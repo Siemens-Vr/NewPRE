@@ -1,0 +1,22 @@
+.rightSidebar {
+    width: 300px;
+    padding: 1rem;
+    background-color: #1a253a;
+    color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .budgetCard {
+    background-color: #1e90ff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .budgetCard h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: white;
+  }
+  

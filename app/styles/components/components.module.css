@@ -1,0 +1,94 @@
+.container {
+  margin: 20px 0;
+  background-color: var(--bgSoft);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.addButton {
+  background-color: #5d57c9;
+  color: var(--text);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #4c46b3;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bgSoft);
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.table th {
+  background-color: var(--bgAccent);
+  font-weight: bold;
+  color: var(--textAccent);
+}
+
+.table tr:nth-child(even) {
+  background-color: var(--bgAccent2);
+}
+
+.table tr:hover {
+  background-color: var(--bgAccent3);
+}
+
+.button {
+  padding: 5px 10px;
+  background-color: teal;
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Added spacing */
+}
+
+.button:last-child {
+  margin-right: 10px; /* Remove margin from the last button */
+}
+
+.button:hover {
+  background-color: darkcyan;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.inStock {
+  background-color: #069b49;
+  color: white;
+}
+
+.outOfStock {
+  background-color: crimson;
+  color: white;
+}

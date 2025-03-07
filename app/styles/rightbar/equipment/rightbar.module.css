@@ -1,0 +1,102 @@
+/* rightbar.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--bgSoft);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .item {
+    background-color: var(--bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notification {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: teal; /* Blue color for notifications */
+  }
+  
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  
+  .subtitle {
+    display: block;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  
+  .desc {
+    font-size: 14px;
+    color:  var(--text);
+    margin-bottom: 15px;
+  }
+  
+  
+  
+
+  
+  .activityList,
+  .overdueList {
+    margin-top: 10px;
+  }
+  
+  .activityItem,
+  .overdueItem {
+    background:var(--bgSoft);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .activityItem p,
+  .overdueItem p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text); 
+  }
+  
+  .activityItem span,
+  .overdueItem span {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color:var(--text);
+  }
+  
+  .bgContainer {
+    position: relative;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .bg {
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .item:last-of-type {
+    background-color: var(--bg);
+    
+  }
+  
+  .item:last-of-type .notification {
+    color: #dc3545; 
+  }
+  
+ 
+  
+  

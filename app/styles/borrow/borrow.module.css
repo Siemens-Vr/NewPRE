@@ -1,0 +1,60 @@
+.container{
+    background-color: var(--bgSoft);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+
+}
+.top{
+    display:flex;
+    justify-content: space-between;
+}
+
+
+
+.addButton{
+    background-color: #5d57c9;
+    color:var(--text);
+    padding:10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+}
+.updateButton{
+    background-color: teal;
+    color:var(--text);
+    padding:5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+.table{
+    width:100%;
+    border-collapse: collapse;
+    background-color: var(--bgSoft);
+
+    /* margin-top:10px; */
+}
+.table thead,
+.table td{
+    padding:12px 15px;
+    text-align: left;
+    border-bottom:1px solid var(--border);
+    font-size: 14px;
+
+}
+.table th {
+    background-color: var(--bgAccent);
+    font-weight: bold;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: var(--bgAccent2);
+  }
+  
+  .table tr:hover {
+    background-color: var(--bgAccent3);
+  }
+
+  

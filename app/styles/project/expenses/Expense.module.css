@@ -1,0 +1,15 @@
+.container {
+  padding: 40px;
+  text-align: center;
+}
+
+.h2 {
+  margin-bottom: 20px;
+  color:#3372cf;
+}
+.expenseList {
+  display: flex;
+  justify-content: flex-start; 
+  gap: 10px; 
+  flex-wrap: wrap; 
+}

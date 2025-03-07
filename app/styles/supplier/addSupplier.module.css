@@ -1,0 +1,107 @@
+.container {
+    background-color: var(--bgSoft);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.divInputs{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+.divInput {
+    display: flex;
+    flex-direction: column;
+    flex-basis: calc(50% - 10px);
+    margin-bottom: 20px;
+}
+
+.fullWidth {
+    flex-basis: 100%;
+}
+
+.label {
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.divInput input,
+.divInput textarea,
+.divInput select {
+    padding: 15px;
+    background-color: var(--bg);
+    color: var(--text);
+    border: 2px solid #2e374a;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.divInput input,
+.divInput select {
+    width: 100%;
+}
+
+.divInput textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.buttonContainer {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.buttonContainer button {
+    width: 100%;
+    padding: 15px;
+    background-color: teal;
+    color: var(--text);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.successMessage {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+    width: 100%;
+    max-width: 400px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.divInput select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%204%205"><path%20fill="none"%20stroke="%232e374a"%20stroke-width="1"%20d="M2%200L0%202h4zm0%205L0%203h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px 12px;
+    padding-right: 40px;
+}

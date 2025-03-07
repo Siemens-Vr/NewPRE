@@ -1,0 +1,168 @@
+/* AssigneesForm.module.css */
+.assigneesForm {
+    margin: 20px 0;
+}
+
+.assigneeSection {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #1c2935;
+}
+
+.assigneeInputs {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: space-between; /* Space out items */
+    margin-bottom: 10px; /* Added margin for spacing */
+    gap: 20px;
+}
+
+.roleAgeInputs {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: space-between; /* Space out items */
+    gap: 20px; /* Add gap between Role and Age inputs */
+}
+
+.nameGenderInputs {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: space-between; /* Space out items */
+    gap: 20px; /* Add gap between Name and Gender inputs */
+}
+
+.assigneeSection label {
+    margin-bottom: 8px;
+    flex: 1; /* Allow labels to take up equal space */
+}
+
+.assigneeSection input,
+.assigneeSection select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px; /* Added margin for spacing */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ageInput {
+    width: 60px; /* Set a fixed width for age input */
+}
+
+.removeButton,
+.addButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Align the icon */
+}
+
+.removeButton:hover,
+.addButton:hover {
+    color: red; /* Change color on hover */
+}
+
+/* phasesForm.module.css */
+.phasesForm {
+    padding: 20px;
+    background-color: #0b1323;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.phase {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #d1d9e6;
+    border-radius: 8px;
+    background-color: #1a253a;
+}
+
+.phase label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.phase input[type="text"],
+.phase input[type="date"],
+.phase select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333;
+}
+
+.phase select {
+    height: 36px;
+}
+
+.deliverable {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px dashed #b3b9c5;
+    border-radius: 4px;
+    background-color: #1a253a;
+}
+
+.deliverable label {
+    font-weight: normal;
+    color: #555;
+}
+
+.deliverable input[type="text"],
+.deliverable input[type="date"],
+.deliverable select {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.buttonGroup button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.buttonGroup .addButton {
+    background-color: #4caf50;
+    color: #000000;
+}
+
+.buttonGroup .deleteButton {
+    background-color: #e57373;
+    color: #000000;
+}
+
+.addPhaseButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addPhaseButton:hover {
+    background-color: #388e3c;
+}

@@ -1,0 +1,145 @@
+.container{
+    background-color: var(--bgSoft);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  
+  .top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .addButton{
+    padding: 10px;
+    background-color: #5d57c9;
+    color: var(--text);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bgSoft);
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+      font-size: 14px;
+  }
+  
+  
+  .table th {
+    background-color: var(--bgAccent);
+    font-weight: bold;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: var(--bgAccent2);
+  }
+  
+  .table tr:hover {
+    background-color: var(--bgAccent3);
+  }
+  
+  .student {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  
+  
+  .buttons{
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button{
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .view{
+    background-color: teal;
+  }
+  
+  .delete{
+    background-color: crimson;
+  }
+  
+  .noStudents {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+  }
+  
+  
+  
+  
+  /* Make the table responsive */
+  @media (max-width: 768px) {
+    .table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    .table thead,
+    .table tbody,
+    .table th,
+    .table td,
+    .table tr {
+      display: block;
+    }
+  
+    .table thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+  
+    .table tr {
+      border: 1px solid var(--border);
+    }
+  
+    .table td {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      padding-left: 50%;
+    }
+  
+    .table td:before {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      font-weight: bold;
+      content: attr(data-column);
+    }
+    .delete{
+    background-color: crimson;
+  }
+  
+  .noStudents {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+  }
+  }
+  

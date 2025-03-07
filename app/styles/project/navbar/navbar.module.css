@@ -1,0 +1,47 @@
+
+.navbarPage{
+  color: white;
+  padding: 10px;
+}
+
+.navbarPage h1{
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform:capitalize;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  .brand h1{
+    font-size: 18px;
+    color: #1e90ff;
+  }
+  
+  .navLinks {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .navLinks button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .navLinks button:hover {
+    background-color: #1e90ff;
+  }
+  
+  .navLinks .active {
+    background-color: #1e90ff;
+  }
+  

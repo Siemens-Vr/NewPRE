@@ -1,0 +1,133 @@
+.container {
+  background-color: var(--bgSoft);
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+
+
+.form {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap onto multiple lines */
+  gap: 20px; /* Adds spacing between items */
+}
+.top{
+  display: flex;
+  justify-content: flex-end;
+}
+.top button{
+  /* width: 35%; */
+  padding: 10px; /* Adjust padding as needed */
+  margin-left: 25px;
+  background-color: teal;
+  color: var(--text);
+  border-radius: 5px;
+  border: none;
+}
+.divInput {
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(50% - 10px); /* Adjust width to be half of the container minus some spacing */
+  margin-bottom: 20px; /* Adds spacing between rows */
+}
+
+.form h3 {
+  margin-bottom: 20px;
+}
+
+.form label {
+  font-size: 14px;
+}
+
+.divInput input,
+.divInput textarea,
+.divInput select {
+  background-color: var(--bg);
+  padding: 10px; /* Adjust padding as needed */
+  border: 2px solid #2e374a;
+  border-radius: 5px;
+  text-transform: capitalize;
+  color: var(--textSoft);
+}
+
+.divInput input,
+.divInput select {
+  width: 100%;
+}
+
+.divInput textarea {
+  width: 100%;
+}
+
+.form button {
+  width: 35%;
+  padding: 10px; /* Adjust padding as needed */
+  margin-left: 25px;
+  background-color: teal;
+  color: var(--text);
+  border-radius: 5px;
+  border: none;
+}
+
+.historyButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.historyButton {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: teal;
+  color: var(--text);
+}
+.container {
+  background-color: var(--bgSoft);
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.historyButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.historyButton {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: teal;
+  color: var(--text);
+}
+
+.componentInfo p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: var(--textSoft);
+}
+
+.componentInfo p span {
+  font-weight: bold;
+  color: var(--text);
+}
+
+.componentInfo button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: teal;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.componentInfo button:hover {
+  background-color: #006d5b;
+}
+
+

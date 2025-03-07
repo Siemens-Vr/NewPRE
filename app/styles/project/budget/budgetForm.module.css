@@ -1,0 +1,54 @@
+.budgetForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: #17232e; /* Light background color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+}
+
+.table {
+    width: 100%; /* Full width for tables */
+    border-collapse: collapse; /* Remove space between table cells */
+}
+
+.table th,
+.table td {
+    border: 1px solid #1a1919; /* Light border for cells */
+    padding: 10px; /* Padding for cells */
+    text-align: left; /* Left align text */
+}
+
+.table th {
+    background-color: #17232e; /* Light gray for table headers */
+}
+
+.table input[type="text"],
+.table input[type="number"] {
+    width: 100%; /* Full width for inputs */
+    padding: 8px; /* Padding for inputs */
+    margin: 5px 0; /* Margin for spacing */
+    border: 1px solid #2b3e4f; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.table button {
+    padding: 5px 10px; /* Padding for buttons */
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
+    cursor: pointer;
+}
+
+.table button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+
+.total {
+    font-weight: bold; /* Bold text for totals */
+    font-size: 1.1em; /* Larger font size */
+    margin-top: 10px; /* Space above totals */
+}

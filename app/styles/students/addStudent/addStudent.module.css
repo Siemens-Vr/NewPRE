@@ -1,0 +1,212 @@
+.container {
+  background-color: var(--bgSoft);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.form input,
+.form textarea,
+.form select {
+  padding: 20px;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 2px solid #2e374a;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.form input, .form select {
+  width: 45%;
+}
+
+.form textarea{
+  width: 100%;
+}
+
+.form button{
+  width: 100%;
+  padding: 20px;
+  background-color: teal;
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top:20px;
+}
+
+  
+.successMessage {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+  width: 100%;
+  max-width: 400px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+
+
+
+.cohortLevelList {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  /* width:100%; */
+
+  background-color: #f9f9f9;
+  color:black;
+}
+
+.cohortLevelList h3 {
+  text-align: left;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.cohortLevelList .deleteButton {
+  padding: 6px 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: darkred;
+}
+
+
+button.addCohortButton {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+  margin-top:0px;
+}
+
+.plusSign {
+  font-size: 32px;
+  font-weight: bold;
+  color: crimson;
+  margin-right: 8px; /* Spacing between + and text */
+}
+
+.addText {
+  font-size: 16px;
+  color: white;
+}
+
+button.addCohortButton:hover .plusSign, 
+button.addCohortButton:hover .addText {
+  color: darkcyan; /* Change color on hover */
+}
+
+button.addCohortButton:focus {
+  outline: none; /* Remove button outline */
+}
+
+.label {
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.divInputs{
+  display: flex;
+  flex-direction: row;
+  gap:10px;
+}
+
+.divInput {
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(50% - 10px);
+  margin-bottom: 20px;
+}
+
+.fullWidth {
+  flex-basis: 100%;
+}
+
+.label {
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.divInput input,
+.divInput textarea,
+.divInput select {
+  padding: 15px;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 2px solid #2e374a;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.divInput input,
+.divInput select {
+  width: 100%;
+}
+
+.divInput textarea {
+  width: 100%;
+  height: 100px;
+}

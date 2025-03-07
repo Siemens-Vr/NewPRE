@@ -1,0 +1,137 @@
+/* AddProjectModal.module.css */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.modalContent {
+    background-color: white;
+    display: flex;
+    border-radius: 18px;
+    width:25%; /* Set a fixed width */
+    max-width: 1000px; /* Maximum width */
+    height: 550px; /* Set a fixed height */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+}
+
+
+
+.active {
+    background-color: #2563eb; /* Blue background for active step */
+    color: #1d1c1c;
+}
+
+.modalRight {
+    flex: 3;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto; /* Enable scrolling for content */
+}
+
+.modalRight h2 {
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: black; /* Dark text color */
+}
+
+.modalButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 490px;
+    gap: 10px; /* Spacing between buttons */
+}
+
+.modalButtons button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px; /* Rounded corners */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit Button */
+.submitButton {
+    background-color: #2563eb; /* Primary Blue */
+    color: white;
+}
+
+.submitButton:hover {
+    background-color: #1e4bce;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Cancel Button */
+.cancelButton {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled State */
+.modalButtons button:disabled {
+    background-color: #a1a1aa;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .modalButtons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .modalButtons button {
+        width: 100%;
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modalContent {
+        flex-direction: column;
+        width: 90%; /* Adjust width for smaller screens */
+        height: auto; 
+    }
+
+    .modalLeft {
+        border-right: none;
+        border-bottom: 1px solid #130606;
+    }
+
+    .modalButtons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modalButtons button {
+        width: 100%;
+    }
+
+    .closeButton {
+        width: 100%;
+    }
+}

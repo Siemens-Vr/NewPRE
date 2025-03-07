@@ -1,0 +1,56 @@
+/* ProjectInfoPage.module.css */
+
+.projectInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between fields */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.projectInfo h2 {
+    margin-bottom: 20px; /* Space below the title */
+    font-size: 24px; /* Font size for the title */
+    color: #333; /* Dark color for the title */
+}
+
+.projectInfo label {
+    margin-bottom: 5px; /* Space below each label */
+    font-weight: bold; /* Bold labels */
+    color:black;
+}
+
+.projectInfo input,
+.projectInfo select,
+.projectInfo textarea {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    margin: 5px 0; /* Space above and below inputs */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+    transition: border 0.3s; /* Smooth transition for border */
+    color: black;
+}
+
+.projectInfo input:focus,
+.projectInfo select:focus,
+.projectInfo textarea:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.projectInfo textarea {
+    resize: vertical; /* Allow vertical resizing only */
+    height: 80px; /* Default height for textarea */
+}
+
+.projectInfo input[required],
+.projectInfo select[required] {
+    background-color: #ffffff; /* White background for required fields */
+}
+
+.projectInfo input[disabled],
+.projectInfo select[disabled],
+.projectInfo textarea[disabled] {
+    background-color: #eaeaea; /* Light gray for disabled fields */
+    cursor: not-allowed; /* Change cursor for disabled fields */
+}

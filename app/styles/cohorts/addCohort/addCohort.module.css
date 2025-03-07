@@ -1,0 +1,177 @@
+
+.container {
+  background-color: var(--bgSoft);
+  padding: 40px;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #1b253a;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.formGroup {
+  margin-bottom: 25px;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #e0e0e0;
+}
+
+.title{
+  text-align: center;
+}
+
+.input,
+.select {
+  padding: 12px 15px;
+  background-color: #2e374a;
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: #5d57c9;
+}
+.btn{
+  display: flex;
+  justify-content: flex-end;
+}
+.buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap:10px;
+  padding:10px;
+  margin-right: 156px;
+  margin-top: 10px;
+}
+.button {
+  padding:10px;
+  background-color: #5d57c9;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.addButton{
+  background-color: teal;
+}
+.deleteButton{
+  width: 15%;
+  padding: 10px;
+  background-color: crimson;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 5px;
+}
+/* .button:hover {
+  background-color: #5d57c9;
+} */
+.facilitatorCheckbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.facilitatorCheckbox label {
+  margin-left: 8px;
+}
+.successMessage {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+  width: 100%;
+  max-width: 400px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.facilitatorRoleSelection {
+  display: flex;
+  align-items:center;
+  gap: 20px; /* Add some space between elements */
+}
+
+.select {
+  width: 200px; /* Adjust width as needed */
+  font-size: 14px;
+  color:black;
+}
+
+.addFacilitatorRoleButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.addFacilitatorRoleButton:hover {
+  background-color: #0056b3;
+}
+
+.facilitatorRoleTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bgSoft);
+}
+
+.facilitatorRoleTable th,
+.facilitatorRoleTable td {
+  padding: 10px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border)
+}
+
+
+.facilitatorRoleTable th {
+  background-color: var(--bgAccent);
+  font-weight: bold;
+}
+
+.facilitatorRoleTable tr:nth-child(even) {
+  background-color: var(--bgAccent2);
+}
+
+.facilitatorRoleTable tr:hover {
+  background-color: var(--bgAccent3);
+}

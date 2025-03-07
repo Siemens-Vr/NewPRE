@@ -1,0 +1,6 @@
+node_modules
+.env
+iisnode
+.next
+.idea
+config

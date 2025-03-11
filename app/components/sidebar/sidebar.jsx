@@ -10,6 +10,7 @@ import {
   MdAnalytics,
   MdPeople,
   MdLogout,
+  MdSettings
 } from "react-icons/md";
 
 // Menu Items Definition
@@ -17,39 +18,41 @@ const menuItems = [
   {
     title: "Dashboard",
     path: "/pages/admin/dashboard",
-    icon: <MdDashboard />,
+    icon: <MdDashboard className={styles.whiteIcon} />,
   },
   {
     title: "Staff",
     path: "/pages/admin/dashboard/staff",
-    icon: <MdPeople />,
+    icon: <MdPeople className={styles.whiteIcon} />,
   },
   {
     title: "Student",
-    icon: <MdAnalytics />,
+    path: "/pages/student/dashboard",
+    icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics /> },
-      { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics /> },
+      { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
+      { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
     ],
   },
   {
     title: "Equipment",
-    icon: <MdAnalytics />,
+    path: "/pages/equipment/dashboard",
+    icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard /> },
-      { title: "Borrow Equipment", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople /> },
-      { title: "Notifications", path: "/pages/equipment/dashboard/notifications", icon: <MdPeople /> },
+      { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Borrow Equipment", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
+      { title: "Notifications", path: "/pages/equipment/dashboard/notifications", icon: <MdPeople className={styles.whiteIcon} /> },
     ],
   },
   {
     title: "Projects",
     path: "/pages/project/dashboard/dashboard",
-    icon: <MdAnalytics/>
+    icon: <MdAnalytics className={styles.whiteIcon} />,
   },
   {
     title: "Users",
-    path:"/pages/dashboard/users",
-  icon: <MdAnalytics />
+    path: "/pages/dashboard/users",
+    icon: <MdAnalytics className={styles.whiteIcon} />,
   },
 ];
 
@@ -69,7 +72,7 @@ const Sidebar = () => {
   };
 
   return (
-      <div className={styles.container}>
+      <div className={styles.containers}>
         {/* User Info */}
         <div className={styles.user}>
           <Image
@@ -89,24 +92,24 @@ const Sidebar = () => {
         <ul className={styles.list}>
           {menuItems.map((item) => (
               <li key={item.title}>
-                {/* Ensure ALL items use MenuLink for navigation */}
-                {item.path ? (
-                    <MenuLink item={item} />
-                ) : (
+                {item.subpages ? (
                     <div className={styles.menuItem} onClick={() => toggleMenu(item.title)}>
-                      {item.icon} {item.title}
-                      {item.subpages?.length > 0 && (
-                          <span className={styles.toggleIcon}>{openMenus[item.title] ? "➖" : "➕"}</span>
-                      )}
+                      <div className={styles.menuItemContent}>
+                        {item.icon}
+                        <span className={styles.whiteText}>{item.title}</span>
+                      </div>
+                      <span className={styles.toggleIcon}>{openMenus[item.title] ? "➖" : "➕"}</span>
                     </div>
+                ) : (
+                    <MenuLink item={{ ...item, className: styles.whiteText }} />
                 )}
 
                 {/* Render submenus for expandable sections */}
-                {openMenus[item.title] && item.subpages?.length > 0 && (
+                {openMenus[item.title] && item.subpages && (
                     <ul className={styles.submenu}>
                       {item.subpages.map((sub) => (
                           <li key={sub.title}>
-                            <MenuLink item={sub} />
+                            <MenuLink item={{ ...sub, className: styles.whiteText }} />
                           </li>
                       ))}
                     </ul>
@@ -121,7 +124,8 @@ const Sidebar = () => {
                     item={{
                       title: "Admin Dashboard",
                       path: "/pages/admin/dashboard",
-                      icon: <MdDashboard />,
+                      icon: <MdDashboard className={styles.whiteIcon} />,
+                      className: styles.whiteText,
                     }}
                 />
               </li>
@@ -130,11 +134,19 @@ const Sidebar = () => {
 
         {/* Logout Button */}
         <form>
-          <button className={styles.logout}>
-            <MdLogout />
+          <button className={`${styles.logout} ${styles.whiteText}`}>
+            <MdLogout className={styles.whiteIcon} />
             Logout
           </button>
         </form>
+
+        {/* Settings */}
+        <div className={styles.settings}>
+          <MdSettings className={styles.whiteIcon} />
+          <span className={styles.whiteText}>Settings</span>
+        </div>
+
+        <div className={`${styles.footer} ${styles.whiteText}`}>&copy; 2025 SIEMENS ERP</div>
       </div>
   );
 };

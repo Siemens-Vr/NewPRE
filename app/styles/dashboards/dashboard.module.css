@@ -1,12 +1,13 @@
 .container {
     display: flex;
+  background-color: var(--bgSoft);
   }
   
   .menu {
     flex: 1;
-    background-color: var(--bgSoft);
     padding: 20px;
     min-height: 100vh;
+    background-color: var(--bgSoft);
   }
   
   .content {
@@ -35,5 +36,6 @@
   
   .side {
     flex: 1;
+
   }
   

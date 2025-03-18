@@ -3,7 +3,7 @@
   top: 0;
   background-color: #1b9392;
   width: 250px;
-  height: 100vh;
+  height: 100%;
   padding: 20px;
   overflow-y: auto;
 }
@@ -14,30 +14,32 @@
 /* User Info */
 .user {
   display: flex;
-  align-items: center;
-  gap: 15px;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .userImage {
-  border-radius: 50%;
-  object-fit: cover;
+  width: 70px;
+  height: 65px;
 }
 
-.userDetail {
-  display: flex;
-  flex-direction: column;
-}
+/*.userDetail {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
 
-.username {
-  font-weight: 600;
-  color: white;
-}
+/*.username {*/
+/*  font-weight: 600;*/
+/*  color: white;*/
+/*}*/
 
-.userTitle {
-  font-size: 12px;
-  color: white;
-}
+/*.userTitle {*/
+/*  font-size: 12px;*/
+/*  color: white;*/
+/*}*/
 
 /* Sidebar List */
 .list {
@@ -59,7 +61,12 @@
 }
 
 .menuItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255, 114, 17);
+}
+.menuItem.active {
+  background-color: rgba(255, 114, 17, 0.8); /* Highlighted color */
+  border-left: 5px solid white; /* Rectangle effect on the left */
+  font-weight: bold; /* Make text bold */
 }
 
 .menuItemContent {
@@ -70,12 +77,25 @@
 
 .toggleIcon {
   font-size: 18px;
+  color: white; /* Ensures the arrow is white */
   transition: transform 0.3s ease-in-out;
 }
 
-.menuItem.open .toggleIcon {
-  transform: rotate(90deg);
+/* Active Menu Item Styling */
+.active {
+  background-color: rgba(255, 114, 17, 0.8); /* Highlighted background */
+  border-radius: 5px;
 }
+
+.menuItem.active {
+  background-color: rgba(255, 114, 17, 0.8);
+}
+
+/* Active Submenu */
+.submenu .active {
+  background-color: rgba(255, 114, 17, 0.6);
+}
+
 
 /* Submenu */
 .submenu {
@@ -91,7 +111,7 @@
 }
 
 .submenu li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255, 114, 17);
   border-radius: 5px;
 }
 
@@ -112,15 +132,21 @@
   padding: 12px;
   cursor: pointer;
   border-radius: 8px;
-  background: none;
+  background: white;
   border: none;
   width: 100%;
   text-align: left;
+
 }
 
 .logout:hover {
   background-color: #ff7211;
+
 }
+/*.logout {*/
+/*  background-color: #ff7211;*/
+/*  border-radius: 6px;*/
+/*}*/
 
 /* Settings */
 .settings {
@@ -129,16 +155,23 @@
   gap: 10px;
   padding: 12px;
   cursor: pointer;
+
 }
 
 .settings:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255, 114, 17);
   border-radius: 5px;
 }
 
 /* Footer */
 .footer {
-  margin-top: 20px;
+  /*margin-top: 100px;*/
   font-size: 12px;
   text-align: center;
+  padding: 12px;
+  margin-left: -50px;
+
+}
+.down{
+  margin-top: 150px;
 }

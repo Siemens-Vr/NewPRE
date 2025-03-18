@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import MenuLink from "./menuLink/menuLink";
 import styles from "@/app/styles/sidebar/sidebar.module.css";
@@ -12,6 +13,7 @@ import {
   MdLogout,
   MdSettings
 } from "react-icons/md";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Down and Up arrows
 
 // Menu Items Definition
 const menuItems = [
@@ -46,17 +48,18 @@ const menuItems = [
   },
   {
     title: "Projects",
-    path: "/pages/project/dashboard/dashboard",
+    path: "/pages/project/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
   },
   {
     title: "Users",
-    path: "/pages/dashboard/users",
+    path: "/pages/admin/dashboard/users",
     icon: <MdAnalytics className={styles.whiteIcon} />,
   },
 ];
 
 const Sidebar = () => {
+  const router = useRouter();
   const [openMenus, setOpenMenus] = useState({});
 
   const toggleMenu = (title) => {
@@ -82,40 +85,58 @@ const Sidebar = () => {
               width={60}
               height={60}
           />
-          <div className={styles.userDetail}>
-            <span className={styles.username}>{user.username.toUpperCase()}</span>
-            <span className={styles.userTitle}>{user.role.toUpperCase()}</span>
-          </div>
         </div>
 
         {/* Sidebar Menu */}
         <ul className={styles.list}>
-          {menuItems.map((item) => (
-              <li key={item.title}>
-                {item.subpages ? (
-                    <div className={styles.menuItem} onClick={() => toggleMenu(item.title)}>
-                      <div className={styles.menuItemContent}>
-                        {item.icon}
-                        <span className={styles.whiteText}>{item.title}</span>
-                      </div>
-                      <span className={styles.toggleIcon}>{openMenus[item.title] ? "➖" : "➕"}</span>
-                    </div>
-                ) : (
-                    <MenuLink item={{ ...item, className: styles.whiteText }} />
-                )}
+          {menuItems.map((item) => {
+            const isActive = router.pathname === item.path; // Check if menu item is active
 
-                {/* Render submenus for expandable sections */}
-                {openMenus[item.title] && item.subpages && (
-                    <ul className={styles.submenu}>
-                      {item.subpages.map((sub) => (
-                          <li key={sub.title}>
-                            <MenuLink item={{ ...sub, className: styles.whiteText }} />
-                          </li>
-                      ))}
-                    </ul>
-                )}
-              </li>
-          ))}
+            return (
+                <li key={item.title}>
+                  {item.subpages ? (
+                      <div
+                          className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
+                          onClick={() => toggleMenu(item.title)}
+                      >
+                        <div className={styles.menuItemContent}>
+                          {item.icon}
+                          <span className={styles.whiteText}>{item.title}</span>
+                        </div>
+                        <span className={styles.toggleIcon}>
+                    {openMenus[item.title] ? <FaChevronUp className={styles.whiteIcon} /> : <FaChevronDown className={styles.whiteIcon} />}
+                  </span>
+                      </div>
+                  ) : (
+                      <MenuLink
+                          item={{
+                            ...item,
+                            className: `${styles.whiteText} ${isActive ? styles.active : ""}`,
+                          }}
+                      />
+                  )}
+
+                  {/* Render submenus */}
+                  {openMenus[item.title] && item.subpages && (
+                      <ul className={styles.submenu}>
+                        {item.subpages.map((sub) => {
+                          const isSubActive = router.pathname === sub.path;
+                          return (
+                              <li key={sub.title}>
+                                <MenuLink
+                                    item={{
+                                      ...sub,
+                                      className: `${styles.whiteText} ${isSubActive ? styles.active : ""}`,
+                                    }}
+                                />
+                              </li>
+                          );
+                        })}
+                      </ul>
+                  )}
+                </li>
+            );
+          })}
 
           {/* Conditionally Render Admin Dashboard Link */}
           {user.role.toLowerCase() === "admin" && (
@@ -132,10 +153,12 @@ const Sidebar = () => {
           )}
         </ul>
 
+        <div className={styles.down}>
+
         {/* Logout Button */}
         <form>
-          <button className={`${styles.logout} ${styles.whiteText}`}>
-            <MdLogout className={styles.whiteIcon} />
+          <button className={`${styles.logout} ${styles.blackText}`}>
+            <MdLogout className={styles.blackIcon} />
             Logout
           </button>
         </form>
@@ -147,6 +170,7 @@ const Sidebar = () => {
         </div>
 
         <div className={`${styles.footer} ${styles.whiteText}`}>&copy; 2025 SIEMENS ERP</div>
+      </div>
       </div>
   );
 };

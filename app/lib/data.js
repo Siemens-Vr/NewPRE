@@ -54,4 +54,33 @@ export const cards = [
     number: 10,
     change: 18,
   },
+  {
+    id: 4,
+    title: "Equipments",
+    number: 80,
+    change: 18,
+  },
 ];
+
+export const projectdata=[
+  {
+    id: 1,
+    title:"Todo",
+    number: 2,
+  },
+  {
+    id: 2,
+    title:"Active",
+    number: 3,
+  },
+  {
+    id: 3,
+    title:"Completed",
+    number: 1,
+  },
+  {
+    id: 4,
+    title:"Total",
+    number: 6,
+  }
+]

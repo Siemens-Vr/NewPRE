@@ -1,12 +1,16 @@
 .container {
-  height: 450px;
-  background-color: var(--bgSoft);
+  height: 200px;
+  background-color: #f3f3f3;
   padding: 20px;
   border-radius: 10px;
+  /*margin-top: 30px;*/
+  width: 350px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 .title{
   font-weight: 200;
   color: var(--textSoft);
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }

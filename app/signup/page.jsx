@@ -20,34 +20,54 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const [error, setError] = useState("");
+  const [hints, setHints] = useState([]);
   const router = useRouter();
   
 
  
   // Password Validation
-  const passwordValidations = {
-    length: password.length >= 8,
-    uppercase: /[A-Z]/.test(password),
-    lowercase: /[a-z]/.test(password),
-    number: /\d/.test(password),
-    specialChar: /[@#$%^&*()_+!~]/.test(password),
+  const validatePassword = (password) => {
+    const errors = [];
+
+    if (password.length > 0 && password.length < 8) {
+      errors.push("Password must be at least 8 characters long.");
+    }
+    if (password.length > 0 && !/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least one uppercase letter.");
+    }
+    if (password.length > 0 && !/\d/.test(password)) {
+      errors.push("Password must contain at least one number.");
+    }
+    if (password.length > 0 && !/[@$!%*?&]/.test(password)) {
+      errors.push("Password must contain at least one special character (@$!%*?&).");
+    }
+
+    return errors;
+  };
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setHints(validatePassword(newPassword));
+    setPasswordsMatch(newPassword === confirmPassword);
   };
 
-  const allValid = Object.values(passwordValidations).every(Boolean);
+  const handleConfirmPasswordChange = (e) => {
+    const newConfirmPassword = e.target.value;
+    setConfirmPassword(newConfirmPassword);
+    setPasswordsMatch(newConfirmPassword === password);
+  };
 
-    useEffect(() => {
-      setPasswordsMatch(password.trim() === confirmPassword.trim());
-    }, [password, confirmPassword]);
 
 
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!allValid) {
-      alert("Password does not meet all requirements!");
-      return;
-    }
+    // if (!allValid) {
+    //   alert("Password does not meet all requirements!");
+    //   return;
+    // }
   
 
     const res = await fetch(`${config.baseURL}/api/auth/signup`, {
@@ -55,6 +75,11 @@ export default function Signup() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, idNumber, dateJoined, email, password,confirmPassword, phoneNumber, gender }),
     });
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
 
     if (res.ok) {
       setDateJoined("")
@@ -113,7 +138,7 @@ export default function Signup() {
           <input
             type={showPassword ? "text" : "password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
             className={styles.input}
           />
@@ -127,7 +152,7 @@ export default function Signup() {
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
             className={`${styles.input} ${passwordsMatch ? "border-green-500" : "border-red-500"}`}
           />
@@ -139,16 +164,17 @@ export default function Signup() {
           )}
         </div>
 
-        <p className="text-gray-700">Password must contain:</p>
-        <ul className="list-disc pl-5">
-          <li className={passwordValidations.length ? "text-green-600" : "text-red-600"}>At least 8 characters</li>
-          <li className={passwordValidations.uppercase ? "text-green-600" : "text-red-600"}>At least 1 uppercase letter</li>
-          <li className={passwordValidations.lowercase ? "text-green-600" : "text-red-600"}>At least 1 lowercase letter</li>
-          <li className={passwordValidations.number ? "text-green-600" : "text-red-600"}>At least 1 number</li>
-          <li className={passwordValidations.specialChar ? "text-green-600" : "text-red-600"}>At least 1 special character (@#$%^&*)</li>
-        </ul>
+        {/* Show password hints dynamically */}
+        {password.length > 0 && hints.length > 0 && (
+            <div style={{color: "red", fontSize: "0.9em", marginTop: "5px"}}>
+              {hints.map((hint, index) => (
+                  <p key={index}>{hint}</p>
+              ))}
+            </div>
+        )}
+        {error && <p style={{color: "red"}}>{error}</p>}
 
-        <button type="submit" disabled={!allValid || !passwordsMatch} className={`${styles.button} ${!allValid || !passwordsMatch ? "opacity-50 cursor-not-allowed" : ""}`}>
+        <button >
           Sign Up
         </button>
 

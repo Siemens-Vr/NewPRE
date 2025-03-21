@@ -1,0 +1,59 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px; /* Space between cards */
+    justify-content: center;
+    align-items: center;
+
+    background-color: #1E88E5;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    /*margin-top: 20px;*/
+
+
+    font-weight: bold;
+    font-size: 18px;
+    /*margin: 10px;*/
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.05);
+
+}
+
+.texts {
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    text-align: center;
+
+}
+
+.title{
+    color: white;
+    /*align-items: center;*/
+    text-align: end;
+}
+.number {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+}
+.color1 {
+    background-color: #ff7211;
+}
+
+.color2 {
+    background-color: #121212;
+}
+
+.color3 {
+    background-color: #000000;
+}
+
+.color4 {
+    background-color: #1b9392;
+}

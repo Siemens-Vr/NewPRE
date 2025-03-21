@@ -1,9 +1,9 @@
 .container {
   margin: 20px 0;
-  background-color: var(--bgSoft);
+  /* background-color: #1B9392; */
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .top {
@@ -14,28 +14,47 @@
 }
 
 .addButton {
-  background-color: #5d57c9;
+  background-color: #ff7211;
   color: var(--text);
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: clamp(120px, 20vw, 200px);
 }
 
 .addButton:hover {
-  background-color: #4c46b3;
+  background-color: #C6E7E7;
 }
 
+.select {
+  border:2px solid black;
+  border-radius:5px;
+  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  height:40px;
+
+}
+
+.h2{
+  font-weight: bold;
+  font-size: clamp(0.875rem, 2vw, 1.5rem);
+}
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bgSoft);
+   background-color: #1B9392;
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height:200px;
+  overflow:hidden;
+  color: #ffffff;
+
 }
 
 .table th,
 .table td {
-  padding: 12px 15px;
+  padding: 12px 40px;
   text-align: left;
   border-bottom: 1px solid var(--border);
   font-size: 14px;

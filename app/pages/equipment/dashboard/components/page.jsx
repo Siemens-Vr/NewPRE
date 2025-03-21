@@ -41,21 +41,45 @@ const Page = () => {
     fetchComponentData();
   }, [q]);
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-      <Suspense fallback={<div>Loading...</div>}>
-      <Search placeholder="search for components" />
+  const [selectedOption, setSelectedOption] = useState("");
 
+  const sortBy = {
+    title: "Sort By",
+    options: ["Computers", "Laptops", "Mouse", "Omen", "Robot"],
+  };
+
+  return (   
+
+         <div className={styles.container}>
+
+         <div className={styles.top}>
+         <h1 className={styles.h2}>Components</h1>
+
+         <select
+        id="sort"
+        value={selectedOption}
+        onChange={(e) => setSelectedOption(e.target.value)}
+        className={styles.select}
+      >
+        <option value="" disabled>Sort by</option>
+        {sortBy.options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+
+     {/* <Suspense fallback={<div>Loading...</div>}>
+      <Search placeholder="search for components" />
+     </Suspense> */}
+
+      <button onClick={() => setShowPopup(true)}   className={styles.addButton}>Add Categories</button>
       
-    </Suspense>
-      
-        <button onClick={() => setShowPopup(true)}   className={styles.addButton}>Add Categories</button>
-            
-        <Link href="/pages/equipment/dashboard/components/add">
-          <button className={styles.addButton}>Add New</button>
-        </Link>
-      </div>
+       <Link href="/pages/equipment/dashboard/components/add">
+       <button className={styles.addButton}>Add New</button>
+      </Link>
+    </div>
+
       <table className={styles.table}>
         <thead>
           <tr>
@@ -96,9 +120,24 @@ const Page = () => {
         />
       )}
     </div>
+    
   )
 }
 
 export default Page;
 
 
+
+{/* <div className={styles.top}>
+<Suspense fallback={<div>Loading...</div>}>
+<Search placeholder="search for components" />
+
+
+</Suspense>
+
+  <button onClick={() => setShowPopup(true)}   className={styles.addButton}>Add Categories</button>
+      
+  <Link href="/pages/equipment/dashboard/components/add">
+    <button className={styles.addButton}>Add New</button>
+  </Link>
+</div> */}

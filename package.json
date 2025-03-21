@@ -50,8 +50,9 @@
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
     "recharts": "2.9.0",
+    "siemensnext14dashboard": "file:",
     "styled-components": "^6.1.11",
-    "sweetalert2": "^11.11.0",
+    "sweetalert2": "^11.6.13",
     "use-debounce": "9.0.4",
     "xlsx": "^0.18.5"
   },

@@ -9,6 +9,7 @@
     border-radius: 10px;
     padding: 15px;
     color: white;
+    /*margin-top: 20px;*/
 
 
     font-weight: bold;
@@ -20,6 +21,7 @@
 
 .container:hover {
     transform: scale(1.05);
+
 }
 
 .texts {

@@ -8,6 +8,7 @@ import style from '@/app/styles/sidebar/sidebar.module.css'
 import Rightbar from '@/app/components/rightbar/rightbar'
 
 import CalendarComponent from "@/app/components/calendar/CalendarComponent";
+import CommonLinks from "@/app/components/commonlinks/CommonLinks";
 
 
 
@@ -16,6 +17,7 @@ const Dashboard = () => {
       <div className={styles.wrapper}>
           <div className={styles.menu}>
               <div className={styles.contents}>
+
               <div className={styles.containercard}>
                   <div className={styles.cards}>
                       {cards.map((item) => (
@@ -23,7 +25,7 @@ const Dashboard = () => {
                       ))}
                   </div>
               </div>
-
+                  <Chart/>
 
           </div>
               <div className={styles.calendars}>
@@ -31,7 +33,7 @@ const Dashboard = () => {
           {/*<div className={style.container}>*/}
           {/*    /!*<Rightbar />*!/*/}
           {/*</div>*/}
-
+             <div className={styles.commonlink}>
                   <div className={styles.containercards}>
                       <h1 className={styles.text}>Projects</h1>
                       <div className={styles.card}>
@@ -40,9 +42,11 @@ const Dashboard = () => {
                           ))}
                       </div>
                   </div>
+                 <CommonLinks/>
+             </div>
               </div>
 
-          <Chart/>
+
           </div>
 
       </div>

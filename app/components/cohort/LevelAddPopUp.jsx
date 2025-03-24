@@ -76,8 +76,8 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
   return (
     <div className={styles.popup}>
       <div className={styles.popupContent}>
-        <h2>Add New Level</h2>
-        <form onSubmit={handleSubmit}>
+        <h2 className={styles.title}>Add New Level</h2>
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
           <div className={styles.formGroup}>
             <label className={styles.label}>Level Name</label>
             <select
@@ -133,8 +133,8 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
               onChange={(e) => handleLevelChange('exam_quotation_number', e.target.value)}
             />
           </div>
-
-          <label className={styles.label}>Facilitators</label>
+           <div className={styles.facilitator}>
+          <label className={styles.labels}>Facilitators</label>
           {levelData.facilitators.length > 0 && (
             <div className={styles.facilitatorRoleTable}>
               <table>
@@ -159,7 +159,7 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
               </table>
             </div>
           )}
-          <div className={styles.facilitatorRoleSelection}>
+          <div className={styles.facilitatorRoleSelections}>
             <select
               className={styles.select}
               value={selectedFacilitator ? selectedFacilitator.value : ""}
@@ -190,7 +190,7 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
                 </option>
               ))}
             </select>
-
+          </div >
             <button
               type="button"
               className={styles.addFacilitatorRoleButton}
@@ -201,8 +201,8 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
           </div>
 
           <div className={styles.popupActions}>
-            <button type="submit">Add Level</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="submit" className={styles.submit}>Add Level</button>
+            <button className={styles.closeButtons} onClick={onClose}>×</button>
           </div>
         </form>
       </div>

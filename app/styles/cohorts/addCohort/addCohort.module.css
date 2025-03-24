@@ -1,177 +1,154 @@
 
+
 .container {
-  background-color: var(--bgSoft);
+  background-color: #c6e7e7;
   padding: 40px;
   border-radius: 10px;
-  margin-top: 20px;
+  width: 60%;
+  max-width: 800px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  margin-left: 250px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff4d4d;
 }
 
 .form {
   display: flex;
-  flex-direction: column;
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: #1b253a;
-  border-radius: 8px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
 }
 
 .formGroup {
-  margin-bottom: 25px;
+  width: 45%; /* Creates a two-column layout */
+  display: flex;
+  flex-direction: column;
 }
 
 .label {
-  display: block;
   font-weight: bold;
-  margin-bottom: 8px;
-  color: #e0e0e0;
+  margin-bottom: 5px;
+  color: #000;
 }
-
-.title{
-  text-align: center;
+.forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
 }
 
 .input,
 .select {
   padding: 12px 15px;
-  background-color: #2e374a;
-  color: var(--text);
-  border: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
   font-size: 16px;
   width: 100%;
-  transition: border-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .input:focus,
 .select:focus {
-  outline: none;
-  border-color: #5d57c9;
+  border: 1px solid #4CAF50;
 }
-.btn{
+
+.buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
 }
-.buttons{
+.facilitator{
   display: flex;
-  justify-content: flex-end;
-  gap:10px;
-  padding:10px;
-  margin-right: 156px;
-  margin-top: 10px;
+  flex-wrap: wrap;
+  /*gap: 50px;*/
+  justify-content: space-between;
 }
-.button {
-  padding:10px;
-  background-color: #5d57c9;
-  color: #ffffff;
+.addFacilitatorRoleButton{
+  padding: 12px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  background-color: #1b9392;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
+.button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ff7211;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
 
-.addButton{
+.addButton {
   background-color: teal;
 }
-.deleteButton{
-  width: 15%;
-  padding: 10px;
-  background-color: crimson;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 10px;
-  transition: background-color 0.3s ease;
-  margin-bottom: 5px;
+
+.createButton {
+  background-color: #ff7211;
 }
-/* .button:hover {
-  background-color: #5d57c9;
-} */
-.facilitatorCheckbox {
-  display: flex;
+.deleteButton {
   align-items: center;
-  margin-bottom: 8px;
+  margin-left: 280px;
+  background-color: #1b9392;
 }
 
-.facilitatorCheckbox label {
-  margin-left: 8px;
+.addButton:hover {
+  background-color: #006666;
 }
-.successMessage {
-  background-color: #4CAF50;
-  color: white;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  text-align: center;
+
+.createButton:hover {
+  background-color: #d65a00;
+}
+.title{
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 20px;
+margin-left: 250px;
+font-size: 20px;
   font-weight: bold;
-  animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
-  width: 100%;
-  max-width: 400px;
+  color: #ff7211;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
 .facilitatorRoleSelection {
   display: flex;
-  align-items:center;
-  gap: 20px; /* Add some space between elements */
+  gap: 150px; /* Space between elements */
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.select {
-  width: 200px; /* Adjust width as needed */
-  font-size: 14px;
-  color:black;
-}
-
-.addFacilitatorRoleButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
+/*.addFacilitatorRoleButton {*/
+/*  !*padding: 8px;*!*/
+/*  padding: 12px 20px;*/
+/*  background-color: #1b9392;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*  transition: background 0.3s;*/
+/*}*/
 
 .addFacilitatorRoleButton:hover {
-  background-color: #0056b3;
-}
-
-.facilitatorRoleTable {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: var(--bgSoft);
-}
-
-.facilitatorRoleTable th,
-.facilitatorRoleTable td {
-  padding: 10px 10px;
-  text-align: left;
-  border-bottom: 1px solid var(--border)
-}
-
-
-.facilitatorRoleTable th {
-  background-color: var(--bgAccent);
-  font-weight: bold;
-}
-
-.facilitatorRoleTable tr:nth-child(even) {
-  background-color: var(--bgAccent2);
-}
-
-.facilitatorRoleTable tr:hover {
-  background-color: var(--bgAccent3);
+  background-color: #ff7211;
 }

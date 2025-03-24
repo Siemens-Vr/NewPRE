@@ -1,11 +1,11 @@
 .container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
-    gap: 20px; /* Space between cards */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     justify-content: center;
     align-items: center;
 
-    background-color: #1E88E5;
+    /*background-color: #1E88E5;*/
     border-radius: 10px;
     padding: 15px;
     color: white;
@@ -21,6 +21,7 @@
 
 .container:hover {
     transform: scale(1.05);
+    background-color: #121212;
 
 }
 

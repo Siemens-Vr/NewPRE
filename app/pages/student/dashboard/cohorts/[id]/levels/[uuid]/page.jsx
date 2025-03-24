@@ -31,6 +31,8 @@ const LevelDetails = ({ searchParams }) => {
   useEffect(() => {
     fetchData(); 
   }, []);
+  const [showMenu, setShowMenu] = useState(false);
+
 
   const fetchData  = async (req, res)=>{
     const response = await fetch(`${config.baseURL}/levels/${params.id}/levels/${params.uuid}`)
@@ -153,147 +155,164 @@ const LevelDetails = ({ searchParams }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Start Date</td>
-              <td>End Date</td>
-              <td>Exam Date</td>
-              <td>Exam Quotation Number</td>
-              <td>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{levelData.levelName}</td>
-              <td>{new Date(levelData.startDate).toLocaleDateString()}</td>
-              <td>{new Date(levelData.endDate).toLocaleDateString()}</td>
-              <td>{new Date(levelData.examDates).toLocaleDateString()}</td>
-              <td>{levelData.examQuotationNumber}</td>
-              <td>
-                <button onClick={() => setShowPopup(true)} className={styles.button}>Update</button>
-                <button onClick={handleDownloadPDF} className={styles.button}>Download PDF</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className={styles.studentTable}>
-        {filteredStudents.length > 0 ? (
-          <>
-            <div className={styles.tableTop}>
-              <h3>Students</h3>
-              <p>Count: {levelData.students.length}</p>
-              <p>Pass: {passCount}</p>
-              <p>Fail: {failCount}</p>
-              <Search value={searchQuery} onChange={handleSearchChange} placeholder="Search" />
-            </div>
-
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div className={styles.top}>
             <table className={styles.table}>
               <thead>
-                <tr>
-                  <td>No.</td>
-                  <td>Registration Number</td>
-                  <td>Name</td>
-                  <td>Exam Results</td>
-                  <td>Phone</td>
-                </tr>
+              <tr>
+                <td>Name</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Exam Date</td>
+                <td>Exam Quotation Number</td>
+                <td>Action</td>
+              </tr>
               </thead>
               <tbody>
-                {currentStudents.map((student, index) => (
-                  <tr key={index}>
-                    <td>{currentPage * studentsPerPage + index + 1}</td>
-                    <td>{student.regNo}</td>
-                    <td>{student.firstName} {student.lastName}</td>
-                    <td>{student.examResults}</td>
-                    <td>{student.phone}</td>
-                  </tr>
-                ))}
+              <tr>
+                <td>{levelData.levelName}</td>
+                <td>{new Date(levelData.startDate).toLocaleDateString()}</td>
+                <td>{new Date(levelData.endDate).toLocaleDateString()}</td>
+                <td>{new Date(levelData.examDates).toLocaleDateString()}</td>
+                <td>{levelData.examQuotationNumber}</td>
+                <td>
+                  <div className={styles.actionMenu}>
+                    <button className={styles.dotsButton} onClick={() => setShowMenu(!showMenu)}>⋮</button>
+                    {showMenu && (
+                        <div className={styles.dropdownMenu}>
+                          <button onClick={() => setShowPopup(true)}>Update</button>
+                          <button onClick={handleDownloadPDF}>Download PDF</button>
+                        </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
               </tbody>
             </table>
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
+          </div>
+        </div>
+
+        <div className={styles.studentTable}>
+          {filteredStudents.length > 0 ? (
+              <>
+                <div className={styles.tableTop}>
+                  <h3>Students</h3>
+                  <p>Count: {levelData.students.length}</p>
+                  <p>Pass: {passCount}</p>
+                  <p>Fail: {failCount}</p>
+                  <Search value={searchQuery} onChange={handleSearchChange} placeholder="Search"/>
+                </div>
+
+                <table className={styles.table}>
+                  <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td>Registration Number</td>
+                    <td>Name</td>
+                    <td>Exam Results</td>
+                    <td>Phone</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {currentStudents.map((student, index) => (
+                      <tr key={index}>
+                        <td>{currentPage * studentsPerPage + index + 1}</td>
+                        <td>{student.regNo}</td>
+                        <td>{student.firstName} {student.lastName}</td>
+                        <td>{student.examResults}</td>
+                        <td>{student.phone}</td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
+                <Pagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                />
+              </>
+          ) : (
+              <p className={styles.nothing}>No students found.</p>
+          )}
+        </div>
+
+        <div className={styles.instructorsTable}>
+          {levelData.facilitators.length > 0 ? (
+              <>
+                <div className={styles.tableTop}>
+                  <h3>Instructors</h3>
+                  <p>Paid: 20</p>
+                  <p>Not Paid: 18</p>
+                  <Link href="/pages/student/dashboard/facilitators/add">
+                    <button className={styles.button}>Add New Instructor</button>
+                  </Link>
+                </div>
+
+                <table className={styles.table}>
+                  <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td>Name</td>
+                    <td>Phone</td>
+                    <td>Specification</td>
+                    <td>Total Hours</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {levelData.facilitators.map((facilitator, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{facilitator.firstName} {facilitator.lastName}</td>
+                        <td>{facilitator.phone}</td>
+                        <td>{facilitator.specification}</td>
+                        <td>
+                          <div className={styles.hoursButtons}>
+                            <button className={styles.button} onClick={() => {
+                              setCurrentFacilitatorId(facilitator.uuid);
+                              setPopupType('addUpdate');
+                            }}>Add Hours
+                            </button>
+                            <button className={styles.button} onClick={() => {
+                              setCurrentFacilitatorId(facilitator.uuid);
+                              setPopupType('view');
+                            }}>View Hours
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </>
+          ) : (
+              <p className={styles.nothing}>No facilitators found.</p>
+          )}
+        </div>
+
+        {showPopup && (
+            <LevelEditPopup
+                levelData={levelData}
+                onClose={() => setShowPopup(false)}
+                onUpdate={handleLevelUpdate}
             />
-          </>
-        ) : (
-          <p className={styles.nothing}>No students found.</p>
+        )}
+
+        {popupType === 'addUpdate' && (
+            <AddUpdateHoursPopup
+                facilitatorId={currentFacilitatorId}
+                onClose={() => setPopupType(null)}
+                onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}
+            />
+        )}
+
+        {popupType === 'view' && (
+            <ViewHoursPopup
+                facilitatorId={currentFacilitatorId}
+                onClose={() => setPopupType(null)}
+            />
         )}
       </div>
-
-      <div className={styles.instructorsTable}>
-        {levelData.facilitators.length > 0 ? (
-          <>
-            <div className={styles.tableTop}>
-              <h3>Instructors</h3>
-              <p>Paid: 20</p>
-              <p>Not Paid: 18</p>
-              <Link href="/pages/student/dashboard/facilitators/add">
-                <button className={styles.button}>Add New Instructor</button>
-              </Link>
-            </div>
-
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <td>No.</td>
-                  <td>Name</td>
-                  <td>Phone</td>
-                  <td>Specification</td>
-                  <td>Total Hours</td>
-                </tr>
-              </thead>
-              <tbody>
-                {levelData.facilitators.map((facilitator, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{facilitator.firstName} {facilitator.lastName}</td>
-                    <td>{facilitator.phone}</td>
-                    <td>{facilitator.specification}</td>
-                    <td>
-                      <div className={styles.hoursButtons}>
-                        <button className={styles.button} onClick={() => { setCurrentFacilitatorId(facilitator.uuid); setPopupType('addUpdate'); }}>Add Hours</button>
-                        <button className={styles.button} onClick={() => { setCurrentFacilitatorId(facilitator.uuid); setPopupType('view'); }}>View Hours</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        ) : (
-          <p className={styles.nothing}>No facilitators found.</p>
-        )}
-      </div>
-
-      {showPopup && (
-        <LevelEditPopup
-          levelData={levelData}
-          onClose={() => setShowPopup(false)}
-          onUpdate={handleLevelUpdate}
-        />
-      )}
-
-      {popupType === 'addUpdate' && (
-        <AddUpdateHoursPopup
-          facilitatorId={currentFacilitatorId}
-          onClose={() => setPopupType(null)}
-          onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}
-        />
-      )}
-
-      {popupType === 'view' && (
-        <ViewHoursPopup
-          facilitatorId={currentFacilitatorId}
-          onClose={() => setPopupType(null)}
-        />
-      )}
-    </div>
   );
 };
 

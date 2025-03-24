@@ -32,6 +32,7 @@ const menuItems = [
     path: "/pages/student/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
+      {title : "Dashboard",path:"/pages/student/dashboard",icon: <MdDashboard className={styles.whiteIcon} />},
       { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
       { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
     ],
@@ -41,6 +42,7 @@ const menuItems = [
     path: "/pages/equipment/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
+      {title : "Dashboard", path:"/pages/equipment/dashboard" ,icon: <MdDashboard className={styles.whiteIcon} /> },
       { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard className={styles.whiteIcon} /> },
       { title: "Borrow Equipment", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
       { title: "Notifications", path: "/pages/equipment/dashboard/notifications", icon: <MdPeople className={styles.whiteIcon} /> },

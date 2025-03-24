@@ -91,9 +91,12 @@ const ViewCohort = () => {
           <h1>{cohortsData.cohortName}</h1>
            
           <p>
-            Start Date: {new Date(cohortsData.startDate).toLocaleDateString()} |
-            End Date: {new Date(cohortsData.endDate).toLocaleDateString()}
+            Start Date: {new Date(cohortsData.startDate).toLocaleDateString()}
           </p>
+            <p>
+            End Date: {new Date(cohortsData.endDate).toLocaleDateString()}
+            </p>
+
           <button onClick={() => setShowPopup(true)} className={styles.button}>
             Add Level
           </button>
@@ -220,11 +223,11 @@ const CohortDetailsPDF = ({ cohortData }) => {
             <Text style={styles.dateText}>Start Date: {new Date(cohortData.cohorts.startDate).toLocaleDateString()}</Text>
             <Text style={styles.dateText}>End Date: {new Date(cohortData.cohorts.endDate).toLocaleDateString()}</Text>
           </View>
-          
+
           {cohortData.levels.map((level, index) => (
             <View key={index} style={styles.levelSection}>
               <Text style={styles.subheading}>{level.levelName}</Text>
-              
+
               <Text style={[styles.text, { marginTop: 10, fontWeight: 'bold' }]}>Facilitators:</Text>
               <View style={styles.table}>
                 <View style={[styles.tableRow, styles.tableHeader]}>

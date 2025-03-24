@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: 40px;
 }
 
 .top,
@@ -55,7 +55,7 @@
 }
 
 .listItem {
-  background-color: #2E374A;
+  background-color: #121212;
   margin: 5px 0;
   padding: 8px;
   border-radius: 4px;
@@ -79,7 +79,7 @@
 /* Add these styles to your viewLevel.module.css file */
 
 .popup {
- 
+
   position: fixed;
   top: 0;
   left: 0;
@@ -93,6 +93,10 @@
 }
 
 .popupContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
   max-height: 80vh; /* Limits the height to 80% of the viewport height */
   overflow-y: auto; /* Makes the popup scrollable if content overflows */
   background-color: white;
@@ -106,7 +110,7 @@
 .popupContent h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #333;
+  color: #ff7211;
   font-size: 24px;
   text-align: center;
 }
@@ -119,7 +123,7 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #555;
+  color: #000000;
 }
 
 .formGroup input,
@@ -169,16 +173,19 @@
 .popupActions button[type="button"]:hover {
   background-color: #d32f2f;
 }
-.facilitatorRoleSelection{
+.facilitatorRoleSelections{
   display: flex;
-  justify-content: space-between;
-  gap:10px;
+  /*justify-content: space-between;*/
+  gap:5px;
 }
 .facilitatorRoleSelection select{
   color:black;
 }
-.label{
+.labels{
+  font-size: 16px;
   color:black;
+  font-weight: bold;
+  margin-left: 60px;
 }
 .facilitatorRoleTable table {
   width: 100%;
@@ -189,7 +196,7 @@
 
 .facilitatorRoleTable th,
 .facilitatorRoleTable td {
-  color: #000; /* Set the text color */
+  color: #000;
   padding: 8px;
   border-bottom: 1px solid #ddd;
 }
@@ -200,29 +207,271 @@
 
 .facilitatorRoleTable tbody td {
   font-size: 14px; /* Make the text in the table body smaller */
+  color: black;
 }
 
 .select {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .select option {
-  background-color: var(--bg);
-  color: white;
+  /*background-color: black;*/
+  color: #000000;
 }
 
 .addFacilitatorRoleButton {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #1b9392;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 8px;
+  margin-left: 100px;
 }
 
 .addFacilitatorRoleButton:hover {
-  background-color: #0056b3;
+  background-color: #c6e7e7;
+}
+/*motrew*/
+.popupContent {
+  background-color: #c6e7e7; /* Light teal background */
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.title{
+  text-align: center;
+  color: #ff7211;
+  margin-left: 180px;
+}
+.h2{
+  text-align: center;
+  color: #ff7211;
+  margin-left: 180px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  margin-left: 20px;
+  gap:10px;
+}
+
+.formGroup label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.formGroup input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Aligning inputs in two columns */
+.formContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Styling the buttons */
+.popupActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-left: 30px;
+}
+
+/*.popupActions button {*/
+/*  padding: 12px 20px;*/
+/*  font-size: 16px;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*  width: 100%;*/
+/*}*/
+
+.popupActions button[type="submit"] {
+  background-color: #1b9392; /* Teal */
+  color: white;
+  align-items: center;
+  margin-left: 100px;
+
+}
+
+.popupActions button[type="submit"]:hover {
+  background-color: #ff7211;
+}
+
+.popupActions button[type="button"] {
+  background-color: #ff7f32; /* Orange */
+  color: white;
+}
+
+.popupActions button[type="button"]:hover {
+  background-color: #d96b27;
+}
+
+/* Close button (X) styling */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color:red;
+}
+
+.closeButtons {
+  position:absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 90px;
+  cursor: pointer;
+  color:red;
+
+}
+/* Card Styling */
+.card {
+  background: #008080; /* Teal background */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  min-width: 250px;
+  text-align: left;
+  position: relative;
+}
+
+/* Title */
+
+
+/* Three-dot Action Button */
+.actionContainer {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.dotsButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000000;
+}
+
+/* Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  background: #c6e7e7;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  color: black;
+}
+
+.dropdownMenu button {
+  padding: 10px;
+  border: none;
+  background: #c6e7e7;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdownMenu button:hover {
+  background: #ff7211;
+}
+
+/* Grid Layout for Multiple Cards */
+.milestoneGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.facilitator{
+  display: flex;
+  flex-wrap: wrap;
+  /*gap: 50px;*/
+  justify-content: space-between;
+}
+.addFacilitatorRoleButton{
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #1b9392;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ff7211;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.addButton {
+  background-color: teal;
+}
+
+.createButton {
+  background-color: #ff7211;
+}
+.deleteButton {
+  align-items: center;
+  margin-left: 280px;
+  background-color: #1b9392;
+}
+
+.addButton:hover {
+  background-color: #006666;
+}
+
+.createButton:hover {
+  background-color: #d65a00;
+}
+
+.facilitatorRoleSelection {
+  display: flex;
+  gap: 150px; /* Space between elements */
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+
+
+.addFacilitatorRoleButton:hover {
+  background-color: #ff7211;
 }

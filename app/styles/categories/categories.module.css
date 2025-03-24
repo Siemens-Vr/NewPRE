@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     gap:20px;
-   
+    
    }
    .top,
    .studentTable,
@@ -81,7 +81,7 @@
      justify-content: center;
      align-items: center;
      z-index: 1000;
-   }
+    }
    
    .popupContent {
      background-color: white;
@@ -90,6 +90,7 @@
      max-width: 500px;
      width: 90%;
      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     background-color: #C6E7E7;
    }
    
    .popupContent h2 {
@@ -98,6 +99,7 @@
      color: #333;
      font-size: 24px;
      text-align: center;
+     font-weight: bold;
    }
    
    .formGroup {
@@ -120,6 +122,11 @@
      color:black;
    }
    
+   .formGroup input::placeholder{
+      color:#1B9392;
+
+   }
+
    .popupActions {
      display: flex;
      justify-content: flex-end;
@@ -136,13 +143,13 @@
    }
    
    .popupActions button[type="submit"] {
-     background-color: #4CAF50;
+     background-color: #ff7211;
      color: white;
      margin-right: 10px;
    }
    
    .popupActions button[type="submit"]:hover {
-     background-color: #45a049;
+     background-color: #e6600f;
    }
    
    .popupActions button[type="button"] {

@@ -1,17 +1,33 @@
-.container {
-  background-color: var(--bgSoft);
-  margin-top: 20px;
+  .container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
   padding: 20px;
   border-radius: 10px;
-}
-
+ }
 
 
 .form {
   display: flex;
   flex-wrap: wrap; /* Allows items to wrap onto multiple lines */
   gap: 20px; /* Adds spacing between items */
+  background-color: #C6E7E7;
+  padding:40px;
+  border: 1px solid #C6E7E7;
+  border-radius: 20px;
+  position:relative;
+  width:650px;
+
 }
+
+ 
 .top{
   display: flex;
   justify-content: flex-end;
@@ -45,10 +61,12 @@
 .divInput select {
   background-color: var(--bg);
   padding: 10px; /* Adjust padding as needed */
-  border: 2px solid #2e374a;
-  border-radius: 5px;
+   border-radius: 5px;
   text-transform: capitalize;
   color: var(--textSoft);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+
 }
 
 .divInput input,
@@ -56,19 +74,51 @@
   width: 100%;
 }
 
+.divInput input{
+  color: black;
+}
+
+
 .divInput textarea {
   width: 100%;
 }
+ 
+  
+  .btn{     
+    position: absolute;
+     top: 10px;
+     right: 20px;
+     color: red;
+     cursor: pointer;
+     /* border: 1px solid black; */
+     height:25px;
+     width:40px;
+  }
 
-.form button {
-  width: 35%;
-  padding: 10px; /* Adjust padding as needed */
-  margin-left: 25px;
-  background-color: teal;
-  color: var(--text);
+  .submit1{
+    background-color: #ff7211;
+    color: #ff7211;
+    width: 30%;
+    margin-left: 25px;
+    color: var(--text);
+    border-radius: 5px;
+    border: none;
+    height: 40px;
+    color: white;
+    
+  }
+  .add{
+   background-color: #1B9392;
+   width: 30%;
+   margin-left: 25px;
+   color: var(--text);
   border-radius: 5px;
   border: none;
-}
+   height: 40px;
+   color: white;
+   
+ 
+  }
 
 .historyButtons {
   display: flex;
@@ -95,6 +145,8 @@
   justify-content: flex-end;
   gap: 10px;
 }
+
+ 
 
 .historyButton {
   padding: 10px;

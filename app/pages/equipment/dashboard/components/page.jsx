@@ -1,6 +1,7 @@
 "use client"
 import styles from '@/app/styles/components/components.module.css'
 import CategoriesPopUp from '@/app/components/categories/categories'
+import AddComponent from '@/app/components/component/component'
 import Search from '@/app/components/search/search'
 import { Suspense } from "react"
 import Link from "next/link"
@@ -15,6 +16,11 @@ const Page = () => {
   const [components, setComponents] = useState([]);
   const { q } = useParams();
   const [showPopup, setShowPopup] = useState(false); 
+
+  const [component,setAddComponent]=useState(false)
+  // const [popup, setPopup]=useState(false)
+
+ 
 
   const handleCreateCategory = (category) => {
     // Handle the creation of a new category
@@ -48,6 +54,7 @@ const Page = () => {
     options: ["Computers", "Laptops", "Mouse", "Omen", "Robot"],
   };
 
+ 
   return (   
 
          <div className={styles.container}>
@@ -61,7 +68,7 @@ const Page = () => {
         onChange={(e) => setSelectedOption(e.target.value)}
         className={styles.select}
       >
-        <option value="" disabled>Sort by</option>
+        <option  className={styles.option} value="" disabled>Sort by</option>
         {sortBy.options.map((option, index) => (
           <option key={index} value={option}>
             {option}
@@ -69,15 +76,22 @@ const Page = () => {
         ))}
       </select>
 
-     {/* <Suspense fallback={<div>Loading...</div>}>
+
+      {/* <Suspense fallback={<div>Loading...</div>}>
       <Search placeholder="search for components" />
-     </Suspense> */}
+      </Suspense> */}
+
+    
 
       <button onClick={() => setShowPopup(true)}   className={styles.addButton}>Add Categories</button>
       
-       <Link href="/pages/equipment/dashboard/components/add">
+       {/* <Link href="/pages/equipment/dashboard/components/add">
        <button className={styles.addButton}>Add New</button>
-      </Link>
+      </Link> */}
+
+       <button onClick={()=> setAddComponent(true)} className={styles.addButton}>Add New</button>
+
+ 
     </div>
 
       <table className={styles.table}>
@@ -119,12 +133,21 @@ const Page = () => {
          
         />
       )}
+
+
+      {component && (
+        <AddComponent
+        
+          onClose={() => setAddComponent(false)}
+         
+        />
+      )}
     </div>
     
   )
 }
 
-export default Page;
+export default Page
 
 
 

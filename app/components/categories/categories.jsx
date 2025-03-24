@@ -6,6 +6,7 @@ const CategoriesPopUp = ({ onClose }) => {
     const [category, setCategory] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null); 
+     
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,7 +52,7 @@ const CategoriesPopUp = ({ onClose }) => {
                         />
                     </div>
                     {loading && <p className={styles.loader}>Adding, please wait...</p>}
-                    {error && <p className={styles.error}>{error}</p>} Error message
+                    {error && <p className={styles.error}>{error}</p>} 
                     <div className={styles.popupActions}>
                         <button type="submit" disabled={loading}>Add</button>
                         <button type="button" onClick={onClose}>Cancel</button>

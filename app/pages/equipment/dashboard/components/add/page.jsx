@@ -108,8 +108,7 @@ const AddComponent = () => {
     
       <form onSubmit={handleSubmit} >
      <div className={styles.top}>
-     <button onClick={handleAddConditionClick}>Add Condition Details</button>
-
+ 
 
       {/* <UploadForm />  */}
 
@@ -193,7 +192,10 @@ const AddComponent = () => {
         )}
 
        
-        <button type="submit">Submit</button>
+         <button onClick={handleAddConditionClick} className={styles.add}>Add Condition</button>
+         <button type="submit" className={styles.submit1}>Submit</button>
+ 
+
         </div>
       </form>
 

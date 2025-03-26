@@ -13,7 +13,7 @@
   
   .addButton{
     padding: 10px;
-    background-color: #5d57c9;
+    background-color: #ff7211;
     color: var(--text);
     border: none;
     border-radius: 5px;
@@ -22,6 +22,9 @@
   
   .table{
     width: 100%;
+  }
+  .tables{
+    background-color: #c6e7e7;
   }
   
   .table td{

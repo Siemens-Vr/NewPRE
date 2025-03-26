@@ -1,0 +1,40 @@
+.leaveContainer {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .leaveContainer {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .leaveCard {
+    padding: 24px;
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+    color: black;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leaveCard:hover {
+    transform: translateY(-5px);
+  }
+  
+  .leaveTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .leaveDescription,
+  .leaveDays {
+    color: #333;
+  }
+  
+  .loadingText {
+    color: gray;
+    text-align: center;
+  }
+  

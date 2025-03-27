@@ -5,6 +5,7 @@ import styles from '@/app/styles/borrow/borrow.module.css';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Search from '@/app/components/search/search';
+import BorrowedCard from '@/app/components/card/borrowCard';
 
 import { config } from '/config';
 
@@ -34,9 +35,22 @@ const BorrowedComponentPage = () => {
     return date.toISOString().split('T')[0];
   };
 
+  const item = {
+    available: "5",
+    borrowed: "2 ",
+    dueItems: "1 ",
+  };
+
   return (
     <div>
+    <div className={styles.borrow}>
+        <BorrowedCard item={item}/>
+     </div>
     <div className={styles.container}>
+
+    {/* <div>
+        <BorrowedCard item={item}/>
+     </div> */}
       <div className={styles.top}>
       <Suspense fallback={<div>Loading...</div>}>
    

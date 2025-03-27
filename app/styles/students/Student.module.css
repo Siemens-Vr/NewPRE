@@ -1,0 +1,155 @@
+.container {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    padding: 20px;
+    background: #1b9392;
+    border-radius: 8px;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /*background: white;*/
+    /*!*padding: 20px;*!*/
+    border-radius: 10px;
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+}
+
+.filterSection {
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filterField {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.filterField label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.filterField select,
+.filterField input {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    outline: none;
+}
+
+.filterButton {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.filterButton:hover {
+    background: #1e40af;
+}
+
+.downloadButton {
+    background: #c6e7e7;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.downloadButton:hover {
+    background: #1b9392;
+}
+
+.addButton {
+    background: #ff7211;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.addButton:hover {
+    background: #c6e7e7;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.table thead {
+    background: #c6e7e7;
+    color: white;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #f3f4f6;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.button.view {
+    background: #1b9392;
+    color: white;
+}
+
+.button.view:hover {
+    background: #c6e7e7;
+}
+
+.button.delete {
+    background: #ef4444;
+    color: white;
+}
+
+.button.delete:hover {
+    background: #991b1b;
+}
+
+.noStudents {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #c6e7e7;
+    margin-top: 20px;
+}

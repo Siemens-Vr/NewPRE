@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import AddLevelPopup from '@/app/components/student/AddLevelPopUp';
 import Pagination from '@/app/components/pagination/pagination';
 import Search from '@/app/components/search/search';
-import styles from '@/app/styles/students/students.module.css';
+import styles from '@/app/styles/students/Student.module.css';
 import Link from "next/link";
 import Swal from 'sweetalert2';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
@@ -197,8 +197,8 @@ const StudentsPage = () => {
                   <option value="January Intake">January Intake</option>
                 </select>
                 </div>
-              </div>
-              <div className={styles.filterField}>
+
+              {/*<div className={styles.filterField}>*/}
                 <label htmlFor="level">Level:</label>
                 <div>
                 <select
@@ -213,18 +213,19 @@ const StudentsPage = () => {
                   <option value="3">3</option>
                 </select>
                 </div>
-              </div>
-              <div className={styles.filterField}>
-                <label htmlFor="regNo">Reg No:</label>
-                <input
-                  id="regNo"
-                  name="regNo"
-                  type="text"
-                  placeholder="Enter Registration Number"
-                  value={filters.regNo}
-                  onChange={handleFilterChange}
-                />
-              </div>
+              {/*</div>*/}
+              {/*<div className={styles.filterField}>*/}
+              {/*  <label htmlFor="regNo">Reg No:</label>*/}
+              {/*  <input*/}
+              {/*    id="regNo"*/}
+              {/*    name="regNo"*/}
+              {/*    type="text"*/}
+              {/*    placeholder="Enter Registration Number"*/}
+              {/*    value={filters.regNo}*/}
+              {/*    onChange={handleFilterChange}*/}
+              {/*  />*/}
+              {/*</div>*/}
+
               {/*<div className={styles.filterField}>*/}
               {/*  <label htmlFor="kcseNo">KCSE No:</label>*/}
               {/*  <input*/}
@@ -248,6 +249,7 @@ const StudentsPage = () => {
               <button className={styles.addButton}>Add New</button>
             </Link>
           </div>
+            </div>
           {/*</div>*/}
         </div>
   </div>

@@ -162,6 +162,7 @@ const CohortModal = ({ onSave, onClose }) => {
           <button onClick={onClose} className={styles.closeButton}>
             Close
           </button>
+          {/*<button className={styles.closeButton} onClick={onClose}>×</button>*/}
         </div>
       </div>
     </div>

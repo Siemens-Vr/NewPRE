@@ -225,30 +225,30 @@ const StudentsPage = () => {
                   onChange={handleFilterChange}
                 />
               </div>
-              <div className={styles.filterField}>
-                <label htmlFor="kcseNo">KCSE No:</label>
-                <input
-                  id="kcseNo"
-                  name="kcseNo"
-                  type="text"
-                  placeholder="Enter KCSE Number"
-                  value={filters.kcseNo}
-                  onChange={handleFilterChange}
-                />
-                </div>
+              {/*<div className={styles.filterField}>*/}
+              {/*  <label htmlFor="kcseNo">KCSE No:</label>*/}
+              {/*  <input*/}
+              {/*    id="kcseNo"*/}
+              {/*    name="kcseNo"*/}
+              {/*    type="text"*/}
+              {/*    placeholder="Enter KCSE Number"*/}
+              {/*    value={filters.kcseNo}*/}
+              {/*    onChange={handleFilterChange}*/}
+              {/*  />*/}
+              {/*  </div>*/}
                 <>
                 <button className={styles.filterButton} onClick={applyFilters}>
                   Filter
                 </button>
                 </>
                 <Search placeholder="Search for a student..." />
-            <div className={styles.buttonsGroup}>
+            {/*<div className={styles.buttonsGroup}>*/}
           <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
             <Link href="/pages/student/dashboard/students/add">
               <button className={styles.addButton}>Add New</button>
             </Link>
           </div>
-          </div>
+          {/*</div>*/}
         </div>
   </div>
         {Array.isArray(filteredStudents) && filteredStudents.length > 0 ? (

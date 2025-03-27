@@ -10,7 +10,7 @@ import blur from '../../cohorts/page';
 
 // console.log(`${config.baseURL}`)
 
-const CohortForm = () => {
+const CohortForm = ( onClose) => {
   const [cohortName, setCohortName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -191,10 +191,18 @@ const CohortForm = () => {
     { value: 'Theory Instructor', label: 'Theory Instructor' },
     { value: ' Practical Instructor', label: ' Practical Instructor' },
   ];
-// console.log(facilitators)
+
+  //add
+
+  const handleSave = () => {
+    onSave(cohortLevelList);
+    onClose();
+  };
+console.log(facilitators)
   return (
 
-        <div className={styles.container}>
+        <div className={styles.modalOverlay}>
+          <div className={styles.container}>
 
           {showSuccessMessage && (
               <div className={styles.successMessage}>Cohort created successfully!</div>
@@ -373,7 +381,7 @@ const CohortForm = () => {
                   onClick={addLevel}
                   className={`${styles.addButton} ${styles.button}`}
               >
-              Add New Level
+                Add New Level
               </button>
               <button type="submit" className={`${styles.submitButton} ${styles.button}`} disabled={loading}>
                 {loading ? (
@@ -384,11 +392,13 @@ const CohortForm = () => {
                     'Create Cohort'
                 )}
               </button>
+              <button className={styles.closeButton} onClick={onClose}>×</button>
             </div>
           </form>
+          </div>
         </div>
 
-        );
-        };
+  );
+};
 
-        export default CohortForm;
+export default CohortForm;

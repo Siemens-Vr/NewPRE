@@ -76,7 +76,7 @@
   background-color: rgb(10, 97, 97);
 }
 
-/* Add these styles to your viewLevel.module.css file */
+
 
 .popup {
 
@@ -97,8 +97,8 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: space-between;
-  max-height: 80vh; /* Limits the height to 80% of the viewport height */
-  overflow-y: auto; /* Makes the popup scrollable if content overflows */
+  max-height: 80vh;
+  overflow-y: auto;
   background-color: white;
   padding: 30px;
   border-radius: 8px;
@@ -202,11 +202,11 @@
 }
 
 .facilitatorRoleTable th {
-  text-align: left; /* Align header text to the left */
+  text-align: left;
 }
 
 .facilitatorRoleTable tbody td {
-  font-size: 14px; /* Make the text in the table body smaller */
+  font-size: 14px;
   color: black;
 }
 
@@ -218,7 +218,7 @@
 }
 
 .select option {
-  /*background-color: black;*/
+
   color: #000000;
 }
 
@@ -238,7 +238,7 @@
 }
 /*motrew*/
 .popupContent {
-  background-color: #c6e7e7; /* Light teal background */
+  background-color: #c6e7e7;
   padding: 20px;
   border-radius: 10px;
   width: 600px;
@@ -278,14 +278,14 @@
   font-size: 16px;
 }
 
-/* Aligning inputs in two columns */
+
 .formContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
 
-/* Styling the buttons */
+
 .popupActions {
   display: flex;
   justify-content: center;
@@ -323,7 +323,7 @@
   background-color: #d96b27;
 }
 
-/* Close button (X) styling */
+
 .closeButton {
   position: absolute;
   top: 10px;

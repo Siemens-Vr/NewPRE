@@ -33,6 +33,7 @@ const menuItems = [
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
       {title : "Dashboard",path:"/pages/student/dashboard",icon: <MdDashboard className={styles.whiteIcon} />},
+      {title : "Students",path: "/pages/student/dashboard/students",icon :<MdPeople className={styles.whiteIcon}/> },
       { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
       { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
     ],

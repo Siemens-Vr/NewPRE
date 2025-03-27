@@ -242,7 +242,9 @@ const StudentsPage = () => {
                   Filter
                 </button>
                 </>
-                <Search placeholder="Search for a student..." />
+                  < div  className={styles.search}   >
+                <Search   placeholder="Search for a student..." />
+                  </div>
             {/*<div className={styles.buttonsGroup}>*/}
           <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
             <Link href="/pages/student/dashboard/students/add">

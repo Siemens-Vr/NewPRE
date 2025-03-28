@@ -41,21 +41,46 @@ const BorrowedComponentPage = () => {
     dueItems: "1 ",
   };
 
+   const [selectedBorrow, setSelectedBorrow] = useState("");
+  
+
+  const sortBy = {
+    title: "Sort By",
+    options: ["Component", "category", "Output"],
+  };
+
   return (
     <div>
     <div className={styles.borrow}>
         <BorrowedCard item={item}/>
      </div>
     <div className={styles.container}>
-
-    {/* <div>
-        <BorrowedCard item={item}/>
-     </div> */}
+ 
       <div className={styles.top}>
-      <Suspense fallback={<div>Loading...</div>}>
+      {/* <Suspense fallback={<div>Loading...</div>}>
    
       <Search />
-    </Suspense>
+    </Suspense> */}
+
+
+      <div className={styles}>
+
+         <select
+        id="sort"
+        value={selectedBorrow}
+        onChange={(e) => setSelectedBorrow(e.target.value)}
+        className={styles.select}
+      >
+
+        <option  className={styles.option} value="" disabled>Sort by</option>
+        {sortBy.options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+         
+     </div>
  
         <Link href="/pages/equipment/dashboard/borrow/add">
           <button className={styles.addButton}>Borrow</button>

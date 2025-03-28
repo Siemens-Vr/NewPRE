@@ -1,25 +1,48 @@
 .container{
     background-color: var(--bgSoft);
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     margin-top: 20px;
 
 }
 .top{
     display:flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    gap:200px;
+    padding-left: 200px;
 }
 
+.select {
+    border: 1px solid black;
+    border-radius:5px;
+    cursor: pointer;
+    padding: 8px;
+    width: 250px;
+}
 
+@media (max-width: 600px) {
+    .container {
+      width: 80%;
+    }
+  }
+  
 
 .addButton{
-    background-color: #5d57c9;
-    color:var(--text);
+    background-color: #ff7211;
+    color:white;
     padding:10px 20px;
     border: none;
     border-radius: 5px;
     cursor:pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+
 }
+.addButton:hover {
+    background-color: #e66000; 
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5); 
+    transform: scale(1.01); 
+}
+
 .updateButton{
     background-color: teal;
     color:var(--text);
@@ -29,12 +52,20 @@
     cursor:pointer;
 }
 
+/* .table {
+    margin-left: 12px;
+    height:auto;
+      
+} */
+
 .table{
     width:100%;
     border-collapse: collapse;
-    background-color: var(--bgSoft);
-
-    /* margin-top:10px; */
+    background-color: #1B9392;
+    color: #ffffff;
+    border-radius: 10px;
+    margin-top:10px;
+    height: 300px;
 }
 .table thead,
 .table td{

@@ -43,13 +43,12 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-   background-color: #1B9392;
+  background-color: #1B9392;
   border-radius: 10px; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height:200px;
   overflow:hidden;
   color: #ffffff;
-
 }
 .option{
   padding: 22px;

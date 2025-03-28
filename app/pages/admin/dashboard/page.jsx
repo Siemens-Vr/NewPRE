@@ -15,7 +15,7 @@ import CommonLinks from "@/app/components/commonlinks/CommonLinks";
 const Dashboard = () => {
   return (
       <div className={styles.wrapper}>
-          <div className={styles.menu}>
+          {/* <div className={styles.menu}> */}
               <div className={styles.contents}>
 
               <div className={styles.containercard}>
@@ -27,7 +27,7 @@ const Dashboard = () => {
               </div>
                   <Chart/>
 
-          </div>
+          {/* </div> */}
               <div className={styles.calendars}>
               <CalendarComponent/>
           {/*<div className={style.container}>*/}

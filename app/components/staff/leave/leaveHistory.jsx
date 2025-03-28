@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { config } from "@/config";
-import styles from "@/app/styles/staff/staff.module.css"
+import styles from "@/app/styles/staff/staff.module.css";
+import { useParams } from "next/navigation";
 
 const LeaveHistory = () => {
     const [leaveHistory, setLeaveHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [history, setHistory] = useState([]);
-  
+    const params = useParams();
+  const { staffuuid } = params;
     useEffect(() => {
         const fetchLeaveHistory = async () => {
           try {
-            const response = await fetch(`${config.baseURL}/leaves`);
+            const response = await fetch(`${config.baseURL}/leaves/${staffuuid}`);
             const data = await response.json();
             console.log("Leave history:", data);
           } catch (error) {

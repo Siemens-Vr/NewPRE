@@ -5,7 +5,7 @@ import styles from "@/app/styles/staff/leave/leave.module.css";
 const LeaveTypes = () => {
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const colors = ["#c6e7e7", "#ff7211", "#c6e7e7", "#ff7211"];
+  const colors = [ "#ff7211", "#c6e7e7", "#c6e7e7","#ff7211"];
   useEffect(() => {
     const fetchLeaveType = async () => {
       setLoading(true);

@@ -1,37 +1,47 @@
-'use client';
+"use client";
 
+import styles from "@/app/styles/staff/staff.module.css";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-// import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { Activity, Users, ClipboardList } from "lucide-react";
+import { Activity, Users, ClipboardList, FileText, Box } from "lucide-react";
 import StaffComponents from "@/app/components/staff/staffComponents";
 
+import Link from "next/link";
+
 const Card = ({ children, className }) => (
-  <div className={`bg-white shadow-md rounded-lg p-4 ${className}`}>{children}</div>
+  <div className={`${styles.card} ${className}`}>{children}</div>
 );
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ totalUsers: 0, activeStaff: 0, pendingRequests: 0 });
-  const [activityLogs, setActivityLogs] = useState([]);
-  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    // Fetch statistics, logs, and chart data from API (dummy data for now)
     setStats({ totalUsers: 150, activeStaff: 75, pendingRequests: 5 });
-    
   }, []);
 
   return (
-    <div className="p-6 space-y-6">
-
+    <div className={styles.dashboardContainer}>
       {/* Staff Information, Notifications & To-do */}
       <div>
         <StaffComponents />
       </div>
-      
-      {/* Quick Actions */}
-      <div className="flex space-x-4">
-       
+
+      {/* Quick Links Section */}
+      <div className={styles.quickActions}>
+        <Link href="/projects" className={styles.quickLink}>
+          <Activity size={20} />
+          <span> Your Projects</span>
+        </Link>
+
+        <Link href="/documentation" className={styles.quickLink}>
+          <FileText size={20} />
+          <span>Documentation</span>
+        </Link>
+
+        <Link href="/equipments" className={styles.quickLink}>
+          <Box size={20} />
+          <span>YourEquipments</span>
+        </Link>
       </div>
     </div>
   );

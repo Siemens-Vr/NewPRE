@@ -11,14 +11,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background: #fff;
+  background: linear-gradient(to left, #c2f3f3, #4fa9a9); /* Light to dark gradient */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 
 .welcome {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
+  color: #fff;
   display: flex;
 }
 .title {
@@ -97,7 +98,7 @@
 
 .notificationIcon {
   cursor: pointer;
-  color: #555;
+  color: #000000;
 }
 .userMenu {
   position: relative;
@@ -109,7 +110,7 @@
   top: 100%;
   right: 0;
   width:200px;
-  background: white;
+  background-color: #ffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
@@ -128,5 +129,5 @@
 }
 
 .dropdownMenu li:hover {
-  background: #f0f0f0;
+  background-color: #c6e7e7;
 }

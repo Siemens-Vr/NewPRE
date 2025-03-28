@@ -56,10 +56,7 @@ const Sidebar = () => {
     }));
   };
 
-  const user = {
-    username: "cheldean",
-    role: "Admin",
-  };
+ 
 
   return (
       <div className={styles.containers}>

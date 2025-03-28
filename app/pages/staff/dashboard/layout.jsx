@@ -8,13 +8,13 @@ const Layout = ({children}) => {
   return (
     <div className={styles.container}>
         <div className={styles.menu}>
-        <Sidebar dashboardType="admin" />
+        <Sidebar dashboardType="staff" />
 
         </div>
        <div className={styles.content}>
         <Navbar/>
         {children}
-        {/*<Footer/>*/}
+        {/* <Footer/> */}
        </div>
     </div>
   )

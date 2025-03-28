@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { config } from "@/config";
 import { toast } from "react-toastify";
-import styles from "@/app/styles/staff/staff.module.css"
+import styles from "@/app/styles/staff/leave/leave.module.css";
 
 const ApplyLeaveModal = ({ staffUUID, onClose }) => {
   const [formData, setFormData] = useState({
@@ -84,99 +84,82 @@ const ApplyLeaveModal = ({ staffUUID, onClose }) => {
   
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      onClick={onClose} // Close modal on outside click
-    >
-      <div
-        className="bg-white p-6 rounded-lg shadow-lg w-1/3"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-      >
-        <h2 className="text-lg font-semibold mb-4">Apply for Leave</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Leave Type Dropdown */}
-          <div>
-            <label className="block text-sm font-medium">Leave Type</label>
-            <select
-              name="leaveType"
-              value={formData.leaveType}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2 rounded-md"
-            >
-              <option value="">Select Leave Type</option>
-              {loading ? (
-                <option disabled>Loading...</option>
-              ) : (
-                leaveTypes.map((type) => (
-                  <option key={type.id} value={type.name}>
-                    {type.name}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
-
-          {/* Start Date */}
-          <div>
-            <label className="block text-sm font-medium">Start Date</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-
-          {/* End Date */}
-          <div>
-            <label className="block text-sm font-medium">End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              required
-              className="w-full border px-3 py-2 rounded-md"
-            />
-          </div>
-          {/* Reason */}
-          {/* Reason Input */}
-            <div>
-              <label className="block text-sm font-medium">Reason</label>
-              <textarea
-                name="reason"
-                value={formData.reason}
-                onChange={handleChange}
-                required
-                className="w-full border px-3 py-2 rounded-md"
-                placeholder="Enter reason for leave"
-              />
-            </div>
-
-
-          {/* Buttons */}
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={closeModal}
-              className="bg-gray-400 text-white px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className={styles.addButton}
-            >
-              Apply
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+      {/* Close (X) Button */}
+      <button className={styles.closeButton} onClick={onClose}>
+        &times;
+      </button>
+  
+      <h2 className={styles.modalHeader}>Apply for Leave</h2>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div>
+          <label className={styles.modalLabel}>Leave Type</label>
+          <select
+            name="leaveType"
+            value={formData.leaveType}
+            onChange={handleChange}
+            required
+            className={styles.modalSelect}
+          >
+            <option value="">Select Leave Type</option>
+            {loading ? (
+              <option disabled>Loading...</option>
+            ) : (
+              leaveTypes.map((type) => (
+                <option key={type.id} value={type.name}>
+                  {type.name}
+                </option>
+              ))
+            )}
+          </select>
+        </div>
+  
+        <div>
+          <label className={styles.modalLabel}>Start Date</label>
+          <input
+            type="date"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            required
+            className={styles.modalInput}
+          />
+        </div>
+  
+        <div>
+          <label className={styles.modalLabel}>End Date</label>
+          <input
+            type="date"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            required
+            className={styles.modalInput}
+          />
+        </div>
+  
+        <div>
+          <label className={styles.modalLabel}>Reason</label>
+          <textarea
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            required
+            className={styles.modalTextarea}
+            placeholder="Enter reason for leave"
+          />
+        </div>
+  
+        <div className={styles.modalButtons}>
+          <button type="submit" className={styles.applyButton}>
+            Apply
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
+  
   );
 };
 

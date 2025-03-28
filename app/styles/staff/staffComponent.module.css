@@ -1,0 +1,148 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on small screens */
+    gap: 20px;
+    width: 100%;
+    max-width: 100%; /* Ensure full width */
+    margin: auto;
+    padding: 20px;
+    height: 100%;
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      grid-template-columns: repeat(3, minmax(0, 1fr)); /* Ensures equal width */
+    }
+  }
+  
+  .card {
+    background-color: #1b9392;;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .react-calendar {
+    width: 100% !important;
+    max-width: 100%;
+    border: none;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .notificationCard{
+    background-color:#ff7211;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color:white;
+  }
+  .staffCard{
+    background-color: #c6e7e7;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  .todoCard{
+    background-color: #1b9392;;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* calendarCard.module.css */
+
+.calendarCard {
+  background-color: #1b9392;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.calendarTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.markedDates {
+  margin-top: 1rem;
+}
+
+.markedDateList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.markedDateItem {
+  background: #f9f9f9;
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.highlightedDate {
+  background: #ffcc00 !important;
+  color: white !important;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dateInput {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input[type="text"] {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+

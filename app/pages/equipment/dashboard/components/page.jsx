@@ -85,11 +85,8 @@ const Page = () => {
 
       <button onClick={() => setShowPopup(true)}   className={styles.addButton}>Add Categories</button>
       
-       {/* <Link href="/pages/equipment/dashboard/components/add">
-       <button className={styles.addButton}>Add New</button>
-      </Link> */}
-
-       <button onClick={()=> setAddComponent(true)} className={styles.addButton}>Add New</button>
+     
+      <button onClick={()=> setAddComponent(true)} className={styles.addButton}>Add New</button>
 
  
     </div>

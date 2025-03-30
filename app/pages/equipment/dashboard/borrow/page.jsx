@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from '@/app/styles/borrow/borrow.module.css';
+import AddBorrow from '@/app/components/Borrow/borrow';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Search from '@/app/components/search/search';
@@ -42,8 +43,9 @@ const BorrowedComponentPage = () => {
   };
 
    const [selectedBorrow, setSelectedBorrow] = useState("");
-  
-
+   const [borrow,setAddBorrow]=useState(false)
+    
+ 
   const sortBy = {
     title: "Sort By",
     options: ["Component", "category", "Output"],
@@ -62,7 +64,7 @@ const BorrowedComponentPage = () => {
       <Search />
     </Suspense> */}
 
-
+ 
       <div className={styles}>
 
          <select
@@ -81,10 +83,18 @@ const BorrowedComponentPage = () => {
       </select>
          
      </div>
- 
-        <Link href="/pages/equipment/dashboard/borrow/add">
+  
+        {/* //Removed this link */}
+        {/* <Link href="/pages/equipment/dashboard/borrow/add">
           <button className={styles.addButton}>Borrow</button>
-        </Link>
+        </Link> */}
+
+
+        {/* Added this button */}
+        {/* <button className={styles.addButton}>Borrow</button> */}
+
+        <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
+ 
       </div>
       
       <table className={styles.table}>
@@ -119,6 +129,12 @@ const BorrowedComponentPage = () => {
         </tbody>
       </table>
     </div>
+
+    {borrow && (
+        <AddBorrow        
+          onClose={() => setAddBorrow(false)}         
+        />
+      )}
 
     </div>
   );

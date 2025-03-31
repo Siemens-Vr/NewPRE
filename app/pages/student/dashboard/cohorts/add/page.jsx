@@ -10,7 +10,7 @@ import blur from '../../cohorts/page';
 
 // console.log(`${config.baseURL}`)
 
-const CohortForm = ({onClose}) => {
+const CohortForm = ({onClose }) => {
   const [cohortName, setCohortName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

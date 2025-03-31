@@ -129,7 +129,7 @@ const Sidebar = () => {
                                 <MenuLink
                                     item={{
                                       ...sub,
-                                      className: `${styles.whiteText} ${isSubActive ? styles.active : ""}`,
+                                      className:` ${styles.whiteText} ${isSubActive ? styles.active : ""}`,
                                     }}
                                 />
                               </li>
@@ -158,22 +158,22 @@ const Sidebar = () => {
 
         <div className={styles.down}>
 
-        {/* Logout Button */}
-        <form>
-          <button className={`${styles.logout} ${styles.blackText}`}>
-            <MdLogout className={styles.blackIcon} />
-            Logout
-          </button>
-        </form>
+          {/* Logout Button */}
+          <form>
+            <button className={`${styles.logout} ${styles.blackText}`}>
+              <MdLogout className={styles.blackIcon} />
+              Logout
+            </button>
+          </form>
 
-        {/* Settings */}
-        <div className={styles.settings}>
-          <MdSettings className={styles.whiteIcon} />
-          <span className={styles.whiteText}>Settings</span>
+          {/* Settings */}
+          <div className={styles.settings}>
+            <MdSettings className={styles.whiteIcon} />
+            <span className={styles.whiteText}>Settings</span>
+          </div>
+
+          <div className={`${styles.footer} ${styles.whiteText}`}>&copy; 2025 SIEMENS ERP</div>
         </div>
-
-        <div className={`${styles.footer} ${styles.whiteText}`}>&copy; 2025 SIEMENS ERP</div>
-      </div>
       </div>
   );
 };

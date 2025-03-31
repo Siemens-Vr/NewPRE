@@ -135,7 +135,7 @@ const CohortsPage = () => {
             </div>
 
             {/* Modal */}
-            <AddCohort isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            {/*<AddCohort isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
         </div>
     );
 };

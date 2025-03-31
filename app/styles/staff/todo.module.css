@@ -34,7 +34,8 @@
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
+    min-width: 400px;
+
   }
   
   .todoCard h3 {
@@ -95,26 +96,19 @@
     margin-bottom: 10px;
   }
   
-  .addTaskButton,
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  /* .addTaskButton,
   .saveButton {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 1rem;
   }
-  
+   */
   .addTaskButton {
-    position: absolute;
-    font-size: 20px;
-    background:  #ff7211;
-    border: none;
-    cursor: pointer;
-    color:white;
-    transition: color 0.3s ease-in-out;
-    justify-content: start;
-  }
-  
-  .saveButton {
-    background-color: #2a73d3;
+    background-color: #ff7211;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -122,8 +116,22 @@
     cursor: pointer;
     transition: background 0.3s ease-in-out;
     margin-top: 10px;
-    justify-content: end;
   }
   
+  .saveButton {
+  background-color: #1b9392;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+    margin-left: auto;
+  }
+  .h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
  
   

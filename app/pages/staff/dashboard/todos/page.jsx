@@ -78,7 +78,7 @@ const TodoPage = () => {
           <button className={style.closeButton} onClick={() => setShowModal(false)}>
             &times;
           </button>
-            <h2>Add Tasks for {currentDate}</h2>
+            <h2 className={styles.h2}>Add Tasks for {currentDate}</h2>
             <input
               type="text"
               placeholder="Enter task..."
@@ -91,10 +91,11 @@ const TodoPage = () => {
                 <li key={index}>{task.text}</li>
               ))}
             </ul>
+            <div className={styles.buttonContainer}>
             <button onClick={handleAddTask} className={styles.addTaskButton}>Add Task</button>
            
             <button onClick={handleSaveTasks} className={styles.saveButton}> Save</button>
-
+</div>
           </div>
         </div>
       )}

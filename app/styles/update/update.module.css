@@ -86,7 +86,7 @@
   }
   
   .popupActions button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #1B9392;
     color: white;
     margin-right: 10px;
   }
@@ -96,7 +96,7 @@
   }
   
   .popupActions button[type="button"] {
-    background-color: #f44336;
+    background-color: #FF7211;
     color: white;
   }
   

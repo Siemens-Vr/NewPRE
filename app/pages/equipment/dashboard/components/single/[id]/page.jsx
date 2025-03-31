@@ -54,7 +54,7 @@ const EditComponent = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container1}>
       <div className={styles.historyButtons}>
         <Link href={`/pages/equipment/dashboard/components/borrow-history/${id}`}>
           <button className={styles.historyButton}>View Borrow History</button>

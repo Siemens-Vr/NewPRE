@@ -102,7 +102,12 @@ const AddComponent = ({onClose}) => {
     };
 
     return (
+        <>
+
+        <div className={styles.overlay}></div>
+
         <div className={styles.container}>
+ 
              <form onSubmit={handleSubmit}>
                 <div className={styles.top}></div>
                   
@@ -204,6 +209,7 @@ const AddComponent = ({onClose}) => {
                 />
             )}
         </div>
+        </>
     );
 };
 

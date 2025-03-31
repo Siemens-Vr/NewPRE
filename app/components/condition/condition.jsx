@@ -28,6 +28,8 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
     };
 
     return (
+        <>
+        <div className={styles.overlay}></div>
         <div className={styles.popup}>
             <div className={styles.popupContent}>
                 <h2>Condition Details</h2>
@@ -104,6 +106,7 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

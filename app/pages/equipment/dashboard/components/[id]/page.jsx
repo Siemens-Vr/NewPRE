@@ -4,6 +4,8 @@ import styles from '@/app/styles/components/singleComponent/singlecomponent.modu
 import Search from '@/app/components/search/search';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import AddBorrow from '@/app/components/Borrow/borrow';
+
 
 import { config } from '/config';
 
@@ -18,6 +20,7 @@ const SingleComponentPage = () => {
   const searchParams = useSearchParams();
   const componentsType = params.id;
   const q = searchParams.get('q');
+  const [borrow,setAddBorrow]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,8 +108,8 @@ const SingleComponentPage = () => {
       <div className={styles.top}>
         <Search placeholder="Search components" />
       </div>
-
-
+  
+ 
         {/* Components without Part Numbers */}
         <>
           <table className={styles.table}>
@@ -137,12 +140,14 @@ const SingleComponentPage = () => {
                     <button className={styles.button} onClick={() => handleAddQuantity(component)}>
                       AddQ
                     </button>
-                    <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
+                    {/* <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
                       <button className={styles.button}>Borrow</button>
-                    </Link>
+                    </Link>    */}
+
+                     {/* Added a pop up button */}
+                    <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
                     
-                    
-                  
+                   
                   </td>
                   
                 </tr>
@@ -161,8 +166,6 @@ const SingleComponentPage = () => {
       <div className={styles.top}>
         <Search placeholder="Search components" />
       </div>
-
-
 
       {/* Components with Part Numbers */}
       
@@ -199,9 +202,15 @@ const SingleComponentPage = () => {
                   <td className={styles.buttons}>
                     <Link href={`/pages/equipment/dashboard/components/single/${component.uuid}`}>
                       <button className={styles.button}>View</button>
-                    </Link> <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
+                    </Link> 
+                    {/* <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
                       <button className={styles.button}>Borrow</button>
-                    </Link>
+                    </Link> */}
+                           
+                    {/* Added a pop up button        */}
+                   <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
+                    
+ 
                     
                   </td>
                 </tr>
@@ -239,6 +248,12 @@ const SingleComponentPage = () => {
         </div>
       )}
 
+
+      {borrow && (
+        <AddBorrow        
+          onClose={() => setAddBorrow(false)}         
+        />
+      )}
 
     </div>
   );

@@ -2,7 +2,8 @@
   margin:20px 0px;
   background-color: var(--bgSoft);
   padding:20px;
-  border-radius: 10px;;
+  border-radius: 10px;
+  /* height: 100vh; */
 
 }
 .top{
@@ -15,7 +16,11 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    background-color: var(--bgSoft);
+    background-color: #1B9392;
+    border-radius: 10px;
+    margin-top: 20px;
+    height: 100px;
+    /* height: 100%; */
   }
   
   .table th,
@@ -24,6 +29,8 @@
     text-align: left;
     border-bottom: 1px solid var(--border);
     font-size: 14px;
+    color: white;
+    height: 60px;
   }
   
   
@@ -49,6 +56,18 @@
     cursor:pointer;
 
   }
+
+  .addButton{
+    cursor: pointer;
+    background-color: #ff7211;
+    color: white; 
+    padding: 5px 10px; 
+    height: 30px;
+    border: none; 
+    border-radius: 8px; 
+    transition: all 0.3s ease; 
+    
+    }
   .buttons{
     display:flex;
     gap:10px;

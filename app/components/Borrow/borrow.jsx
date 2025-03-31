@@ -112,6 +112,9 @@ const AddBorrow = ({ onClose, id }) => {
   };
 
   return (
+    <>
+    {/* An overlay to make the background black */}
+    <div className={styles.overlay}></div>
 
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -189,6 +192,7 @@ const AddBorrow = ({ onClose, id }) => {
  
       </form>
     </div>
+    </>
   );
 };
 

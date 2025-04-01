@@ -21,6 +21,7 @@
     margin-top: 20px;
     height: 100px;
     /* height: 100%; */
+    color: #ffffff;
   }
   
   .table th,
@@ -49,7 +50,7 @@
 
   .button{
     padding:5px 10px;
-    background-color: teal;
+    background-color: #C6E7E7;
     color:var(--text);
     border: none;
     border-radius: 5px;
@@ -87,7 +88,7 @@
 }
 
 .redPill {
-  background-color: crimson;
+  background-color: #ff7211;
   color: white;
 }
 .yellowPill{  

@@ -135,7 +135,7 @@ const SingleComponentPage = () => {
                   <td>{component.borrowedQuantity}</td>
                   <td className={styles.buttons}>
                   <Link href={`/pages/equipment/dashboard/components/single/${component.uuid}`}>
-                      <button className={styles.button}>View</button>
+                      {/* <button className={styles.button}>View</button> */}
                     </Link>
                     <button className={styles.button} onClick={() => handleAddQuantity(component)}>
                       AddQ

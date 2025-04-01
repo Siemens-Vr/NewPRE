@@ -1,4 +1,4 @@
-
+  
 .container {
   position: fixed;
   top: 45%;
@@ -26,18 +26,19 @@
  }
 
 
-/* style for single component container */
-.container1{         
-  background-color: #1B9392;
-  padding: 20px;
+ .container1{         
+  background-color: #C6E7E7;
+  padding: 10px;
   border-radius: 20px;
+  width: 1000px;
+  margin: 0 auto;
 }
 
 
 .form {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap onto multiple lines */
-  gap: 20px; /* Adds spacing between items */
+  flex-wrap: wrap; 
+  gap: 20px; 
   background-color: #C6E7E7;
   padding:40px;
   border: 1px solid #C6E7E7;
@@ -53,8 +54,8 @@
   justify-content: flex-end;
 }
 .top button{
-  /* width: 35%; */
-  padding: 10px; /* Adjust padding as needed */
+  
+  padding: 10px; 
   margin-left: 25px;
   background-color: teal;
   color: var(--text);
@@ -64,8 +65,8 @@
 .divInput {
   display: flex;
   flex-direction: column;
-  flex-basis: calc(50% - 10px); /* Adjust width to be half of the container minus some spacing */
-  margin-bottom: 20px; /* Adds spacing between rows */
+  flex-basis: calc(50% - 10px);
+  margin-bottom: 20px;
 }
 
 .form h3 {
@@ -80,7 +81,7 @@
 .divInput textarea,
 .divInput select {
   background-color: var(--bg);
-  padding: 10px; /* Adjust padding as needed */
+  padding: 10px; 
    border-radius: 5px;
   text-transform: capitalize;
   color: var(--textSoft);
@@ -111,7 +112,6 @@
      right: 20px;
      color: red;
      cursor: pointer;
-     /* border: 1px solid black; */
      height:25px;
      width:40px;
   }
@@ -136,8 +136,7 @@
   border-radius: 5px;
   border: none;
    height: 40px;
-   color: white;
-   
+   color: white;  
  
   }
 
@@ -145,6 +144,8 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
  }
 
  
@@ -158,8 +159,10 @@
 
 .historyButtons {
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   gap: 10px;
+  margin-right: 86px;
+
 }
 
  
@@ -170,32 +173,55 @@
   border: none;
   background-color: #ff7211;
   color: #ffffff;
+  /* margin-right: 85px; */
 }
 
+.componentInfo{
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-left: 50px;
+  margin-top: 12px;
+} 
+
 .componentInfo p {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 10px;
   font-size: 16px;
-  color: #ffffff;
+  color: #000000;
+  font-weight: bold;
+  width: 45%; 
+  height: 80px;
+  background-color: #1B9392;
+  padding-left: 12px;
+  padding-top: 15px;
+  border-radius: 12px;
 }
 
 .componentInfo p span {
   font-weight: bold;
-  color: var(--text);
+  color: #ffffff;
 }
 
 .componentInfo button {
-  margin-top: 20px;
-  padding: 10px 20px;
+  margin-left: 328px;
+   margin-top: 15px;
   border: none;
   border-radius: 5px;
   background-color: #ff7211;
   color: #ffffff;
   cursor: pointer;
+  height: 41px;
+  width:90px;
+  
   transition: background-color 0.3s ease;
 }
 
 .componentInfo button:hover {
   background-color: #006d5b;
 }
+
 
 

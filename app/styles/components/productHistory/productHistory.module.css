@@ -4,8 +4,11 @@
   background-color: var(--bgSoft);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #1B9392;
 }
-
+.container h1{
+  color: #ffffff;
+}
 .componentDetails {
   background: linear-gradient(145deg, var(--bgSoft), var(--bgAccent));
   border-radius: 15px;
@@ -13,7 +16,7 @@
   margin:20px  0px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
-
+  background-color: #C6E7E7;
   display: flex;
   justify-content: space-between;
 }
@@ -27,15 +30,17 @@
 }
 
 .componentDetails p {
-  color: var(--textSoft);
+  color: #1B9392;
   font-size: 16px;
   margin: 10px 0;
+  font-weight: 600;
 }
 
 .historyTable {
   width: 100%;
   border-collapse: collapse;
   background-color: var(--bgSoft);
+  color: #ffffff;
 }
 
 .historyTable th,

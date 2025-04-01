@@ -1,6 +1,6 @@
 .container {
   margin: 20px 0;
-  background-color: var(--bgSoft);
+  background-color: #1B9392;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -8,7 +8,7 @@
 
 .title {
   margin-bottom: 20px;
-  color: var(--textSoft);
+  color: #ffffff;
 }
 
 .componentDetails {
@@ -19,6 +19,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  background-color: #C6E7E7;
 }
 
 .componentDetails:hover {
@@ -27,8 +28,8 @@
 }
 
 .componentDetails h2 {
-  color: teal;
-  font-size: 24px;
+  color: #1B9392;
+   font-size: 24px;
   margin-bottom: 15px;
   border-bottom: 2px solid var(--primary);
   padding-bottom: 10px;
@@ -54,6 +55,7 @@
   width: 100%;
   border-collapse: collapse;
   background-color: var(--bgSoft);
+  color: #FFFFFF;
 }
 
 .table th,
@@ -88,12 +90,12 @@
 }
 
 .borrowed {
-  background-color: #5D57C9;
+  background-color: #ff7211;
   color: white;
 }
 
 .returned {
-  background-color: #069b49;
+  background-color: #C6E7E7;
   color: white;
 }
 

@@ -10,7 +10,6 @@ import BorrowedCard from '@/app/components/card/borrowCard';
 
 import { config } from '/config';
 
-
 const BorrowedComponentPage = () => {
   const [borrowsData, setBorrowsData] = useState([]);
 
@@ -53,9 +52,11 @@ const BorrowedComponentPage = () => {
 
   return (
     <div>
-    <div className={styles.borrow}>
+
+    {/* <div className={styles.borrow}>
         <BorrowedCard item={item}/>
-     </div>
+     </div> */}
+
     <div className={styles.container}>
  
       <div className={styles.top}>
@@ -91,8 +92,6 @@ const BorrowedComponentPage = () => {
 
 
         {/* Added this button */}
-        {/* <button className={styles.addButton}>Borrow</button> */}
-
         <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
  
       </div>

@@ -29,7 +29,7 @@
     flex-wrap: wrap; 
     gap: 10px; 
     background-color: #C6E7E7;
-    padding:20px;
+    padding: 20px;
     border: 1px solid #C6E7E7;
     border-radius: 20px;
     position:relative;
@@ -54,11 +54,10 @@
     color:var(--textSoft);
     border-radius: 10px;
     font-size: 16px;
-    height: 60px;
+    height: 70px;
 }
 
  
-
 .form input,
 .form select{
     width:47%;
@@ -69,7 +68,7 @@
 }
 
 .submit{
-    width:97%;
+    width:90px;
     padding:20px;
     padding-top: 12px;
     padding-bottom: 33px;
@@ -78,6 +77,8 @@
     border-radius: 5px;
     border:none;
     height: 5px;
+    /* display: block; */
+    margin-left: 582px;
 }
 
 

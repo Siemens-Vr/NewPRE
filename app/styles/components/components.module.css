@@ -36,6 +36,23 @@
 
 }
 
+.suspense {
+  border:2px solid black;
+  border-radius:5px;
+  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  height:40px;
+  background-color: #069b49;
+}
+
+.search{
+  border:2px solid black;
+  border-radius:5px;
+  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  height:40px;
+  background-color: #069b49;
+
+}
+
 .h2{
   font-weight: bold;
   font-size: clamp(0.875rem, 2vw, 1.5rem);
@@ -78,7 +95,7 @@
 
 .button {
   padding: 5px 10px;
-  background-color: teal;
+  background-color: #C6E7E7;
   color: var(--text);
   border: none;
   border-radius: 5px;

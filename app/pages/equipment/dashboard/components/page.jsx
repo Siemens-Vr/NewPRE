@@ -62,7 +62,7 @@ const Page = () => {
          <div className={styles.top}>
          <h1 className={styles.h2}>Components</h1>
 
-         <select
+         {/* <select
         id="sort"
         value={selectedOption}
         onChange={(e) => setSelectedOption(e.target.value)}
@@ -74,12 +74,12 @@ const Page = () => {
             {option}
           </option>
         ))}
-      </select>
+      </select> */}
 
 
-      {/* <Suspense fallback={<div>Loading...</div>}>
-      <Search placeholder="search for components" />
-      </Suspense> */}
+      <Suspense fallback={<div>Loading...</div>} className={styles.suspense}>
+           <Search placeholder="search for By Category" />
+      </Suspense>
 
     
 

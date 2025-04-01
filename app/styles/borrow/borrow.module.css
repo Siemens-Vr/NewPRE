@@ -8,10 +8,10 @@
 
  
 .top{
-    display:flex;
-    /* justify-content: space-between; */
+    display:flex; 
+    justify-content: space-between;
     gap:200px;
-    padding-left: 200px;
+     padding-left: 200px;
 }
 
 .select {
@@ -37,7 +37,7 @@
     border-radius: 5px;
     cursor:pointer;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-
+  
 }
 .addButton:hover {
     background-color: #e66000; 
@@ -46,7 +46,7 @@
 }
 
 .updateButton{
-    background-color: teal;
+    background-color: #C6E7E7;
     color:var(--text);
     padding:5px 10px;
     border: none;
@@ -67,8 +67,9 @@
     color: #ffffff;
     border-radius: 10px;
     margin-top:10px;
-    height: 300px;
+    height: 10px;
 }
+
 .table thead,
 .table td{
     padding:12px 15px;

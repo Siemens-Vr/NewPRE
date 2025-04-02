@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import Search from '@/app/components/search/search';
 import BorrowedCard from '@/app/components/card/borrowCard';
+import {MdSearch} from "react-icons/md";
 
 import { config } from '/config';
 
@@ -60,35 +61,11 @@ const BorrowedComponentPage = () => {
     <div className={styles.container}>
  
       <div className={styles.top}>
-      {/* <Suspense fallback={<div>Loading...</div>}>
-   
-      <Search />
-    </Suspense> */}
-
- 
-      <div className={styles}>
-
-         <select
-        id="sort"
-        value={selectedBorrow}
-        onChange={(e) => setSelectedBorrow(e.target.value)}
-        className={styles.select}
-      >
-
-        <option  className={styles.option} value="" disabled>Sort by</option>
-        {sortBy.options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-         
-     </div>
-  
-        {/* //Removed this link */}
-        {/* <Link href="/pages/equipment/dashboard/borrow/add">
-          <button className={styles.addButton}>Borrow</button>
-        </Link> */}
+      
+       <div className={styles.search}>
+         <MdSearch />
+          <input type="text" placeholder="Search by Component..." className={styles.input} />
+         </div> 
 
 
         {/* Added this button */}
@@ -96,6 +73,7 @@ const BorrowedComponentPage = () => {
  
       </div>
       
+      <div className={styles.tablediv}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -127,6 +105,7 @@ const BorrowedComponentPage = () => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
 
     {borrow && (

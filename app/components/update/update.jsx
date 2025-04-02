@@ -27,8 +27,8 @@ const UpdatePopUp = ({ componentData, onClose, onUpdate }) => {
     <div className={styles.popup}>
       <div className={styles.popupContent}>
         <h2>Edit Component Details</h2>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+           <div className={styles.formGroup}>
             <label htmlFor="componentName">Component Name:</label>
             <input
               type="text"
@@ -68,6 +68,7 @@ const UpdatePopUp = ({ componentData, onClose, onUpdate }) => {
               onChange={handleChange}
             />
           </div>
+
           <div className={styles.formGroup}>
             <label htmlFor="condition">Condition:</label>
             <select
@@ -82,7 +83,8 @@ const UpdatePopUp = ({ componentData, onClose, onUpdate }) => {
               <option value="Not Good">Not Good</option>
             </select>
           </div>
-          <div className={styles.formGroup}>
+
+           <div className={styles.formGroup}>
             <label htmlFor="conditionDetails">Condition Details:</label>
             <textarea
               id="conditionDetails"

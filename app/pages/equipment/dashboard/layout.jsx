@@ -1,6 +1,6 @@
 import Sidebar from '@/app/components/sidebar/sidebar'
 import Footer  from '@/app/components/footer/footer'
-import Navbar from  '@/app/components/navbar/navbar'
+ import ComponentNavbar from '@/app/components/navbar/componentNav'
 import styles from   '@/app/styles/dashboards/dashboard.module.css'
 
 const Layout = ({children}) => {
@@ -10,7 +10,7 @@ const Layout = ({children}) => {
         <Sidebar dashboardType="equipment" />
         </div>
        <div className={styles.content}>
-        <Navbar/>
+         <ComponentNavbar />
         {children}
         <Footer/>
        </div>

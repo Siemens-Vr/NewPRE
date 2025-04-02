@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { MdSearch } from "react-icons/md";
 
 import { config } from "/config";
 
@@ -61,9 +62,8 @@ const Page = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <h1 className={styles.h2}>Components</h1>
-
-        <Suspense fallback={<div>Loading...</div>} className={styles.suspense}>
+ 
+        {/* <Suspense fallback={<div>Loading...</div>} className={styles.suspense}>
           <Search
             placeholder="Search by Category"
             onChange={(e) => {
@@ -71,14 +71,21 @@ const Page = () => {
               setSearchQuery(e.target.value);
             }}
           />
-        </Suspense>
+        </Suspense> */}
 
+              <div className={styles.Search}>
+                 <MdSearch />
+                  <input type="text" placeholder="Search by Category..." className={styles.input} />
+                 </div>
+
+    <div className={styles.btn}>
         <button onClick={() => setShowPopup(true)} className={styles.addButton}>
           Add Categories
         </button>
         <button onClick={() => setAddComponent(true)} className={styles.addButton}>
           Add New
         </button>
+    </div>
       </div>
 
       <table className={styles.table}>

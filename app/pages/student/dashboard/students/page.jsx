@@ -11,12 +11,14 @@ import Link from "next/link";
 import Swal from 'sweetalert2';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { config } from '/config';
+import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [count, setCount] = useState(0);
   const [popupStudentId, setPopupStudentId] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
+    const [showAddNewPopup, setShowAddNewPopup] = useState(false);
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -37,6 +39,7 @@ const StudentsPage = () => {
     level: '',
     regNo: '',
     kcseNo: '',
+    name: '',
   });
 
   const handleFilterChange = (e) => {
@@ -50,7 +53,7 @@ const StudentsPage = () => {
         (filters.cohort === '' || student.cohort === filters.cohort) &&
         (filters.level === '' || student.level === filters.level) &&
         (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
-        (filters.kcseNo === '' || student.kcseNo.includes(filters.kcseNo))
+        (filters.name === '' || student.name.includes(filters.name))
       );
     });
 
@@ -119,7 +122,7 @@ const StudentsPage = () => {
       icon: 'error',
       title: 'Oops...',
       text: message,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#1b9392',
     });
   };
 
@@ -137,7 +140,7 @@ const StudentsPage = () => {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      cancelButtonColor: '#ff7211',
       confirmButtonText: 'Yes, delete',
       cancelButtonText: 'Cancel'
     });
@@ -178,93 +181,117 @@ const StudentsPage = () => {
     }
   };
 
+    const handleAddNewClick = () => {
+        setShowAddNewPopup(true);
+    };
+
+    // Close the "Add New" student popup
+    const handleClosePopup = () => {
+        setShowAddNewPopup(false);
+    };
+
     return (
       <div className={styles.container}>
         <div className={styles.top}>
           <div className={styles.filterSection}>
             <div className={styles.horizontalFilters}>
               <div className={styles.filterField}>
-                <label htmlFor="cohort">Cohort:</label>
-                <div>
-                <select
-                  id="cohort"
-                  name="cohort"
-                  value={filters.cohort}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  <option value="Cohort Test">Cohort Test</option>
-                  <option value="January Intake">January Intake</option>
-                </select>
-                </div>
 
-              {/*<div className={styles.filterField}>*/}
-                <label htmlFor="level">Level:</label>
-                <div>
-                <select
-                  id="level"
-                  name="level"
-                  value={filters.level}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
+                <div className={styles.filterField}>
+                  <label htmlFor="regNo">Reg No:</label>
+                  <input
+                      id="regNo"
+                      name="regNo"
+                      type="text"
+                      placeholder="Enter Registration Number"
+                      value={filters.regNo}
+                      onChange={handleFilterChange}
+                  />
                 </div>
-              {/*</div>*/}
-              {/*<div className={styles.filterField}>*/}
-              {/*  <label htmlFor="regNo">Reg No:</label>*/}
-              {/*  <input*/}
-              {/*    id="regNo"*/}
-              {/*    name="regNo"*/}
-              {/*    type="text"*/}
-              {/*    placeholder="Enter Registration Number"*/}
-              {/*    value={filters.regNo}*/}
-              {/*    onChange={handleFilterChange}*/}
-              {/*  />*/}
-              {/*</div>*/}
+                {/*<label htmlFor="cohort">Cohort:</label>*/}
+                {/*<div>*/}
+                {/*  <select*/}
+                {/*      id="cohort"*/}
+                {/*      name="cohort"*/}
+                {/*      value={filters.cohort}*/}
+                {/*      onChange={handleFilterChange}*/}
+                {/*  >*/}
+                {/*    <option value="">All</option>*/}
+                {/*    <option value="Cohort Test">Cohort Test</option>*/}
+                {/*    <option value="January Intake">January Intake</option>*/}
+                {/*  </select>*/}
+                {/*</div>*/}
 
-              {/*<div className={styles.filterField}>*/}
-              {/*  <label htmlFor="kcseNo">KCSE No:</label>*/}
-              {/*  <input*/}
-              {/*    id="kcseNo"*/}
-              {/*    name="kcseNo"*/}
-              {/*    type="text"*/}
-              {/*    placeholder="Enter KCSE Number"*/}
-              {/*    value={filters.kcseNo}*/}
-              {/*    onChange={handleFilterChange}*/}
-              {/*  />*/}
-              {/*  </div>*/}
+                {/*<div className={styles.filterField}>*/}
+                <label htmlFor="level">Name :</label>
+                <div>
+                  <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Enter name"
+                      value={filters.name}
+                      onChange={handleFilterChange}
+                  />
+                </div>
+                {/*</div>*/}
+                {/*<div className={styles.filterField}>*/}
+                {/*  <label htmlFor="regNo">Reg No:</label>*/}
+                {/*  <input*/}
+                {/*      id="regNo"*/}
+                {/*      name="regNo"*/}
+                {/*      type="text"*/}
+                {/*      placeholder="Enter Registration Number"*/}
+                {/*      value={filters.regNo}*/}
+                {/*      onChange={handleFilterChange}*/}
+                {/*  />*/}
+                {/*</div>*/}
+
+                {/*<div className={styles.filterField}>*/}
+                {/*  <label htmlFor="kcseNo">KCSE No:</label>*/}
+                {/*  <input*/}
+                {/*    id="kcseNo"*/}
+                {/*    name="kcseNo"*/}
+                {/*    type="text"*/}
+                {/*    placeholder="Enter KCSE Number"*/}
+                {/*    value={filters.kcseNo}*/}
+                {/*    onChange={handleFilterChange}*/}
+                {/*  />*/}
+                {/*  </div>*/}
                 <>
-                <button className={styles.filterButton} onClick={applyFilters}>
-                  Filter
-                </button>
+                  <button className={styles.filterButton} onClick={applyFilters}>
+                    Filter
+                  </button>
                 </>
-                  < div  className={styles.search}   >
-                <Search   placeholder="Search for a student..." />
-                  </div>
-            {/*<div className={styles.buttonsGroup}>*/}
-          <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
-            <Link href="/pages/student/dashboard/students/add">
-              <button className={styles.addButton}>Add New</button>
-            </Link>
-          </div>
+                < div className={styles.search}>
+                  <Search placeholder="Search for a student..."/>
+                </div>
+                {/*<div className={styles.buttonsGroup}>*/}
+                <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
+                  {/* Button to open the "Add New" student popup */}
+                  <button onClick={handleAddNewClick} className={styles.addButton}>
+                      Add New
+                  </button>
+
+                  {/* Conditionally render the Add New Student Popup */}
+                  {showAddNewPopup && (
+                      <AddStudentPage onClose={handleClosePopup} />
+                  )}
+              </div>
             </div>
-          {/*</div>*/}
+            {/*</div>*/}
+          </div>
         </div>
-  </div>
         {Array.isArray(filteredStudents) && filteredStudents.length > 0 ? (
-          <table className={styles.table}>
-            <thead>
+            <table className={styles.table}>
+              <thead>
               <tr>
                 <td>Reg No</td>
                 <td>Full Name</td>
                 <td>Phone</td>
                 <td>Action</td>
               </tr>
-            </thead>
+              </thead>
             <tbody>
               {filteredStudents.map((student) => {
                 const fullName = `${student.firstName} ${student.lastName}`;
@@ -284,7 +311,7 @@ const StudentsPage = () => {
                             View
                           </button>
                         </Link>
-                        <button onClick={() => setPopupStudentId(student.uuid)}>Add Level</button>
+                        <button  className={`${styles.button}  ${styles.addlevel}`} onClick={() => setPopupStudentId(student.uuid)}>Add Level</button>
                         {popupStudentId === student.uuid && (
                           <AddLevelPopup
                             studentId={student.uuid}

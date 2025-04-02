@@ -1,8 +1,10 @@
 "use client"
-import styles from '@/app/styles/students/singleStudent/singleStudent.module.css'
-import { useState, useEffect } from "react";
+import styles from '@/app/styles/students/singleStudent/Facilitator.module.css'
+
+import React, { useState, useEffect } from "react";
 import { AddUpdateHoursPopup, ViewHoursPopup } from '@/app/components/facilitators/WorkHoursPopups'
 import { config } from "/config";
+import Image from "next/image";
 
 const SingleFacilitatorPage = ({ params }) => {
  const [facilitator, setFacilitator] = useState(null);
@@ -10,6 +12,7 @@ const [successMessage, setSuccessMessage] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
 const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
   const [popupType, setPopupType] = useState(null);
+    const [editingField, setEditingField] = useState(null);
 
   
   const [formData, setFormData] = useState({
@@ -60,7 +63,17 @@ const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
     });
   };
 
+//added by me
+    const handleBlur = () => {
+        setEditingField(null); // Exit edit mode when clicking outside
+    };
 
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            setEditingField(null); // Save when Enter is pressed
+        }
+    };
+//to this place
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -139,83 +152,81 @@ const handleAddUpdateHours = async (entries) => {
   }
     // console.log(formData)
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>{facilitator.firstName} {facilitator.lastName}</h1>
+      <div className={styles.container}>
+          <div className={styles.header}>
+              <h1>Welcome {facilitator.firstName}</h1>
+              <div>
+                  <p>Today is a good day</p>
+                  {/*<button className={styles.button}>Total Fee Paid</button>*/}
+                  {/*<button className={styles.button}>Course Level</button>*/}
+                  {/*<button className={styles.button}>Task</button>*/}
+              </div>
+          </div>
+
+          <div className={styles.profile }>
+              {/* Profile Section */}
+              <div className={styles.card}>
+                  <Image
+                      className={styles.userImage}
+                      src="/noavatar.png"
+                      alt=""
+                      width="50"
+                      height="50"
+                  />
+                  <h3>{facilitator.firstName} {facilitator.lastName}</h3>
+                  <p>{facilitator.idNo}</p>
+              </div>
+
+              {/* Details Section with Editable Fields */}
+              <div className={styles.details}>
+                  <h2>Personal Details</h2>
+
+                  <p><strong>Full Name:</strong>
+                      {editingField === "firstName" ? (
+                          <input type="text" name="firstName" value={formData.firstName} onChange={handleChange}
+                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
+                      ) : (
+                          <span
+                              onClick={() => setEditingField("firstName")}>{facilitator.firstName} {facilitator.lastName}</span>
+                      )}
+                  </p>
+
+                  <p><strong>Email:</strong>
+                      {editingField === "email" ? (
+                          <input type="email" name="email" value={formData.email} onChange={handleChange}
+                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
+                      ) : (
+                          <span onClick={() => setEditingField("email")}>{facilitator.email}</span>
+                      )}
+                  </p>
+
+                  <p><strong>Phone:</strong>
+                      {editingField === "phoneNo" ? (
+                          <input type="text" name="phoneNo" value={formData.phoneNo} onChange={handleChange}
+                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
+                      ) : (
+                          <span onClick={() => setEditingField("phoneNo")}>{facilitator.phoneNo}</span>
+                      )}
+                  </p>
+
+                  <p><strong>Reg No:</strong> {facilitator.idNo}</p>
+              </div>
+          </div>
+
+          {/*<div className={styles.hoursButtons}>*/}
+          {/*    <button className={styles.button} onClick={() => setPopupType('addUpdate')}>Add Hours</button>*/}
+          {/*    <button className={styles.button} onClick={() => setPopupType('view')}>View Hours</button>*/}
+          {/*</div>*/}
+
+          {/*{popupType === 'addUpdate' && (*/}
+          {/*    <AddUpdateHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}*/}
+          {/*                         onSubmit={(entries) => handleAddUpdateHours(entries)}/>*/}
+          {/*)}*/}
+
+          {/*{popupType === 'view' && (*/}
+          {/*    <ViewHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}/>*/}
+          {/*)}*/}
       </div>
-      
-      {successMessage && (
-        <div className={styles.successMessage}>
-          {successMessage}
-        </div>
-      )}
-
-      <form className={styles.form} onSubmit={handleSubmit}>
-          <label>First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          <label>Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <label>ID Number</label>
-          <input
-            type="text"
-            name="idNo"
-            value={formData.idNo}
-            onChange={handleChange}
-          />
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phoneNo"
-            value={formData.phoneNo}
-            onChange={handleChange}
-          />
-          <label>Gender</label>
-          <input
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-          />
-
-          <button type="submit">Update</button>
-        </form>
-
-        <div className={styles.hoursButtons}>
-                        <button className={styles.button} onClick={() => { setCurrentFacilitatorId(facilitator.uuid); setPopupType('addUpdate'); }}>Add Hours</button>
-                        <button className={styles.button} onClick={() => { setCurrentFacilitatorId(facilitator.uuid); setPopupType('view'); }}>View Hours</button>
-                      </div>
-
-      {popupType === 'addUpdate' && (
-              <AddUpdateHoursPopup
-                facilitatorId={currentFacilitatorId}
-                onClose={() => setPopupType(null)}
-                onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}
-              />
-            )}
-      
-            {popupType === 'view' && (
-              <ViewHoursPopup
-                facilitatorId={currentFacilitatorId}
-                onClose={() => setPopupType(null)}
-              />
-            )}
-    </div>
   );
 };
 

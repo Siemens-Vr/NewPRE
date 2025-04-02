@@ -14,7 +14,7 @@ import Link from 'next/link';
 
 
 
-const LevelDetails = ({ searchParams }) => {
+const LevelDetails = ({ searchParams }, {onClose}) => {
   
   const [levelData, setLevelData] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -242,8 +242,8 @@ const LevelDetails = ({ searchParams }) => {
               <>
                 <div className={styles.tableTop}>
                   <h3>Instructors</h3>
-                  <p>Paid: 20</p>
-                  <p>Not Paid: 18</p>
+                  {/*<p>Paid: 20</p>*/}
+                  {/*<p>Not Paid: 18</p>*/}
                   <Link href="/pages/student/dashboard/facilitators/add">
                     <button className={styles.button}>Add New Instructor</button>
                   </Link>

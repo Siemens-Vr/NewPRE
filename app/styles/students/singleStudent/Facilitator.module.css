@@ -1,0 +1,109 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.header {
+    width: 100%;
+    background: #008080;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.profile {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 50px;
+}
+
+.card {
+    background: #ff7211;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    text-align: center;
+}
+
+.userImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+.details {
+    background: #e0f7fa;
+    padding: 20px;
+    border-radius: 10px;
+    width: 65%;
+    align-self: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details h2 {
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-size: 20px;
+    align-items: center;
+}
+
+.details p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.details input {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.form input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.successMessage {
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.hoursButtons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    width: 50%;
+}
+
+.button {
+    background: #ff7211;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #c6e7e7;
+}

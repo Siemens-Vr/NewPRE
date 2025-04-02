@@ -11,7 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-const AddStudentPage = () => {
+const AddStudentPage = ({onClose}) => {
   const [showCohortModal, setShowCohortModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const router= useRouter();
@@ -50,7 +50,8 @@ const AddStudentPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage(""); 
+    setErrorMessage("");
+    onClose();
     
     const dataToSend = {
       ...formData,
@@ -114,171 +115,188 @@ const AddStudentPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {showSuccess && (<div className={styles.successMessage}>Student added successfully!</div>)}
-      <form onSubmit={handleSubmit} className={styles.form}>
-        {errorMessage && (
-            <div>
-              {errorMessage}
-            </div>
-        )}
-        <div className={styles.divInput}>
-          <label htmlFor="firstName" className={styles.label}>First Name</label>
-          <input
-              type="text"
-              placeholder="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="lastName" className={styles.label}>Last Name</label>
-          <input
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="email" className={styles.label}>Email</label>
-          <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="phone" className={styles.label}>Phone Number</label>
-          <input
-              type="text"
-              placeholder="Phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="regNo" className={styles.label}>Registration Number</label>
-          <input
-              type="text"
-              placeholder="Registration Number"
-              name="regNo"
-              value={formData.regNo}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="kcseNo" className={styles.label}>KCSE Number</label>
-
-          <input
-              type="text"
-              placeholder="KCSE Number"
-              name="kcseNo"
-              value={formData.kcseNo}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className={styles.divInput}>
-          <label htmlFor="gender" className={styles.label}>Gender</label>
-
-          <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-
-        <div className={styles.divInput}>
-          <label htmlFor="id" className={styles.label}>Id NO</label>
-
-          <input
-              type="text"
-              placeholder="Id NO"
-              name="IdNO"
-              value={formData.id}
-              onChange={handleChange}
-              required
-          />
-        </div>
+      <div className={styles.modalOverlay} >
+          <div className={styles.modalContent}>
 
 
-        <button
-            type="button"
-            onClick={() => setShowCohortModal(true)}
-            className={styles.addCohortButton}
-        >
-          {/*<span className={styles.plusSign}>+</span>*/}
-          <span className={styles.addText}>Add Cohort and Level</span>
-        </button>
+              <div>
+
+                  {showSuccess && (<div className={styles.successMessage}>Student added successfully!</div>)}
+
+                  <form onSubmit={handleSubmit} className={styles.form}>
+                      {errorMessage && (
+                          <div>
+                              {errorMessage}
+                          </div>
+                      )}
 
 
-        {cohortLevelList.length > 0 && (
-            <div className={styles.cohortLevelList}>
-              <h3>Selected Cohorts and Levels:</h3>
-              <table className={styles.table}>
-                <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Cohort Name</th>
-                  <th>Level Name</th>
-                  <th>Fee Amount</th>
-                  <th>Exam Results</th>
-                  <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {cohortLevelList.map((item, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{item.cohortName}</td>
-                      <td>{item.levelName}</td>
-                      <td>{item.fee}</td>
-                      <td>{item.examResults}</td>
-                      <td>
-                        <button onClick={() => handleDelete(index)} className={styles.deleteButton}>
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
+                      <div className={styles.divInput}>
+                          <label htmlFor="firstName" className={styles.label}>First Name</label>
+                          <input
+                              type="text"
+                              placeholder="First Name"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="lastName" className={styles.label}>Last Name</label>
+                          <input
+                              type="text"
+                              placeholder="Last Name"
+                              name="lastName"
+                              value={formData.lastName}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="email" className={styles.label}>Email</label>
+                          <input
+                              type="email"
+                              placeholder="Email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="phone" className={styles.label}>Phone Number</label>
+                          <input
+                              type="text"
+                              placeholder="Phone"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="regNo" className={styles.label}>Registration Number</label>
+                          <input
+                              type="text"
+                              placeholder="Registration Number"
+                              name="regNo"
+                              value={formData.regNo}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="kcseNo" className={styles.label}>KCSE Number</label>
 
-        <button type="submit" className={styles.submitButton} disabled={loading}>
-          {loading ? (
-              <>
-                <Spinner/> Please wait...
-              </>
-          ) : (
-              'SUBMIT'
-          )}
-        </button>
-        <ToastContainer/>
-      </form>
-      {showCohortModal && (
-          <CohortModal
-              onSave={handleSaveCohorts}
-              onClose={() => setShowCohortModal(false)}
-          />
-      )}
-    </div>
+                          <input
+                              type="text"
+                              placeholder="KCSE Number"
+                              name="kcseNo"
+                              value={formData.kcseNo}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+                      <div className={styles.divInput}>
+                          <label htmlFor="gender" className={styles.label}>Gender</label>
+
+                          <select
+                              name="gender"
+                              value={formData.gender}
+                              onChange={handleChange}
+                              required
+                          >
+                              <option value="">Select Gender</option>
+                              <option value="male">Male</option>
+                              <option value="female">Female</option>
+                          </select>
+                      </div>
+
+                      <div className={styles.divInput}>
+                          <label htmlFor="id" className={styles.label}>Id NO</label>
+
+                          <input
+                              type="text"
+                              placeholder="Id NO"
+                              name="IdNO"
+                              value={formData.id}
+                              onChange={handleChange}
+                              required
+                          />
+                      </div>
+
+
+                      <button
+                          type="button"
+                          onClick={() => setShowCohortModal(true)}
+                          className={styles.addCohortButton}
+                      >
+                          {/*<span className={styles.plusSign}>+</span>*/}
+                          <span className={styles.addText}>Add Cohort and Level</span>
+                      </button>
+
+
+                      {cohortLevelList.length > 0 && (
+                          <div className={styles.cohortLevelList}>
+                              <h3>Selected Cohorts and Levels:</h3>
+                              <table className={styles.table}>
+                                  <thead>
+                                  <tr>
+                                      <th>#</th>
+                                      <th>Cohort Name</th>
+                                      <th>Level Name</th>
+                                      <th>Fee Amount</th>
+                                      <th>Exam Results</th>
+                                      <th>Actions</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {cohortLevelList.map((item, index) => (
+                                      <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{item.cohortName}</td>
+                                          <td>{item.levelName}</td>
+                                          <td>{item.fee}</td>
+                                          <td>{item.examResults}</td>
+                                          <td>
+                                              <button onClick={() => handleDelete(index)}
+                                                      className={styles.deleteButton}>
+                                                  Delete
+                                              </button>
+                                          </td>
+                                      </tr>
+                                  ))}
+                                  </tbody>
+                              </table>
+                          </div>
+                      )}
+
+                      <button type="submit" className={styles.submitButton} disabled={loading}>
+                          {loading ? (
+                              <>
+                                  <Spinner/> Please wait...
+                              </>
+                          ) : (
+                              'SUBMIT'
+                          )}
+
+                      </button>
+                      <button type="button" className={styles.closeButton} onClick={onClose}>
+                          ✖
+                      </button>
+                      <ToastContainer/>
+                  </form>
+                  {showCohortModal && (
+                      <CohortModal
+                          onSave={handleSaveCohorts}
+                          onClose={() => setShowCohortModal(false)}
+                      />
+                  )}
+
+
+              </div>
+          </div>
+      </div>
   );
 };
 

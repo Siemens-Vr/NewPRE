@@ -1,3 +1,45 @@
+/* Add this to your addStudent.module.css or the appropriate CSS file */
+
+.modalOverlay {
+  position: fixed; /* Position it fixed on the screen */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center the modal horizontally */
+  align-items: center; /* Center the modal vertically */
+  z-index: 1000; /* Ensure the modal is above other content */
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.modalContent {
+  position: relative; /* Ensures the close button is positioned inside */
+  /*background-color: white; !* Ensure the modal has a visible background *!*/
+  /*padding: 20px;*/
+  /*border-radius: 8px;*/
+  /*max-width: 500px;*/
+  /*width: 100%;*/
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #c6e7e7; /* Ensure the text is visible */
+  font-weight: bold;
+}
+
+
+
+
 .container {
   display: flex;
   justify-content: center;
@@ -11,7 +53,8 @@
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 600px;
+  width: 800px;
+  height: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -28,7 +71,7 @@
 .label {
   color: #000000;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .divInput input, .divInput select {
@@ -53,6 +96,18 @@
   margin-top: 5px;
   text-align: center;
   display: inline-block;
+}
+.submitButtons{
+  padding: 5px 10px;
+  border-radius: 5px;
+  height: 40px;
+  background-color: #ff7211;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
 }
 
 .addCohortButton:hover, .submitButton:hover {
@@ -104,4 +159,48 @@
 .table th {
   background: darkcyan;
 }
+
+
 /*//new page*/
+/*.cohortLevelList {*/
+/*  text-align: center;*/
+/*  margin-top: 30px;*/
+/*}*/
+
+/*.gridContainer {*/
+/*  display: grid;*/
+/*  grid-template-columns: repeat(2, 1fr);*/
+/*  gap: 20px;*/
+/*  justify-items: center; !* Centers the content horizontally *!*/
+/*  align-items: center; !* Centers the content vertically *!*/
+/*}*/
+
+/*.table {*/
+/*  width: 100%;*/
+/*  border-collapse: collapse;*/
+/*  margin-top: 20px;*/
+/*}*/
+
+/*.table th,*/
+/*.table td {*/
+/*  padding: 10px;*/
+/*  border: 1px solid #ccc;*/
+/*  text-align: left;*/
+/*}*/
+
+/*.table th {*/
+/*  background-color: #f2f2f2;*/
+/*}*/
+
+/*.deleteButton {*/
+/*  background-color: #d9534f;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  padding: 5px 10px;*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*.deleteButton:hover {*/
+/*  background-color: #c9302c;*/
+/*}*/
+

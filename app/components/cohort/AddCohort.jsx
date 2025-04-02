@@ -75,7 +75,7 @@ const CohortModal = ({ onSave, onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
-        <h2>Add Cohort and Level</h2>
+        {/*<h2>Add Cohort and Level</h2>*/}
         <div className={styles.formGrid}>
           <select
             value={selectedCohort}
@@ -160,7 +160,7 @@ const CohortModal = ({ onSave, onClose }) => {
             Save
           </button>
           <button onClick={onClose} className={styles.closeButton}>
-            Close
+            x
           </button>
           {/*<button className={styles.closeButton} onClick={onClose}>×</button>*/}
         </div>

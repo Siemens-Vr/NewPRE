@@ -104,7 +104,7 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
-        <h2>Add Level to Student</h2>
+        {/*<h2>Add Level to Student</h2>*/}
         <div className={styles.formGrid}>
           <select
             value={selectedCohort}
@@ -190,7 +190,7 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
             Add Level
           </button>
           <button onClick={onClose} className={styles.closeButton}>
-            Close
+            x
           </button>
         </div>
       </div>

@@ -5,14 +5,14 @@ import styles from "@/app/styles/students/students.module.css";
 import Swal from "sweetalert2";
 import { config } from "/config";
 import { MdSearch } from "react-icons/md";
-import AddCohort from "@/app/pages/student/dashboard/cohorts/add/page";
+import CohortForm from "@/app/pages/student/dashboard/cohorts/add/page";
 
 const CohortsPage = () => {
     const [cohorts, setCohorts] = useState([]);
     const [filteredCohorts, setFilteredCohorts] = useState([]);
     const [openDropdown, setOpenDropdown] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+    const [showAddNewPopup, setShowAddNewPopup] = useState(false);
 
     useEffect(() => {
         fetchCohorts();
@@ -40,6 +40,14 @@ const CohortsPage = () => {
         }
     };
 
+    const handleAddNewClick = () => {
+        setShowAddNewPopup(true);
+    };
+
+    // Close the "Add New" student popup
+    const handleClosePopup = () => {
+        setShowAddNewPopup(false);
+    };
     const toggleDropdown = (id) => {
         setOpenDropdown(openDropdown === id ? null : id);
     };
@@ -73,7 +81,7 @@ const CohortsPage = () => {
     };
 
     return (
-        <div className={`${styles.container} ${isModalOpen ? styles.modalBackground : ""}`}>
+        <div className={styles.container }>
             {/* Top bar */}
             <div className={styles.top}>
                 <div className={styles.searchInput}>
@@ -86,9 +94,14 @@ const CohortsPage = () => {
                     />
                     <MdSearch />
                 </div>
-                <button className={styles.addButton} onClick={() => setIsModalOpen(true)}>
+                <button onClick={handleAddNewClick} className={styles.addButton}>
                     Add New
                 </button>
+
+                {/* Conditionally render the Add New Student Popup */}
+                {showAddNewPopup && (
+                    < CohortForm onClose={handleClosePopup} />
+                )}
             </div>
 
             {/* Cohort Cards */}

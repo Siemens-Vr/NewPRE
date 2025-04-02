@@ -3,22 +3,27 @@
   padding: 20px;
   background-color: var(--bgSoft);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #1B9392;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  /* background-color: #1B9392; */
 }
 .container h1{
-  color: #ffffff;
+  color: #1B9392;
+  font-weight:800;
+  /* text-align: center; */
+  font-size: 18px;
 }
 .componentDetails {
   background: linear-gradient(145deg, var(--bgSoft), var(--bgAccent));
-  border-radius: 15px;
+  /* border-radius: 5px; */
   padding: 20px;
   margin:20px  0px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: #C6E7E7;
   display: flex;
-  justify-content: space-between;
+  gap: 150px;
+  padding-left: 100px;
+  /* justify-content: space-between; */
 }
 
 .componentDetails h2 {
@@ -39,8 +44,15 @@
 .historyTable {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bgSoft);
+  /* background-color: #1B9392; */
   color: #ffffff;
+  margin-top: 50px;
+}
+
+.historyTable thead{
+  background-color: #1B9392;
+
+
 }
 
 .historyTable th,
@@ -57,13 +69,23 @@
   color: var(--textAccent);
 }
 
-.historyTable tr:nth-child(even) {
-  background-color: var(--bgAccent2);
+.historyTable tbody tr:nth-child(odd) {
+  background-color: #f0f0f0;
+  color: #1B9392;
+  font-weight: 500;
+}
+
+
+.historyTable tbody tr:nth-child(even) {
+  background-color: #ffffff;
+  color: #1B9392;
+  font-weight: 500;
 }
 
 .historyTable tr:hover {
-  background-color: var(--bgAccent3);
-}
+
+  /* background-color: var(--bgAccent3); */
+ }
 
 .loader {
   text-align: center;

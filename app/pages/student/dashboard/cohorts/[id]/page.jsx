@@ -97,7 +97,7 @@ const ViewCohort = () => {
             End Date: {new Date(cohortsData.endDate).toLocaleDateString()}
             </p>
 
-          <button onClick={() => setShowPopup(true)} className={styles.button}>
+          <button onClick={() => setShowPopup(true)} className={styles.buttons}>
             Add Level
           </button>
           <button onClick={handleDownloadPDF} className={`${styles.cohortbtn} ${styles.cohortdownload}`}>

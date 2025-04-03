@@ -9,12 +9,13 @@ import { pdf } from '@react-pdf/renderer';
 import LevelDetailsPDF from '@/app/components/cohort/LevelDetailsPDF'
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
 
 import Link from 'next/link';
 
 
 
-const LevelDetails = ({ searchParams }, {onClose}) => {
+const LevelDetails = ({ searchParams }) => {
   
   const [levelData, setLevelData] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,6 +25,7 @@ const LevelDetails = ({ searchParams }, {onClose}) => {
   const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
   const [popupType, setPopupType] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
 
   const params = useParams();
   // console.log(params)
@@ -153,6 +155,17 @@ const LevelDetails = ({ searchParams }, {onClose}) => {
       console.error('No level data available to download.');
     }
   };
+  const handleAddNewClick = () => {
+    setShowAddNewPopup(true);
+  };
+
+  // Close the "Add New" student popup
+  const handleClosePopup = () => {
+    setShowAddNewPopup(false);
+  };
+
+
+
 
   return (
       <div className={styles.container}>
@@ -244,15 +257,18 @@ const LevelDetails = ({ searchParams }, {onClose}) => {
                   <h3>Instructors</h3>
                   {/*<p>Paid: 20</p>*/}
                   {/*<p>Not Paid: 18</p>*/}
-                  <Link href="/pages/student/dashboard/facilitators/add">
-                    <button className={styles.button}>Add New Instructor</button>
-                  </Link>
+                  <button onClick={handleAddNewClick} className={styles.addButton}>
+                    Add New Instructor
+                  </button>
+                  {showAddNewPopup && (
+                      <AddFacilitatorPage onClose={handleClosePopup}/>
+                  )}
                 </div>
 
                 <table className={styles.table}>
                   <thead>
                   <tr>
-                    <td>No.</td>
+                  <td>No.</td>
                     <td>Name</td>
                     <td>Phone</td>
                     <td>Specification</td>

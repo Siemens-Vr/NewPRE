@@ -484,3 +484,18 @@
 .addFacilitatorRoleButton:hover {
   background-color: #ff7211;
 }
+
+.addButton {
+  background: #ff7211;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  margin-top: 20px;
+}
+
+.addButton:hover {
+  background: #c6e7e7;
+}

@@ -152,9 +152,9 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
           </select>
         </div>
 
-        <button onClick={handleAdd} className={styles.addButton}>
-          Add
-        </button>
+        {/*<button onClick={handleAdd} className={styles.addButton}>*/}
+        {/*  Add*/}
+        {/*</button>*/}
 
         {cohortLevelList.length > 0 && (
           <table className={styles.table}>

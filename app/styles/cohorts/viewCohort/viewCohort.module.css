@@ -54,6 +54,16 @@
 }
 
 .button {
+  background-color: #1b9392;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+.buttons {
   background-color: #ff7211;
   color: white;
   border: none;
@@ -64,8 +74,13 @@
   font-size: 16px;
 }
 
-.button:hover {
+.buttons:hover {
   background-color: #c6e7e7;
+}
+
+
+.button:hover {
+  background-color: #ff7211;
 }
 
 .container h1 {
@@ -74,8 +89,8 @@
 
 
 .button:hover {
-  background-color: #c6e7e7;
-   box-shadow: 0 4px 8px rgb(27, 147, 146);
+  background-color: #ff7211;
+   box-shadow: 0 4px 8px rgb(255, 114, 17);
 }
 
 .container h1 {

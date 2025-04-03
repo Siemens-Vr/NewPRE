@@ -11,6 +11,28 @@
   justify-content:  space-between;
 }
 
+.input {
+  background-color: transparent;
+  border: none;
+  color: var(--text);
+  outline: none;
+  padding: 5px;
+  width: 160px; 
+  padding-left: 0;
+}
+
+.Search {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #c6e7e7;
+  padding: 1px 10px;
+  border-radius: 25px;
+  justify-content: start;
+  width: 200px;
+  margin-left: 260px;
+}
+
 
 
 .table {

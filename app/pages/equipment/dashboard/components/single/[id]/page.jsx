@@ -54,27 +54,36 @@ const EditComponent = () => {
   };
 
   return (
+    <>
+    <div className={styles.historyButtons}>
+    <Link href={`/pages/equipment/dashboard/components/borrow-history/${id}`}>
+      <button className={styles.historyButton}>View Borrow History</button>
+    </Link>
+    <Link href={`/pages/equipment/dashboard/components/product-history/${id}`}>
+      <button className={styles.historyButton}>View Product History</button>
+    </Link>
+  </div>
     <div className={styles.container1}>
-      <div className={styles.historyButtons}>
-        <Link href={`/pages/equipment/dashboard/components/borrow-history/${id}`}>
-          <button className={styles.historyButton}>View Borrow History</button>
-        </Link>
-        <Link href={`/pages/equipment/dashboard/components/product-history/${id}`}>
-          <button className={styles.historyButton}>View Product History</button>
-        </Link>
-      </div>
+    
 
       <div className={styles.componentInfo}>
         {component ? (
           <>
+             <div className={styles.component}>
             <p>Component Name:<span>{component.componentName}</span></p>
             <p>Category: <span>{component.componentType}</span> </p>
             <p>Model Number: <span>{component.modelNumber ? component.modelNumber : "N/A"}</span></p>
             <p>Serial Number: <span>{component.partNumber}</span></p>
-            <p>Condition : <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
-            <p>Condition Details: <span>{component.conditionDetails ? component.conditionDetails : "N/A"}</span></p>
             <p>Description: <span>{component.description ? component.description : "No description"}</span></p>
             <button onClick={() => setShowPopup(true)} className={styles.button}>Update</button>
+              </div>
+
+          <div className={styles.details}>
+            <p>Condition : <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
+            <p>Condition Details: <span>{component.conditionDetails ? component.conditionDetails : "N/A"}</span></p>
+            {/* <p>Description: <span>{component.description ? component.description : "No description"}</span></p> */}
+            {/* <button onClick={() => setShowPopup(true)} className={styles.button}>Update</button> */}
+            </div>
           </>
         ) : (
           <p>Loading.....</p>
@@ -89,6 +98,7 @@ const EditComponent = () => {
         />
       )}
     </div>
+    </>
   );
 }
 

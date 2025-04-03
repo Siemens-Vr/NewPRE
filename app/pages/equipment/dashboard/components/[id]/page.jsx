@@ -6,6 +6,8 @@ import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AddBorrow from '@/app/components/Borrow/borrow';
 
+import { MdSearch} from "react-icons/md";
+
 
 import { config } from '/config';
 
@@ -105,9 +107,15 @@ const SingleComponentPage = () => {
 
     
     <div className={styles.container}>
-      <div className={styles.top}>
+
+      {/* <div className={styles.top}>
         <Search placeholder="Search components" />
-      </div>
+      </div> */}
+
+      <div className={styles.search}>
+          <input type="text" placeholder="Search..." className={styles.input} />
+           <MdSearch />
+         </div>
   
  
         {/* Components without Part Numbers */}
@@ -161,11 +169,18 @@ const SingleComponentPage = () => {
     
     </div>
   )}
+  
   {componentsWithPartNumbers.length > 0 && (
     <div className={styles.container}>
-      <div className={styles.top}>
+
+      {/* <div className={styles.top}>
         <Search placeholder="Search components" />
-      </div>
+      </div> */}
+
+      <div className={styles.search}>
+          <input type="text" placeholder="Search..." className={styles.input} />
+          <MdSearch />
+        </div>
 
       {/* Components with Part Numbers */}
       

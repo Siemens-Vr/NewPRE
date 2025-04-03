@@ -1,13 +1,10 @@
 .container {
   /* margin: 20px 0; */
 
-margin-top: 0;
-
-  /* background-color: #1B9392; */
-  padding: 20px;
-  /* border-radius: 10px; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-}
+   margin-top: 0;
+   padding: 20px;
+   margin-right: -12px;
+ }
 
 .top {
   display: flex;
@@ -17,12 +14,13 @@ margin-top: 0;
   margin-top: 1px;
 }
 
+ 
 .input {
   background-color: transparent;
   border: none;
   color: var(--text);
   outline: none;
-  padding: 5px;
+  padding: 4px;
   width: 160px; 
   padding-left: 0;
 }
@@ -32,28 +30,30 @@ margin-top: 0;
   align-items: center;
   gap: 2px;
   background-color: #c6e7e7;
-  padding: 1px 10px;
+  padding: 1px 8px;
   border-radius: 25px;
   justify-content: start;
   width: 200px;
-  margin-left: 260px;
+  margin-left: -25px;
 }
 
 .btn{
   display:flex;
-  gap :20px;
+  gap :15px;
+  margin-right: 26px;
+   
 }
 
 .addButton {
   background-color: #ff7211;
   color: var(--text);
-  padding: 10px 20px;
+  padding: 5px 5px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  /* width: clamp(120px, 20vw, 200px); */
-  width: clamp(50px, 12vw, 180px);
+   width: clamp(40px, 11vw, 128px);
+   /* width: 160px; */
 
 }
 
@@ -93,15 +93,22 @@ margin-top: 0;
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #1B9392;
-  border-radius: 10px; 
+  /* background-color: #1B9392; */
+  /* border-radius: 10px;  */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height:200px;
   overflow:hidden;
   color: #ffffff;
+  margin-left: -26px;
 }
 .option{
   padding: 22px;
+  
+}
+
+.table thead{
+  background-color: #1B9392;
+  color: #ffffff;
 }
 
 .table th,
@@ -118,13 +125,21 @@ margin-top: 0;
   color: var(--textAccent);
 }
 
-.table tr:nth-child(even) {
-  background-color: var(--bgAccent2);
+.table tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
+  color: #1B9392;
+  font-weight: 600;
 }
 
-.table tr:hover {
-  background-color: var(--bgAccent3);
+.table tbody tr:nth-child(odd) {
+   color: #1B9392;
+   font-weight: 600;
 }
+
+
+/* .table tr:hover {
+  background-color: var(--bgAccent3);
+} */
 
 .button {
   padding: 5px 10px;
@@ -134,11 +149,11 @@ margin-top: 0;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 10px; /* Added spacing */
+  margin-right: 10px; 
 }
 
 .button:last-child {
-  margin-right: 10px; /* Remove margin from the last button */
+  margin-right: 10px;  
 }
 
 .button:hover {

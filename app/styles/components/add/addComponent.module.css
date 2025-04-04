@@ -217,6 +217,9 @@
 .componentInfo p span {
   font-weight: bold;
   color: #000000;
+  text-decoration: underline;
+  text-decoration-color: #006d5b;
+
 }
 
 .button {

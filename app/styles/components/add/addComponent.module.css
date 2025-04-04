@@ -27,10 +27,10 @@
 
 
  .container1{         
-  background-color: #C6E7E7;
+  /* background-color: #C6E7E7; */
   padding: 10px;
-  border-radius: 20px;
-  width: 1000px;
+  border-radius: 10px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -161,7 +161,7 @@
   display: flex;
   /* justify-content: flex-end; */
   gap: 10px;
-  margin-right: 86px;
+  margin-right: 10px;
 
 }
 
@@ -173,12 +173,38 @@
   border: none;
   background-color: #ff7211;
   color: #ffffff;
-  /* margin-right: 85px; */
+  /* margin-left: 100px; */
 }
 
 .component{
+  /* background-color: #1B9392; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  flex-direction: row;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
 
-  background-color: #006d5b;
+
+}
+.component p{
+
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* width: 700px;
+  
+  margin: 0; */
+}
+
+.details{
+  /* background-color: #1B9392; */
+  display: flex;
+  flex-direction: row;
+  gap:100px;
+  margin-top: 33px;
+  padding: 12px;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+
+
 }
 
 .componentInfo{
@@ -198,9 +224,9 @@
   font-size: 16px;
   color: #000000;
   font-weight: bold;
-  width: 45%; 
+  width: 30%; 
   height: 80px;
-  background-color: #1B9392;
+  /* background-color: #C6E7E7; */
   padding-left: 12px;
   padding-top: 15px;
   border-radius: 12px;
@@ -208,20 +234,20 @@
 
 .componentInfo p span {
   font-weight: bold;
-  color: #ffffff;
+  color: #000000;
 }
 
-.componentInfo button {
-  margin-left: 328px;
-   margin-top: 15px;
+.button {
+  /* margin-left: 328px; */
+  margin-top: 15px;
   border: none;
   border-radius: 5px;
   background-color: #ff7211;
   color: #ffffff;
+  font-weight: 500;
   cursor: pointer;
   height: 41px;
-  width:90px;
-  
+  width:90px;  
   transition: background-color 0.3s ease;
 }
 
@@ -229,5 +255,15 @@
   background-color: #006d5b;
 }
 
-
+.buttonUpdate{
+   margin-top: 13px; 
+  border: none;
+ border-radius: 5px;
+ background-color: #ff7211;
+ color: #ffffff;
+ cursor: pointer;
+ height: 35px;
+ width:200px;  
+ transition: background-color 0.3s ease;
+}
 

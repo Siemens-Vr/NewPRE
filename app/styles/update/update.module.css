@@ -28,7 +28,7 @@
     border-radius: 8px;
     max-width: 650px;
     max-height: 90vh; 
-     width: 90%;
+     width: 45%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
@@ -42,10 +42,20 @@
   }
 
   .form{
-
-    display: flex; 
+    /* display: flex; 
     flex-wrap: wrap;
     gap:20px;
+    justify-content: space-between; */
+    padding: 37px;
+    padding-left: 12px;
+    padding-right: 12px;
+
+  }
+
+  .flex{
+    display: flex; 
+    flex-wrap: wrap;
+    gap:10px;
     justify-content: space-between;
 
   }
@@ -54,9 +64,15 @@
     margin-bottom: 10px;
     /* flex: 1 1 calc(50% - 10px);
     min-width: 300px; */
+    /* width: 100%; */
 
   }
   
+  /* .formGroupdesc{
+    width: 100%;
+  }
+   */
+
   .formGroup label {
     display: block;
     margin-bottom: 5px;

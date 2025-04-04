@@ -113,10 +113,10 @@ const SingleComponentPage = () => {
       </div> */}
 
       <div className={styles.search}>
+          <MdSearch />
           <input type="text" placeholder="Search..." className={styles.input} />
-           <MdSearch />
-         </div>
-  
+          </div>
+ 
  
         {/* Components without Part Numbers */}
         <>
@@ -178,9 +178,11 @@ const SingleComponentPage = () => {
       </div> */}
 
       <div className={styles.search}>
-          <input type="text" placeholder="Search..." className={styles.input} />
-          <MdSearch />
-        </div>
+           <MdSearch />
+          <input type="text" placeholder="search..." className={styles.input} />
+         </div>
+
+        
 
       {/* Components with Part Numbers */}
       
@@ -218,15 +220,14 @@ const SingleComponentPage = () => {
                     <Link href={`/pages/equipment/dashboard/components/single/${component.uuid}`}>
                       <button className={styles.button}>View</button>
                     </Link> 
+                    
                     {/* <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
                       <button className={styles.button}>Borrow</button>
                     </Link> */}
                            
                     {/* Added a pop up button        */}
-                   <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
-                    
+                   <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>              
  
-                    
                   </td>
                 </tr>
               ))}

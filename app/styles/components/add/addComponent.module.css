@@ -1,4 +1,4 @@
-  
+
 .container {
   position: fixed;
   top: 45%;
@@ -27,8 +27,7 @@
 
 
  .container1{         
-  /* background-color: #C6E7E7; */
-  padding: 10px;
+   padding: 10px;
   border-radius: 10px;
   width: 100%;
   margin: 0 auto;
@@ -159,7 +158,6 @@
 
 .historyButtons {
   display: flex;
-  /* justify-content: flex-end; */
   gap: 10px;
   margin-right: 10px;
 
@@ -173,48 +171,33 @@
   border: none;
   background-color: #ff7211;
   color: #ffffff;
-  /* margin-left: 100px; */
+  
 }
 
 .component{
-  /* background-color: #1B9392; */
+  
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   flex-direction: row;
-  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); 
 
 
 }
-.component p{
-
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* width: 700px;
-  
-  margin: 0; */
-}
+ 
 
 .details{
-  /* background-color: #1B9392; */
-  display: flex;
+   display: flex;
   flex-direction: row;
   gap:100px;
   margin-top: 33px;
   padding: 12px;
-  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);  
 
 
 }
 
-.componentInfo{
-
-  /* display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-left: 50px;
-  margin-top: 12px; */
-} 
+ 
 
 
 .componentInfo p {
@@ -226,8 +209,7 @@
   font-weight: bold;
   width: 30%; 
   height: 80px;
-  /* background-color: #C6E7E7; */
-  padding-left: 12px;
+   padding-left: 12px;
   padding-top: 15px;
   border-radius: 12px;
 }
@@ -238,8 +220,7 @@
 }
 
 .button {
-  /* margin-left: 328px; */
-  margin-top: 15px;
+   margin-top: 15px;
   border: none;
   border-radius: 5px;
   background-color: #ff7211;
@@ -266,4 +247,7 @@
  width:200px;  
  transition: background-color 0.3s ease;
 }
+ 
 
+ 
+ 

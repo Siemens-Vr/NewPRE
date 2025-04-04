@@ -1,6 +1,5 @@
-.container {
-  /* margin: 20px 0; */
-
+/* .container {
+ 
    margin-top: 0;
    padding: 20px;
    margin-right: -12px;
@@ -66,8 +65,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
    width: clamp(40px, 11vw, 128px);
-   /* width: 160px; */
-}
+ }
 
  
 
@@ -78,7 +76,7 @@
 .select {
   border:2px solid black;
   border-radius:5px;
-  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  width: clamp(180px, 50vw, 380px);  
   height:40px;
 
 }
@@ -86,7 +84,7 @@
 .suspense {
   border:2px solid black;
   border-radius:5px;
-  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  width: clamp(180px, 50vw, 380px);  
   height:40px;
   background-color: #069b49;
 }
@@ -107,8 +105,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  /* background-color: #1B9392; */
-  /* border-radius: 10px;  */
+ 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height:200px;
   overflow:hidden;
@@ -123,8 +120,7 @@
 .table thead{
   background-color: #1B9392;
   color: #ffffff;
-  /* color: #000000; */
-
+ 
 }
 
 .table th,
@@ -143,21 +139,17 @@
 
 .table tbody tr:nth-child(even) {
   background-color: #f0f0f0;
-  /* color: #1B9392; */
-  color: #000000;
+   color: #000000;
   font-weight: 600;
 }
 
 .table tbody tr:nth-child(odd) {
-   /* color: #1B9392; */
-   color: #000000;
+    color: #000000;
    font-weight: 600;
 }
 
 
-/* .table tr:hover {
-  background-color: var(--bgAccent3);
-} */
+ 
 
 .button {
   padding: 5px 10px;
@@ -195,4 +187,269 @@
 .outOfStock {
   background-color: crimson;
   color: white;
+} */
+
+
+
+
+/* General Container */
+.container {
+  margin-top: 0;
+  padding: 20px;
+  margin-right: -12px;
+}
+
+/* Top Section */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 1px;
+}
+
+/* Search Input */
+.input {
+  background-color: transparent;
+  border: none;
+  color: var(--text);
+  outline: none;
+  padding: 4px;
+  width: 160px; 
+  padding-left: 0;
+}
+
+/* Search Box */
+.Search {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #c6e7e7;
+  padding: 1px 8px;
+  border-radius: 25px;
+  justify-content: start;
+  width: 200px;
+  margin-left: -25px;
+}
+
+/* Buttons Container */
+.btn {
+  display: flex;
+  gap: 15px;
+  margin-right: 26px;
+}
+
+/* Add Button */
+.addButton {
+  background-color: #ff7211;
+  color: var(--text);
+  padding: 5px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: clamp(40px, 11vw, 128px);
+}
+
+.addButton:hover {
+  background-color: #C6E7E7;
+}
+
+/* Select Dropdown */
+.select {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  height: 40px;
+}
+
+/* Suspense Styling */
+.suspense {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: clamp(180px, 50vw, 380px); /* Dynamic width */
+  height: 40px;
+  background-color: #069b49;
+}
+
+/* Search Box */
+.search {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: clamp(180px, 50vw, 380px); 
+  height: 40px;
+  background-color: #069b49;
+}
+
+/* Heading */
+.h2 {
+  font-weight: bold;
+  font-size: clamp(0.875rem, 2vw, 1.5rem);
+}
+
+/* Table Styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+  overflow: hidden;
+  color: #ffffff;
+  margin-left: -26px;
+}
+
+.table thead {
+  background-color: #1B9392;
+  color: #ffffff;
+}
+
+.table th, .table td {
+  padding: 12px 40px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.table th {
+  background-color: var(--bgAccent);
+  font-weight: bold;
+  color: var(--textAccent);
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f0f0f0;
+  color: #000000;
+  font-weight: 600;
+}
+
+.table tbody tr:nth-child(odd) {
+  color: #000000;
+  font-weight: 600;
+}
+
+/* Action Button Styling */
+.button {
+  padding: 5px 10px;
+  background-color: #C6E7E7;
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; 
+}
+
+.button:last-child {
+  margin-right: 10px;  
+}
+
+.button:hover {
+  background-color: darkcyan;
+}
+
+/* Badge Styling */
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.inStock {
+  background-color: #069b49;
+  color: white;
+}
+
+.outOfStock {
+  background-color: crimson;
+  color: white;
+}
+
+/* Media Queries for Responsiveness */
+
+/* For Screens up to 1024px (Tablets & Smaller Laptops) */
+@media screen and (max-width: 1024px) {
+  .Search {
+    width: 180px;
+  }
+
+  .input {
+    width: 140px;
+  }
+
+  .btn {
+    gap: 10px;
+    margin-right: 10px;
+  }
+
+  .table th, .table td {
+    padding: 10px 30px;
+  }
+
+  .addButton {
+    width: clamp(40px, 10vw, 100px);
+  }
+}
+
+/* For Screens up to 768px (Mobile/Tablets) */
+@media screen and (max-width: 768px) {
+  .Search {
+    width: 150px;
+  }
+
+  .input {
+    width: 120px;
+  }
+
+  .table th, .table td {
+    padding: 8px 20px;
+  }
+
+  .table {
+    margin-left: 0;
+  }
+
+  .btn {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-right: 0;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+/* For Screens up to 480px (Small Mobile Screens) */
+@media screen and (max-width: 480px) {
+  .Search {
+    width: 120px;
+  }
+
+  .input {
+    width: 100px;
+  }
+
+  .table th, .table td {
+    padding: 8px 15px;
+  }
+
+  .btn {
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 0;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .table {
+    margin-left: 0;
+  }
 }

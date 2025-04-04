@@ -71,6 +71,10 @@ const EditComponent = () => {
         <div className={styles.componentInfo}>
           {component ? (
             <>
+
+            <div className={styles.components}>
+
+            <h2 className={styles.h3}>Component Information</h2>
               <div className={styles.component}>
                 <p>Component Name: <span>{component.componentName}</span></p>
                 <p>Category: <span>{component.componentType}</span></p>
@@ -81,13 +85,17 @@ const EditComponent = () => {
                   Update
                 </button>
               </div>
+              </div>
 
+             <div className={styles.detail}>
+             <h2 className={styles.h2}>Component Condition</h2>
               <div className={styles.details}>
-                <p>Condition: <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
+                 <p>Condition: <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
                 <p>Condition Details: <span>{component.conditionDetails || "N/A"}</span></p>
                 <button onClick={() => { setShowPopup(true); setShowConditionDetails(true); }} className={styles.buttonUpdate}>
                   Update Condition Details
                 </button>
+              </div>
               </div>
             </>
           ) : (

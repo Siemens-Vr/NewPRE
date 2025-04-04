@@ -174,14 +174,18 @@
   
 }
 
-.component{
-  
+.component{  
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   flex-direction: row;
+  /* box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);  */
+  /* background-color: #C6E7E7; */
+}
+ 
+.components{
+  background-color: #C6E7E7;
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); 
-
 
 }
  
@@ -190,15 +194,36 @@
    display: flex;
   flex-direction: row;
   gap:100px;
+  /* margin-top: 33px; */
+  /* padding: 12px; */
+  /* box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);   */
+  /* background-color: #C6E7E7; */
+}
+
+.detail{
+
+  /* display: flex; */
+  /* flex-direction: row; */
+  gap:100px;
   margin-top: 33px;
   padding: 12px;
   box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);  
-
-
+  background-color: #C6E7E7;
 }
-
  
 
+
+.h2{
+   color: #1B9392;
+   font-size: 25px;
+}
+
+.h3{
+  color: #1B9392;
+  font-size: 25px;
+  padding-left: 12px;
+  padding-top: 5px;
+}
 
 .componentInfo p {
   display: flex;
@@ -216,9 +241,12 @@
 
 .componentInfo p span {
   font-weight: bold;
-  color: #000000;
-  text-decoration: underline;
-  text-decoration-color: #006d5b;
+  color: #1B9392; 
+  border-bottom: 1px solid black; /* Custom underline */
+  padding-bottom: 2px; /* Adjusts spacing */
+  display: inline-block;
+  width: 35%; /* Extend underline beyond text */
+
 
 }
 

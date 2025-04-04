@@ -392,26 +392,58 @@
 }
 
 .profileCard {
-  width: 30%;
+  width: 40%;
   text-align: center;
   background: #ff7211;
 }
-
 .detailsCard {
-  width: 65%;
-  background: #d6f5f3;
+  background: #c6e7e7;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: 100%;
 }
 
-.detailsCard h3{
-  color: #000000;
-  font-weight: bold;
-  font-size: 24px;
+.detailsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
+.updateButton {
+  background: #ff8c00;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.updateButton:hover {
+  background: #1b9392;
+}
 .profileImage {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   margin-bottom: 10px;
+}
+.buttons{
+  background: #FF8C00;
+  color: white;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 90px;
+  height: 50px;
+}
+
+.title{
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
 }

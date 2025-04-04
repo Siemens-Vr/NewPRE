@@ -19,6 +19,8 @@ const StudentsPage = () => {
   const [popupStudentId, setPopupStudentId] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
     const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('name');
+  const [searchValue, setSearchValue] = useState('');
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -47,18 +49,18 @@ const StudentsPage = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const applyFilters = () => {
-    const filtered = students.filter((student) => {
-      return (
-        (filters.cohort === '' || student.cohort === filters.cohort) &&
-        (filters.level === '' || student.level === filters.level) &&
-        (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
-        (filters.name === '' || student.name.includes(filters.name))
-      );
-    });
-
-    setFilteredStudents(filtered);
-  };
+  // const applyFilters = () => {
+  //   const filtered = students.filter((student) => {
+  //     return (
+  //       (filters.cohort === '' || student.cohort === filters.cohort) &&
+  //       (filters.level === '' || student.level === filters.level) &&
+  //       (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
+  //       (filters.name === '' || student.name.includes(filters.name))
+  //     );
+  //   });
+  //
+  //   setFilteredStudents(filtered);
+  // };
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -131,6 +133,23 @@ const StudentsPage = () => {
 
   // };
   // console.log(levels)
+  //added by me
+  const applyFilters = (customFilters = filters) => {
+    const filtered = students.filter((student) => {
+      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+
+      return (
+          (customFilters.cohort === '' || student.cohort === customFilters.cohort) &&
+          (customFilters.level === '' || student.level === customFilters.level) &&
+          (customFilters.regNo === '' || student.regNo.toLowerCase().includes(customFilters.regNo.toLowerCase())) &&
+          (customFilters.kcseNo === '' || (student.kcseNo && student.kcseNo.toLowerCase().includes(customFilters.kcseNo.toLowerCase()))) &&
+          (customFilters.name === '' || fullName.includes(customFilters.name.toLowerCase()))
+      );
+    });
+
+    setFilteredStudents(filtered);
+  };
+
 
 
   const handleDeleteStudent = async (uuid, fullName) => {
@@ -198,85 +217,65 @@ const StudentsPage = () => {
               <div className={styles.filterField}>
 
                 <div className={styles.filterField}>
-                  <label htmlFor="regNo">Reg No:</label>
+                  <label htmlFor="filterType">Filter by:</label>
+                  <select
+                      id="filterType"
+                      value={selectedFilter}
+                      onChange={(e) => setSelectedFilter(e.target.value)}
+                  >
+                    <option value="name">Name</option>
+                    <option value="regNo">Reg No</option>
+                    <option value="cohort">Cohort</option>
+                    <option value="level">Level</option>
+                    <option value="kcseNo">KCSE No</option>
+                  </select>
+                </div>
+
+                <div className={styles.filterField}>
                   <input
-                      id="regNo"
-                      name="regNo"
                       type="text"
-                      placeholder="Enter Registration Number"
-                      value={filters.regNo}
-                      onChange={handleFilterChange}
+                      placeholder={`Enter ${selectedFilter}`}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
                   />
                 </div>
-                {/*<label htmlFor="cohort">Cohort:</label>*/}
-                {/*<div>*/}
-                {/*  <select*/}
-                {/*      id="cohort"*/}
-                {/*      name="cohort"*/}
-                {/*      value={filters.cohort}*/}
-                {/*      onChange={handleFilterChange}*/}
-                {/*  >*/}
-                {/*    <option value="">All</option>*/}
-                {/*    <option value="Cohort Test">Cohort Test</option>*/}
-                {/*    <option value="January Intake">January Intake</option>*/}
-                {/*  </select>*/}
-                {/*</div>*/}
+                <button
+                    className={styles.filterButton}
+                    onClick={() => {
+                      setFilters((prev) => {
+                        const updated = {
+                          ...prev,
+                          cohort: '',
+                          level: '',
+                          regNo: '',
+                          kcseNo: '',
+                          name: '',
+                          [selectedFilter]: searchValue, // this sets the selected filter value dynamically
+                        };
+                        // applyFilters needs to run *after* state updates
+                        applyFilters(updated);
+                        return updated;
+                      });
+                    }}
+                >
+                  Search
+                </button>
 
-                {/*<div className={styles.filterField}>*/}
-                <label htmlFor="level">Name :</label>
-                <div>
-                  <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="Enter name"
-                      value={filters.name}
-                      onChange={handleFilterChange}
-                  />
-                </div>
-                {/*</div>*/}
-                {/*<div className={styles.filterField}>*/}
-                {/*  <label htmlFor="regNo">Reg No:</label>*/}
-                {/*  <input*/}
-                {/*      id="regNo"*/}
-                {/*      name="regNo"*/}
-                {/*      type="text"*/}
-                {/*      placeholder="Enter Registration Number"*/}
-                {/*      value={filters.regNo}*/}
-                {/*      onChange={handleFilterChange}*/}
-                {/*  />*/}
-                {/*</div>*/}
 
-                {/*<div className={styles.filterField}>*/}
-                {/*  <label htmlFor="kcseNo">KCSE No:</label>*/}
-                {/*  <input*/}
-                {/*    id="kcseNo"*/}
-                {/*    name="kcseNo"*/}
-                {/*    type="text"*/}
-                {/*    placeholder="Enter KCSE Number"*/}
-                {/*    value={filters.kcseNo}*/}
-                {/*    onChange={handleFilterChange}*/}
-                {/*  />*/}
-                {/*  </div>*/}
-                <>
-                  <button className={styles.filterButton} onClick={applyFilters}>
-                    Filter
-                  </button>
-                </>
-                < div className={styles.search}>
-                  <Search placeholder="Search for a student..."/>
-                </div>
+                {/*< div className={styles.search}>*/}
+                {/*  <Search placeholder="Search for a student..."/>*/}
+                {/*</div>*/}
                 {/*<div className={styles.buttonsGroup}>*/}
                 <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
-                  {/* Button to open the "Add New" student popup */}
-                  <button onClick={handleAddNewClick} className={styles.addButton}>
-                      Add New
-                  </button>
+                {/* Button to open the "Add New" student popup */}
+                <button onClick={handleAddNewClick} className={styles.addButton}>
+                  Add New
+                </button>
 
-                  {/* Conditionally render the Add New Student Popup */}
-                  {showAddNewPopup && (
-                      <AddStudentPage onClose={handleClosePopup} />
-                  )}
+                {/* Conditionally render the Add New Student Popup */}
+                {showAddNewPopup && (
+                    <AddStudentPage onClose={handleClosePopup}/>
+                )}
               </div>
             </div>
             {/*</div>*/}
@@ -292,14 +291,14 @@ const StudentsPage = () => {
                 <td>Action</td>
               </tr>
               </thead>
-            <tbody>
+              <tbody>
               {filteredStudents.map((student) => {
                 const fullName = `${student.firstName} ${student.lastName}`;
                 return (
-                  <tr key={student.uuid}>
-                    <td>{student.regNo}</td>
-                    <td>
-                      <div className={styles.student}>
+                    <tr key={student.uuid}>
+                      <td>{student.regNo}</td>
+                      <td>
+                        <div className={styles.student}>
                         {fullName}
                       </div>
                     </td>

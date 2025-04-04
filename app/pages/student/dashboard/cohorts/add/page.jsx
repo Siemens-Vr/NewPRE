@@ -307,77 +307,86 @@ console.log(facilitators)
                               onChange={(e) => handleLevelChange(index, 'exam_quotation_number', e.target.value)}
                           />
                         </div>
-                      </div>
-                      <div className={styles.facilitator}>
-                        <label htmlFor="" className={styles.title}>Facilitators</label>
+                        <div className={styles.buttons2}>
+                          <button
+                              type="button"
+                              onClick={() => deleteLevel(index)}
+                              className={`${styles.deleteButton} ${styles.button}`}
+                          >
+                            Delete Level
+                          </button>
+                          <button
+                              type="button"
+                              onClick={addLevel}
+                              className={`${styles.addButton} ${styles.button}`}
+                          >
+                            Add New Level
+                          </button>
+                        </div>
+                        </div>
+                        <div className={styles.facilitator}>
+                          <label htmlFor="" className={styles.title}>Facilitators</label>
 
 
-                        {level.facilitators.length > 0 && (
-                            <div className={styles.facilitatorRoleTable}>
-                              <table>
-                                <thead>
-                                <tr>
-                                  <th>Facilitator</th>
-                                  <th>Role</th>
-                                  <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {level.facilitators.map((facilitator, i) => (
-                                    <tr key={i}>
-                                      <td>{facilitator.label}</td>
-                                      <td>{facilitator.role}</td>
-                                      <td>
-                                        <button onClick={() => removeFacilitatorRole(index, i)}>Remove</button>
-                                      </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                              </table>
-                            </div>
-                        )}
-                        <div className={styles.facilitatorRoleSelection}>
-                          <Select
-                              className={styles.select}
-                              placeholder="Select Facilitator"
-                              options={facilitators.map(facilitator => ({
-                                value: facilitator.uuid,
-                                label: `${facilitator.firstName} ${facilitator.lastName}`
-                              }))}
-                              value={selectedFacilitator}
-                              onChange={setSelectedFacilitator}
-                          />
-                          <Select
-                              className={styles.select}
-                              placeholder="Select Role"
-                              options={roleOptions}
-                              value={selectedRole}
-                              onChange={setSelectedRole}
-                          />
+                          {level.facilitators.length > 0 && (
+                              <div className={styles.facilitatorRoleTable}>
+                                <table>
+                                  <thead>
+                                  <tr>
+                                    <th>Facilitator</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {level.facilitators.map((facilitator, i) => (
+                                      <tr key={i}>
+                                        <td>{facilitator.label}</td>
+                                        <td>{facilitator.role}</td>
+                                        <td>
+                                          <button onClick={() => removeFacilitatorRole(index, i)}>Remove</button>
+                                        </td>
+                                      </tr>
+                                  ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                          )}
+                          <div className={styles.facilitatorRoleSelection}>
+                            <Select
+                                className={styles.selects}
+                                placeholder="Select Facilitator"
+                                options={facilitators.map(facilitator => ({
+                                  value: facilitator.uuid,
+                                  label: `${facilitator.firstName} ${facilitator.lastName}`
+                                }))}
+                                value={selectedFacilitator}
+                                onChange={setSelectedFacilitator}
+                            />
+                            <Select
+                                className={styles.selects}
+                                placeholder="Select Role"
+                                options={roleOptions}
+                                value={selectedRole}
+                                onChange={setSelectedRole}
+                            />
 
+
+                          </div>
+                          <button
+                              type="button"
+                              className={styles.addFacilitatorRoleButton}
+                              onClick={() => addFacilitatorRole(index)}
+                          >
+                            Add facilitator
+                          </button>
 
                         </div>
-                        <button
-                            type="button"
-                            className={styles.addFacilitatorRoleButton}
-                            onClick={() => addFacilitatorRole(index)}
-                        >
-                          Add
-                        </button>
+
 
                       </div>
-
-
-                      <button
-                          type="button"
-                          onClick={() => deleteLevel(index)}
-                          className={`${styles.deleteButton} ${styles.button}`}
-                      >
-                        Delete Level
-                      </button>
+                      ))}
                     </div>
-                ))}
-              </div>
               <div className={styles.buttons}>
                 <button
                     type="button"
@@ -386,7 +395,8 @@ console.log(facilitators)
                 >
                   Add New Level
                 </button>
-                <button type="submit" className={`${styles.submitButton} ${styles.button}`} disabled={loading}>
+
+                <button type="submit" className={`${styles.submitButtons} ${styles.button}`} disabled={loading}>
                   {loading ? (
                       <>
                         <Spinner/> Please wait...

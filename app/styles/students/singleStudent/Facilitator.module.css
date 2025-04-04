@@ -18,7 +18,7 @@
 .profile {
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 100%;
     margin-top: 50px;
 }
 
@@ -27,7 +27,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
-    width: 30%;
+    width: 40%;
     text-align: center;
 }
 
@@ -37,14 +37,21 @@
     border-radius: 50%;
 }
 .details {
-    background: #e0f7fa;
+    background: #c6e7e7;
     padding: 20px;
-    border-radius: 10px;
-    width: 65%;
-    align-self: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-left: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
 }
 
+.detailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
 .details h2 {
     color: #000000;
     font-weight: bold;
@@ -103,6 +110,16 @@
     border-radius: 5px;
     cursor: pointer;
 }
+.updateButton {
+    background: #ff8c00;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
 
 .button:hover {
     background: #c6e7e7;

@@ -196,7 +196,7 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
               className={styles.addFacilitatorRoleButton}
               onClick={addFacilitatorRole}
             >
-              Add
+              Add Facilitator
             </button>
           </div>
 

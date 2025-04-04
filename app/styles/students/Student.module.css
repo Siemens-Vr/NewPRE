@@ -19,11 +19,15 @@
 .filterSection {
     display: flex;
     flex-wrap: wrap;
-
+  margin-left: 400px;
     align-items: center;
     justify-content: space-between;
 }
-
+@media screen and (min-width: 1545px) {
+    .filterSection {
+        margin-left: 900px;
+    }
+}
 .filterField {
     display: flex;
     flex-direction: row;
@@ -78,11 +82,11 @@
     background: #ff7211;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 12px 12px;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease-in-out;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
 }
 
 .addButton:hover {

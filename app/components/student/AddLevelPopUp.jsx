@@ -187,7 +187,7 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
 
         <div className={styles.buttonContainer}>
           <button onClick={handleAddLevelToBackend} className={styles.saveButton}>
-            Add Level
+            Add
           </button>
           <button onClick={onClose} className={styles.closeButton}>
             x

@@ -6,6 +6,8 @@ import { AddUpdateHoursPopup, ViewHoursPopup } from '@/app/components/facilitato
 import { config } from "/config";
 import Image from "next/image";
 
+import UpdateFacilitator from "@/app/components/facilitators/UpdateFacilitator";
+
 const SingleFacilitatorPage = ({ params }) => {
  const [facilitator, setFacilitator] = useState(null);
 const [successMessage, setSuccessMessage] = useState('');
@@ -13,6 +15,7 @@ const [errorMessage, setErrorMessage] = useState('');
 const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
   const [popupType, setPopupType] = useState(null);
     const [editingField, setEditingField] = useState(null);
+    const [showUpdate, setShowUpdate] = useState(false);
 
   
   const [formData, setFormData] = useState({
@@ -150,6 +153,13 @@ const handleAddUpdateHours = async (entries) => {
   if (!facilitator) {
     return <div>Loading...</div>;
   }
+
+    const handleshowUpdate = () => {
+        setShowUpdate(true);
+    };
+    const handleshowDelete = () => {
+        setShowUpdate(false);
+    }
     // console.log(formData)
   return (
       <div className={styles.container}>
@@ -163,7 +173,7 @@ const handleAddUpdateHours = async (entries) => {
               </div>
           </div>
 
-          <div className={styles.profile }>
+          <div className={styles.profile}>
               {/* Profile Section */}
               <div className={styles.card}>
                   <Image
@@ -179,41 +189,22 @@ const handleAddUpdateHours = async (entries) => {
 
               {/* Details Section with Editable Fields */}
               <div className={styles.details}>
-                  <h2>Personal Details</h2>
+                  <div className={styles.detailsHeader}>
+                      <h2>Personal Details</h2>
+                      <button onClick={handleshowUpdate} className={styles.updateButton}>
+                          Update
+                      </button>
+                  </div>
+                      <p><strong>Full Name:</strong> {facilitator.firstName} {facilitator.lastName}</p>
+                      <p><strong>Email:</strong> {facilitator.email}</p>
+                      <p><strong>Phone:</strong> {facilitator.phoneNo}</p>
+                      <p><strong>Reg No:</strong> {facilitator.idNo}</p>
 
-                  <p><strong>Full Name:</strong>
-                      {editingField === "firstName" ? (
-                          <input type="text" name="firstName" value={formData.firstName} onChange={handleChange}
-                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
-                      ) : (
-                          <span
-                              onClick={() => setEditingField("firstName")}>{facilitator.firstName} {facilitator.lastName}</span>
-                      )}
-                  </p>
-
-                  <p><strong>Email:</strong>
-                      {editingField === "email" ? (
-                          <input type="email" name="email" value={formData.email} onChange={handleChange}
-                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
-                      ) : (
-                          <span onClick={() => setEditingField("email")}>{facilitator.email}</span>
-                      )}
-                  </p>
-
-                  <p><strong>Phone:</strong>
-                      {editingField === "phoneNo" ? (
-                          <input type="text" name="phoneNo" value={formData.phoneNo} onChange={handleChange}
-                                 onBlur={handleBlur} onKeyPress={handleKeyPress} autoFocus/>
-                      ) : (
-                          <span onClick={() => setEditingField("phoneNo")}>{facilitator.phoneNo}</span>
-                      )}
-                  </p>
-
-                  <p><strong>Reg No:</strong> {facilitator.idNo}</p>
+                      {showUpdate && <UpdateFacilitator onClose={handleshowDelete}/>}
+                  </div>
               </div>
-          </div>
 
-          {/*<div className={styles.hoursButtons}>*/}
+              {/*<div className={styles.hoursButtons}>*/}
           {/*    <button className={styles.button} onClick={() => setPopupType('addUpdate')}>Add Hours</button>*/}
           {/*    <button className={styles.button} onClick={() => setPopupType('view')}>View Hours</button>*/}
           {/*</div>*/}

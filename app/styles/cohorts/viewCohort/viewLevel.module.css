@@ -164,15 +164,15 @@
   transition: background-color 0.3s ease;
 }
 
-.popupActions button[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  margin-right: 10px;
-}
+/*.popupActions button[type="submit"] {*/
+/*  background-color: #4CAF50;*/
+/*  color: white;*/
+/*  margin-right: 10px;*/
+/*}*/
 
-.popupActions button[type="submit"]:hover {
-  background-color: #45a049;
-}
+/*.popupActions button[type="submit"]:hover {*/
+/*  background-color: #45a049;*/
+/*}*/
 
 .popupActions button[type="button"] {
   background-color: #f44336;
@@ -195,6 +195,7 @@
   color:black;
   font-weight: bold;
   margin-left: 60px;
+  margin-bottom: 16px;
 }
 .facilitatorRoleTable table {
   width: 100%;
@@ -239,7 +240,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 8px;
-  margin-left: 100px;
+  margin-left: 70px;
 }
 
 .addFacilitatorRoleButton:hover {
@@ -315,7 +316,7 @@
   background-color: #1b9392; /* Teal */
   color: white;
   align-items: center;
-  margin-left: 100px;
+  /*margin-left: 100px;*/
 
 }
 
@@ -331,7 +332,19 @@
 .popupActions button[type="button"]:hover {
   background-color: #d96b27;
 }
-
+/*.submit{*/
+/*  align-items: center;*/
+/*  !*margin-left: 150px;*!*/
+/*  !*padding: 8px 16px;*!*/
+/*  background-color: #1b9392;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  border-radius: 4px;*/
+/*  cursor: pointer;*/
+/*  margin-top: 8px;*/
+/*  width: 100%;*/
+/*  !*margin-left: 70px;*!*/
+/*}*/
 
 .closeButton {
   position: absolute;
@@ -425,6 +438,7 @@
   flex-wrap: wrap;
   /*gap: 50px;*/
   justify-content: space-between;
+  /*margin-top:16px ;*/
 }
 .addFacilitatorRoleButton{
   padding: 12px 20px;

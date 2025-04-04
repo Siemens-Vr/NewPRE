@@ -1,4 +1,30 @@
 
+.modalOverlay {
+  position: fixed; /* Position it fixed on the screen */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center the modal horizontally */
+  align-items: center; /* Center the modal vertically */
+  z-index: 1000; /* Ensure the modal is above other content */
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.modalContent {
+  position: relative; /* Ensures the close button is positioned inside */
+  /*background-color: white; !* Ensure the modal has a visible background *!*/
+  /*padding: 20px;*/
+  /*border-radius: 8px;*/
+  /*max-width: 500px;*/
+  /*width: 100%;*/
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+}
+
+
  .container {
   display: flex;
   flex-direction: column;

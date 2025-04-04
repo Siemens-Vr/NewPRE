@@ -364,14 +364,24 @@ import AddLevelPopup from '@/app/components/student/AddLevelPopUp';
 import React, { useState, useEffect } from "react";
 import { config } from "/config";
 import Image from "next/image";
+import UpdateStudent from "@/app/components/student/UpdateStudent";
+import LevelAddPopUp from "@/app/components/cohort/LevelAddPopUp";
 
 const SinstudentPage = ({ params }) => {
   const [student, setStudent] = useState(null);
   const { id } = params;
+  const [showUpdate, setShowUpdate] = useState(false);
 
   useEffect(() => {
     fetchStudent();
   }, [id]);
+
+  const handleshowUpdate = () => {
+    setShowUpdate(true);
+  };
+  const handleshowDelete = () => {
+    setShowUpdate(false);
+  }
 
   const fetchStudent = async () => {
     try {
@@ -409,16 +419,22 @@ const SinstudentPage = ({ params }) => {
             <h3>{student.firstName}</h3>
             <p>{student.regNo}</p>
           </div>
-
           <div className={styles.detailsCard}>
-            <h3>Personal Details</h3>
+            <div className={styles.detailsHeader}>
+              <h3 className={styles.title}>Personal Details</h3>
+              <button onClick={handleshowUpdate} className={styles.updateButton}>
+                Update
+              </button>
+            </div>
             <p><strong>Full Name:</strong> {student.firstName} {student.lastName}</p>
             <p><strong>Email:</strong> {student.email}</p>
             <p><strong>Phone:</strong> {student.phone}</p>
             <p><strong>Reg No:</strong> {student.regNo}</p>
             <p><strong>Kcse No:</strong> {student.kcseNo}</p>
           </div>
-        </div>
+
+          {showUpdate && <UpdateStudent onClose={handleshowDelete} />}
+      </div>
       </div>
   );
 };

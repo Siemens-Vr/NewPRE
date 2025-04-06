@@ -39,9 +39,7 @@ const menuItems = [
     ],
   },
   {
-    title: "Equipment",
-    path: "/pages/equipment/dashboard",
-    icon: <MdAnalytics className={styles.whiteIcon} />,
+    title: "Equipment", path: "/pages/equipment/dashboard", icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
       {title : "Dashboard", path:"/pages/equipment/dashboard" ,icon: <MdDashboard className={styles.whiteIcon} /> },
       { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard className={styles.whiteIcon} /> },
@@ -78,7 +76,7 @@ const Sidebar = () => {
   };
 
   return (
-      <div className={styles.containers}>
+      <div className={styles.container}>
         {/* User Info */}
         <div className={styles.user}>
           <Image
@@ -107,9 +105,14 @@ const Sidebar = () => {
                           <span className={styles.whiteText}>{item.title}</span>
                         </div>
                         <span className={styles.toggleIcon}>
-                    {openMenus[item.title] ? <FaChevronUp className={styles.whiteIcon} /> : <FaChevronDown className={styles.whiteIcon} />}
-                  </span>
+    {openMenus[item.title] ? (
+        <FaChevronUp className={styles.whiteIcon}/>
+    ) : (
+        <FaChevronDown className={styles.whiteIcon}/>
+    )}
+  </span>
                       </div>
+
                   ) : (
                       <MenuLink
                           item={{
@@ -122,7 +125,7 @@ const Sidebar = () => {
                   {/* Render submenus */}
                   {openMenus[item.title] && item.subpages && (
                       <ul className={styles.submenu}>
-                        {item.subpages.map((sub) => {
+                      {item.subpages.map((sub) => {
                           const isSubActive = router.pathname === sub.path;
                           return (
                               <li key={sub.title}>
@@ -142,18 +145,18 @@ const Sidebar = () => {
           })}
 
           {/* Conditionally Render Admin Dashboard Link */}
-          {user.role.toLowerCase() === "admin" && (
-              <li>
-                <MenuLink
-                    item={{
-                      title: "Admin Dashboard",
-                      path: "/pages/admin/dashboard",
-                      icon: <MdDashboard className={styles.whiteIcon} />,
-                      className: styles.whiteText,
-                    }}
-                />
-              </li>
-          )}
+          {/*{user.role.toLowerCase() === "admin" && (*/}
+          {/*    // <li>*/}
+          {/*    //   <MenuLink*/}
+          {/*    //       item={{*/}
+          {/*    //         title: "Admin Dashboard",*/}
+          {/*    //         path: "/pages/admin/dashboard",*/}
+          {/*    //         icon: <MdDashboard className={styles.whiteIcon} />,*/}
+          {/*    //         className: styles.whiteText,*/}
+          {/*    //       }}*/}
+          {/*    //   />*/}
+          {/*    // </li>*/}
+          {/*)}*/}
         </ul>
 
         <div className={styles.down}>
@@ -172,7 +175,7 @@ const Sidebar = () => {
             <span className={styles.whiteText}>Settings</span>
           </div>
 
-          <div className={`${styles.footer} ${styles.whiteText}`}>&copy; 2025 SIEMENS ERP</div>
+          <div className={`${styles.footer} ${styles.whiteTexts}`}>&copy; 2025 SIEMENS ERP</div>
         </div>
       </div>
   );

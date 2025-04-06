@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import styles from '@/app/styles/cohorts/viewCohort/viewLevel.module.css'
+import styles from '@/app/styles/cohorts/viewCohort/Editcohort.module.css'
 
 const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
   const formatDate = (dateString) => {
@@ -29,48 +29,53 @@ const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
   };
 
   return (
-    <div className={styles.popup}>
-      <div className={styles.popupContent}>
-        <h2>Edit Cohort Details</h2>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="cohortName">Name:</label>
-            <input
-              type="text"
-              id="cohortName"
-              name="cohortName"
-              value={formData.cohortName}
-              onChange={handleChange}
-            />
+      <div className={styles.modalOverlay}>
+        <div className={styles.modal}>
+          <div className={styles.popup}>
+            <div className={styles.popupContent}>
+              <h2>Edit Cohort Details</h2>
+              <form onSubmit={handleSubmit}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="cohortName">Name:</label>
+                  <input
+                      type="text"
+                      id="cohortName"
+                      name="cohortName"
+                      value={formData.cohortName}
+                      onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="startDate">Start Date:</label>
+                  <input
+                      type="date"
+                      id="startDate"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="endDate">End Date:</label>
+                  <input
+                      type="date"
+                      id="endDate"
+                      name="endDate"
+                      value={formData.endDate}
+                      onChange={handleChange}
+                  />
+                </div>
+                {/* Add any additional fields as needed */}
+                <div className={styles.popupActions}>
+                  <button type="submit">Update</button>
+
+                </div>
+              </form>
+              <button type="button" onClick={onClose} className={styles.closeButton}>x</button>
+            </div>
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="startDate">Start Date:</label>
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="endDate">End Date:</label>
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-            />
-          </div>
-          {/* Add any additional fields as needed */}
-          <div className={styles.popupActions}>
-            <button type="submit">Update</button>
-            <button type="button" onClick={onClose}>Cancel</button>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
   );
 };
 

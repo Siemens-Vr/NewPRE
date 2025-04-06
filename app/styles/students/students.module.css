@@ -1,5 +1,5 @@
 .container {
-  padding: 20px;
+  padding: 10px;
   /*height: 100%;*/
 }
 
@@ -36,7 +36,7 @@
 
 .gridContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   /*gap: 20px;*/
 }
 .card {
@@ -46,12 +46,12 @@
   border-radius: 8px;
   position: relative;
   transition: all 0.3s ease-in-out;
-  min-width: 350px;
+  min-width: 200px;
 }
 
 .cardHeader {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -64,7 +64,7 @@
 
 }
 .dots{
-  margin-left: 200px;
+  /*margin-left: 200px;*/
   /*margin-top: 50px;*/
 
 }
@@ -98,10 +98,12 @@
 }
 
 .gridContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  justify-content: center;
+}
+.start{
+  flex-wrap: wrap;
 }
 
 /*//fun*/

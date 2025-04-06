@@ -206,7 +206,9 @@ const LevelDetails = ({ searchParams }) => {
           </div>
         </div>
 
-        <div className={styles.studentTable}>
+        <div   className={`${styles.studentTable} ${
+            filteredStudents.length > 0 ? styles.filled : styles.empty
+        }`}>
           {filteredStudents.length > 0 ? (
               <>
                 <div className={styles.tableTop}>
@@ -285,7 +287,7 @@ const LevelDetails = ({ searchParams }) => {
                         <td>
                           <div className={styles.hoursButtons}>
                             <button className={styles.button} onClick={() => {
-                              setCurrentFacilitatorId(facilitator.uuid);
+                              https://kevzkip.github.io/          setCurrentFacilitatorId(facilitator.uuid);
                               setPopupType('addUpdate');
                             }}>Add Hours
                             </button>

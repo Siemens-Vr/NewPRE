@@ -155,7 +155,7 @@ const AddFacilitatorPage = ({onClose}) => {
                     required
                 />
               </div>
-              <button type="submit" className={styles.submitButtons}>Submit</button>
+
               <button type="button" className={styles.closeButton} onClick={onClose}>
                 ✖
               </button>
@@ -170,7 +170,9 @@ const AddFacilitatorPage = ({onClose}) => {
                   toastClassName="custom-toast" // Apply custom styling
                   bodyClassName="custom-toast-body"
               />
+              <button type="submit" className={styles.submitButtons}>Submit</button>
             </form>
+
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@
 }
 
 .modalContent {
-    background: #D1E8E2;
+    background: #c6e7e7;
     padding: 20px;
     width: 600px;
     border-radius: 10px;
@@ -32,6 +32,7 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+    color: #ff7211;
 }
 .title{
     text-align: center;
@@ -54,12 +55,12 @@
 
 .formGroup label {
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 5px;
 }
 
 .formGroup input, .formGroup select {
-    padding: 8px;
+    padding: 15px;
     border: 1px solid #ffffff;
     border-radius: 5px;
 background: #ffffff;
@@ -72,14 +73,14 @@ background: #ffffff;
 /*    margin-top: 15px;*/
 /*}*/
 
-.cancelButton {
-    background: gray;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+/*.cancelButton {*/
+/*    background: #ff7211;*/
+/*    color: white;*/
+/*    padding: 10px;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
 
 .submitButton {
     background: #FF8C00;
@@ -91,4 +92,8 @@ background: #ffffff;
     /*margin-left: 100px;*/
     width: 100px;
     height: 40px;
+    justify-content: flex-end;
+    margin-left: 450px;
+    margin-top: 15px;
+
 }

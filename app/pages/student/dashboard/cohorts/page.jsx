@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { config } from "/config";
 import { MdSearch } from "react-icons/md";
 import CohortForm from "@/app/pages/student/dashboard/cohorts/add/page";
+import CohortEditPopup from "@/app/components/cohort/CohortEditPopup";
 
 const CohortsPage = () => {
     const [cohorts, setCohorts] = useState([]);
@@ -13,6 +14,8 @@ const CohortsPage = () => {
     const [openDropdown, setOpenDropdown] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+    const [selectedCohort, setSelectedCohort] = useState(null);
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
     useEffect(() => {
         fetchCohorts();
@@ -39,6 +42,33 @@ const CohortsPage = () => {
             console.error("Error fetching cohorts:", error);
         }
     };
+    const handleEditCohort = (cohort) => {
+        setSelectedCohort(cohort);
+        setIsEditPopupOpen(true);
+    };
+    const handleUpdateCohort = async (updatedCohortData) => {
+        try {
+            const response = await fetch(`${config.baseURL}/cohorts/${selectedCohort.uuid}/update`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedCohortData),
+            });
+
+            if (response.ok) {
+                setCohorts(cohorts.map(cohort => (cohort.id === selectedCohort.id ? updatedCohortData : cohort)));
+                console.log('Cohort updated successfully');
+            } else {
+                console.error('Failed to update cohort');
+            }
+        } catch (error) {
+            console.error('Error updating cohort:', error);
+        }
+        setIsEditPopupOpen(false);
+    };
+
+
 
     const handleAddNewClick = () => {
         setShowAddNewPopup(true);
@@ -51,6 +81,7 @@ const CohortsPage = () => {
     const toggleDropdown = (id) => {
         setOpenDropdown(openDropdown === id ? null : id);
     };
+
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -114,7 +145,10 @@ const CohortsPage = () => {
                                 <Link href={`/pages/student/dashboard/cohorts/${cohort.uuid}`}>
                                     <button className={styles.dropdownItem}>View</button>
                                 </Link>
-                                <button className={styles.dropdownItem} onClick={() => console.log("Edit", cohort.id)}>
+                                <button
+                                    className={`${styles.button} ${styles.view}`}
+                                    onClick={() => handleEditCohort(cohort)}
+                                >
                                     Edit
                                 </button>
                                 <button className={styles.dropdownItem} onClick={() => handleDelete(cohort.id)}>
@@ -128,7 +162,7 @@ const CohortsPage = () => {
                             <strong>Cohort Name:</strong> {cohort.cohortName}
                         </p>
                         <div className={styles.cardHeader}>
-                            <p>
+                            <p className={styles.start}>
                                 <strong>Start Date:</strong> {cohort.startDate}
                             </p>
                             <div className={styles.dots}>
@@ -146,6 +180,13 @@ const CohortsPage = () => {
                     </div>
                 ))}
             </div>
+            {isEditPopupOpen && (
+                <CohortEditPopup
+                    cohortData={selectedCohort}
+                    onClose={() => setIsEditPopupOpen(false)}
+                    onUpdate={handleUpdateCohort}
+                />
+            )}
 
             {/* Modal */}
             {/*<AddCohort isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}

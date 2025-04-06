@@ -6,14 +6,25 @@
 }
 
 .top,
-.studentTable,
+/*.studentTable,*/
 .instructorsTable {
   background-color: var(--bgSoft);
   padding: 20px;
   margin-top: 30px;
   border-radius: 10px;
 }
-
+.studentTable {
+  min-height: 5px;
+  max-height: 600px; /* or any sensible limit */
+  /*overflow-y: auto;*/
+  transition: height 0.3s ease-in-out;
+}
+.studentTable.empty {
+  height: 5px;
+}
+.studentTable.filled {
+  /*height: auto;*/
+}
 .tableTop {
   display: flex;
   justify-content: space-between;
@@ -138,31 +149,31 @@
 .formGroup input,
 .formGroup select {
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
-  color:black;
+  /*color:black;*/
 }
-.formGroup select{
-  color:black;
-}
+/*.formGroup select{*/
+/*  color:black;*/
+/*}*/
 
-.popupActions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
-  /* position:relative; */
-}
+/*.popupActions {*/
+/*  display: flex;*/
+/*  justify-content: flex-end;*/
+/*  margin-top: 30px;*/
+/*  !* position:relative; *!*/
+/*}*/
 
-.popupActions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+/*.popupActions button {*/
+/*  padding: 10px 20px;*/
+/*  border: none;*/
+/*  border-radius: 4px;*/
+/*  font-size: 16px;*/
+/*  cursor: pointer;*/
+/*  transition: background-color 0.3s ease;*/
+/*}*/
 
 /*.popupActions button[type="submit"] {*/
 /*  background-color: #4CAF50;*/
@@ -186,16 +197,17 @@
   display: flex;
   /*justify-content: space-between;*/
   gap:5px;
+  padding: 15px;
 }
-.facilitatorRoleSelection select{
-  color:black;
-}
+/*.facilitatorRoleSelection select{*/
+/*  color:black;*/
+/*}*/
 .labels{
   font-size: 16px;
   color:black;
   font-weight: bold;
   margin-left: 60px;
-  margin-bottom: 16px;
+  /*margin-bottom: 16px;*/
 }
 .facilitatorRoleTable table {
   width: 100%;
@@ -222,15 +234,15 @@
 
 .select {
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.select option {
+/*.select option {*/
 
-  color: #000000;
-}
+/*  color: #000000;*/
+/*}*/
 
 .addFacilitatorRoleButton {
   padding: 8px 16px;
@@ -282,7 +294,7 @@
 }
 
 .formGroup input {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
@@ -296,12 +308,12 @@
 }
 
 
-.popupActions {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-left: 30px;
-}
+/*.popupActions {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  margin-top: 20px;*/
+/*  margin-left: 30px;*/
+/*}*/
 
 /*.popupActions button {*/
 /*  padding: 12px 20px;*/
@@ -315,10 +327,12 @@
 .popupActions button[type="submit"] {
   background-color: #1b9392; /* Teal */
   color: white;
-  align-items: center;
-  /*margin-left: 100px;*/
+  align-items: flex-end;
+  justify-content: flex-end;
+
 
 }
+
 
 .popupActions button[type="submit"]:hover {
   background-color: #ff7211;
@@ -439,6 +453,7 @@
   /*gap: 50px;*/
   justify-content: space-between;
   /*margin-top:16px ;*/
+  /*padding: 15px;*/
 }
 .addFacilitatorRoleButton{
   padding: 12px 20px;
@@ -491,6 +506,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  padding: 25px;
 }
 
 
@@ -508,6 +524,20 @@
   cursor: pointer;
   transition: background 0.3s ease-in-out;
   margin-top: 20px;
+  justify-content: flex-end;
+}
+.submit{
+margin-left: 450px;
+  background-color: #ff7211;
+  /*background-color: #1b9392; !* Teal *!*/
+  color: white;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px;
+  border-radius: 5px;
+}
+.submit:hover {
+  background-color: #1b9392;
 }
 
 .addButton:hover {

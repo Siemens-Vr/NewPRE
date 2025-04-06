@@ -153,7 +153,7 @@ const SingleFacilitatorPage = ({onClose}) => {
 
                     {successMessage && (
                         <div className={styles.successMessage}>
-                        {successMessage}
+                            {successMessage}
                         </div>
                     )}
 
@@ -211,11 +211,12 @@ const SingleFacilitatorPage = ({onClose}) => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className={styles.submitButton}>
 
-                            <button type="submit" className={styles.submitButton}>Update</button>
-                        </div>
                     </form>
+                    <div >
+
+                        <button type="submit" className={styles.submitButton}>Update</button>
+                    </div>
 
                     {/*<div className={styles.hoursButtons}>*/}
                     {/*    <button className={styles.button} onClick={() => {*/}
@@ -247,7 +248,7 @@ const SingleFacilitatorPage = ({onClose}) => {
                 </div>
             </div>
         </div>
-                );
-                };
+    );
+};
 
-                export default SingleFacilitatorPage;
+export default SingleFacilitatorPage;

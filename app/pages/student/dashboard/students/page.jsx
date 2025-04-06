@@ -217,7 +217,7 @@ const StudentsPage = () => {
               <div className={styles.filterField}>
 
                 <div className={styles.filterField}>
-                  <label htmlFor="filterType">Filter by:</label>
+                  <label htmlFor="filterType" className={styles.text}>Filter by:</label>
                   <select
                       id="filterType"
                       value={selectedFilter}

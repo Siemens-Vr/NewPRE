@@ -81,27 +81,27 @@ const SinstudentPage = ({onClose}) => {
           <form onSubmit={handleSubmit} className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label>First Name</label>
-              <input type="text" name="firstName" defaultValue={student.firstName} />
+              <input type="text" name="firstName" defaultValue={student.firstName}/>
             </div>
             <div className={styles.formGroup}>
               <label>Last Name</label>
-              <input type="text" name="lastName" defaultValue={student.lastName} />
+              <input type="text" name="lastName" defaultValue={student.lastName}/>
             </div>
             <div className={styles.formGroup}>
               <label>Email</label>
-              <input type="email" name="email" defaultValue={student.email} />
+              <input type="email" name="email" defaultValue={student.email}/>
             </div>
             <div className={styles.formGroup}>
               <label>Phone</label>
-              <input type="text" name="phone" defaultValue={student.phone} />
+              <input type="text" name="phone" defaultValue={student.phone}/>
             </div>
             <div className={styles.formGroup}>
               <label>Registration Number</label>
-              <input type="text" name="regNo" defaultValue={student.regNo} />
+              <input type="text" name="regNo" defaultValue={student.regNo}/>
             </div>
             <div className={styles.formGroup}>
               <label>KCSE Number</label>
-              <input type="text" name="kcseNo" defaultValue={student.kcseNo} />
+              <input type="text" name="kcseNo" defaultValue={student.kcseNo}/>
             </div>
             <div className={styles.formGroup}>
               <label>Gender</label>
@@ -130,11 +130,12 @@ const SinstudentPage = ({onClose}) => {
               </select>
             </div>
 
-            <div className={styles.buttonContainer}>
 
-              <button type="submit" className={styles.submitButton}>Update</button>
-            </div>
           </form>
+          <div className={styles.buttonContainer}>
+
+            <button type="submit" className={styles.submitButton}>Update</button>
+          </div>
         </div>
       </div>
   );

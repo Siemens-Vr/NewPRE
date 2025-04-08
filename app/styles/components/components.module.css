@@ -153,6 +153,7 @@
 
 .button:hover {
   background-color: darkcyan;
+  color: white;
 }
 
 /* Badge Styling */

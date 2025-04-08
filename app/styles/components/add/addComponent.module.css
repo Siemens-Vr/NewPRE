@@ -238,7 +238,7 @@
 }
 
 .componentInfo p span {
-  font-weight: bold;
+  /* font-weight: bold; */
   color: #1B9392; 
   border-bottom: 1px solid black; /* Custom underline */
   padding-bottom: 2px; /* Adjusts spacing */

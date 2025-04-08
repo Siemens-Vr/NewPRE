@@ -143,22 +143,22 @@
    }
    
    .popupActions button[type="submit"] {
-     background-color: #ff7211;
+     background-color: #1B9392;
      color: white;
      margin-right: 10px;
    }
    
    .popupActions button[type="submit"]:hover {
-     background-color: #e6600f;
+     background-color: #48B9B7;
    }
    
    .popupActions button[type="button"] {
-     background-color: #f44336;
+     background-color: #ff7211;
      color: white;
    }
    
    .popupActions button[type="button"]:hover {
-     background-color: #d32f2f;
+     background-color: #cc5a0d;
    }
 
    /* categories.module.css */

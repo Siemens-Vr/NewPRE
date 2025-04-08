@@ -91,6 +91,7 @@
      width: 90%;
      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
      background-color: #C6E7E7;
+     position: relative;
    }
    
    .popupContent h2 {
@@ -161,6 +162,17 @@
      background-color: #cc5a0d;
    }
 
+
+   .btn{
+    position: absolute;
+  top: 10px;
+  right: 15px;
+   color: #ff7211;
+   border: none;
+  padding: 4px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+   }
    /* categories.module.css */
 
 .loader {

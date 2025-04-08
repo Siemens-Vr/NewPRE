@@ -38,6 +38,8 @@ const CategoriesPopUp = ({ onClose }) => {
     return (
         <div className={styles.popup}>
             <div className={styles.popupContent}>
+            <button type="button" onClick={onClose} className={styles.btn}>X</button>
+
                 <h2>Add New Component Types</h2>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formGroup}>
@@ -55,8 +57,7 @@ const CategoriesPopUp = ({ onClose }) => {
                     {error && <p className={styles.error}>{error}</p>} 
                     <div className={styles.popupActions}>
                         <button type="submit" disabled={loading}>Add</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
-                    </div>
+                     </div>
                 </form>
             </div>
         </div>

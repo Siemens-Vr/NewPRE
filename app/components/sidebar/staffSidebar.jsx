@@ -39,7 +39,7 @@ const menuItems = [
   },
   {
     title: "Notifications",
-    path: "/pages/project/dashboard",
+    path:  "/pages/staff/dashboard/notifications",
     icon: <MdAnalytics className={styles.whiteIcon} />,
   },
 
@@ -122,19 +122,6 @@ const Sidebar = () => {
             );
           })}
 
-          {/* Conditionally Render Admin Dashboard Link */}
-          {/* {user.role.toLowerCase() === "admin" && (
-              <li>
-                <MenuLink
-                    item={{
-                      title: "Admin Dashboard",
-                      path: "/pages/admin/dashboard",
-                      icon: <MdDashboard className={styles.whiteIcon} />,
-                      className: styles.whiteText,
-                    }}
-                />
-              </li>
-          )} */}
         </ul>
 
         <div className={styles.down}>

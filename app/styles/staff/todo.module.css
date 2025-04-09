@@ -94,6 +94,7 @@
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
+     border: 1px solid #ccc;
   }
   
   .buttonContainer {
@@ -108,7 +109,7 @@
   }
    */
   .addTaskButton {
-    background-color: #ff7211;
+    background-color: #1b9392;;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -119,7 +120,7 @@
   }
   
   .saveButton {
-  background-color: #1b9392;
+    background-color: #ff7211;
     color: white;
     padding: 10px 15px;
     border: none;

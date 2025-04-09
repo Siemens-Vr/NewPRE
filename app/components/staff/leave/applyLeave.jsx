@@ -151,7 +151,7 @@ const ApplyLeaveModal = ({ staffUUID, onClose }) => {
           />
         </div>
   
-        <div className={styles.modalButtons}>
+        <div className={styles.modalButton}>
           <button type="submit" className={styles.applyButton}>
             Apply
           </button>

@@ -106,7 +106,13 @@
     justify-content: center;
     margin-top: 1rem;
   }
+  .modalButton {
+    display: flex;
+    justify-content: end;
+    margin-top: 1rem;
+  }
   
+
   .applyButton {
     background-color: #ff7211;
     color: white;

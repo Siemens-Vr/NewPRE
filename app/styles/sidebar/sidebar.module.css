@@ -4,7 +4,8 @@
   top: 0;
   background-color: #1b9392;
   width: 230px;
-  height: 850px;
+  /*height: 850px;*/
+  height: 100%;
   padding: 20px;
   /*margin: 4px;*/
   overflow-y: auto;
@@ -22,9 +23,9 @@
 /*    position: sticky;*/
 /*  }*/
 /*}*/
-/*@media (min-width: 1400px) {*/
+/*@media (max-width: 1800px) {*/
 /* .containers{*/
-/*   height: 1500px;*/
+/*   height: 100vh;*/
 /* }*/
 /*}*/
 

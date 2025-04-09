@@ -29,6 +29,12 @@
   font-size: 18px;
 }
 
+/* Added component  */
+ .component{
+     font-size: 25px;
+     font-weight: 650;
+}
+
 .menu {
   display: flex;
   align-items: center;

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import styles from "../../../ui/dashboard/components/singleComponent/singlecomponent.module.css";
+// import styles from '@/app/styles/components/singleComponent/singlecomponent.module.css';
 import Search from '@/app/ui/dashboard/search/search';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';

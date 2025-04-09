@@ -23,34 +23,61 @@
   }
   
   .popupContent {
-    background-color: white;
+    background-color: #C6E7E7;
     padding: 20px;
     border-radius: 8px;
-    max-width: 500px;
-    max-height: 80vh; /* Set max height */
-    overflow-y: auto; /* Enable vertical scrolling */
-    width: 90%;
+    max-width: 650px;
+    max-height: 90vh; 
+     width: 45%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .popupContent h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #333;
+    color: #1B9392;
     font-size: 24px;
+    font-weight: bold;
     text-align: center;
+  }
+
+  .form{
+    /* display: flex; 
+    flex-wrap: wrap;
+    gap:20px;
+    justify-content: space-between; */
+    padding: 37px;
+    padding-left: 12px;
+    padding-right: 12px;
+
+  }
+
+  .flex{
+    display: flex; 
+    flex-wrap: wrap;
+    gap:10px;
+    justify-content: space-between;
+
   }
   
   .formGroup {
     margin-bottom: 10px;
-   
+    /* flex: 1 1 calc(50% - 10px);
+    min-width: 300px; */
+    /* width: 100%; */
+
   }
   
+  /* .formGroupdesc{
+    width: 100%;
+  }
+   */
+
   .formGroup label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #555;
+    color: #1B9392;
   }
   
   .formGroup input,
@@ -70,11 +97,11 @@
     justify-content: flex-end;
     margin-top: 20px;
     position: sticky;
-    bottom: 0; /* Ensure buttons are always visible */
-    background-color: white;
+    bottom: 0; 
     padding-top: 10px;
-    border-top: 1px solid #ddd;
-  }
+    margin-left: 380px;
+
+   }
   
   .popupActions button {
     padding: 10px 20px;
@@ -86,7 +113,7 @@
   }
   
   .popupActions button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #1B9392;
     color: white;
     margin-right: 10px;
   }
@@ -96,7 +123,7 @@
   }
   
   .popupActions button[type="button"] {
-    background-color: #f44336;
+    background-color: #FF7211;
     color: white;
   }
   

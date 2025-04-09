@@ -3,21 +3,37 @@
   padding: 20px;
   background-color: var(--bgSoft);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  /* background-color: #1B9392; */
 }
-
+.container h1{
+  color: #1B9392;
+  font-weight:800;
+  /* text-align: center; */
+  font-size: 18px;
+}
 .componentDetails {
   background: linear-gradient(145deg, var(--bgSoft), var(--bgAccent));
-  border-radius: 15px;
-  padding: 20px;
+   padding: 20px;
   margin:20px  0px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #C6E7E7;
+  /* display: flex;
+  gap: 150px;
+  padding-left: 100px; */
+ }
+ .name{
+  font-size: 30px;
+  color: #1B9392;
+ }
 
+ .componentDetail{
   display: flex;
-  justify-content: space-between;
-}
+  gap: 150px;
+  /* padding-left: 50px; */
 
+ }
 .componentDetails h2 {
   color: var(--textAccent);
   font-size: 24px;
@@ -27,15 +43,23 @@
 }
 
 .componentDetails p {
-  color: var(--textSoft);
+  color: #1B9392;
   font-size: 16px;
   margin: 10px 0;
+  font-weight: 600;
 }
 
 .historyTable {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bgSoft);
+  /* background-color: #1B9392; */
+  color: #ffffff;
+  margin-top: 50px;
+}
+
+.historyTable thead{
+  background-color: #1B9392;
+
 }
 
 .historyTable th,
@@ -52,13 +76,23 @@
   color: var(--textAccent);
 }
 
-.historyTable tr:nth-child(even) {
-  background-color: var(--bgAccent2);
+.historyTable tbody tr:nth-child(odd) {
+  background-color: #f0f0f0;
+  color: #1B9392;
+  font-weight: 500;
+}
+
+
+.historyTable tbody tr:nth-child(even) {
+  background-color: #ffffff;
+  color: #1B9392;
+  font-weight: 500;
 }
 
 .historyTable tr:hover {
-  background-color: var(--bgAccent3);
-}
+
+  /* background-color: var(--bgAccent3); */
+ }
 
 .loader {
   text-align: center;

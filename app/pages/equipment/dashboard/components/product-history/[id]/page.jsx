@@ -68,11 +68,19 @@ const ProductHistory = () => {
     <div className={styles.container}>
       <h1>Product History</h1>
       {componentDetails && (
+        <>
+        
         <div className={styles.componentDetails}>
-          <p>Name: {componentDetails.componentName}</p>
+        <h3 className={styles.name}>{componentDetails.componentName}</h3>
+
+        <div className={styles.componentDetail}>        
+          {/* <p>Name: {componentDetails.componentName}</p> */}
           <p>Part Number: {componentDetails.partNumber}</p>
           <p>Type: {componentDetails.componentType}</p>
         </div>
+       </div>
+
+        </>
       )}
       {productHistory.length > 0 ? (
         <table className={styles.historyTable}>

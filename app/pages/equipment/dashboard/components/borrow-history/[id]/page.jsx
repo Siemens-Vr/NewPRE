@@ -46,7 +46,7 @@ const BorrowHistory = () => {
  return (
     <div className={styles.container}>
       <h1 className={styles.title}>Borrow History</h1>
-      {componentDetails && (
+       {componentDetails && (
        <div className={styles.componentDetails}>
           <h2>{componentDetails.componentName}</h2>
           <div className={styles.detailsContent}>
@@ -90,6 +90,7 @@ const BorrowHistory = () => {
         </tbody>
       </table>
     </div>
+    
   );
 };
 

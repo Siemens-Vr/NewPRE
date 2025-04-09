@@ -1,43 +1,112 @@
-.container{
-    background-color: var(--bgSoft);
-    margin-top: 20px;
-    padding:20px;
+ 
+    /* Dark overlay to dim the background */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay effect */
+    z-index: 999; /* Ensures it stays behind the popup */
+}
+
+/* Popup container - perfectly centered */
+.container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 750px;
+     padding: 20px;
+     z-index: 1000;
+ }
+
+/* Form container - responsive */
+.form {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px; 
+    background-color: #C6E7E7;
+    padding: 20px;
     border-radius: 10px;
+    width: 100%;
+    max-height: 90vh; /* Prevents overflowing on small screens */
+    overflow-y: auto; /* Adds scroll if content is too large */
 }
 
-.form{
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
+/* Input, select, and textarea styling */
 .form input,
 .form textarea,
-.form select{
+.form select {
     background-color: var(--bg);
-    padding:30px;
-    margin: 20px;
-    border: 2px solid #2e374a;
-    border-radius:5px;
-    text-transform: capitalize;
-    color:var(--textSoft)
-}
-
-.form input,
-.form select{
-    width:45%;
-}
-
-.form textarea{
-    width: 100%
-}
-
-.form button{
-    width:100%;
-    padding:30px;
-    background-color: teal;
-    color:var(--text);
+    padding: 10px;
     border-radius: 5px;
-    border:none;
+    border: 1px solid #ccc;
+    text-transform: capitalize;
+    color: var(--textSoft);
+    font-size: 16px;
 }
 
+/* Inputs and select fields take 48% width on larger screens */
+.form input,
+.form select {
+    width: 48%;
+}
+
+/* Textareas span full width */
+.form textarea {
+    width: 100%;
+    height: 80px;
+}
+
+/* Submit button styling */
+.submit {
+    width: 100px;
+    padding: 10px;
+    background-color: #ff7211;
+    color: #ffffff;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: center;
+    transition: background 0.3s;
+    margin-left: 570px;
+    
+}
+
+.submit:hover {
+    background-color: #e66000;
+}
+
+/* Close button */
+.btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px 15px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff7211;
+    cursor: pointer;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    .form input,
+    .form select {
+        width: 100%; /* Full width for smaller screens */
+    }
+    
+    .btn {
+        font-size: 16px;
+    }
+}

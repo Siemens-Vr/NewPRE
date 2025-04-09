@@ -68,7 +68,19 @@
      color: white;
    }
    
-   /* Add these styles to your viewLevel.module.css file */
+   /* Overlay */
+   .overlay{
+    position: fixed;
+    top: 1;
+    left: 1;
+    width: 650px;
+    height: 461px;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+    border-radius: 20px;
+    /* display: none;  */
+
+   }
    
    .popup {
      position: fixed;
@@ -76,7 +88,7 @@
      left: 0;
      width: 100%;
      height: 100%;
-     background-color: rgba(0, 0, 0, 0.5);
+     /* background-color: #1B9392; */
      display: flex;
      justify-content: center;
      align-items: center;
@@ -84,7 +96,9 @@
    }
    
    .popupContent {
-     background-color: white;
+     /* background-color: white; */
+     position: relative;
+     background-color: #C6E7E7;
      padding: 30px;
      border-radius: 8px;
      max-width: 500px;
@@ -111,6 +125,7 @@
      color: #555;
    }
    
+    
    .formGroup input ,
    .formGroup select {
      width: 100%;
@@ -118,13 +133,14 @@
      border: 1px solid #ddd;
      border-radius: 4px;
      font-size: 16px;
-     color:black;
+     color:#1B9392;
    }
    
    .popupActions {
      display: flex;
-     justify-content: flex-end;
+     justify-content: space-between;
      margin-top: 30px;
+     /* display: relative; */
    }
    
    .popupActions button {
@@ -136,26 +152,44 @@
      transition: background-color 0.3s ease;
    }
    
+   .delete{
+    /* background-color: red; */
+    color: red;
+     height: 30px;
+    width: 50px;
+   }
    .popupActions button[type="submit"] {
-     background-color: #4CAF50;
+     background-color: #1B9392;
      color: white;
      margin-right: 10px;
    }
    
    .popupActions button[type="submit"]:hover {
-     background-color: #45a049;
-   }
+     background-color: #136B6A;
+     }
    
    .popupActions button[type="button"] {
-     background-color: #f44336;
+     background-color: #ff7211;
      color: white;
    }
    
    .popupActions button[type="button"]:hover {
-     background-color: #d32f2f;
+     background-color: #C6550D;
    }
 
 
+   .btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ff7211;
+    /* color: white; */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+
+   }
  
 
    /* categories.module.css */

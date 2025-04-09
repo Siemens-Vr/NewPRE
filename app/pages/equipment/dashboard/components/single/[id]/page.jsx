@@ -1,5 +1,7 @@
-"use client"
-import styles from '@/app/styles/components/add/addComponent.module.css'
+ 
+
+"use client";
+import styles from '@/app/styles/components/add/addComponent.module.css';
 import UpdatePopUp from '@/app/components/update/update';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -11,6 +13,7 @@ const EditComponent = () => {
   const id = params.id;
 
   const [showPopup, setShowPopup] = useState(false);
+  const [showConditionDetails, setShowConditionDetails] = useState(false); 
   const [component, setComponent] = useState(null);
 
   const fetchData = async () => {
@@ -42,7 +45,7 @@ const EditComponent = () => {
       });
 
       if (response.ok) {
-        await fetchData();  // Re-fetch data after update
+        await fetchData();
         setShowPopup(false);
       } else {
         const errorData = await response.json();
@@ -54,7 +57,7 @@ const EditComponent = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.historyButtons}>
         <Link href={`/pages/equipment/dashboard/components/borrow-history/${id}`}>
           <button className={styles.historyButton}>View Borrow History</button>
@@ -64,32 +67,54 @@ const EditComponent = () => {
         </Link>
       </div>
 
-      <div className={styles.componentInfo}>
-        {component ? (
-          <>
-            <p>Component Name:<span>{component.componentName}</span></p>
-            <p>Category: <span>{component.componentType}</span> </p>
-            <p>Model Number: <span>{component.modelNumber ? component.modelNumber : "N/A"}</span></p>
-            <p>Serial Number: <span>{component.partNumber}</span></p>
-            <p>Condition : <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
-            <p>Condition Details: <span>{component.conditionDetails ? component.conditionDetails : "N/A"}</span></p>
-            <p>Description: <span>{component.description ? component.description : "No description"}</span></p>
-            <button onClick={() => setShowPopup(true)} className={styles.button}>Update</button>
-          </>
-        ) : (
-          <p>Loading.....</p>
+      <div className={styles.container1}>
+        <div className={styles.componentInfo}>
+          {component ? (
+            <>
+
+            <div className={styles.components}>
+
+            <h2 className={styles.h3}>Component Information</h2>
+              <div className={styles.component}>
+                <p>Component Name: <span>{component.componentName}</span></p>
+                <p>Category: <span>{component.componentType}</span></p>
+                <p>Model Number: <span>{component.modelNumber || "N/A"}</span></p>
+                <p>Serial Number: <span>{component.partNumber}</span></p>
+                <p>Description: <span>{component.description || "No description"}</span></p>
+                <button onClick={() => { setShowPopup(true); setShowConditionDetails(false); }} className={styles.button}>
+                  Update
+                </button>
+              </div>
+              </div>
+
+             <div className={styles.detail}>
+             <h2 className={styles.h2}>Component Condition</h2>
+              <div className={styles.details}>
+                 <p>Condition: <span>{component.condition === null ? "N/A" : component.condition ? "Good" : "Not Good"}</span></p>
+                <p>Condition Details: <span>{component.conditionDetails || "N/A"}</span></p>
+                <button onClick={() => { setShowPopup(true); setShowConditionDetails(true); }} className={styles.buttonUpdate}>
+                  Update Condition Details
+                </button>
+              </div>
+              </div>
+            </>
+          ) : (
+            <p>Loading.....</p>
+          )}
+        </div>
+
+        {showPopup && (
+          <UpdatePopUp
+            componentData={component}
+            onClose={() => setShowPopup(false)}
+            onUpdate={handleComponentUpdate}
+            showConditionDetails={showConditionDetails} // Pass as prop
+          />
         )}
       </div>
-
-      {showPopup && (
-        <UpdatePopUp
-          componentData={component}
-          onClose={() => setShowPopup(false)}
-          onUpdate={handleComponentUpdate}
-        />
-      )}
-    </div>
+    </>
   );
-}
+};
 
 export default EditComponent;
+

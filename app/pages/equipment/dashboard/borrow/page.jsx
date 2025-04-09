@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from '@/app/styles/borrow/borrow.module.css';
+import AddBorrow from '@/app/components/Borrow/borrow';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Search from '@/app/components/search/search';
+import BorrowedCard from '@/app/components/card/borrowCard';
+import {MdSearch} from "react-icons/md";
 
 import { config } from '/config';
-
 
 const BorrowedComponentPage = () => {
   const [borrowsData, setBorrowsData] = useState([]);
@@ -34,20 +36,44 @@ const BorrowedComponentPage = () => {
     return date.toISOString().split('T')[0];
   };
 
+  const item = {
+    available: "5",
+    borrowed: "2 ",
+    dueItems: "1 ",
+  };
+
+   const [selectedBorrow, setSelectedBorrow] = useState("");
+   const [borrow,setAddBorrow]=useState(false)
+    
+ 
+  const sortBy = {
+    title: "Sort By",
+    options: ["Component", "category", "Output"],
+  };
+
   return (
     <div>
+
+    {/* <div className={styles.borrow}>
+        <BorrowedCard item={item}/>
+     </div> */}
+
     <div className={styles.container}>
-      <div className={styles.top}>
-      <Suspense fallback={<div>Loading...</div>}>
-   
-      <Search />
-    </Suspense>
  
-        <Link href="/pages/equipment/dashboard/borrow/add">
-          <button className={styles.addButton}>Borrow</button>
-        </Link>
+      <div className={styles.top}>
+      
+       <div className={styles.search}>
+         <MdSearch />
+          <input type="text" placeholder="Search by Component..." className={styles.input} />
+         </div> 
+
+
+        {/* Added this button */}
+        <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
+ 
       </div>
       
+      <div className={styles.tablediv}>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -79,7 +105,14 @@ const BorrowedComponentPage = () => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
+
+    {borrow && (
+        <AddBorrow        
+          onClose={() => setAddBorrow(false)}         
+        />
+      )}
 
     </div>
   );

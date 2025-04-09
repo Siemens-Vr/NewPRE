@@ -1,24 +1,60 @@
+
 .container {
-  background-color: var(--bgSoft);
-  margin-top: 20px;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 600px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
   padding: 20px;
   border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 999; 
+ }
+
+
+ .container1{         
+   padding: 10px;
+  border-radius: 10px;
+  width: 100%;
+  margin: 0 auto;
+}
 
 
 .form {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap onto multiple lines */
-  gap: 20px; /* Adds spacing between items */
+  flex-wrap: wrap; 
+  gap: 20px; 
+  background-color: #C6E7E7;
+  padding:40px;
+  border: 1px solid #C6E7E7;
+  border-radius: 20px;
+  position:relative;
+  width:650px; 
+
 }
+
+ 
 .top{
   display: flex;
   justify-content: flex-end;
 }
 .top button{
-  /* width: 35%; */
-  padding: 10px; /* Adjust padding as needed */
+  
+  padding: 10px; 
   margin-left: 25px;
   background-color: teal;
   color: var(--text);
@@ -28,8 +64,8 @@
 .divInput {
   display: flex;
   flex-direction: column;
-  flex-basis: calc(50% - 10px); /* Adjust width to be half of the container minus some spacing */
-  margin-bottom: 20px; /* Adds spacing between rows */
+  flex-basis: calc(50% - 10px);
+  margin-bottom: 20px;
 }
 
 .form h3 {
@@ -44,45 +80,75 @@
 .divInput textarea,
 .divInput select {
   background-color: var(--bg);
-  padding: 10px; /* Adjust padding as needed */
-  border: 2px solid #2e374a;
-  border-radius: 5px;
+  padding: 10px; 
+   border-radius: 5px;
   text-transform: capitalize;
   color: var(--textSoft);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 }
+
+
 
 .divInput input,
 .divInput select {
   width: 100%;
 }
 
+.divInput input{
+  color: black;
+}
+
+
 .divInput textarea {
   width: 100%;
 }
+ 
+  
+  .btn{     
+    position: absolute;
+     top: 10px;
+     right: 20px;
+     color: red;
+     cursor: pointer;
+     height:25px;
+     width:40px;
+  }
 
-.form button {
-  width: 35%;
-  padding: 10px; /* Adjust padding as needed */
-  margin-left: 25px;
-  background-color: teal;
-  color: var(--text);
+  .submit1{
+    background-color: #ff7211;
+    color: #ff7211;
+    width: 30%;
+    margin-left: 25px;
+    color: var(--text);
+    border-radius: 5px;
+    border: none;
+    height: 40px;
+    color: white;
+    
+  }
+  .add{
+   background-color: #1B9392;
+   width: 30%;
+   margin-left: 70px;
+   color: var(--text);
   border-radius: 5px;
   border: none;
-}
+   height: 40px;
+   color: white;  
+ 
+  }
 
 .historyButtons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
+  margin-top: 8px;
+  margin-bottom: 8px;
+ }
 
-.historyButton {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background-color: teal;
-  color: var(--text);
-}
+ 
+
 .container {
   background-color: var(--bgSoft);
   margin-top: 20px;
@@ -92,37 +158,106 @@
 
 .historyButtons {
   display: flex;
-  justify-content: flex-end;
   gap: 10px;
+  margin-right: 10px;
+
 }
+
+ 
 
 .historyButton {
   padding: 10px;
   border-radius: 10px;
   border: none;
-  background-color: teal;
-  color: var(--text);
+  background-color: #ff7211;
+  color: #ffffff;
+  
+}
+
+.component{  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  flex-direction: row;
+  /* box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);  */
+  /* background-color: #C6E7E7; */
+}
+ 
+.components{
+  background-color: #C6E7E7;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1); 
+
+} 
+
+.details{
+   display: flex;
+  flex-direction: row;
+  gap:100px;
+  /* margin-top: 33px; */
+  /* padding: 12px; */
+  /* box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);   */
+  /* background-color: #C6E7E7; */
+}
+
+.detail{
+
+  /* display: flex; */
+  /* flex-direction: row; */
+  gap:100px;
+  margin-top: 33px;
+  padding: 12px;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.1);  
+  background-color: #C6E7E7;
+}
+ 
+
+
+.h2{
+   color: #1B9392;
+   font-size: 25px;
+}
+
+.h3{
+  color: #1B9392;
+  font-size: 25px;
+  padding-left: 12px;
+  padding-top: 5px;
 }
 
 .componentInfo p {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 10px;
   font-size: 16px;
-  color: var(--textSoft);
+  color: #000000;
+   width: 30%; 
+  height: 80px;
+   padding-left: 12px;
+  padding-top: 15px;
+  border-radius: 12px;
 }
 
 .componentInfo p span {
-  font-weight: bold;
-  color: var(--text);
+  /* font-weight: bold; */
+  color: #1B9392; 
+  border-bottom: 1px solid black; /* Custom underline */
+  padding-bottom: 2px; /* Adjusts spacing */
+  display: inline-block;
+  width: 35%; /* Extend underline beyond text */
+
+
 }
 
-.componentInfo button {
-  margin-top: 20px;
-  padding: 10px 20px;
+.button {
+   margin-top: 15px;
   border: none;
   border-radius: 5px;
-  background-color: teal;
-  color: var(--text);
+  background-color: #ff7211;
+  color: #ffffff;
+  font-weight: 500;
   cursor: pointer;
+  height: 41px;
+  width:90px;  
   transition: background-color 0.3s ease;
 }
 
@@ -130,4 +265,18 @@
   background-color: #006d5b;
 }
 
+.buttonUpdate{
+   margin-top: 13px; 
+  border: none;
+ border-radius: 5px;
+ background-color: #ff7211;
+ color: #ffffff;
+ cursor: pointer;
+ height: 35px;
+ width:200px;  
+ transition: background-color 0.3s ease;
+}
+ 
 
+ 
+ 

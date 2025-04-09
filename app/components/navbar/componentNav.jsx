@@ -14,7 +14,7 @@ import {
   MdSearch,
 } from "react-icons/md";
 
-const Navbar = () => {
+const componentNavbar = () => {
   const pathname = usePathname();
   const user = {
     "username": "cheldean",
@@ -32,11 +32,15 @@ const Navbar = () => {
       {/*<div className={styles.title}>{pathname.split("/").pop()}</div>*/}
       <div className={styles.menu}>
 
-        {/*<div className={styles.search}>*/}
+         {/* <div className={styles.search}>
+          <input type="text" placeholder="Search..." className={styles.input} />
+          <MdSearch />
+        </div>  */}
 
-        {/*  /!*<input type="text" placeholder="Search..." className={styles.input} />*!/*/}
-        {/*  /!*<MdSearch />*!/*/}
-        {/*</div>*/}
+        <div>
+            <h2 className={styles.component}>Equipments</h2>
+        </div>
+
 
         <div className={styles.icons}>
           <MdOutlineChat size={20}/>
@@ -62,4 +66,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default componentNavbar;

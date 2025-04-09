@@ -4,6 +4,10 @@ import styles from '@/app/styles/components/singleComponent/singlecomponent.modu
 import Search from '@/app/components/search/search';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import AddBorrow from '@/app/components/Borrow/borrow';
+
+import { MdSearch} from "react-icons/md";
+
 
 import { config } from '/config';
 
@@ -18,6 +22,7 @@ const SingleComponentPage = () => {
   const searchParams = useSearchParams();
   const componentsType = params.id;
   const q = searchParams.get('q');
+  const [borrow,setAddBorrow]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,11 +107,17 @@ const SingleComponentPage = () => {
 
     
     <div className={styles.container}>
-      <div className={styles.top}>
+
+      {/* <div className={styles.top}>
         <Search placeholder="Search components" />
-      </div>
+      </div> */}
 
-
+      <div className={styles.search}>
+          <MdSearch />
+          <input type="text" placeholder="Search..." className={styles.input} />
+          </div>
+ 
+ 
         {/* Components without Part Numbers */}
         <>
           <table className={styles.table}>
@@ -132,17 +143,19 @@ const SingleComponentPage = () => {
                   <td>{component.borrowedQuantity}</td>
                   <td className={styles.buttons}>
                   <Link href={`/pages/equipment/dashboard/components/single/${component.uuid}`}>
-                      <button className={styles.button}>View</button>
+                      {/* <button className={styles.button}>View</button> */}
                     </Link>
                     <button className={styles.button} onClick={() => handleAddQuantity(component)}>
                       AddQ
                     </button>
-                    <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
+                    {/* <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
                       <button className={styles.button}>Borrow</button>
-                    </Link>
+                    </Link>    */}
+
+                     {/* Added a pop up button */}
+                    <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>
                     
-                    
-                  
+                   
                   </td>
                   
                 </tr>
@@ -156,13 +169,20 @@ const SingleComponentPage = () => {
     
     </div>
   )}
+  
   {componentsWithPartNumbers.length > 0 && (
     <div className={styles.container}>
-      <div className={styles.top}>
+
+      {/* <div className={styles.top}>
         <Search placeholder="Search components" />
-      </div>
+      </div> */}
 
+      <div className={styles.search}>
+           <MdSearch />
+          <input type="text" placeholder="search..." className={styles.input} />
+         </div>
 
+        
 
       {/* Components with Part Numbers */}
       
@@ -199,10 +219,15 @@ const SingleComponentPage = () => {
                   <td className={styles.buttons}>
                     <Link href={`/pages/equipment/dashboard/components/single/${component.uuid}`}>
                       <button className={styles.button}>View</button>
-                    </Link> <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
-                      <button className={styles.button}>Borrow</button>
-                    </Link>
+                    </Link> 
                     
+                    {/* <Link href={`/pages/equipment/dashboard/borrow/add?id=${component.uuid}`}>
+                      <button className={styles.button}>Borrow</button>
+                    </Link> */}
+                           
+                    {/* Added a pop up button        */}
+                   <button onClick={() => setAddBorrow(true)} className={styles.addButton}>Borrow</button>              
+ 
                   </td>
                 </tr>
               ))}
@@ -239,6 +264,12 @@ const SingleComponentPage = () => {
         </div>
       )}
 
+
+      {borrow && (
+        <AddBorrow        
+          onClose={() => setAddBorrow(false)}         
+        />
+      )}
 
     </div>
   );

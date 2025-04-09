@@ -32,6 +32,8 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
         <div className={styles.overlay}></div>
         <div className={styles.popup}>
             <div className={styles.popupContent}>
+            <button type="button" onClick={onClose} className={styles.btn}>X</button>
+
                 <h2>Condition Details</h2>
                 <form onSubmit={handleAddCondition}>
                     <div className={styles.formGroup}>
@@ -68,13 +70,8 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
                         />
                     </div>
                     {error && <p className={styles.error}>{error}</p>}
-                    <div className={styles.popupActions}>
-                        <button type="submit" disabled={loading}>Add Condition</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
-                    </div>
-                </form>
-                
-                <h3>Added Conditions</h3>
+
+                    <h3>Added Conditions</h3>
                 {conditions.length > 0 ? (
                     <table className={styles.table}>
                         <thead>
@@ -92,7 +89,7 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
                                     <td>{condition.quantity}</td>
                                     <td>{condition.details}</td>
                                     <td>
-                                        <button onClick={() => handleDeleteCondition(index)}>Delete</button>
+                                        <button onClick={() => handleDeleteCondition(index)} className={styles.delete}>Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -101,9 +98,18 @@ const ConditionPopUp = ({ onClose, conditions, setConditions }) => {
                 ) : (
                     <p>No conditions added yet.</p>
                 )}
-                <div className={styles.popupActions}>
+                    <div className={styles.popupActions}>
+                        <button type="submit" disabled={loading}>Add Condition</button>
+                        <button type="button" onClick={onClose}>Done</button>
+
+                        
+                        {/* <button type="button" onClick={onClose}>Cancel</button> */}
+                    </div>
+                </form>
+                
+                      {/* <div className={styles.popupActions}>
                     <button type="button" onClick={onClose}>Done</button>
-                </div>
+                </div> */}
             </div>
         </div>
         </>

@@ -1,13 +1,13 @@
 .container {
   display: flex;
   padding: 0;
-}
+ 
+ }
 
 .menu {
   flex: 1;
   background-color: var(--bgSoft);
-  padding: 20px;
-  min-height: 100vh;
+   min-height: 100vh;
 }
 
 .content {
@@ -41,8 +41,9 @@
 .dashboardContainer {
   display: flex;
   flex-direction: column;
-  /* padding: 20px; */
-}
+  /* background-color: #1B9392; */
+
+ }
 
 .breadcrumb {
   padding: 10px 20px;
@@ -73,8 +74,9 @@
 }
 
 .mainContent {
-  padding: 20px;
-}
+  padding-top: 15px;
+  /* padding-left: 20px; */
+ }
 
 .header {
   display: flex;
@@ -90,7 +92,16 @@
 .controls {
   display: flex;
   gap: 10px;
-}
+ }
+
+ .controls input{
+    color: #000000;   
+    background-color: #C6E7E7;
+    border: 1px solid #C6E7E7;
+
+ }
+
+
 .searchInput, .filterDropdown{
   color:black;
 }
@@ -102,7 +113,7 @@
 }
 
 .addProjectBtn {
-  background-color: green;
+  background-color: #FF7211;
   color: white;
   cursor: pointer;
 }
@@ -116,7 +127,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Space between each project card */
+  gap: 15px; 
   background-color: #1e293b;
   padding: 15px;
   border-radius: 8px;
@@ -124,22 +135,24 @@
 
 .cardContainer {
   display: flex;
-  flex-wrap: wrap; /* Allows multiple cards to wrap within the column */
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .projectCard {
-  background-color: #ffffff;
+  background-color: #C6E7E7;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 300px; /* Optional: sets max width for each card */
+  max-width: 300px;
   width: 100%;
-  color: black;
+  color: #1B9392;
+  font-weight: 550;
+  /* color: white; */
 }
 
 .projectCard {
-  position: relative; /* Enable positioning of child elements */
+  position: relative; 
 }
 
 .cardContent {
@@ -147,37 +160,37 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  cursor: pointer; /* Pointer cursor for click */
+  cursor: pointer; 
 }
 
 .menuButton {
-  cursor: pointer; /* Pointer cursor for menu button */
-  font-size: 24px; /* Adjust size of the dots */
-  color: #888; /* Dot color */
+  cursor: pointer; 
+  font-size: 24px; 
+  color: #888; 
 }
 
 .menuOptions {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #fff; /* White background for options */
-  border: 1px solid #ccc; /* Border for options */
-  border-radius: 5px; /* Rounded corners */
+  background-color: #fff;  
+  border: 1px solid #ccc;  
+  border-radius: 5px;  
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  z-index: 10; /* Ensure it appears above other elements */
+  z-index: 10;  
 }
 
 .menuOptions button {
   padding: 10px;
   border: none;
-  background: transparent; /* No background for buttons */
-  cursor: pointer; /* Pointer cursor for buttons */
+  background: transparent;
+  cursor: pointer; 
 }
 
 .menuOptions button:hover {
-  background-color: #f0f0f0; /* Light background on hover */
+  background-color: #f0f0f0; 
 }
 
 

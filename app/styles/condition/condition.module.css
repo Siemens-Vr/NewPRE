@@ -97,6 +97,7 @@
    
    .popupContent {
      /* background-color: white; */
+     position: relative;
      background-color: #C6E7E7;
      padding: 30px;
      border-radius: 8px;
@@ -137,8 +138,9 @@
    
    .popupActions {
      display: flex;
-     justify-content: flex-end;
+     justify-content: space-between;
      margin-top: 30px;
+     /* display: relative; */
    }
    
    .popupActions button {
@@ -150,6 +152,12 @@
      transition: background-color 0.3s ease;
    }
    
+   .delete{
+    /* background-color: red; */
+    color: red;
+     height: 30px;
+    width: 50px;
+   }
    .popupActions button[type="submit"] {
      background-color: #1B9392;
      color: white;
@@ -158,7 +166,7 @@
    
    .popupActions button[type="submit"]:hover {
      background-color: #136B6A;
-   }
+     }
    
    .popupActions button[type="button"] {
      background-color: #ff7211;
@@ -170,6 +178,18 @@
    }
 
 
+   .btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ff7211;
+    /* color: white; */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+
+   }
  
 
    /* categories.module.css */

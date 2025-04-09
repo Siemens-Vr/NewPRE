@@ -57,10 +57,22 @@ const Details = () => {
     return (
         <div className={styles.projectDetails}>
             <div className={styles.projectDetail}>
+
             <div className={styles.card}>
-                <h2>Status</h2>
-                <p>{projectDetails.status}</p>
-            </div>
+               <div className={styles.imgDiv}>
+               <img src='/60111.jpg' alt="Avatar image" className={styles.img} />  
+               <h2>{projectDetails.projectName}</h2>             
+ 
+               </div>
+
+                <div className={styles.conditions}>
+                <p>Status:{projectDetails.status}</p>
+                <p>Startdate:{}</p>
+                <p>Enddate:{}</p>
+                </div>
+
+             </div>
+
             <div className={styles.card}>
                 <h2>Description</h2>
                 <p>{projectDetails.description}</p>

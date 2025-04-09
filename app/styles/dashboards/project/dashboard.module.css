@@ -1,7 +1,7 @@
 .container {
   display: flex;
   padding: 0;
- 
+  
  }
 
 .menu {
@@ -11,9 +11,10 @@
 }
 
 .content {
-  flex: 4;
-  padding: 20px;
-}
+  /* flex: 4; */
+  padding: 15px;
+ 
+ }
 
 .wrapper {
   display: flex;

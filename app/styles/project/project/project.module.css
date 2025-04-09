@@ -113,8 +113,6 @@
 }
 
 
-
-
 .actionButtons {
     display: flex;
     justify-content: center; /* Center the buttons horizontally */
@@ -129,15 +127,16 @@
 }
 
 .projectDropdown {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .dropdown {
     padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid #1a253a;
+    border: 1px solid #C6E7E7;
     border-radius: 4px;
-    color: black;
+    color: #1B9392;
+    background-color: #C6E7E7;
 }
 
 
@@ -146,8 +145,7 @@
 .projectInfoContainer {
     display: flex;
     flex-direction: column;
-    /* min-height: 100vh; */
-    background-color: var(--bg);
+     background-color: var(--bg);
     font-family: 'Roboto', sans-serif;
     color: var(--text);
 }
@@ -225,7 +223,7 @@
 }
 
 .card {
-    background-color: var(--bgSoft);
+    background-color: #C6E7E7;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -234,13 +232,40 @@
 
 .card h2 {
     margin-top: 0;
-    color: #1e90ff;
+    color: #1B9392; 
+    font-weight:bold;
     margin-bottom: 10px;
 }
 
 .card p {
     color: var(--text);
 }
+
+/* image styling */
+
+.img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+      
+}
+
+.imgDiv{
+    display: flex; 
+}
+
+.imgDiv h2{
+    /* color: white; */
+    margin-top: 25px;
+    margin-left: 15px;
+ }
+
+ .conditions{
+    margin-top: 12px;
+ 
+ }
 
 /* Assignees Section */
 .deliverables, .calendarSection {

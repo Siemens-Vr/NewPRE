@@ -9,7 +9,7 @@ const Navbar = ({ projectID,projectName, onSectionChange, activeSection }) => {
   return (
     <div className={styles.navbarPage}>
       <div className={styles.top}>
-        <h1>{projectName}</h1>
+        {/* <h1>{projectName}</h1> */}
       </div>
       <nav className={styles.navbar}>
         <div className={styles.brand}>
@@ -24,41 +24,45 @@ const Navbar = ({ projectID,projectName, onSectionChange, activeSection }) => {
           </button>
 
           </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/documents`}>
+
+          {/* <Link href={`/pages/project/dashboard/${projectID}/dashboard/documents`}>
             <button
               className="">
               Documents
             </button>
-          </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/deliverables`}>
+          </Link> */}
+
+          {/* <Link href={`/pages/project/dashboard/${projectID}/dashboard/deliverables`}>
           <button
             className="">
             Deliverables
           </button>
-          </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/assignees`}>
+          </Link> */}
+
+          {/* <Link href={`/pages/project/dashboard/${projectID}/dashboard/assignees`}>
           <button
             className="">
             Assignees
           </button>
 
-          </Link>
+          </Link> */}
       
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/expenses`}>
+          {/* <Link href={`/pages/project/dashboard/${projectID}/dashboard/expenses`}>
           <button
             className="">
             Expenses
           </button>
 
-          </Link>
+          </Link> */}
       
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/report`}>
+          {/* <Link href={`/pages/project/dashboard/${projectID}/dashboard/report`}>
           <button
             className="">
             Report
           </button>
 
-          </Link>
+          </Link> */}
+          
           {/* <button
             className={activeSection === "calendar" ? styles.active : ""}
             onClick={() => onSectionChange("calendar")}

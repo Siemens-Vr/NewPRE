@@ -104,7 +104,7 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
-        <h2>Add Level to Student</h2>
+        {/*<h2>Add Level to Student</h2>*/}
         <div className={styles.formGrid}>
           <select
             value={selectedCohort}
@@ -152,9 +152,9 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
           </select>
         </div>
 
-        <button onClick={handleAdd} className={styles.addButton}>
-          Add
-        </button>
+        {/*<button onClick={handleAdd} className={styles.addButton}>*/}
+        {/*  Add*/}
+        {/*</button>*/}
 
         {cohortLevelList.length > 0 && (
           <table className={styles.table}>
@@ -187,10 +187,10 @@ const AddStudentLevelModal = ({ studentUuid, onClose }) => {
 
         <div className={styles.buttonContainer}>
           <button onClick={handleAddLevelToBackend} className={styles.saveButton}>
-            Add Level
+            Add
           </button>
           <button onClick={onClose} className={styles.closeButton}>
-            Close
+            x
           </button>
         </div>
       </div>

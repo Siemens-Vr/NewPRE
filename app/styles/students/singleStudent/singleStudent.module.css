@@ -1,4 +1,30 @@
 
+.modalOverlay {
+  position: fixed; /* Position it fixed on the screen */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center the modal horizontally */
+  align-items: center; /* Center the modal vertically */
+  z-index: 1000; /* Ensure the modal is above other content */
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.modalContent {
+  position: relative; /* Ensures the close button is positioned inside */
+  /*background-color: white; !* Ensure the modal has a visible background *!*/
+  /*padding: 20px;*/
+  /*border-radius: 8px;*/
+  /*max-width: 500px;*/
+  /*width: 100%;*/
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+}
+
+
  .container {
   display: flex;
   flex-direction: column;
@@ -153,16 +179,19 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
 }
 
 .popupContent {
-  background-color: white;
+  background-color: #c6e7e7;
   padding: 30px;
   border-radius: 10px;
   max-width: 600px;
   width: 90%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   animation: popupFadeIn 0.3s ease-out;
+  position: relative;
 }
 
 @keyframes popupFadeIn {
@@ -173,7 +202,7 @@
 .popupContent h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #333;
+  color: #ff7211;
   font-size: 24px;
   text-align: center;
 }
@@ -200,8 +229,9 @@
 
 .popupButtons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 20px;
+  gap: 20px;
 }
 
 .popupButtons button {
@@ -286,9 +316,10 @@
 
 .entryRow {
   display: flex;
-  gap: 10px;
+  gap: 30px;
   /* margin-bottom: 10px; */
   align-items: center;
+  margin-left: 40px;
 }
 
 .entryRow input {
@@ -300,7 +331,8 @@
   background-color: #ff4d4d;
   color: white;
   border: none;
-  padding: 4px 8px;
+  margin-bottom: 13px;
+  padding: 6px 8px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -314,13 +346,27 @@
   background-color: teal;
   color: white;
   border: none;
+  width:200px;
   padding: 10px 15px;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 20px;
+  margin-left: 150px;
   transition: background-color 0.3s ease;
 }
 
 .addEntryBtn:hover {
   background-color: teal;
 }
+
+ .closeButtons {
+   position:absolute;
+   top: 20px;
+   right: 20px;
+   background: none;
+   border: none;
+   font-size: 24px;
+   cursor: pointer;
+   color: #000000;
+
+ }

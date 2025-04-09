@@ -76,16 +76,16 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
   return (
     <div className={styles.popup}>
       <div className={styles.popupContent}>
-        <h2>Add New Level</h2>
-        <form onSubmit={handleSubmit}>
+        <h2 className={styles.title}>Add New Level</h2>
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
           <div className={styles.formGroup}>
             <label className={styles.label}>Level Name</label>
             <select
-              className={styles.input}
-              name="levelName"
-              value={levelData.levelName}
-              onChange={(e) => handleLevelChange('levelName', e.target.value)}
-              required
+                className={styles.input}
+                name="levelName"
+                value={levelData.levelName}
+                onChange={(e) => handleLevelChange('levelName', e.target.value)}
+                required
             >
               <option value="">Select level name</option>
               <option value="SMSCP Level 1">SMSCP Level 1</option>
@@ -96,115 +96,119 @@ const LevelAddPopUp = ({ cohortId, onClose, onAdd }) => {
           <div className={styles.formGroup}>
             <label htmlFor="startDate">Start Date:</label>
             <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={levelData.startDate}
-              onChange={(e) => handleLevelChange('startDate', e.target.value)}
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={levelData.startDate}
+                onChange={(e) => handleLevelChange('startDate', e.target.value)}
             />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="endDate">End Date:</label>
             <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              value={levelData.endDate}
-              onChange={(e) => handleLevelChange('endDate', e.target.value)}
+                type="date"
+                id="endDate"
+                name="endDate"
+                value={levelData.endDate}
+                onChange={(e) => handleLevelChange('endDate', e.target.value)}
             />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="exam_dates">Exam Date:</label>
             <input
-              type="date"
-              id="exam_dates"
-              name="exam_dates"
-              value={levelData.exam_dates}
-              onChange={(e) => handleLevelChange('exam_dates', e.target.value)}
+                type="date"
+                id="exam_dates"
+                name="exam_dates"
+                value={levelData.exam_dates}
+                onChange={(e) => handleLevelChange('exam_dates', e.target.value)}
             />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="exam_quotation_number">Exam Quotation Number:</label>
             <input
-              type="text"
-              id="exam_quotation_number"
-              name="exam_quotation_number"
-              value={levelData.exam_quotation_number}
-              onChange={(e) => handleLevelChange('exam_quotation_number', e.target.value)}
+                type="text"
+                id="exam_quotation_number"
+                name="exam_quotation_number"
+                value={levelData.exam_quotation_number}
+                onChange={(e) => handleLevelChange('exam_quotation_number', e.target.value)}
             />
           </div>
-
-          <label className={styles.label}>Facilitators</label>
-          {levelData.facilitators.length > 0 && (
-            <div className={styles.facilitatorRoleTable}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Facilitator</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {levelData.facilitators.map((facilitator, index) => (
-                    <tr key={index}>
-                      <td>{facilitator.label}</td>
-                      <td>{facilitator.role}</td>
-                      <td>
-                        <button type="button" onClick={() => removeFacilitatorRole(index)}>Remove</button>
-                      </td>
+          <div className={styles.facilitator}>
+            <label className={styles.labels}>Facilitators</label>
+            {levelData.facilitators.length > 0 && (
+                <div className={styles.facilitatorRoleTable}>
+                  <table>
+                    <thead>
+                    <tr>
+                      <th>Facilitator</th>
+                      <th>Role</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                    {levelData.facilitators.map((facilitator, index) => (
+                        <tr key={index}>
+                          <td>{facilitator.label}</td>
+                          <td>{facilitator.role}</td>
+                          <td>
+                            <button type="button" onClick={() => removeFacilitatorRole(index)}>Remove</button>
+                          </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                  </table>
+                </div>
+            )}
+            <div className={styles.facilitatorRoleSelections}>
+              <select
+                  className={styles.select}
+                  value={selectedFacilitator ? selectedFacilitator.value : ""}
+                  onChange={(e) =>
+                      setSelectedFacilitator({
+                        value: e.target.value,
+                        label: e.target.options[e.target.selectedIndex].text,
+                      })
+                  }
+              >
+                <option value="" disabled>Select Facilitator</option>
+                {facilitators.map((facilitator) => (
+                    <option key={facilitator.uuid} value={facilitator.uuid}>
+                      {`${facilitator.firstName} ${facilitator.lastName}`}
+                    </option>
+                ))}
+              </select>
+
+              <select
+                  className={styles.select}
+                  value={selectedRole ? selectedRole.value : ""}
+                  onChange={(e) => setSelectedRole({
+                    value: e.target.value,
+                    label: e.target.options[e.target.selectedIndex].text
+                  })}
+              >
+                <option value="" disabled>Select Role</option>
+                {roleOptions.map((role) => (
+                    <option key={role.value} value={role.value}>
+                      {role.label}
+                    </option>
+                ))}
+              </select>
             </div>
-          )}
-          <div className={styles.facilitatorRoleSelection}>
-            <select
-              className={styles.select}
-              value={selectedFacilitator ? selectedFacilitator.value : ""}
-              onChange={(e) =>
-                setSelectedFacilitator({
-                  value: e.target.value,
-                  label: e.target.options[e.target.selectedIndex].text,
-                })
-              }
-            >
-              <option value="" disabled>Select Facilitator</option>
-              {facilitators.map((facilitator) => (
-                <option key={facilitator.uuid} value={facilitator.uuid}>
-                  {`${facilitator.firstName} ${facilitator.lastName}`}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className={styles.select}
-              value={selectedRole ? selectedRole.value : ""}
-              onChange={(e) => setSelectedRole({ value: e.target.value, label: e.target.options[e.target.selectedIndex].text })}
-            >
-              <option value="" disabled>Select Role</option>
-              {roleOptions.map((role) => (
-                <option key={role.value} value={role.value}>
-                  {role.label}
-                </option>
-              ))}
-            </select>
-
             <button
-              type="button"
-              className={styles.addFacilitatorRoleButton}
-              onClick={addFacilitatorRole}
+                type="button"
+                className={styles.addFacilitatorRoleButton}
+                onClick={addFacilitatorRole}
             >
-              Add
+              Add Facilitator
             </button>
           </div>
 
           <div className={styles.popupActions}>
-            <button type="submit">Add Level</button>
-            <button type="button" onClick={onClose}>Cancel</button>
+
+            <button className={styles.closeButtons} onClick={onClose}>×</button>
           </div>
         </form>
+        <button type="submit" className={styles.submit}>Add Level</button>
       </div>
     </div>
   );

@@ -1,0 +1,110 @@
+
+
+
+.container{
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    padding: 20px;
+    /*background: #1b9392;*/
+    border-radius: 8px;
+}
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+    width: 100%;
+}
+
+
+.addButton {
+    background: #ff7211;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 20px;
+}
+
+.addButton:hover {
+    background: #c6e7e7;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+.table thead {
+    background: #1b9392;
+    color: white;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #d8d8d8;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.button.view {
+    background: #1b9392;
+    color: white;
+}
+
+.button.view:hover {
+    background: #c6e7e7;
+}
+
+.button.delete {
+    background: #ef4444;
+    color: white;
+}
+
+.button.delete:hover {
+    background: #991b1b;
+}
+
+.noStudents {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #c6e7e7;
+    margin-top: 20px;
+}
+
+.search{
+    margin-top: -10px;
+}
+.button.addlevel {
+    background: #1b9392;
+    color: white;
+}
+.button.addlevel:hover{
+    background: #c6e7e7;
+    color: white;
+}

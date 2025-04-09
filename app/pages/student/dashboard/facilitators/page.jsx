@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import Pagination from '@/app/components/pagination/pagination';
 import Search from '@/app/components/search/search';
-import styles from '@/app/styles/students/students.module.css'
+import styles from '@/app/styles/students/addStudent/facilitators.module.css';
 import Link from "next/link";
 import { useSearchParams } from 'next/navigation';
 import Swal from 'sweetalert2';
 import { config } from '/config';
+import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
+// import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
 
 const FacilitatorsPage = () => {
   const [facilitators, setFacilitators] = useState([]);
   const searchParams = useSearchParams();
+  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
   const q = searchParams.get('q') || '';
 
   useEffect(() => {  
@@ -36,6 +39,15 @@ const FacilitatorsPage = () => {
       text: message,
       confirmButtonColor: '#3085d6',
     });
+  };
+
+  const handleAddNewClick = () => {
+    setShowAddNewPopup(true);
+  };
+
+  // Close the "Add New" student popup
+  const handleClosePopup = () => {
+    setShowAddNewPopup(false);
   };
 
   const handleDeleteFacilitator = async (uuid, fullName) => {
@@ -80,9 +92,14 @@ const FacilitatorsPage = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <Search placeholder="Search for a facilitator..."  />
-        <Link href="/pages/student/dashboard/facilitators/add">
-          <button className={styles.addButton}>Add New</button>
-        </Link>
+        <button onClick={handleAddNewClick} className={styles.addButton}>
+          Add New
+        </button>
+
+        {/* Conditionally render the Add New Student Popup */}
+        {showAddNewPopup && (
+            <AddFacilitatorPage onClose={handleClosePopup} />
+        )}
       </div>
       {facilitators.length > 0 ? (
         <table className={styles.table}>

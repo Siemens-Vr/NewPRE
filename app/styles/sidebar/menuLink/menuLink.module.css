@@ -2,7 +2,7 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 10px;
   padding: 10px;
   text-decoration: none;
   color: white;
@@ -12,7 +12,7 @@
 
 /* Highlight active menu item */
 .active {
-  background-color: #ff7211;
+  background-color: #c6e7e7;
   border-radius: 6px;
 }
 

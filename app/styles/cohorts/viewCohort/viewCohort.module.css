@@ -7,7 +7,7 @@
   justify-content: space-between;
   margin-bottom: 20px;
   padding: 20px;
-  background: #182237;
+  background: #1b9392;
   border-radius: 10px;
   width: 100%;
 }
@@ -19,8 +19,8 @@
 }
 
 .card {
-  background: #182237;
-  border: 1px solid #182237;
+  background: #c6e7e7;
+  border: 1px solid #c6e7e7;
   border-radius: 8px;
   padding: 20px;
   width: 300px;
@@ -54,7 +54,17 @@
 }
 
 .button {
-  background-color: #5D57C9;
+  background-color: #1b9392;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+.buttons {
+  background-color: #ff7211;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -64,8 +74,13 @@
   font-size: 16px;
 }
 
+.buttons:hover {
+  background-color: #c6e7e7;
+}
+
+
 .button:hover {
-  background-color: #5D57C9;
+  background-color: #ff7211;
 }
 
 .container h1 {
@@ -74,8 +89,8 @@
 
 
 .button:hover {
-  background-color: #4A45A0;
-   box-shadow: 0 4px 8px rgba(93, 87, 201, 0.3);
+  background-color: #ff7211;
+   box-shadow: 0 4px 8px rgb(255, 114, 17);
 }
 
 .container h1 {
@@ -83,25 +98,27 @@
 }
 
 .detailsRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*justify-content: space-between;*/
+  /*width: 100%;*/
 }
 
 .detailsRow h1 {
   margin: 0;
   flex: 1;
+  color: white;
 }
 
 .detailsRow p {
   margin: 0;
-  text-align: center;
+  /*text-align: center;*/
   flex: 2;
 }
 
 .detailsRow button {
   margin-left: 20px;
+  align-items: end;
 }
 
 .cohortbtn {
@@ -115,13 +132,13 @@
 }
 
 .cohortdownload {
-  background-color: #5D57C9;
+  background-color: #c6e7e7;
   color: white;
 }
 
 .cohortdownload:hover {
-  background-color: #4A45A0;
-  box-shadow: 0 4px 8px rgba(93, 87, 201, 0.3);
+  background-color: #ff7211;
+  box-shadow: 0 4px 8px rgb(255, 114, 17);
 }
 
 .cohortdownload:active {

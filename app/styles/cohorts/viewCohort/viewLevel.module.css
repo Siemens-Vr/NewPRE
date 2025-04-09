@@ -2,46 +2,64 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: 40px;
 }
 
 .top,
-.studentTable,
+/*.studentTable,*/
 .instructorsTable {
   background-color: var(--bgSoft);
   padding: 20px;
   margin-top: 30px;
   border-radius: 10px;
 }
-
+.studentTable {
+  min-height: 5px;
+  max-height: 600px; /* or any sensible limit */
+  /*overflow-y: auto;*/
+  transition: height 0.3s ease-in-out;
+}
+.studentTable.empty {
+  height: 5px;
+}
+.studentTable.filled {
+  /*height: auto;*/
+}
 .tableTop {
   display: flex;
   justify-content: space-between;
 }
-
+.tableTop h3{
+  font-size: 24px;
+  color:black;
+  font-weight: bold;
+}
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bgSoft);
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.table thead {
+  background: #1b9392;
+  color: white;
 }
 
 .table th,
 .table td {
-  padding: 12px 15px;
+  padding: 12px;
   text-align: left;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  text-transform: capitalize;
+  border-bottom: 1px solid #ddd;
 }
 
-.table th {
-  background-color: var(--bgAccent);
-  font-weight: bold;
+.table tbody tr:nth-child(even) {
+  background: #d8d8d8;
 }
 
-.table tr:nth-child(even) {
-  background-color: var(--bgAccent2);
-}
 
 .table tr:hover {
   background-color: var(--bgAccent3);
@@ -55,7 +73,7 @@
 }
 
 .listItem {
-  background-color: #2E374A;
+  background-color: #121212;
   margin: 5px 0;
   padding: 8px;
   border-radius: 4px;
@@ -76,10 +94,10 @@
   background-color: rgb(10, 97, 97);
 }
 
-/* Add these styles to your viewLevel.module.css file */
+
 
 .popup {
- 
+
   position: fixed;
   top: 0;
   left: 0;
@@ -90,11 +108,17 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
 }
 
 .popupContent {
-  max-height: 80vh; /* Limits the height to 80% of the viewport height */
-  overflow-y: auto; /* Makes the popup scrollable if content overflows */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  max-height: 80vh;
+  overflow-y: auto;
   background-color: white;
   padding: 30px;
   border-radius: 8px;
@@ -106,7 +130,7 @@
 .popupContent h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #333;
+  color: #ff7211;
   font-size: 24px;
   text-align: center;
 }
@@ -119,47 +143,47 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #555;
+  color: #000000;
 }
 
 .formGroup input,
 .formGroup select {
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
-  color:black;
+  /*color:black;*/
 }
-.formGroup select{
-  color:black;
-}
+/*.formGroup select{*/
+/*  color:black;*/
+/*}*/
 
-.popupActions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
-  /* position:relative; */
-}
+/*.popupActions {*/
+/*  display: flex;*/
+/*  justify-content: flex-end;*/
+/*  margin-top: 30px;*/
+/*  !* position:relative; *!*/
+/*}*/
 
-.popupActions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+/*.popupActions button {*/
+/*  padding: 10px 20px;*/
+/*  border: none;*/
+/*  border-radius: 4px;*/
+/*  font-size: 16px;*/
+/*  cursor: pointer;*/
+/*  transition: background-color 0.3s ease;*/
+/*}*/
 
-.popupActions button[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  margin-right: 10px;
-}
+/*.popupActions button[type="submit"] {*/
+/*  background-color: #4CAF50;*/
+/*  color: white;*/
+/*  margin-right: 10px;*/
+/*}*/
 
-.popupActions button[type="submit"]:hover {
-  background-color: #45a049;
-}
+/*.popupActions button[type="submit"]:hover {*/
+/*  background-color: #45a049;*/
+/*}*/
 
 .popupActions button[type="button"] {
   background-color: #f44336;
@@ -169,16 +193,21 @@
 .popupActions button[type="button"]:hover {
   background-color: #d32f2f;
 }
-.facilitatorRoleSelection{
+.facilitatorRoleSelections{
   display: flex;
-  justify-content: space-between;
-  gap:10px;
+  /*justify-content: space-between;*/
+  gap:5px;
+  padding: 15px;
 }
-.facilitatorRoleSelection select{
+/*.facilitatorRoleSelection select{*/
+/*  color:black;*/
+/*}*/
+.labels{
+  font-size: 16px;
   color:black;
-}
-.label{
-  color:black;
+  font-weight: bold;
+  margin-left: 60px;
+  /*margin-bottom: 16px;*/
 }
 .facilitatorRoleTable table {
   width: 100%;
@@ -189,40 +218,328 @@
 
 .facilitatorRoleTable th,
 .facilitatorRoleTable td {
-  color: #000; /* Set the text color */
+  color: #000;
   padding: 8px;
   border-bottom: 1px solid #ddd;
 }
 
 .facilitatorRoleTable th {
-  text-align: left; /* Align header text to the left */
+  text-align: left;
 }
 
 .facilitatorRoleTable tbody td {
-  font-size: 14px; /* Make the text in the table body smaller */
+  font-size: 14px;
+  color: black;
 }
 
 .select {
   width: 100%;
-  padding: 8px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.select option {
-  background-color: var(--bg);
-  color: white;
-}
+/*.select option {*/
+
+/*  color: #000000;*/
+/*}*/
 
 .addFacilitatorRoleButton {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #1b9392;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 8px;
+  margin-left: 70px;
 }
 
 .addFacilitatorRoleButton:hover {
-  background-color: #0056b3;
+  background-color: #c6e7e7;
+}
+/*motrew*/
+.popupContent {
+  background-color: #c6e7e7;
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.title{
+  text-align: center;
+  color: #ff7211;
+  margin-left: 180px;
+}
+.h2{
+  text-align: center;
+  color: #ff7211;
+  margin-left: 180px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  margin-left: 20px;
+  gap:10px;
+}
+
+.formGroup label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.formGroup input {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+
+.formContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+
+/*.popupActions {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  margin-top: 20px;*/
+/*  margin-left: 30px;*/
+/*}*/
+
+/*.popupActions button {*/
+/*  padding: 12px 20px;*/
+/*  font-size: 16px;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*  width: 100%;*/
+/*}*/
+
+.popupActions button[type="submit"] {
+  background-color: #1b9392; /* Teal */
+  color: white;
+  align-items: flex-end;
+  justify-content: flex-end;
+
+
+}
+
+
+.popupActions button[type="submit"]:hover {
+  background-color: #ff7211;
+}
+
+.popupActions button[type="button"] {
+  background-color: #ff7f32; /* Orange */
+  color: white;
+}
+
+.popupActions button[type="button"]:hover {
+  background-color: #d96b27;
+}
+/*.submit{*/
+/*  align-items: center;*/
+/*  !*margin-left: 150px;*!*/
+/*  !*padding: 8px 16px;*!*/
+/*  background-color: #1b9392;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  border-radius: 4px;*/
+/*  cursor: pointer;*/
+/*  margin-top: 8px;*/
+/*  width: 100%;*/
+/*  !*margin-left: 70px;*!*/
+/*}*/
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color:red;
+}
+
+.closeButtons {
+  position:absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff7211;
+
+}
+/* Card Styling */
+/*.card {*/
+/*  !*background: #008080; !* Teal background *!*!*/
+/*  !*color: white;*!*/
+/*  padding: 20px;*/
+/*  border-radius: 10px;*/
+/*  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);*/
+/*  max-width: 100%;*/
+/*  min-width: 250px;*/
+/*  text-align: left;*/
+/*  position: relative;*/
+/*}*/
+
+/* Title */
+
+
+/* Three-dot Action Button */
+.actionContainer {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.dotsButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000000;
+}
+
+/* Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+  right: 10px;
+  top: 160px;
+  background: #c6e7e7;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  color: black;
+}
+
+.dropdownMenu button {
+  padding: 10px;
+  border: none;
+  background: #c6e7e7;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdownMenu button:hover {
+  background: #ff7211;
+}
+
+/* Grid Layout for Multiple Cards */
+.milestoneGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.facilitator{
+  display: flex;
+  flex-wrap: wrap;
+  /*gap: 50px;*/
+  justify-content: space-between;
+  /*margin-top:16px ;*/
+  /*padding: 15px;*/
+}
+.addFacilitatorRoleButton{
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #1b9392;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ff7211;
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.addButton {
+  background-color: teal;
+}
+
+.createButton {
+  background-color: #ff7211;
+}
+.deleteButton {
+  align-items: center;
+  margin-left: 280px;
+  background-color: #1b9392;
+}
+
+.addButton:hover {
+  background-color: #006666;
+}
+
+.createButton:hover {
+  background-color: #d65a00;
+}
+
+.facilitatorRoleSelection {
+  display: flex;
+  gap: 150px; /* Space between elements */
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 25px;
+}
+
+
+
+.addFacilitatorRoleButton:hover {
+  background-color: #ff7211;
+}
+
+.addButton {
+  background: #ff7211;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+.submit{
+margin-left: 450px;
+  background-color: #ff7211;
+  /*background-color: #1b9392; !* Teal *!*/
+  color: white;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px;
+  border-radius: 5px;
+}
+.submit:hover {
+  background-color: #1b9392;
+}
+
+.addButton:hover {
+  background: #c6e7e7;
 }

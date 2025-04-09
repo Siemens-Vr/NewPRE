@@ -32,10 +32,11 @@ const Navbar = () => {
       {/*<div className={styles.title}>{pathname.split("/").pop()}</div>*/}
       <div className={styles.menu}>
 
-        <div className={styles.search}>
-          <input type="text" placeholder="Search..." className={styles.input} />
-          <MdSearch />
-        </div>
+        {/*<div className={styles.search}>*/}
+
+        {/*  /!*<input type="text" placeholder="Search..." className={styles.input} />*!/*/}
+        {/*  /!*<MdSearch />*!/*/}
+        {/*</div>*/}
 
         <div className={styles.icons}>
           <MdOutlineChat size={20}/>

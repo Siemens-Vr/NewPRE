@@ -33,67 +33,78 @@ const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
   };
 
   return (
-    <div className={styles.popup}>
-      <div className={styles.popupContent}>
-        <h2>Edit Level Details</h2>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="levelName">Name:</label>
-            <input
-              type="text"
-              id="levelName"
-              name="levelName"
-              value={formData.levelName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="startDate">Start Date:</label>
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="endDate">End Date:</label>
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="exam_dates">Exam Date:</label>
-            <input
-              type="date"
-              id="exam_dates"
-              name="exam_dates"
-              value={formData.exam_dates}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="exam_quotation_number">Exam Quotation Number:</label>
-            <input
-              type="text"
-              id="exam_quotation_number"
-              name="exam_quotation_number"
-              value={formData.exam_quotation_number}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.popupActions}>
-            <button type="submit">Update</button>
-            <button type="button" onClick={onClose}>Cancel</button>
-          </div>
-        </form>
+      <div className={styles.popup}>
+        <div className={styles.popupContent}>
+          <h2 className={styles.h2}>Edit Level Details</h2>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.formContainer}>
+              <div className={styles.formGroup}>
+                <label htmlFor="levelName">Level Name:</label>
+                <input
+                    type="text"
+                    id="levelName"
+                    name="levelName"
+                    value={formData.levelName}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="exam_dates">Exam Date:</label>
+                <input
+                    type="date"
+                    id="exam_dates"
+                    name="exam_dates"
+                    value={formData.exam_dates}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="startDate">Start Date:</label>
+                <input
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="exam_quotation_number">Exam Quotation No:</label>
+                <input
+                    type="text"
+                    id="exam_quotation_number"
+                    name="exam_quotation_number"
+                    value={formData.exam_quotation_number}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="endDate">End Date:</label>
+                <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="facilitatorRole">Facilitator & Role:</label>
+                <select id="facilitatorRole">
+                  <option>Facilitator & Role</option>
+                  {/* Add dynamic options here */}
+                </select>
+              </div>
+            </div>
+            <div className={styles.popupActions}>
+              <button type="submit">Update</button>
+              {/*<button type="button" onClick={onClose}>Cancel</button>*/}
+            </div>
+          </form>
+          <button className={styles.closeButton} onClick={onClose}>×</button>
+        </div>
+
       </div>
-    </div>
   );
 };
 

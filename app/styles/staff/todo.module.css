@@ -1,0 +1,138 @@
+.todoPage {
+    align-items: center;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    justify-content: start;
+  }
+  
+  .addButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: end;
+  }
+  
+  .todoContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .todoCard {
+    background: linear-gradient(to right, #c2f3f3, #4fa9a9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 400px;
+
+  }
+  
+  .todoCard h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .todoCard ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .todoCard li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .completedTask {
+    text-decoration: line-through;
+    color: gray;
+  }
+  
+  .editButton {
+    background-color: #ffa500;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    filter: none;
+  }
+  
+  .modalContent {
+    position: relative;
+    background-color: #c6e7e7;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    filter: none;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+     border: 1px solid #ccc;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  /* .addTaskButton,
+  .saveButton {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+   */
+  .addTaskButton {
+    background-color: #1b9392;;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+  }
+  
+  .saveButton {
+    background-color: #ff7211;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+    margin-left: auto;
+  }
+  .h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+ 
+  

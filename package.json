@@ -23,6 +23,7 @@
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "calendar": "^0.1.1",
     "chart.js": "^4.4.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "date-fns": "^4.1.0",
@@ -50,11 +51,9 @@
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
     "recharts": "2.9.0",
-    "siemensnext14dashboard": "file:",
     "styled-components": "^6.1.11",
     "sweetalert2": "^11.6.13",
-    "use-debounce": "9.0.4",
-    "xlsx": "^0.18.5"
+    "use-debounce": "9.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

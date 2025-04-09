@@ -62,6 +62,33 @@ export const cards = [
   },
 ];
 
+export const card= [
+  {
+    id: 1,
+    title: "Total students",
+    number: 23,
+    change: 12,
+  },
+  {
+    id: 2,
+    title: "Cohort",
+    number: 5,
+    change: -2,
+  },
+  {
+    id: 3,
+    title: "Facilitators",
+    number: 10,
+    change: 18,
+  },
+  {
+    id: 4,
+    title: "levels",
+    number: 5,
+    change: 18,
+  },
+];
+
 export const projectdata=[
   {
     id: 1,
@@ -84,3 +111,8 @@ export const projectdata=[
     number: 6,
   }
 ]
+export const instructors = [
+  { id: 1, src: '/instructor1.jpg', alt: 'Instructor 1' },
+  { id: 2, src: '/instructor2.jpg', alt: 'Instructor 2' },
+  { id: 3, src: '/instructor3.jpg', alt: 'Instructor 3' },
+];

@@ -6,17 +6,21 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import AddLevelPopup from '@/app/components/student/AddLevelPopUp';
 import Pagination from '@/app/components/pagination/pagination';
 import Search from '@/app/components/search/search';
-import styles from '@/app/styles/students/students.module.css';
+import styles from '@/app/styles/students/Student.module.css';
 import Link from "next/link";
 import Swal from 'sweetalert2';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { config } from '/config';
+import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [count, setCount] = useState(0);
   const [popupStudentId, setPopupStudentId] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
+    const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('name');
+  const [searchValue, setSearchValue] = useState('');
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -37,6 +41,7 @@ const StudentsPage = () => {
     level: '',
     regNo: '',
     kcseNo: '',
+    name: '',
   });
 
   const handleFilterChange = (e) => {
@@ -44,18 +49,18 @@ const StudentsPage = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const applyFilters = () => {
-    const filtered = students.filter((student) => {
-      return (
-        (filters.cohort === '' || student.cohort === filters.cohort) &&
-        (filters.level === '' || student.level === filters.level) &&
-        (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
-        (filters.kcseNo === '' || student.kcseNo.includes(filters.kcseNo))
-      );
-    });
-
-    setFilteredStudents(filtered);
-  };
+  // const applyFilters = () => {
+  //   const filtered = students.filter((student) => {
+  //     return (
+  //       (filters.cohort === '' || student.cohort === filters.cohort) &&
+  //       (filters.level === '' || student.level === filters.level) &&
+  //       (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
+  //       (filters.name === '' || student.name.includes(filters.name))
+  //     );
+  //   });
+  //
+  //   setFilteredStudents(filtered);
+  // };
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -119,7 +124,7 @@ const StudentsPage = () => {
       icon: 'error',
       title: 'Oops...',
       text: message,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#1b9392',
     });
   };
 
@@ -128,6 +133,23 @@ const StudentsPage = () => {
 
   // };
   // console.log(levels)
+  //added by me
+  const applyFilters = (customFilters = filters) => {
+    const filtered = students.filter((student) => {
+      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+
+      return (
+          (customFilters.cohort === '' || student.cohort === customFilters.cohort) &&
+          (customFilters.level === '' || student.level === customFilters.level) &&
+          (customFilters.regNo === '' || student.regNo.toLowerCase().includes(customFilters.regNo.toLowerCase())) &&
+          (customFilters.kcseNo === '' || (student.kcseNo && student.kcseNo.toLowerCase().includes(customFilters.kcseNo.toLowerCase()))) &&
+          (customFilters.name === '' || fullName.includes(customFilters.name.toLowerCase()))
+      );
+    });
+
+    setFilteredStudents(filtered);
+  };
+
 
 
   const handleDeleteStudent = async (uuid, fullName) => {
@@ -137,7 +159,7 @@ const StudentsPage = () => {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      cancelButtonColor: '#ff7211',
       confirmButtonText: 'Yes, delete',
       cancelButtonText: 'Cancel'
     });
@@ -178,97 +200,105 @@ const StudentsPage = () => {
     }
   };
 
+    const handleAddNewClick = () => {
+        setShowAddNewPopup(true);
+    };
+
+    // Close the "Add New" student popup
+    const handleClosePopup = () => {
+        setShowAddNewPopup(false);
+    };
+
     return (
       <div className={styles.container}>
         <div className={styles.top}>
           <div className={styles.filterSection}>
             <div className={styles.horizontalFilters}>
               <div className={styles.filterField}>
-                <label htmlFor="cohort">Cohort:</label>
-                <div>
-                <select
-                  id="cohort"
-                  name="cohort"
-                  value={filters.cohort}
-                  onChange={handleFilterChange}
+
+                <div className={styles.filterField}>
+                  <label htmlFor="filterType" className={styles.text}>Filter by:</label>
+                  <select
+                      id="filterType"
+                      value={selectedFilter}
+                      onChange={(e) => setSelectedFilter(e.target.value)}
+                  >
+                    <option value="name">Name</option>
+                    <option value="regNo">Reg No</option>
+                    <option value="cohort">Cohort</option>
+                    <option value="level">Level</option>
+                    <option value="kcseNo">KCSE No</option>
+                  </select>
+                </div>
+
+                <div className={styles.filterField}>
+                  <input
+                      type="text"
+                      placeholder={`Enter ${selectedFilter}`}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                </div>
+                <button
+                    className={styles.filterButton}
+                    onClick={() => {
+                      setFilters((prev) => {
+                        const updated = {
+                          ...prev,
+                          cohort: '',
+                          level: '',
+                          regNo: '',
+                          kcseNo: '',
+                          name: '',
+                          [selectedFilter]: searchValue, // this sets the selected filter value dynamically
+                        };
+                        // applyFilters needs to run *after* state updates
+                        applyFilters(updated);
+                        return updated;
+                      });
+                    }}
                 >
-                  <option value="">All</option>
-                  <option value="Cohort Test">Cohort Test</option>
-                  <option value="January Intake">January Intake</option>
-                </select>
-                </div>
-              </div>
-              <div className={styles.filterField}>
-                <label htmlFor="level">Level:</label>
-                <div>
-                <select
-                  id="level"
-                  name="level"
-                  value={filters.level}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">All</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
-                </div>
-              </div>
-              <div className={styles.filterField}>
-                <label htmlFor="regNo">Reg No:</label>
-                <input
-                  id="regNo"
-                  name="regNo"
-                  type="text"
-                  placeholder="Enter Registration Number"
-                  value={filters.regNo}
-                  onChange={handleFilterChange}
-                />
-              </div>
-              <div className={styles.filterField}>
-                <label htmlFor="kcseNo">KCSE No:</label>
-                <input
-                  id="kcseNo"
-                  name="kcseNo"
-                  type="text"
-                  placeholder="Enter KCSE Number"
-                  value={filters.kcseNo}
-                  onChange={handleFilterChange}
-                />
-                </div>
-                <>
-                <button className={styles.filterButton} onClick={applyFilters}>
-                  Filter
+                  Search
                 </button>
-                </>
-                <Search placeholder="Search for a student..." />
-            <div className={styles.buttonsGroup}>
-          <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
-            <Link href="/pages/student/dashboard/students/add">
-              <button className={styles.addButton}>Add New</button>
-            </Link>
-          </div>
+
+
+                {/*< div className={styles.search}>*/}
+                {/*  <Search placeholder="Search for a student..."/>*/}
+                {/*</div>*/}
+                {/*<div className={styles.buttonsGroup}>*/}
+                <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
+                {/* Button to open the "Add New" student popup */}
+                <button onClick={handleAddNewClick} className={styles.addButton}>
+                  Add New
+                </button>
+
+                {/* Conditionally render the Add New Student Popup */}
+                {showAddNewPopup && (
+                    <AddStudentPage onClose={handleClosePopup}/>
+                )}
+              </div>
+            </div>
+            {/*</div>*/}
           </div>
         </div>
-  </div>
         {Array.isArray(filteredStudents) && filteredStudents.length > 0 ? (
-          <table className={styles.table}>
-            <thead>
+            <table className={styles.table}>
+              <thead>
               <tr>
                 <td>Reg No</td>
                 <td>Full Name</td>
                 <td>Phone</td>
                 <td>Action</td>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {filteredStudents.map((student) => {
                 const fullName = `${student.firstName} ${student.lastName}`;
                 return (
-                  <tr key={student.uuid}>
-                    <td>{student.regNo}</td>
-                    <td>
-                      <div className={styles.student}>
+                    <tr key={student.uuid}>
+                      <td>{student.regNo}</td>
+                      <td>
+                        <div className={styles.student}>
                         {fullName}
                       </div>
                     </td>
@@ -280,7 +310,7 @@ const StudentsPage = () => {
                             View
                           </button>
                         </Link>
-                        <button onClick={() => setPopupStudentId(student.uuid)}>Add Level</button>
+                        <button  className={`${styles.button}  ${styles.addlevel}`} onClick={() => setPopupStudentId(student.uuid)}>Add Level</button>
                         {popupStudentId === student.uuid && (
                           <AddLevelPopup
                             studentId={student.uuid}

@@ -6,10 +6,11 @@ import styles from '@/app/styles/cohorts/addCohort/addCohort.module.css';
 import Link from 'next/link';
 import Spinner from '@/app/components/spinner/spinner'
 import { config } from '/config';
+import blur from '../../cohorts/page';
 
 // console.log(`${config.baseURL}`)
 
-const CohortForm = () => {
+const CohortForm = ({onClose }) => {
   const [cohortName, setCohortName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -86,7 +87,7 @@ const CohortForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Create one payload with both cohort and levels data
     const payload = {
       cohortName,
@@ -94,7 +95,7 @@ const CohortForm = () => {
       endDate,
       levels, // Send all the levels as part of the cohort creation
     };
-  
+
     try {
       setLoading(true); // Start the loading spinner
   console.log(payload)
@@ -105,17 +106,17 @@ const CohortForm = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (!cohortResponse.ok) {
         throw new Error('Failed to create cohort and levels');
       }
-  
+
       const result = await cohortResponse.json();
       console.log('Cohort and levels created:', result);
-  
+
       // Show success message
       setShowSuccessMessage(true);
-  
+
       // Reset form after 3 seconds
       setTimeout(() => {
         setShowSuccessMessage(false);
@@ -130,7 +131,7 @@ const CohortForm = () => {
       setLoading(false); // Stop the loading spinner
     }
   };
-  
+
 
   const addLevel = () => {
     setLevels([...levels, { levelName: '', startDate: '', endDate: '', exam_dates: '' , exam_quotation_number: '', facilitators: [] }]);
@@ -190,191 +191,227 @@ const CohortForm = () => {
     { value: 'Theory Instructor', label: 'Theory Instructor' },
     { value: ' Practical Instructor', label: ' Practical Instructor' },
   ];
-// console.log(facilitators)
+
+  //add
+
+  // const handleSave = () => {
+  //   onSave(cohortLevelList);
+  //   onClose();
+  // };
+console.log(facilitators)
   return (
-    <div className={styles.container}>
-      {showSuccessMessage && (
-        <div className={styles.successMessage}>Cohort created successfully!</div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className={styles.form}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Cohort Name</label>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="Enter cohort name"
-              value={cohortName}
-              onChange={(e) => setCohortName(e.target.value)}
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Start Date</label>
-            <input
-              className={styles.input}
-              type="date"
-              value={startDate}
-              onChange={(e) =>handleCohortStartDateChange(e.target.value)}
-            />
-          {cohortDateError && <p className='text-red-600 text-sm'>{cohortDateError}</p>}
 
-          </div>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>End Date</label>
-            <input
-              className={styles.input}
-              type="date"
-              value={endDate}
-              onChange={(e) => handleCohortEndDateChange(e.target.value)}
-            />
-          {cohortDateError && <p className='text-red-600 text-sm'>{cohortDateError}</p>}
+        <div className={styles.modalOverlay} onClick={onClose}>
+          <div className={styles.container} onClick={(e) => e.stopPropagation()}>
 
-          </div>
-
-          {levels.map((level, index) => (
-            <div className={styles.levelGroup} key={index}>
-              <h3 className={styles.title}>Level</h3>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Level Name</label>
-                <select
-                  className={styles.input}
-                  name="levelName"
-                  value={level.levelName}
-                  onChange={(e) => handleLevelChange(index, 'levelName', e.target.value)}
-                  required
-                >
-                  <option value="">Select level name</option>
-                  <option value="SMSCP Level 1">SMSCP Level 1</option>
-                  <option value="SMSCP Level 2">SMSCP Level 2</option>
-                  <option value="SMSCP Level 3">SMSCP Level 3</option>
-                </select>
-          
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Start Date</label>
-                <input
-                  className={styles.input}
-                  type="date"
-                  value={level.startDate}
-                  onChange={(e) => handleLevelChange(index, 'startDate', e.target.value)}
-                />
-              </div>
-              {levelDateErrors[index] && <p className='text-red-700 text-base text-center	font-semibold	 '>{levelDateErrors[index]}</p>}
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>End Date</label>
-                <input
-                  className={styles.input}
-                  type="date"
-                  value={level.endDate}
-                  onChange={(e) => handleLevelChange(index, 'endDate', e.target.value)}
-                />
-              </div>
-              {levelDateErrors[index] && <p className='text-red-700 text-base text-center	font-semibold'>{levelDateErrors[index]}</p>}
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Exam Date</label>
-                <input
-                  className={styles.input}
-                  type="date"
-                  value={level.exam_dates}
-                  onChange={(e) => handleLevelChange(index, 'exam_dates', e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Exam Quotation Number</label>
-                <input
-                  className={styles.input}
-                  type="text"
-                  value={level.exam_quotation_number}
-                  onChange={(e) => handleLevelChange(index, 'exam_quotation_number', e.target.value)}
-                />
-              </div>
-              <label htmlFor="">Facilitators</label>
-
-
-              {level.facilitators.length > 0 && (
-                <div className={styles.facilitatorRoleTable}>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Facilitator</th>
-                        <th>Role</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {level.facilitators.map((facilitator, i) => (
-                          <tr key={i}>
-                            <td>{facilitator.label}</td>
-                            <td>{facilitator.role}</td>
-                            <td>
-                              <button onClick={() => removeFacilitatorRole(index, i)}>Remove</button>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              <div className={styles.facilitatorRoleSelection}>
-                <Select
-                  className={styles.select}
-                  placeholder="Select Facilitator"
-                  options={facilitators.map(facilitator => ({
-                    value: facilitator.uuid,
-                    label: `${facilitator.firstName} ${facilitator.lastName}`
-                  }))}
-                  value={selectedFacilitator}
-                  onChange={setSelectedFacilitator}
-                />
-                <Select
-                  className={styles.select}
-                  placeholder="Select Role"
-                  options={roleOptions}
-                  value={selectedRole}
-                  onChange={setSelectedRole}
-                />
-                <button
-                  type="button"
-                  className={styles.addFacilitatorRoleButton}
-                  onClick={() => addFacilitatorRole(index)}
-                >
-                  Add 
-                </button>
-              </div>
-            
-            
-              <button
-                type="button"
-                onClick={() => deleteLevel(index)}
-                className={`${styles.deleteButton} ${styles.button}`}
-              >
-                Delete Level
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className={styles.buttons}>
-          <button
-            type="button"
-            onClick={addLevel}
-            className={`${styles.addButton} ${styles.button}`}
-          >
-            Add New Level
-          </button>
-          <button type="submit" className={`${styles.submitButton} ${styles.button}`} disabled={loading}>
-            {loading ? (
-              <>
-                <Spinner /> Please wait...
-              </>
-            ) : (
-              'Create Cohort'
+            {showSuccessMessage && (
+                <div className={styles.successMessage}>Cohort created successfully!</div>
             )}
-          </button>
+            <button className={styles.closeButton} onClick={onClose}>
+              &times;
+            </button>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.form}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Cohort Name</label>
+                  <input
+                      className={styles.input}
+                      type="text"
+                      placeholder="Enter cohort name"
+                      value={cohortName}
+                      onChange={(e) => setCohortName(e.target.value)}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Start Date</label>
+                  <input
+                      className={styles.input}
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => handleCohortStartDateChange(e.target.value)}
+                  />
+                  {cohortDateError && <p className='text-red-600 text-sm'>{cohortDateError}</p>}
+
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>End Date</label>
+                  <input
+                      className={styles.input}
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => handleCohortEndDateChange(e.target.value)}
+                  />
+                  {cohortDateError && <p className='text-red-600 text-sm'>{cohortDateError}</p>}
+
+                </div>
+
+                {levels.map((level, index) => (
+                    <div className={styles.levelGroup} key={index}>
+                      <h3 className={styles.title}>Level</h3>
+                      <div className={styles.forms}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Level Name</label>
+                          <select
+                              className={styles.input}
+                              name="levelName"
+                              value={level.levelName}
+                              onChange={(e) => handleLevelChange(index, 'levelName', e.target.value)}
+                              required
+                          >
+                            <option value="">Select level name</option>
+                            <option value="SMSCP Level 1">SMSCP Level 1</option>
+                            <option value="SMSCP Level 2">SMSCP Level 2</option>
+                            <option value="SMSCP Level 3">SMSCP Level 3</option>
+                          </select>
+
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Start Date</label>
+                          <input
+                              className={styles.input}
+                              type="date"
+                              value={level.startDate}
+                              onChange={(e) => handleLevelChange(index, 'startDate', e.target.value)}
+                          />
+                        </div>
+                        {levelDateErrors[index] &&
+                            <p className='text-red-700 text-base text-center	font-semibold	 '>{levelDateErrors[index]}</p>}
+
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>End Date</label>
+                          <input
+                              className={styles.input}
+                              type="date"
+                              value={level.endDate}
+                              onChange={(e) => handleLevelChange(index, 'endDate', e.target.value)}
+                          />
+                        </div>
+                        {levelDateErrors[index] &&
+                            <p className='text-red-700 text-base text-center	font-semibold'>{levelDateErrors[index]}</p>}
+
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Exam Date</label>
+                          <input
+                              className={styles.input}
+                              type="date"
+                              value={level.exam_dates}
+                              onChange={(e) => handleLevelChange(index, 'exam_dates', e.target.value)}
+                          />
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Exam Quotation Number</label>
+                          <input
+                              className={styles.input}
+                              type="text"
+                              value={level.exam_quotation_number}
+                              onChange={(e) => handleLevelChange(index, 'exam_quotation_number', e.target.value)}
+                          />
+                        </div>
+                        <div className={styles.buttons2}>
+                          <button
+                              type="button"
+                              onClick={() => deleteLevel(index)}
+                              className={`${styles.deleteButton} ${styles.button}`}
+                          >
+                            Delete Level
+                          </button>
+                          <button
+                              type="button"
+                              onClick={addLevel}
+                              className={`${styles.addButton} ${styles.button}`}
+                          >
+                            Add New Level
+                          </button>
+                        </div>
+                        </div>
+                        <div className={styles.facilitator}>
+                          <label htmlFor="" className={styles.title}>Facilitators</label>
+
+
+                          {level.facilitators.length > 0 && (
+                              <div className={styles.facilitatorRoleTable}>
+                                <table>
+                                  <thead>
+                                  <tr>
+                                    <th>Facilitator</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {level.facilitators.map((facilitator, i) => (
+                                      <tr key={i}>
+                                        <td>{facilitator.label}</td>
+                                        <td>{facilitator.role}</td>
+                                        <td>
+                                          <button onClick={() => removeFacilitatorRole(index, i)}>Remove</button>
+                                        </td>
+                                      </tr>
+                                  ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                          )}
+                          <div className={styles.facilitatorRoleSelection}>
+                            <Select
+                                className={styles.selects}
+                                placeholder="Select Facilitator"
+                                options={facilitators.map(facilitator => ({
+                                  value: facilitator.uuid,
+                                  label: `${facilitator.firstName} ${facilitator.lastName}`
+                                }))}
+                                value={selectedFacilitator}
+                                onChange={setSelectedFacilitator}
+                            />
+                            <Select
+                                className={styles.selects}
+                                placeholder="Select Role"
+                                options={roleOptions}
+                                value={selectedRole}
+                                onChange={setSelectedRole}
+                            />
+
+
+                          </div>
+                          <button
+                              type="button"
+                              className={styles.addFacilitatorRoleButton}
+                              onClick={() => addFacilitatorRole(index)}
+                          >
+                            Add facilitator
+                          </button>
+
+                        </div>
+
+
+                      </div>
+                      ))}
+                    </div>
+              <div className={styles.buttons}>
+                <button
+                    type="button"
+                    onClick={addLevel}
+                    className={`${styles.addButton} ${styles.button}`}
+                >
+                  Add New Level
+                </button>
+
+                <button type="submit" className={`${styles.submitButtons} ${styles.button}`} disabled={loading}>
+                  {loading ? (
+                      <>
+                        <Spinner/> Please wait...
+                      </>
+                  ) : (
+                      'Create Cohort'
+                  )}
+                </button>
+
+
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
+
   );
 };
 

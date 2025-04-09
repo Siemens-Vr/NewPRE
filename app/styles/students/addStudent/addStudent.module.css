@@ -1,120 +1,145 @@
+/* Add this to your addStudent.module.css or the appropriate CSS file */
+
+.modalOverlay {
+  position: fixed; /* Position it fixed on the screen */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center the modal horizontally */
+  align-items: center; /* Center the modal vertically */
+  z-index: 1000; /* Ensure the modal is above other content */
+  backdrop-filter: blur(10px); /* This applies the blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.modalContent {
+  position: relative; /* Ensures the close button is positioned inside */
+  /*background-color: white; !* Ensure the modal has a visible background *!*/
+  /*padding: 20px;*/
+  /*border-radius: 8px;*/
+  /*max-width: 500px;*/
+  /*width: 100%;*/
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ff7211; /* Ensure the text is visible */
+  font-weight: bold;
+}
+
+
+
+
 .container {
-  background-color: var(--bgSoft);
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  /*align-items: center;*/
+  height: 70%;
+  /*background: rgba(0, 0, 0, 0.3); !* Background blur effect *!*/
 }
 
 .form {
+  background-color: #c6e7e7;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 800px;
+  height: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.form input,
-.form textarea,
-.form select {
-  padding: 20px;
-  background-color: var(--bg);
-  color: var(--text);
-  border: 2px solid #2e374a;
+.divInput {
+  width: 48%; /* Makes inputs appear side by side */
+  margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  /*gap: 5px;*/
+  height: 40px;
+}
+
+.label {
+  color: #000000;
+  font-weight:500;
+  margin-bottom: 5px;
+}
+
+.divInput input, .divInput select {
+  /*width: 100%;*/
+  padding: 15px;
   border-radius: 5px;
-  margin-bottom: 30px;
+  border: none;
+  outline: none;
+  font-size: 16px;
 }
-
-.form input, .form select {
-  width: 45%;
-}
-
-.form textarea{
-  width: 100%;
-}
-
-.form button{
-  width: 100%;
-  padding: 20px;
-  background-color: teal;
-  color: var(--text);
+.addCohortButton, .submitButton {
+  width: 48%;  /* Ensures buttons align side by side */
+  padding: 5px;
+  background-color: #ff7211;
+  color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-  margin-top:20px;
-}
-
-  
-.successMessage {
-  background-color: #4CAF50;
-  color: white;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  text-align: center;
+  font-size: 16px;
   font-weight: bold;
-  animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
-  width: 100%;
-  max-width: 400px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-
-
-
-.cohortLevelList {
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
   margin-top: 20px;
-  border: 1px solid #ddd;
-  padding: 10px;
+  text-align: center;
+  display: inline-block;
+  height: 40px;
+}
+.submitButtons{
+  padding: 5px 10px;
   border-radius: 5px;
-  /* width:100%; */
-
-  background-color: #f9f9f9;
-  color:black;
-}
-
-.cohortLevelList h3 {
-  text-align: left;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th, .table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.table th {
-  background-color: #4CAF50;
+  height: 40px;
+  background-color: #ff7211;
   color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 80px;
+  align-items: flex-end;
 }
 
-.table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.addCohortButton:hover, .submitButton:hover {
+  background-color: #c6e7e7;
 }
 
-.table tr:hover {
-  background-color: #ddd;
+/* To center buttons in a row */
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.cohortLevelList .deleteButton {
-  padding: 6px 12px;
+
+.successMessage {
+  color: white;
+  background: green;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.deleteButton {
   background-color: red;
   color: white;
   border: none;
-  border-radius: 3px;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -122,91 +147,63 @@
   background-color: darkred;
 }
 
-
-button.addCohortButton {
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0;
-  margin-top:0px;
+.table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
 }
 
-.plusSign {
-  font-size: 32px;
-  font-weight: bold;
-  color: crimson;
-  margin-right: 8px; /* Spacing between + and text */
-}
-
-.addText {
-  font-size: 16px;
+.table th, .table td {
+  padding: 10px;
+  border: 1px solid white;
   color: white;
 }
 
-button.addCohortButton:hover .plusSign, 
-button.addCohortButton:hover .addText {
-  color: darkcyan; /* Change color on hover */
+.table th {
+  background: darkcyan;
 }
 
-button.addCohortButton:focus {
-  outline: none; /* Remove button outline */
-}
 
-.label {
-  font-weight: bold;
-  color: var(--text);
-  margin-bottom: 10px;
-  display: block;
-}
+/*//new page*/
+/*.cohortLevelList {*/
+/*  text-align: center;*/
+/*  margin-top: 30px;*/
+/*}*/
 
-.form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.divInputs{
-  display: flex;
-  flex-direction: row;
-  gap:10px;
-}
+/*.gridContainer {*/
+/*  display: grid;*/
+/*  grid-template-columns: repeat(2, 1fr);*/
+/*  gap: 20px;*/
+/*  justify-items: center; !* Centers the content horizontally *!*/
+/*  align-items: center; !* Centers the content vertically *!*/
+/*}*/
 
-.divInput {
-  display: flex;
-  flex-direction: column;
-  flex-basis: calc(50% - 10px);
-  margin-bottom: 20px;
-}
+/*.table {*/
+/*  width: 100%;*/
+/*  border-collapse: collapse;*/
+/*  margin-top: 20px;*/
+/*}*/
 
-.fullWidth {
-  flex-basis: 100%;
-}
+/*.table th,*/
+/*.table td {*/
+/*  padding: 10px;*/
+/*  border: 1px solid #ccc;*/
+/*  text-align: left;*/
+/*}*/
 
-.label {
-  font-weight: bold;
-  color: var(--text);
-  margin-bottom: 10px;
-  display: block;
-}
+/*.table th {*/
+/*  background-color: #f2f2f2;*/
+/*}*/
 
-.divInput input,
-.divInput textarea,
-.divInput select {
-  padding: 15px;
-  background-color: var(--bg);
-  color: var(--text);
-  border: 2px solid #2e374a;
-  border-radius: 5px;
-  font-size: 16px;
-}
+/*.deleteButton {*/
+/*  background-color: #d9534f;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  padding: 5px 10px;*/
+/*  cursor: pointer;*/
+/*}*/
 
-.divInput input,
-.divInput select {
-  width: 100%;
-}
+/*.deleteButton:hover {*/
+/*  background-color: #c9302c;*/
+/*}*/
 
-.divInput textarea {
-  width: 100%;
-  height: 100px;
-}

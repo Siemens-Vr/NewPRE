@@ -1,16 +1,19 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: #2e374a;
-  padding: 10px;
-  border-radius: 10px;
-  width: max-content;
+  gap: 2px;
+  background-color: #c6e7e7;
+  padding: 10px ;
+  border-radius: 25px;
+  justify-content: space-between;
+  height: 40px;
+  margin-top: 20px;
 }
 
 .input {
-  background-color: transparent;
+  background-color:transparent ;
   border: none;
   color: var(--text);
   outline: none;
+  font-size: 12px;
 }

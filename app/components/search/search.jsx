@@ -29,7 +29,7 @@ const Search = ({ placeholder }) => {
 
   return (
     <div className={styles.container}>
-      <MdSearch />
+
       <input
         type="text"
         placeholder={placeholder}
@@ -37,6 +37,7 @@ const Search = ({ placeholder }) => {
         onChange={handleSearch}
         className={styles.input}
       />
+      <MdSearch />
     </div>
   );
 };

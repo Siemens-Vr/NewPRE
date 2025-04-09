@@ -62,10 +62,7 @@
   margin: 0;
   color: white;
 }
-/*.list li:hover{*/
-/*  padding: 5px;*/
-/*  background-color: #ff7211;*/
-/*}*/
+
 
 /* Sidebar Items */
 .menuItem {
@@ -79,9 +76,8 @@
 .menuItemContent {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
   flex: 1;
-  padding: 10px;
   margin-left: -15px;
 }
 
@@ -92,21 +88,27 @@
   padding-left: 8px;
 }
 
-.menuItem:hover {
-  background-color: rgb(255, 114, 17);
-  padding: 8px;
-}
+
 
 .menuItem.active {
-  background-color: rgba(255, 114, 17,0.8);
-  border-left: 5px solid white;
-  font-weight: bold;
-}
+  background-color: rgb(255, 114, 17);
+  border-radius: 5px;
+  padding-left: 15px;
+  margin-left: -5px;
+  transition: all 0.3s ease-in-out;
+ 
+  } 
+  .submenuItem{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
 
 /* Increase menu item size for large screens */
 @media (min-width: 1800px) {
   .menuItem {
-    padding: 15px;
+    /* padding: 15px; */
     font-size: 10px;
   }
 }
@@ -121,10 +123,16 @@
   padding: 5px;
   display: flex;
   align-items: center;
-  /*gap: 4px;*/
+  gap: 4px;
 }
 
+
 .submenu li:hover {
+  background-color:#4ed8d8;
+  border-radius: 5px;
+  padding: 7px;
+}
+.active {
   background-color: rgb(255, 114, 17);
   border-radius: 5px;
   padding: 7px;

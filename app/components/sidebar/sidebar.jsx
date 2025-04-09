@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import MenuLink from "./menuLink/menuLink";
 import styles from "@/app/styles/sidebar/sidebar.module.css";
@@ -13,9 +13,8 @@ import {
   MdLogout,
   MdSettings
 } from "react-icons/md";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Down and Up arrows
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-// Menu Items Definition
 const menuItems = [
   {
     title: "Dashboard",
@@ -32,18 +31,20 @@ const menuItems = [
     path: "/pages/student/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      {title : "Dashboard",path:"/pages/student/dashboard",icon: <MdDashboard className={styles.whiteIcon} />},
-      {title : "Students",path: "/pages/student/dashboard/students",icon :<MdPeople className={styles.whiteIcon}/> },
+      { title: "Dashboard", path: "/pages/student/dashboard", icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Students", path: "/pages/student/dashboard/students", icon: <MdPeople className={styles.whiteIcon} /> },
       { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
       { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
     ],
   },
   {
-    title: "Equipment", path: "/pages/equipment/dashboard", icon: <MdAnalytics className={styles.whiteIcon} />,
+    title: "Equipment",
+    path: "/pages/equipment/dashboard",
+    icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      {title : "Dashboard", path:"/pages/equipment/dashboard" ,icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Dashboard", path: "/pages/equipment/dashboard", icon: <MdDashboard className={styles.whiteIcon} /> },
       { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard className={styles.whiteIcon} /> },
-      { title: "Borrow Equipment", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
+      { title: "Borrow", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
       { title: "Notifications", path: "/pages/equipment/dashboard/notifications", icon: <MdPeople className={styles.whiteIcon} /> },
     ],
   },
@@ -61,6 +62,7 @@ const menuItems = [
 
 const Sidebar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [openMenus, setOpenMenus] = useState({});
 
   const toggleMenu = (title) => {
@@ -76,108 +78,88 @@ const Sidebar = () => {
   };
 
   return (
-      <div className={styles.container}>
-        {/* User Info */}
-        <div className={styles.user}>
-          <Image
-              className={styles.userImage}
-              src={logo}
-              alt="Virtual Mechatronics Lab Logo"
-              width={60}
-              height={60}
-          />
-        </div>
-
-        {/* Sidebar Menu */}
-        <ul className={styles.list}>
-          {menuItems.map((item) => {
-            const isActive = router.pathname === item.path; // Check if menu item is active
-
-            return (
-                <li key={item.title}>
-                  {item.subpages ? (
-                      <div
-                          className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
-                          onClick={() => toggleMenu(item.title)}
-                      >
-                        <div className={styles.menuItemContent}>
-                          {item.icon}
-                          <span className={styles.whiteText}>{item.title}</span>
-                        </div>
-                        <span className={styles.toggleIcon}>
-    {openMenus[item.title] ? (
-        <FaChevronUp className={styles.whiteIcon}/>
-    ) : (
-        <FaChevronDown className={styles.whiteIcon}/>
-    )}
-  </span>
-                      </div>
-
-                  ) : (
-                      <MenuLink
-                          item={{
-                            ...item,
-                            className: `${styles.whiteText} ${isActive ? styles.active : ""}`,
-                          }}
-                      />
-                  )}
-
-                  {/* Render submenus */}
-                  {openMenus[item.title] && item.subpages && (
-                      <ul className={styles.submenu}>
-                      {item.subpages.map((sub) => {
-                          const isSubActive = router.pathname === sub.path;
-                          return (
-                              <li key={sub.title}>
-                                <MenuLink
-                                    item={{
-                                      ...sub,
-                                      className:` ${styles.whiteText} ${isSubActive ? styles.active : ""}`,
-                                    }}
-                                />
-                              </li>
-                          );
-                        })}
-                      </ul>
-                  )}
-                </li>
-            );
-          })}
-
-          {/* Conditionally Render Admin Dashboard Link */}
-          {/*{user.role.toLowerCase() === "admin" && (*/}
-          {/*    // <li>*/}
-          {/*    //   <MenuLink*/}
-          {/*    //       item={{*/}
-          {/*    //         title: "Admin Dashboard",*/}
-          {/*    //         path: "/pages/admin/dashboard",*/}
-          {/*    //         icon: <MdDashboard className={styles.whiteIcon} />,*/}
-          {/*    //         className: styles.whiteText,*/}
-          {/*    //       }}*/}
-          {/*    //   />*/}
-          {/*    // </li>*/}
-          {/*)}*/}
-        </ul>
-
-        <div className={styles.down}>
-
-          {/* Logout Button */}
-          <form>
-            <button className={`${styles.logout} ${styles.blackText}`}>
-              <MdLogout className={styles.blackIcon} />
-              Logout
-            </button>
-          </form>
-
-          {/* Settings */}
-          <div className={styles.settings}>
-            <MdSettings className={styles.whiteIcon} />
-            <span className={styles.whiteText}>Settings</span>
-          </div>
-
-          <div className={`${styles.footer} ${styles.whiteTexts}`}>&copy; 2025 SIEMENS ERP</div>
-        </div>
+    <div className={styles.container}>
+      {/* User Info */}
+      <div className={styles.user}>
+        <Image
+          className={styles.userImage}
+          src={logo}
+          alt="Virtual Mechatronics Lab Logo"
+          width={60}
+          height={60}
+        />
       </div>
+
+      {/* Sidebar Menu */}
+      <ul className={styles.list}>
+        {menuItems.map((item) => {
+          const isActive = pathname === item.path;
+
+          return (
+            <li key={item.title}>
+              <div
+                className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
+                onClick={() => item.subpages ? toggleMenu(item.title) : router.push(item.path)}
+              >
+                <div className={styles.menuItemContent}>
+                  <div className="flex items-center justify-center gap-2">
+                  {item.icon}
+                  <span className={styles.whiteText}>{item.title}</span>
+                  </div>
+               <div>
+               {item.subpages && (
+                    openMenus[item.title] ? <FaChevronUp className={styles.arrow} /> : <FaChevronDown className={styles.arrow} />
+                  )}
+               </div>
+                 
+                </div>
+              </div>
+
+              {/* Render submenus */}
+              {openMenus[item.title] && item.subpages && (
+                <ul className={styles.submenu}>
+                  {item.subpages.map((sub) => {
+                    const isSubActive = pathname === sub.path;
+                    return (
+                      <li key={sub.title}>
+                        <div
+                          className={`${styles.submenuItem} ${isSubActive ? styles.active : ""}`}
+                          onClick={() => router.push(sub.path)}
+                          style={{ cursor: "pointer", padding: "8px " }}
+                          >
+                          <div className="flex items-center justify-center gap-2">
+                            
+                          {sub.icon}
+                          <span className={styles.whiteText}>{sub.title}</span>
+                          </div>
+                          </div>
+
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className={styles.down}>
+        <form>
+          <button className={`${styles.logout} ${styles.blackText}`} type="button" onClick={() => router.push("/login")}>
+            <MdLogout className={styles.blackIcon} />
+            Logout
+          </button>
+        </form>
+
+        <div className={styles.settings}>
+          <MdSettings className={styles.whiteIcon} />
+          <span className={styles.whiteText}>Settings</span>
+        </div>
+
+        <div className={`${styles.footer} ${styles.whiteTexts}`}>&copy; 2025 SIEMENS ERP</div>
+      </div>
+    </div>
   );
 };
 

@@ -19,6 +19,52 @@
 /* Add a rectangle around the active icon */
 .activeIcon {
   /*background-color: rgb(18, 18, 18);*/
-  padding: 8px;
+  /* padding: 8px; */
   border-radius: 4px;
+}
+.menuItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  transition: background 0.2s ease-in-out;
+}
+
+.active {
+  background-color: #222;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.title {
+  flex: 1;
+}
+
+.toggleIcon {
+  margin-left: auto;
+}
+
+.submenu {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.subLink {
+  display:flex;
+  align-items: center;
+  padding: 6px 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.activeSub {
+  color: #fff;
+  font-weight: bold;
 }

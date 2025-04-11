@@ -48,7 +48,10 @@
 .dashboardContainer {
   display: flex;
   flex-direction: column;
-  /* background-color: #1B9392; */
+   margin-left: -30px;
+  padding-left: 12px;
+  padding-right: 12px;
+
 
  }
 
@@ -93,6 +96,7 @@
 }
 .header h1{
   font-size: 1.5em;
+
   
 }
 
@@ -143,7 +147,7 @@
 .cardContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+   gap: 10px;
 }
 
 .projectCard {
@@ -225,7 +229,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
+ }
 
 .editModalContent {
   background: #fff;

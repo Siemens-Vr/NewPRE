@@ -72,7 +72,9 @@ const Details = () => {
             <div className={styles.projectDetail}>
     <div className={styles.card}>
         <div className={styles.cardContent}>
-            <div>
+
+        <img src="/60111.jpg" alt="Your image description"  className={styles.img}/>
+        <div>
                 <h2>Name</h2>
                 <p>{projectDetails.projectName}</p>
             </div>

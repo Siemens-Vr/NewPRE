@@ -135,7 +135,7 @@
     padding: 0 20px;
     margin-bottom: 10px;
     font-size: 24px;
-    color: #1e90ff
+    color: #1B9392;
 }
 
 .projectDropdown {
@@ -175,6 +175,16 @@
     color: var(--text);
 }
 
+
+.img {
+    width: 40%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 
 .active {
     background-color: #1e90ff;
@@ -249,7 +259,7 @@
 }
 
 .card {
-    background-color: var(--bgSoft);
+    background-color: #C6E7E7;
     /* padding: 10px; */
     /* border-radius: 8px; */
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
@@ -261,7 +271,7 @@
 
 .card h2 {
     margin-top: 0;
-    color: #1e90ff;
+    color: #1B9392;
     margin-bottom: 10px;
 }
 
@@ -996,7 +1006,7 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
-    background-color: #007bff; /* Primary button color */
+    background-color: #ff7211;
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -1006,7 +1016,7 @@
 }
 
 .button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #cc5b0e;
     transform: translateY(-2px); /* Slight lift effect */
 }
 
@@ -1521,7 +1531,7 @@
 }
 
 .card {
-    background-color: #1a253a;
+    background-color: #C6E7E7;
     color: white;
     border-radius: 10px;
     padding: 20px;

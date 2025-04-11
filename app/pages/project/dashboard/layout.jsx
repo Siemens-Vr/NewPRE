@@ -12,7 +12,7 @@ const Layout = ({children}) => {
       <div className={styles.menu}>
       <Sidebar dashboardType="project" />
       </div>
-      <div className={styles.content}>
+      <div className={styles.contents}>
         {children}
          {/* <Footer/> */}
       </div>

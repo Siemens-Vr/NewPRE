@@ -386,17 +386,30 @@
     background-color: #1c86ee;
 }
 
-.phases .top{
-    display:flex;
+/* .phases .top{
+
+    display:flex;    
     justify-content: space-between;
     align-items: center;
+    gap: 400px;
     margin-top: 0px;
+ 
+} */
+
+.phases .up{
+
+    display:flex;    
+    justify-content: space-between;
+    align-items: center;
+     margin-top: 0px; 
+      
 }
+
 .phaseCards {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-}
+ }
 
 .phaseCard {
     background-color: #1a253a;
@@ -1195,7 +1208,8 @@
 }
 
 .addButton {
-    align-self: flex-start;
+    
+    align-self: flex-end;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -1277,8 +1291,10 @@
 }
 
 .addButton {
-    background-color: #4caf50;
+    background-color: #ff7211;
+    align-self: flex-end;
     color: white;
+    margin-left: 850px;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -1286,7 +1302,7 @@
 }
 
 .addButton:hover {
-    background-color: #43a047;
+    background-color: #cc5a0d;
 }
 
 

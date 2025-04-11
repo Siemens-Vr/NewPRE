@@ -14,8 +14,7 @@ const Layout = ({children}) => {
       <div className={styles.content}>
         <DropDown/>
 
-        {children}
-      
+        {children}      
      
       </div>
     </div>

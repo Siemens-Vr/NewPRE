@@ -140,8 +140,8 @@ const Phases = () => {
 
     return (
         <div className={styles.phases}>
-            <div className = {styles.top}>
-                <h2>Phases</h2>
+            <div className = {styles.up}>
+                <h2>Milestones</h2>
                 <button
                     onClick={() => setShowPhaseInput(true)}
                     className={styles.addButton}

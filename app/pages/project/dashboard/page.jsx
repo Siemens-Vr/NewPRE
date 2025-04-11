@@ -461,15 +461,18 @@ const result = await Swal.fire({
                             />
                         </div>
                         <div className={style.modalActions}>
+
+                        <button onClick={addProject} disabled={isAdding} className={style.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+                            
                         <button
                                 onClick={() => setShowProjectInput(false)}
                                 className={style.closeButton1}
                             >
                                 Cancel
                             </button>
-                        <button onClick={addProject} disabled={isAdding} className={style.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
+                         
                             
                         </div>
                     </div>

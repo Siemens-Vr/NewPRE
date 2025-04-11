@@ -19,7 +19,7 @@ const AddTransportPage = () => {
     dateReceived: "",
     approver: "",
     approvedDate: "",
-    document: null,
+    transport: null,
     type: "",
     PvNo: "",
     claimNumber: "",
@@ -34,7 +34,7 @@ const AddTransportPage = () => {
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
   const params = useParams();
-  const { uuid } = params;
+  const { uuid, phaseuuid, outputuuid } = params;
 
   const handleChange = (e) => {
     const { name, type, value, files } = e.target;
@@ -61,7 +61,7 @@ const AddTransportPage = () => {
     });
 
     try {
-      const response = await fetch(`${config.baseURL}/transports/${uuid}`, {
+      const response = await fetch(`${config.baseURL}/transports/${outputuuid}`, {
         method: "POST",
         body: formDataToSend,
       });
@@ -78,7 +78,7 @@ const AddTransportPage = () => {
           dateReceived: "",
           approver: "",
           approvedDate: "",
-          document: null,
+          transport: null,
           type: "",
           PvNo: "",
           claimNumber: "",
@@ -90,7 +90,7 @@ const AddTransportPage = () => {
         });
 
         if (router) {
-          router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/transport`);
+          router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/transport`);
         }
       } else {
         const errorData = await response.json();
@@ -283,10 +283,10 @@ const AddTransportPage = () => {
         </div>
 
         <div className={styles.divInput}>
-          <label htmlFor="document" className={styles.label}>
+          <label htmlFor="transport" className={styles.label}>
             Document
           </label>
-          <input type="file" name="document" onChange={handleChange} />
+          <input type="file" name="transport" onChange={handleChange} />
         </div>
 
         <div className={styles.divInput}>

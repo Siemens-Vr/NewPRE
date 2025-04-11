@@ -50,9 +50,7 @@ const Dashboard = () => {
             const data = await response.json();
             setProjects(data);
         } catch (err) {
-
             setError(err.message);
-
         } finally {
             setLoading(false);
         }

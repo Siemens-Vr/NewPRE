@@ -1,13 +1,15 @@
 "use client"
 import { useEffect, useState } from 'react';
 import styles from '@/app/styles/project/project/project.module.css';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import { config } from "/config";
 
 const Details = () => {
   const params = useParams();
   const {uuid} = params
+
+  const router = useRouter();
   console.log(uuid)
   const [projectDetails, setProjectDetails] = useState({
     projectName: "",
@@ -56,28 +58,36 @@ const Details = () => {
 
     return (
         <div className={styles.projectDetails}>
+           <div className={`${styles.project} ${styles.projectName}`}>
+                <h1>Dashboard</h1>
+          <div className={styles.milestoneButton}>
+            <button
+                onClick={() => router.push(`/pages/project/dashboard/${uuid}/dashboard/phases`)}
+                className={styles.button}
+            >
+              Milestones
+            </button>
+            </div>
+            </div>
             <div className={styles.projectDetail}>
-
-            <div className={styles.card}>
-               <div className={styles.imgDiv}>
-               <img src='/60111.jpg' alt="Avatar image" className={styles.img} />  
-               <h2>{projectDetails.projectName}</h2>             
- 
-               </div>
-
-                <div className={styles.conditions}>
-                <p>Status:{projectDetails.status}</p>
-                <p>Startdate:{}</p>
-                <p>Enddate:{}</p>
-                </div>
-
-             </div>
-
-            <div className={styles.card}>
-                <h2>Description</h2>
-                <p>{projectDetails.description}</p>
+    <div className={styles.card}>
+        <div className={styles.cardContent}>
+            <div>
+                <h2>Name</h2>
+                <p>{projectDetails.projectName}</p>
             </div>
+            <div style={{ textAlign: 'right' }}>
+                <h2>Status</h2>
+                <p>{projectDetails.status}</p>
             </div>
+        </div>
+    </div>
+    <div className={styles.card}>
+        <h2>Description</h2>
+        <p>{projectDetails.description}</p>
+    </div>
+</div>
+
           
             <div>
             <div className={styles.card}>

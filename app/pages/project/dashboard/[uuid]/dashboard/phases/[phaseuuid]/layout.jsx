@@ -1,8 +1,4 @@
-import Sidebar from '@/app/components/sidebar/sidebar'
-import Footer  from '@/app/components/footer/footer'
-// import Navbar from  '@/app/components/navbar/navbar'
-import Navbar from "@/app/components/project/navbar/navbar";
-import DropDown from '@/app/components/project/searchable/dropdown';
+import DropDown from '@/app/components/project/phases/dropdown';
 import styles from   '@/app/styles/dashboards/project/dashboard.module.css'
 
 

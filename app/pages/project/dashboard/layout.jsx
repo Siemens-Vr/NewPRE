@@ -2,7 +2,6 @@ import Sidebar from '@/app/components/sidebar/sidebar'
 import Footer  from '@/app/components/footer/footer'
 import Navbar from  '@/app/components/navbar/navbar'
 import styles from   '@/app/styles/dashboards/project/dashboard.module.css'
-// import Dashboard from './page'
 
 
 
@@ -12,9 +11,9 @@ const Layout = ({children}) => {
       <div className={styles.menu}>
       <Sidebar dashboardType="project" />
       </div>
-      <div className={styles.contents}>
+      <div className={styles.content}>
         {children}
-         {/* <Footer/> */}
+        <Footer/>
       </div>
     </div>
   )

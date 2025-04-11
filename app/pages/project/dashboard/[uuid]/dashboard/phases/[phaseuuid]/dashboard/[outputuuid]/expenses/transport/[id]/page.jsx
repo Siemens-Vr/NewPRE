@@ -12,29 +12,32 @@ const SingleTransportPage = ({ params }) => {
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
 
-  const { uuid, id } = params;
-
+  const { uuid, id, outputuuid } = params;
+  // console.log("Fetching transport with UUID:", transport.id);
   const fetchTransport = async () => {
     if (!id) {
-      router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/transport`);
+      console.error("Transport ID is undefined or null.");
       return;
     }
-
+  
+    console.log("Fetching transport with ID:", id);
     try {
-      const response = await fetch(`${config.baseURL}/transports/project/${id}`);
+      const response = await fetch(`${config.baseURL}/transports/output/${id}`);
       if (!response.ok) {
-        router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/transport`);
-        return;
+        throw new Error(`Failed to fetch transport. Status: ${response.status}`);
       }
       const data = await response.json();
-      
-      console.log("Received transport data:", data); 
+      console.log("Received transport data:", data);
       setTransport(data);
     } catch (error) {
       console.error('Error fetching transport:', error);
-      router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/transport`);
     }
   };
+  
+  useEffect(() => {
+    fetchTransport();
+  }, [id]); // Only depend on id, not transport
+  
   // const fetchTransport = async () => {
   //   if (!id) {
   //     router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/transport`);
@@ -67,40 +70,6 @@ const SingleTransportPage = ({ params }) => {
     fetchTransport();
   }, [id]);
 
-  const handleDelete = async () => {
-    if (!transport || !transport.id) {
-      console.error("Transport data is not loaded");
-      return;
-    }
-  
-    const confirmDelete = window.confirm("Are you sure you want to delete this item?");
-  
-    if (confirmDelete) {
-      try {
-        const response = await fetch(`${config.baseURL}/transports/${id}/delete`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-  
-        if (response.ok) {
-          alert("Item deleted successfully!");
-          window.location.href = `/pages/project/dashboard/${uuid}/dashboard/expenses/transport`;
-        } else {
-          throw new Error("Failed to delete item");
-        }
-      } catch (error) {
-        console.error("Error deleting item:", error);
-        alert("Failed to delete item. Please try again.");
-      }
-    }
-  };
-
-  const handleUpdateClick = (transport) => {
-    setSelectedTransport(transport);
-    setShowPopup(true);
-  };
 
   const handleClosePopup = () => {
     setShowPopup(false);
@@ -142,8 +111,17 @@ const SingleTransportPage = ({ params }) => {
   const getDateValue = (dateField) => {
     return transport[dateField] || "N/A";
   };
+  const handleBack = () => {
+    router.back(); // Go to the previous page
+  };
 
   return (
+    <div>
+        <button className={styles.backButton} onClick={handleBack}>
+          Back
+        </button>
+    
+    
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>{transport.destination}</h1>
@@ -278,6 +256,7 @@ const SingleTransportPage = ({ params }) => {
           onSave={handleSavePopup}
         />
       )}
+    </div>
     </div>
   );
 };

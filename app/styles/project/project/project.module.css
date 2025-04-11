@@ -25,6 +25,7 @@
 }
 .deliverablesManager .top h2{
     font-size: 24px;
+    /* margin-left: 10px; */
 }
 
 /* Deliverable Edit button styles */
@@ -113,6 +114,8 @@
 }
 
 
+
+
 .actionButtons {
     display: flex;
     justify-content: center; /* Center the buttons horizontally */
@@ -125,19 +128,40 @@
     align-items: center;
     padding: 0 20px;
 }
+.project{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #1e90ff
+}
 
 .projectDropdown {
     margin-right: auto;
+   
+}
+.milestoneButton{
+    margin-left:auto;
+}
+.milestoneDropdown {
+    margin-left: auto;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #1a253a;
+    border-radius: 4px;
+    color: black;
 }
 
 .dropdown {
     padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid #C6E7E7;
+    border: 1px solid #1a253a;
     border-radius: 4px;
-    color: #1B9392;
-    background-color: #C6E7E7;
+    color: black;
 }
+
 
 
 
@@ -145,7 +169,8 @@
 .projectInfoContainer {
     display: flex;
     flex-direction: column;
-     background-color: var(--bg);
+    /* min-height: 100vh; */
+    background-color: var(--bg);
     font-family: 'Roboto', sans-serif;
     color: var(--text);
 }
@@ -178,18 +203,18 @@
 }
 
 /* Navbar within Main Content */
-.navbar {
+.navbar1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    /* margin-left: auto; */
 }
 
-.projectName {
-    font-size: 28px;
+/* .projectName {
+    font-size: 24px;
     color: #1e90ff;
     cursor: pointer;
-}
+} */
 
 .navButtons button {
     margin-left: 10px;
@@ -213,59 +238,36 @@
     display: flex;
     flex-direction: column;
     /* flex-wrap: wrap; */
-    gap: 20px;
+    /* gap: 20px; */
 }
 .projectDetail{
     display: flex;
     flex-direction: row;
-    gap: 20px;
+   
+    
 
 }
 
 .card {
-    background-color: #C6E7E7;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--bgSoft);
+    /* padding: 10px; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     flex: 1 1 300px;
+    margin-left: 20px;
+    margin-right:30px;
+    margin-top: 10px;
 }
 
 .card h2 {
     margin-top: 0;
-    color: #1B9392; 
-    font-weight:bold;
+    color: #1e90ff;
     margin-bottom: 10px;
 }
 
 .card p {
     color: var(--text);
 }
-
-/* image styling */
-
-.img{
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ccc;
-      
-}
-
-.imgDiv{
-    display: flex; 
-}
-
-.imgDiv h2{
-    /* color: white; */
-    margin-top: 25px;
-    margin-left: 15px;
- }
-
- .conditions{
-    margin-top: 12px;
- 
- }
 
 /* Assignees Section */
 .deliverables, .calendarSection {
@@ -386,40 +388,38 @@
     background-color: #1c86ee;
 }
 
-/* .phases .top{
-
-    display:flex;    
+.phases 
+.top{
+    display:flex;
     justify-content: space-between;
     align-items: center;
-    gap: 400px;
     margin-top: 0px;
- 
-} */
-
-.phases .up{
-
-    display:flex;    
+    margin-left: 20px;
+}
+.phases 
+.top1{
+    display:flex;
     justify-content: space-between;
     align-items: center;
-     margin-top: 0px; 
-      
-}
+    margin-top: 0px;
 
+}
 .phaseCards {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
- }
+}
 
 .phaseCard {
     background-color: #1a253a;
     border-radius: 8px;
     padding: 10px;
-    width: 250px;
-    height: 150px;
+    width: 300px;
+    height: 200px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: 20px;
 }
 .phaseCard .top{
     display: flex;
@@ -925,7 +925,19 @@
 .inputDocumentHeader{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+}
+.inputDocumentHeaderLeft{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+.inputDocumentHeaderRight{
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: 30px;
+    /* justify-content: end; */
 }
 
 
@@ -1074,8 +1086,8 @@
 
 /* Create and Cancel Button Styles */
 .inputDocumentModalButtons button {
-    padding: 10px 15px;
-    font-size: 16px;
+    padding: 10px;
+    font-size: 14px;
     font-weight: 500;
     border: none;
     border-radius: 8px;
@@ -1208,8 +1220,7 @@
 }
 
 .addButton {
-    
-    align-self: flex-end;
+    align-self: flex-start;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -1221,6 +1232,7 @@
     align-items: center;
     gap: 0.4rem;
     transition: background-color 0.3s;
+    margin-right: 20px;
 }
 
 .addButton:hover {
@@ -1276,7 +1288,7 @@
     margin-top: 20px;
 }
 
-.closeButton {
+.closeButton1 {
     background-color: #f44336;
     color: white;
     padding: 10px 20px;
@@ -1290,11 +1302,9 @@
     background-color: #e53935;
 }
 
-.addButton {
-    background-color: #ff7211;
-    align-self: flex-end;
+.addButton1{
+    background-color: #4caf50;
     color: white;
-    margin-left: 850px;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -1302,7 +1312,7 @@
 }
 
 .addButton:hover {
-    background-color: #cc5a0d;
+    background-color: #43a047;
 }
 
 
@@ -1445,4 +1455,84 @@
     color: #c03535;
     transition: color 0.2s;
 }
+.successMessage {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 0.5s, fadeOut 0.5s 0.5s;
+    width: 100%;
+    max-width: 400px;
+  }
+ 
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  } 
+  
+  .errorMessage {
+    background-color: #f44336;
+    color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 0.5s, fadeOut 0.5s 0.5s;
+    width: 100%;
+    max-width: 400px;
+  }
+.outputDetails {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Ensures 2 cards per row */
+    gap: 90px;
+    max-width: 900px; /* Restricts the width to keep cards aligned */
+    margin-top: 20px;
+    /*width: 100%;*/
+    justify-content: center;
+}
 
+@media (max-width: 768px) {
+    .outputDetails {
+        grid-template-columns: repeat(1, 1fr); /* Stacks cards in one column on smaller screens */
+    }
+}
+
+.card {
+    background-color: #1a253a;
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    justify-content: space-between;
+}
+.cardContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%; 
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card p {
+    font-size: 16px;
+    margin: 0;
+}

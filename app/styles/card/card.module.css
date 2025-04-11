@@ -71,3 +71,11 @@
 .color4 {
   background-color: #1b9392;
 }
+
+/* @media (max-width: 768px) {
+  .cardContainer {
+    height: 4oopx;
+    padding: 15px;
+  }
+
+} */

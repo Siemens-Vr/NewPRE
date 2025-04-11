@@ -48,6 +48,7 @@ const Dashboard = () => {
           <Reminders/>
           <Course/>
         </div>
+        
       </div>
   );
 };

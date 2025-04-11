@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: start;
   background-color: white; /* Ensure navbar has a background */
+  margin-bottom: 10px;
 }
 .container1 {
   display: flex;
@@ -40,6 +41,7 @@
   align-items: center;
   gap: 20px;
   width: 100%;
+
 }
 .menu1 {
   display: flex;

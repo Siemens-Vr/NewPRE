@@ -9,7 +9,7 @@
 
 .menu {
   min-height: 100vh;
-  /*background-color: #1E88E5;*/
+  background-color: #1b9392;
   width: 250px;
   margin-right: 0;
 }
@@ -18,9 +18,9 @@
 .content {
   width: 100%;
   padding: 20px;
-  
-  /*display: grid;*/
-  /*grid-template-columns: repeat(2, 1fr);*/
+  margin-top: 10px;
+  /* display: grid; */
+  grid-template-columns: repeat(2, 1fr);
 }
 
 
@@ -130,36 +130,37 @@
 }
 
 /*Responsive*/
-@media (min-width: 1600px) {
+/* @media (min-width: 1600px) {
   .wrapper {
     gap: 20px; /* Add more space between columns */
-    margin-right: 20px;
-  }
+    /* margin-right: 20px; 
+  } 
 
   .menu {
-    width: 300px; /* Increase sidebar width */
+    width: 300px; /* Increase sidebar width 
   }
 
   .contents {
-    grid-template-columns: repeat(3, 1fr); /* Change to 3 columns for larger screens */
-    gap: 40px; /* Decrease gap between items */
+    grid-template-columns: repeat(3, 1fr); /* Change to 3 columns for larger screens 
+    gap: 40px; /* Decrease gap between items 
   }
 
   .containercard {
-    height: 250px; /* Increase card height */
+    height: 250px; /* Increase card height 
   }
 
-  .containercards {
-    height: 350px; /* Increase project card height */
-    width: 600px; /* Increase width for larger screens */
+  .containercards 
+    height: 350px; /* Increase project card height 
+    width: 600px; /* Increase width for larger screens 
   }
 
   .calendars {
-    grid-template-columns: repeat(3, 1fr); /* Display 3 columns for the calendar section */
+    grid-template-columns: repeat(3, 1fr); /* Display 3 columns for the calendar section 
     gap: 30px;
   }
 
   .calendarContainer {
-    max-width: 400px; /* Increase calendar container size */
+    max-width: 400px; /* Increase calendar container size 
   }
-}
+} 
+  */

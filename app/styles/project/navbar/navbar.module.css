@@ -1,30 +1,47 @@
 
-.navbarPage{
-  color: white;
+/* .navbarPage{
+  color: rgb(143, 0, 0);
   padding: 10px;
-}
+} */
 
 .navbarPage h1{
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 18px;
-  font-weight: 700;
-  text-transform:capitalize;
+  font-weight: 700; 
+   text-transform:capitalize;
 }
-.navbar {
-    display: flex;
+/* .navbar {
+  display: flex;
     justify-content: space-between;
     align-items: center;
-    color: white;
-  }
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #1e90ff
+
+   
+   
+  } */
   .brand h1{
     font-size: 18px;
     color: #1e90ff;
+    margin-left: auto;
+   
+  }
+  .brand1 h1{
+    font-size: 18px;
+    color: #1e90ff;
+    margin-right: auto;
+   
   }
   
-  .navLinks {
+  /* .navLinks {
     display: flex;
     gap: 1rem;
-  }
+    margin-right: auto;
+
+
+  } */
   
   .navLinks button {
     background: none;
@@ -35,6 +52,7 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: background-color 0.3s;
+    margin-top: auto;
   }
   
   .navLinks button:hover {
@@ -43,5 +61,55 @@
   
   .navLinks .active {
     background-color: #1e90ff;
+  }
+
+  .active {
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 16px;
+  }
+  
+  /* .backButton {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #007bff;
+    margin-right: 20px;
+    margin-left: auto;
+  }
+  
+  .backButton:hover {
+    text-decoration: underline;
+  } */
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between; /* Ensures left and right alignment */
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #1e90ff;
+  }
+  
+  .backButton {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #007bff;
+    margin-right: auto;
+  }
+  
+  .backButton:hover {
+    text-decoration: underline;
+  }
+  
+  .navLinks {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto; /* Pushes navigation links to the right */
   }
   

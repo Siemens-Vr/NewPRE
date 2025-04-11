@@ -6,6 +6,8 @@ import { MdFolder} from "react-icons/md";
 import { config } from "/config";
 import UploadDropdown from '@/app/components/uploadDropdown/uploadDropdown';
 import { useParams } from 'next/navigation';
+import Navbar from "@/app/components/project/output/navbar/navbar";
+import Swal from "sweetalert2";
 
 // Action Types
 const ACTION_TYPES = {
@@ -233,41 +235,48 @@ const Documents = () => {
     const [actionMenuPosition, setActionMenuPosition] = useState({ x: 0, y: 0 });
     const [viewUrl, setViewUrl] = useState(null);
     const [showView, setShowView] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [fileList, setFileList] = useState (false);
 
+    
     const [modalStates, setModalStates] = useState({
         folderModal: false,
+        folderUpdateModal:false,
         fileModal: false,
         folderUploadModal: false
     });
-    const [folderName, setFolderName] = useState("")
-
-    const [menuOpen, setMenuOpen] = useState(null);
-    const menuRef = useRef(null);
+    const [folderName, setFolderName] = useState("");
+    
+    const [menuOpen, setMenuOpen] = useState({});
+    const [folderMenuOpen, setFolderMenuOpen] = useState({});
+    const menuRefs = useRef({}); 
 
     const params = useParams()
-    const {uuid} = params
+    const {uuid, outputuuid} = params
 
-    console.log('This is the folder name', folderName)
+    // console.log('This is the folder name', folderName)
 
 
 //menu 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setMenuOpen(null);
-            }
-        };
+const handleClickOutside = (event) => {
+    let isClickInsideMenu = Object.values(menuRefs.current).some(
+        (menu) => menu && menu.contains(event.target)
+    );
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    console.log("Clicked outside?", !isClickInsideMenu);
+
+    if (!isClickInsideMenu) {
+        console.log("Closing menu...");
+        setMenuOpen({});
+    }
+};
+
 
     // Fetch initial folders
     const fetchInitialFolders = async () => {
         try {
-            const response = await fetch(`${config.baseURL}/documents/${uuid}/folders`);
+            const response = await fetch(`${config.baseURL}/documents/${outputuuid}/folders`);
             if (!response.ok) throw new Error('Failed to fetch folders');
             
             const result = await response.json();
@@ -296,12 +305,12 @@ const Documents = () => {
         if (options.parentFolderId) {
             console.log("parentFolderid", options.parentFolderId)
             // If we have a parent folder ID, it means we're dealing with a nested subfolder
-            apiUrl = `${config.baseURL}/documents/${uuid}/${options.parentFolderId}/${folderId}`;
+            apiUrl = `${config.baseURL}/documents/${outputuuid}/${options.parentFolderId}/${folderId}`;
             // apiUrl = `${config.baseURL}/documents/${uuid}/${folderId}`;
 
         } else {
             // If no parent folder ID, we're dealing with a root-level folder
-            apiUrl = `${config.baseURL}/documents/${uuid}/${folderId}`;
+            apiUrl = `${config.baseURL}/documents/${outputuuid}/${folderId}`;
         }
         console.log("URL",apiUrl)
         const response = await fetch(apiUrl);
@@ -337,80 +346,68 @@ const Documents = () => {
     };
 
     useEffect(() => {
-        console.log('Current Folder State:', state.currentFolder);
+        // console.log('Current Folder State:', state.currentFolder);
     }, [state.currentFolder]);
 
-    // Create Folder
+
     const handleCreateFolder = async (providedFolderName = null) => {
-            const nameToUse = providedFolderName || folderName.trim();
-
-            // console.log(nameToUse)
-        
-            // Trim and validate folder name input
-            if (!nameToUse) {
-                alert('Folder name is required.');
-                return null;
-            }
-
-            console.log('This is the folder name in the create folder', nameToUse);
+        if (isLoading) return; // Prevent multiple submissions
+        setIsLoading(true);
     
-
-            // Determine the parent folder ID
-            const parentFolderId = state.currentFolder?.id !== 'root' 
-                ? state.currentFolder.uuid 
-                : null;
-
-            // Construct folder payload
-            const newFolder = {
-                folderName: nameToUse,
-                parentFolderId: parentFolderId
-            };
-
-            // Determine the correct API endpoint
-            const folderUrl = parentFolderId
-                ? `${config.baseURL}/subFolders/${uuid}/${parentFolderId}`
-                : `${config.baseURL}/folders/${uuid}`;
-
-            try {
-                const response = await fetch(folderUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newFolder),
-                });
-
-                // Handle failed request
-                if (!response.ok) {
-                    const errorMessage = await response.text();
-                    console.error('Error response:', errorMessage);
-                    throw new Error('Failed to create folder.');
-                }
-
-                // Parse response and update state
-                const createdFolder = await response.json();
-                console.log('Folder created successfully:', createdFolder);
-
-                // Dispatch the appropriate action
-                dispatch({
-                    type: parentFolderId 
-                        ? ACTION_TYPES.CREATE_SUBFOLDER 
-                        : ACTION_TYPES.CREATE_FOLDER,
-                    payload: {
-                        ...createdFolder,
-                        parentFolderId: parentFolderId
-                    }
-                });
-
-                // Only reset form fields if we're using the state folder name
-                if (!providedFolderName) {
-                    setFolderName('');
-                    setModalStates((prev) => ({ ...prev, folderModal: false }));
-                }
-
-                return createdFolder; // Return the created folder
-            } catch (error) {
-                console.error('Error creating folder:', error.message);
-                    }
+        const nameToUse = providedFolderName || folderName.trim();
+        
+        if (!nameToUse) {
+            alert('Folder name is required.');
+            setIsLoading(false);
+            return;
+        }
+    
+        const parentFolderId = state.currentFolder?.uuid || null;
+    
+        const newFolder = {
+            folderName: nameToUse,
+            parentFolderId,
+        };
+    
+        const folderUrl = parentFolderId
+            ? `${config.baseURL}/subFolders/${outputuuid}/${parentFolderId}`
+            : `${config.baseURL}/folders/${outputuuid}`;
+    
+        try {
+            const response = await fetch(folderUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' ,
+                    'Authorization': 'Bearer ${userToken}'
+                },
+                
+                body: JSON.stringify(newFolder),
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                console.error('Error response:', errorMessage);
+                throw new Error(errorMessage || 'Failed to create folder.');
+            }
+    
+            const createdFolder = await response.json();
+            console.log('Folder created successfully:', createdFolder);
+            dispatch({
+                type: parentFolderId ? ACTION_TYPES.CREATE_SUBFOLDER : ACTION_TYPES.CREATE_FOLDER,
+                payload: { ...createdFolder, parentFolderId },
+            });
+          
+            if (!providedFolderName) {
+                setFolderName('');
+                setModalStates((prev) => ({ ...prev, folderModal: false }));
+            }
+            return createdFolder;
+        } catch (error) {
+            console.error('Error creating folder:', error.message);
+        } finally {
+            setIsLoading(false);
+        }
     };
+
 
    // File upload handler function
     const handleFileUpload = async (file, options = {}) => {
@@ -424,16 +421,16 @@ const Documents = () => {
             formData.append('file', selectedFile);
 
             // Construct the appropriate URL based on folder hierarchy
-            let uploadUrl = `${config.baseURL}/documents/${uuid}`;
+            let uploadUrl = `${config.baseURL}/documents/${outputuuid}`;
         
             
             if (state.currentFolder?.uuid) {
                 if (state.currentFolder.parentFolderId) {
                     // For subfolders (nested folders)
-                    uploadUrl = `${config.baseURL}/documents/${uuid}/${state.currentFolder.parentFolderId}/${state.currentFolder.uuid}`;
+                    uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.parentFolderId}/${state.currentFolder.uuid}`;
                 } else {
                     // For root-level folders
-                    uploadUrl = `${config.baseURL}/documents/${uuid}/${state.currentFolder.uuid}`;
+                    uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.uuid}`;
                 }
             }
             console.log(uploadUrl)
@@ -494,7 +491,7 @@ const Documents = () => {
     
             // Call handleCreateFolder directly with the folder name
             const newFolder = await handleCreateFolder(folderUploadName);
-            console.log(newFolder)
+            console.log("new folder",newFolder)
        
     
             if (!newFolder) {
@@ -518,10 +515,10 @@ const Documents = () => {
             console.log('Extracted UUID:', newFolderUuid);
     
             // Construct upload URL for files using the returned folder
-            let uploadUrl = `${config.baseURL}/documents/${uuid}/${newFolderUuid}`;
+            let uploadUrl = `${config.baseURL}/documents/${outputuuid}/${newFolderUuid}`;
             
             if (state.currentFolder.id !== "root" ) {
-                uploadUrl = `${config.baseURL}/documents/${uuid}/${state.currentFolder.uuid}/${newFolderUuid}`;
+                uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.uuid}/${newFolderUuid}`;
             }
 
             console.log(uploadUrl)
@@ -580,76 +577,189 @@ const Documents = () => {
         }
     };
 
-    // const handleView = async (file) => {
-    //     try {
-    //         const viewUrl = `${config.baseURL}/documents/${file.id}`;
-    //         const newTab = window.open('', '_blank');
+    const handleView = async (file) => {
+        try {
+            // Ensure the project UUID is correctly defined
+            const viewUrl = `${config.baseURL}/${file.documentPath}`;
     
-    //         if (!newTab) {
-    //             alert('Pop-up blocked! Please allow pop-ups for this site.');
-    //             return;
-    //         }
+            // Open a new tab
+            const newTab = window.open('', '_blank');
     
-    //         setViewUrl(viewUrl);
-    //         setShowView(true);
+            if (!newTab) {
+                alert('Pop-up blocked! Please allow pop-ups for this site.');
+                return;
+            }
     
-    //         // Open the file URL in the new tab
-    //         newTab.location.href = viewUrl;
-    //     } catch (error) {
-    //         console.error('Error viewing file:', error);
-    //         alert('Failed to view file');
-    //     }
-    // };
-    const handleView = (file) => {
-            window.open(`${config.baseURL}/documents/view/${file.uuid}`, '_blank');
-        };
+            // Open the file URL in the new tab
+            newTab.location.href = viewUrl;
     
-        // const handleDownload = (file) => {
-        //     window.open(`${config.baseURL}/reports/download/${file.id}`, '_blank');
-        // };
+        } catch (error) {
+            console.error('Error viewing file:', error);
+            alert('Failed to view file');
+        }
+    };
     
       // New function to handle file download
-      const handleDownload = async (file) => {
-        try {
-            const response = await fetch(`${config.baseURL}/download/${file.id}`);
-            if (!response.ok) throw new Error('Download failed');
+    //   const handleDownload = (file) => {
+    //     console.log(file)
+    //     if (!file.documentPath) {
+    //         alert("No file available to download.");
+    //         return;
+    //     }
+        
+    //     const filePath = `${config.baseURL}/download/${file.documentPath}`;
+    //     const link = document.createElement("a");
+    //     link.href = filePath;
+    //     link.download = file.documentName || "download";
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // };
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = file.documentName;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+    const handleDownload = (file) => {
+        console.log("Download file:", file);
+    
+        if (!file || !file.documentPath) {
+            Swal.fire({
+                title: 'Error',
+                text: "No file available to download.",
+                icon: 'error'
+            });
+            return;
+        }
+        
+        try {
+            const filePath = `${config.baseURL}/download/${file.documentPath}`;
+            const link = document.createElement("a");
+            link.href = filePath;
+            link.download = file.documentName || "download";
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         } catch (error) {
-            console.error('Error downloading file:', error);
-            alert('Failed to download file');
+            console.error("Download error:", error);
+            Swal.fire({
+                title: 'Download Error',
+                text: "Failed to download the file.",
+                icon: 'error'
+            });
         }
     };
-
     //handle file delete
-    const handleDeleteFile = async (fileId) => {
-        if (!confirm('Are you sure you want to delete this file?')) return;
-        // console.log('clicked')
+   
+    // const handleDeleteFile = async (file) => {
+    //     console.log("Delete function received:", file.documentName);
+    
+    //     if (!file) {
+    //         console.error("Invalid file object:", file);
+    //         alert("Cannot delete this file - missing file information");
+    //         return;
+    //     }
+    
+    //     try {
+    //         const result = await Swal.fire({
+    //             title: 'Are you sure?',
+    //             text: `You are about to delete ${file.documentName}`, // Use file.documentName instead of undefined 'name'
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonColor: '#d33',
+    //             cancelButtonColor: '#3085d6',
+    //             confirmButtonText: 'Yes, delete',
+    //             cancelButtonText: 'Cancel'
+    //         });
+            
+    //         if (result.isConfirmed) {
+    //             // Ensure you're using the correct UUID
+    //             const outputUuid = file.outputUuid || outputuuid; // Check which UUID you actually need
+    
+    //             try {
+    //                 const response = await fetch(`${config.baseURL}/documents/delete/${outputUuid}/${file.uuid}`, {
+    //                     method: 'GET'
+    //                 });
+    
+    //                 console.log(response);
+    
+    //                 if (response.ok) {
+    //                     // Update your file list state 
+    //                     setFileList((prev) => prev.filter((f) => f.uuid !== file.uuid)); // Use uuid for consistent filtering
+                        
+    //                     // Show success message
+    //                     await Swal.fire({
+    //                         title: 'Deleted!',
+    //                         text: `${file.documentName} has been successfully deleted.`,
+    //                         icon: 'success',
+    //                         confirmButtonColor: '#3085d6',
+    //                     });
+    //                 } else {
+    //                     const errorText = await response.text();
+    //                     console.error("Error deleting file:", errorText);
+                        
+    //                     await Swal.fire({
+    //                         title: 'Error',
+    //                         text: errorText || 'Failed to delete file',
+    //                         icon: 'error'
+    //                     });
+    //                 }
+    //             } catch (error) {
+    //                 console.error("Error deleting file:", error);
+                    
+    //                 await Swal.fire({
+    //                     title: 'Error',
+    //                     text: error.message || 'An unexpected error occurred',
+    //                     icon: 'error'
+    //                 });
+    //             }
+    //         }
+    //     } catch (swallError) {
+    //         console.error("Swal fire error:", swallError);
+    //     }
+    // };
+   
+    const handleDeleteFile = async ( file) => {
+        console.log("Delete function received:", file.documentName  );
+    
+    if (!file) {
+        console.error("Invalid file object:", file);
+        alert("Cannot delete this file - missing file information");
+        return;
+    }
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete ${name} `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete',
+            cancelButtonText: 'Cancel'
+          });
+          
+          if (result.isConfirmed) {
+            setDeleting(uuid);
+        
 
         try {
-            const response = await fetch(`${config.baseURL}/documents/delete/${fileId}`, {
+            const response = await fetch(`${config.baseURL}/documents/delete/${file.uuid}`, {
                 method: 'DELETE'
             });
-
-            if (!response.ok) throw new Error('Delete failed');
-
-            dispatch({
-                type: ACTION_TYPES.DELETE_FILE,
-                payload: fileId
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-            alert('Failed to delete file');
-        }
-    };
+            console.log(response)
+            if (response.ok) {
+        
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: `${name} has been successfully deleted.`,
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                });
+            } else {
+                console.error("Error deleting file:", await response.text());
+            }
+            } catch (error) {
+            console.error("Error deleting file:", error);
+            }
+    }
+};
 
     // New function to handle folder deletion
     const handleDeleteFolder = async (folder) => {
@@ -691,10 +801,68 @@ const Documents = () => {
             fetchInitialFolders();
         }
     };
+    const [selectedFolder, setSelectedFolder] = useState(null);
+
+    const handleUpdateFolder = (folder) => {
+      // Set the selected folder and pre-fill the folder name
+      console.log("folder to update",folder)
+      setSelectedFolder(folder);
+      setFolderName(folder.folderName); // Assuming the folder object has a 'name' property
+      setModalStates(prev => ({ ...prev, folderUpdateModal: true }));
+      setMenuOpen(false);
+    };
+    
+    const submitFolderUpdate = async () => {
+        if (!selectedFolder) return;
+        console.log("folder to be updated folder name",folderName )
+      
+        try {
+          setIsLoading(true);
+          
+          const response = await fetch(`${config.baseURL}/folders/update/${selectedFolder.uuid}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({  folderName })
+          });
+      
+          if (!response.ok) {
+            // Handle non-200 responses
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update folder');
+          }
+      
+          const updatedFolder = await response.json();
+      
+          // Update the folders list or trigger a refresh
+          // This depends on how you're managing folders state
+          // For example:
+          // setFolders(prevFolders => 
+          //   prevFolders.map(folder => 
+          //     folder.uuid === selectedFolder.uuid 
+          //       ? { ...folder, name: folderName } 
+          //       : folder
+          //   )
+          // );
+      
+          // Close the modal
+          setModalStates(prev => ({ ...prev, folderUpdateModal: false }));
+          
+          // Optional: show success message
+         console.log('Folder updated successfully');
+        } catch (error) {
+          console.error('Error updating folder:', error);
+        //   toast.error(error.message || 'Failed to update folder');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    
 
     // Open Folder
     const handleOpenFolder = (folder, parentFolder = null) => {
-        // If the parent folder is provided, pass it as an option
+      
         const options = parentFolder 
             ? { parentFolderId: parentFolder.uuid } 
             : {};
@@ -702,6 +870,20 @@ const Documents = () => {
         fetchFolderContents(folder.uuid, options);
     };
 
+    const toggleFolderMenu = (folderId) => {
+        setFolderMenuOpen((prev) => ({
+          ...prev,
+          [folderId]: !prev[folderId],
+        }));
+      };
+    
+    // In your component
+    const toggleMenu = (fileId) => {
+        setMenuOpen(prev => ({
+          ...prev,
+          [fileId]: !prev[fileId]
+        }));
+      };
     // Side Effects
     useEffect(() => {
         fetchInitialFolders();
@@ -710,83 +892,201 @@ const Documents = () => {
     // Render Methods
     const renderFolders = () => {
         const foldersToRender = state.currentFolder?.subfolders || [];
-        console.log('Folders to render:', foldersToRender);
-    
-        return foldersToRender.map(folder => (
-            <div key={folder.uuid} className={styles.inputDocumentCard}>
-            <div 
-                className={styles.cardContent}
+        
+        return (
+          <div className="flex flex-wrap gap-4">
+            {foldersToRender.map((folder) => (
+              <div
+                key={folder.uuid}
+                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
                 onClick={() => handleOpenFolder(folder, state.currentFolder)}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <MdFolder className="text-yellow-500 rounded p-1 w-8 h-8" />
+                  <h3 className="text-gray-700 font-medium truncate">
+                    {folder.folderName || 'Unnamed Folder'}
+                  </h3>
+                </div>
+                 {/* Toggle button */}
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFolderMenu(folder.uuid);
+                
+              }}
+              className="text-gray-500 hover:text-gray-700"
             >
-                <MdFolder className={styles.inputDocumentCardIcon} />
-                <h3>{folder.folderName || 'Unnamed Folder'}</h3>
-            </div>
-            <button 
-                className={styles.deleteButton}
-                onClick={(e) => {
+              <FaEllipsisV size={16} />
+            </button>
+
+            {/* Dropdown menu */}
+            {folderMenuOpen[folder.uuid] && (
+              <div
+                id={`dropdown-${folder.uuid}`}
+                className="absolute right-0 top-full mt-1 w-32 bg-white shadow-lg rounded-lg z-50"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdateFolder(folder);
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Update
+                </button>
+                <button
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteFolder(folder);
-                }}
-            >
-                <FaTrash  size={12}/>
-            </button>
-        </div>
-        ));
-    };
-
-    const renderFiles = () => {
+                  }}
+                  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+              </div>
+            ))}
+          </div>
+        );
+      };
+      
+  
+ 
+      
+      const renderFiles = () => { 
         const filesToRender = state.currentFolder?.files || [];
-        console.log(filesToRender)
-        return filesToRender.map(file => (
-       <>
-            <div key={file?.id} className={styles.inputFileCard}>
-                <div className={styles.fileInfo}>
-                    <FaRegFileAlt className={styles.inputFileCardIcon} />
-                    <span className={styles.fileName} onClick={() => handleView(file)}>
-                        {file?.documentName?.split('-').pop() || 'Unnamed Document'}
+      
+        return (
+          <div className="flex flex-wrap gap-4 overflow-visible">
+            {filesToRender.map((file) => {
+              const fileName =
+                file?.documentName?.split('-').pop()?.length > 20
+                  ? `${file?.documentName?.split('-').pop().slice(0, 26)}...`
+                  : file?.documentName?.split('-').pop() || 'Unnamed Document';
+      
+              return (
+                <div
+                  key={file?.uuid || file?.documentName}
+                  className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
+                  onClick={() => handleView(file)}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <FaRegFileAlt className="text-yellow-500 rounded p-1 w-10 h-10" />
+                    <span className="text-gray-700 text-sm truncate">
+                      {fileName}
                     </span>
-                </div>
-                <>
-                    <div className={styles.fileMenu} ref={menuRef}>
-                    <button onClick={() => setMenuOpen(menuOpen === file.id ? null : file.id)}>
-                        <FaEllipsisV />
+                  </div>
+                  <div className="relative">
+                    {/* Three dots button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        toggleMenu(file.uuid);
+                        console.log("Menu toggled for:", file.uuid);
+                      }}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <FaEllipsisV size={16} />
                     </button>
-                    </div>
-                    {menuOpen === file.id && (
-                <div className={styles.menuDropdown}>
-                    <button onClick={() => handleView(file)}>View</button>
-                    <button onClick={() => handleDownload(file)}>Download</button>
-                    <button onClick={() => handleDeleteFile(file)}>Delete</button>
+      
+                    {menuOpen[file.uuid] && (
+                      <div 
+                        className="absolute right-0 top-full mt-1 w-32 bg-white shadow-lg rounded-lg z-50"
+                        onClick={(e) => e.stopPropagation()} // Prevents closing on click inside menu
+                      >
+                        {/* Download Button */}
+                        <button
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation();
+    console.log("Download button clicked!");
+    handleDownload(file);
+    setTimeout(() => toggleMenu(file.uuid), 200);
+  }}
+  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+>
+  Download
+</button>
+
+<button
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation();
+    console.log("Delete button clicked!");
+    handleDeleteFile(file);
+    setTimeout(() => toggleMenu(file.uuid), 200);
+  }}
+  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+>
+  Delete
+</button>
+
+                      </div>
+                    )}
+                  </div>
                 </div>
-                )}
-                </>
-             </div>
-             </>
-        ));
-    };
+              );
+            })}
+          </div>
+        );
+      };
+      
+      
+      
+      
+      
+      
 
     return (
-        
+        <div className={styles.projectDetails}>
+        <nav className={styles.navbar}>
+          <Navbar />
+          </nav>
         <div className={styles.inputDocumentSection}>
+            
             <div className={styles.inputDocumentHeader}>
+            <div className={styles.inputDocumentHeaderLeft}>
                 {state.breadcrumbs.length > 0 && (
-                    <button onClick={handleBackToParent}>
-                        <FaArrowLeft /> Back
+                    <button className=" flex gap-2 p-4 justify-center align-center"onClick={handleBackToParent}>
+                        <FaArrowLeft className='w-8'/> 
                     </button>
                 )}
-                <h2>
+                {/* <h2>
                     {state.currentFolder 
                         ? state.currentFolder.name 
                         : 'Documents'}
-                </h2>
-
+                </h2> */}
+        </div>
+        <div className={styles.inputDocumentHeaderRight}>
                 <UploadDropdown setModalStates={setModalStates} />
             </div>
-
-            <div className={styles.inputDocumentCardsContainer}>
-                {renderFolders()}
-                {renderFiles()}
             </div>
+
+            <div className="flex flex-wrap gap-4 justify-start items-start p-4 md:gap-3 sm:gap-2 ">
+            {/* Folders Section */}
+            <div className="w-full">
+                <h2 className="text-lg font-semibold text-white mb-2">Folders</h2>
+                <div className="flex flex-wrap gap-4">
+                {renderFolders()}
+                </div>
+            </div>
+
+            {/* Files Section */}
+            <div className="w-full">
+                <h2 className="text-lg font-semibold text-white mt-6 mb-2">Files</h2>
+                <div className="flex flex-wrap gap-4">
+                {renderFiles()}
+                </div>
+            </div>
+            </div>
+
+
 
             {/* Modal Components would be added here */}
 
@@ -828,7 +1128,10 @@ const Documents = () => {
                         onChange={(e) => setFolderName(e.target.value)}
                     />
                      <div className={styles.inputDocumentModalButtons}>
-                        <button type="submit">Create Folder</button>
+                        <button type="submit" disabled={isLoading}>
+                            {isLoading ? 'Creating...' : 'Create Folder'}
+                        </button>
+
                         {/* <button onClick={handleCreateFolder}>Create</button> */}
                         <button onClick={() => setModalStates({ ...modalStates, folderModal: false })}>Cancel</button>
                     </div>
@@ -836,6 +1139,46 @@ const Documents = () => {
                     </div>
                 </div>
             )}
+
+             {/* update Folder modal */}
+             {modalStates.folderUpdateModal && (
+      <div className={styles.inputDocumentModal}>
+        <div className={styles.inputDocumentModalContent}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitFolderUpdate();
+            }}
+          >
+            <h2>Update Folder</h2>
+            
+            <input
+              type="text"
+              placeholder="Folder Name"
+              value={folderName}
+              onChange={(e) => setFolderName(e.target.value)}
+            />
+            <div className={styles.inputDocumentModalButtons}>
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Updating...' : 'Update Folder'}
+              </button>
+              <button 
+                type="button"
+                onClick={() => {
+                  setModalStates({ ...modalStates, folderUpdateModal: false });
+                  setFolderName('');
+                  setSelectedFolder(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
+  
+
 
             {/* Upload File modal */}
 
@@ -886,7 +1229,7 @@ const Documents = () => {
                 </div>
             
         )}
-
+</div>
 
             </div>
         );

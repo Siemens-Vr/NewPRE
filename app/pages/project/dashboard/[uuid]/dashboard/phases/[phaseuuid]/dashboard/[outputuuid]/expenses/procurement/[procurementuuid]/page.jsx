@@ -57,8 +57,15 @@ const SingleSuppliersPage = ({ params }) => {
   if(!procurement){
     return null;
   }
+  const handleBack = () => {
+    router.back(); // Go to the previous page
+  };
 
   return (
+    <div>
+      <button className={styles.backButton} onClick={handleBack}>
+          Back
+        </button>
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>{procurement.suppliers}</h1>
@@ -237,6 +244,7 @@ const SingleSuppliersPage = ({ params }) => {
           onSave={handleSavePopup}
         />
       )}
+    </div>
     </div>
   );
 };

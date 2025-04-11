@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import styles from "@/app/styles/project/project/project.module.css";
-import Navbar from "@/app/components/project/navbar/navbar";
+
 
 import { config } from "/config";
 
@@ -11,11 +11,13 @@ const DropDown = () => {
   const searchParams = useSearchParams();
   const params = useParams()
   const router = useRouter();
-  const {uuid} = params;
+  const {uuid, phaseuuid} = params;
 
   // const uuid = searchParams.get("uuid");
 
   const [projects, setProjects] = useState([]);
+  const [phases, setPhases] = useState([]);
+  const [phase, setPhase] = useState([]);
   const [projectDetails, setProjectDetails] = useState({
     projectName: "",
     status: "",
@@ -36,6 +38,19 @@ const DropDown = () => {
       console.error("Failed to fetch projects:", error);
     }
   };
+  const fetchPhases = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/milestones/${uuid}`);
+      if (!response.ok) throw new Error("Error fetching phases");
+      const data = await response.json();
+      setPhases(data);
+    } catch (error) {
+      console.error("Failed to fetch phases:", error);
+    }
+  };
+  useEffect(() => {
+    fetchPhases();
+  }, []);
 
   // Fetch all projects
   useEffect(() => {
@@ -61,11 +76,33 @@ const DropDown = () => {
       console.error("Failed to fetch project data:", error);
     }
   };
+  const fetchPhaseData = async () => {
+    if (!phaseuuid) return;
+
+    try {
+      const phaseRes = await fetch(`${backendUrl}/outputs/${phaseuuid}`);
+      if (!phaseRes.ok) throw new Error("Error fetching project data");
+
+      const phaseData = await phaseRes.json();
+      setProjectDetails({
+        name: phase.name,
+        completionDate: phase.completionDate,
+        status: phase.status,
+        description: phase.description,
+      });
+
+    } catch (error) {
+      console.error("Failed to fetch project data:", error);
+    }
+  };
 
   // Fetch current project details
   useEffect(() => {
     fetchProjectData();
   }, [uuid]);
+  useEffect(() => {
+    fetchPhaseData();
+  }, [phaseuuid]);
 
   // Handle project change from dropdown
   const handleProjectChange = (selectedUuid) => {
@@ -73,10 +110,18 @@ const DropDown = () => {
     fetchProjectData()
     fetchProjects()
   };
+  const handleMilestoneChange = (e) => {
+    router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phases.phaseuuid}/dashboard`);
+    fetchPhaseData();
+    fetchPhases()
+  };
 
   return (
       <div className={styles.projectInfoContainer}>
         {/* Navbar */}
+        <h1 className={styles.project}>Project</h1>
+        <div className={styles.project}>
+        
         <div className={styles.projectDropdown}>
             <select
                 onChange={(e) => handleProjectChange(e.target.value)}
@@ -93,61 +138,11 @@ const DropDown = () => {
               ))}
             </select>
           </div>
-       
-          <Navbar
-              projectName={projectDetails.projectName}
-              projectID={uuid}
-          />
-         
-    
-
-        <div className={styles.content}>
-          {/* Main Content */}
-          {/* <div className={styles.mainContent}>
-            {activeSection === "details" && (
-                <Details projectDetails={projectDetails} />
-            )}
-            {activeSection === "documents" && <Documents uuid={uuid} />}
-            {activeSection === "assignees" && (
-                <Assignees uuid={uuid} backendUrl={backendUrl} />
-            )}
-            {activeSection === "phases" && (
-                <Phases
-                    uuid={uuid}
-                    phases={phases}
-                    backendUrl={backendUrl}
-                    setPhases={setPhases}
-                />
-            )}
-
-            {activeSection === "deliverables" && (
-                <Deliverables
-                    uuid={uuid}
-                    backendUrl={backendUrl}
-                />
-            )}
-            {activeSection === "expenses" && (
-                <Expenses
-                    uuid={uuid}
-                    backendUrl={backendUrl}
-                />
-            )}       
-
-            
-          </div> */}
-
-          {/* Conditionally Render Right Sidebar */}
-          {/* {activeSection === "details" && (
-              <div className={styles.rightBar}>
-                <RightSidebar
-                    budget={projectDetails.budget}
-                    funding={projectDetails.funding}
-                />
-              </div>
-          )} */}
-        </div>
+          
+            </div> 
       </div>
   );
 };
 
 export default DropDown;
+

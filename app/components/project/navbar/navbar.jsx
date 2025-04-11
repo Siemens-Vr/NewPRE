@@ -1,72 +1,45 @@
-// components/Navbar.js
 "use client";
 import React from "react";
 import Link from "next/link";
-import styles from "@/app/styles/project/navbar/navbar.module.css"; // Create a CSS module for the Navbar styles
+import { usePathname, useParams } from "next/navigation"; 
+import styles from "@/app/styles/project/navbar/navbar.module.css"; 
 
-const Navbar = ({ projectID,projectName, onSectionChange, activeSection }) => {
-  
+const Navbar = () => {
+  const pathname = usePathname(); 
+  const params = useParams();
+  const { uuid, phaseuuid, outputuuid } = params;
+  console.log("Params in parent:", params);
+
   return (
-    <div className={styles.navbarPage}>
-      <div className={styles.top}>
-        <h1>{projectName}</h1>
-      </div>
-      <nav className={styles.navbar}>
+    <div className={styles.navbar}>
         <div className={styles.brand}>
           <h1>Dashboard</h1>
         </div>
         <div className={styles.navLinks}>
-          
-           <Link href={`/pages/project/dashboard/${projectID}/dashboard/phases`}>
-          <button
-            className="">
-            Milestones
-          </button>
-
-          </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/documents`}>
+        <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/documents`}>
             <button
-              className="">
+              className={pathname.includes("documents") ? styles.active : ""}
+            >
               Documents
             </button>
           </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/deliverables`}>
-          <button
-            className="">
-            Deliverables
-          </button>
-          </Link>
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/assignees`}>
-          <button
-            className="">
-            Assignees
-          </button>
 
+          <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses`}>
+            <button
+              className={pathname.includes("expenses") ? styles.active : ""}
+            >
+              Expenses
+            </button>
           </Link>
-      
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/expenses`}>
-          <button
-            className="">
-            Expenses
-          </button>
 
+          <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/report`}>
+            <button
+              className={pathname.includes("report") ? styles.active : ""}
+            >
+              Report
+            </button>
           </Link>
-      
-          <Link href={`/pages/project/dashboard/${projectID}/dashboard/report`}>
-          <button
-            className="">
-            Report
-          </button>
-
-          </Link>
-          {/* <button
-            className={activeSection === "calendar" ? styles.active : ""}
-            onClick={() => onSectionChange("calendar")}
-          >
-            Calendar
-          </button> */}
         </div>
-    </nav>
     </div>
   );
 };

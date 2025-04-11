@@ -10,7 +10,7 @@ const ProcurementAddPage = () => {
     const [isloading, setIsloading] = useState(false)
     const params = useParams()
     const router =useRouter ();
-    const {uuid} = params
+    const {uuid, phaseuuid, outputuuid} = params
     const [formData, setFormData] = useState({
         suppliers: "",
         itemName:"",
@@ -31,6 +31,8 @@ const ProcurementAddPage = () => {
        
         
     });
+    console.log(formData);
+    console.log(outputuuid);
 
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -67,7 +69,7 @@ const ProcurementAddPage = () => {
     }
     
         try {
-            const response = await fetch(`${config.baseURL}/procurements/${uuid}`, {
+            const response = await fetch(`${config.baseURL}/procurements/${outputuuid}`, {
                 method: "POST",
                 body: formDataToSend, // Use FormData as the request body
             });
@@ -101,7 +103,7 @@ const ProcurementAddPage = () => {
         } catch (error) {
             toast.error("Error:", error);
         }
-        router.push(`/pages/project/dashboard/${uuid}/dashboard/expenses/procurement`);
+        router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/procurement`);
 
     };
     
@@ -252,7 +254,7 @@ const ProcurementAddPage = () => {
                     />
                 </div>
                 <div className={styles.divInput}>
-                        <label htmlFor="document" className={styles.label}>Document </label>
+                        <label htmlFor="procurement" className={styles.label}>Document </label>
                         <input
                             type="file"
                             name="procurement"

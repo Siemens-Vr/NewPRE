@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "@/app/styles/project/project/project.module.css";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash,FaEye } from "react-icons/fa";
 import { config } from "/config";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 const Phases = () => {
     const [phases, setPhases] = useState([]);
@@ -14,19 +15,25 @@ const Phases = () => {
         status: "",
         deliverables: [],
     });
-    const [editPhaseData, setEditPhaseData] = useState(null); // State for editing phase
+    const [viewPhaseData, setViewPhaseData] = useState(null);
+    const [editPhaseData, setEditPhaseData] = useState(null);
+    const [editPhase, setEditPhase] = useState(null);  // State for editing phase
     const [showPhaseInput, setShowPhaseInput] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [addPhaseError, setAddPhaseError] = useState("");
+    const router = useRouter();
     const params = useParams();
-    const { uuid } = params;
+    const { uuid, id } = params;
+    const [successMessage, setSuccessMessage] = useState("");
+    const [deleting, setDeleting] = useState(null);
 
     const fetchPhases = async () => {
         try {
-            const response = await fetch(`${config.baseURL}/phases/${uuid}`);
+            const response = await fetch(`${config.baseURL}/milestones/${uuid}`);
             if (response.ok) {
                 const data = await response.json();
-                setPhases(data.phases || []);
+               setPhases(data);
+               console.log(data);
             } else {
                 console.error("Failed to fetch phases");
             }
@@ -39,109 +46,231 @@ const Phases = () => {
         fetchPhases();
     }, []);
 
-    const addPhase = async () => {
+      const showErrorAlert = (message) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: message,
+          confirmButtonColor: '#3085d6',
+        });
+      };
+
+      const addPhase = async () => {
         console.log("UUID in addPhase:", uuid);
         if (!uuid) {
             console.error("UUID is undefined.");
             return;
         }
-        
-        if (newPhase.name.trim()) {
-            setIsAdding(true);
-            setAddPhaseError("");
-
-            try {
-                const payload = {
-                    phases: [
-                        {
-                            name: newPhase.name,
-                            startDate: new Date(newPhase.startDate).toISOString(),
-                            endDate: new Date(newPhase.endDate).toISOString(),
-                            status: newPhase.status,
-                            deliverables: newPhase.deliverables,
-                        },
-                    ],
-                };
-
-                const response = await fetch(`${config.baseURL}/phases/${uuid}/`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
+    
+        if (!newPhase.name || !newPhase.startDate || !newPhase.endDate || !newPhase.status) {
+            showErrorAlert("All fields (Name, Start Date, End Date, and Status) are required.");
+            return;
+        }
+    
+        const startDate = new Date(newPhase.startDate);
+        const endDate = new Date(newPhase.endDate);
+    
+        // Check if End Date is before Start Date
+        if (endDate < startDate) {
+            showErrorAlert("End Date cannot be before Start Date.");
+            return;
+        }
+    
+        setIsAdding(true);
+        setAddPhaseError("");
+    
+        try {
+            const payload = {
+                name: newPhase.name,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                status: newPhase.status,
+            };
+    
+            console.log(payload);
+    
+            const response = await fetch(`${config.baseURL}/milestones/${uuid}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+    
+            if (response.ok) {
+                fetchPhases();
+                setShowPhaseInput(false);
+                setSuccessMessage("Milestone added successfully");
+                setTimeout(() => setSuccessMessage(""), 3000);
+                setNewPhase({
+                    name: "",
+                    startDate: "",
+                    endDate: "",
+                    status: "",
                 });
-
-                if (response.ok) {
-                    fetchPhases();
-                    setShowPhaseInput(false);
-                    setNewPhase({
-                        name: "",
-                        startDate: "",
-                        endDate: "",
-                        status: "",
-                        deliverables: [],
-                    });
-                } else {
-                    const errorText = await response.text();
-                    console.error("Failed to add phase:", errorText);
-                    setAddPhaseError("Failed to add phase.");
-                }
-            } catch (error) {
-                console.error("Error in addPhase function:", error);
-                setAddPhaseError("Error occurred while adding phase.");
-            } finally {
-                setIsAdding(false);
+            } else {
+                const errorText = await response.text();
+                console.error("Failed to add phase:", errorText);
+                setAddPhaseError("Failed to add phase.");
             }
-        } else {
-            alert("Phase name is required!");
+        } catch (error) {
+            console.error("Error in addPhase function:", error);
+            setAddPhaseError("Error occurred while adding phase.");
+        } finally {
+            setIsAdding(false);
         }
     };
+    
 
-    const deletePhase = async (index) => {
+    const deletePhase = async (index, name) => {
         const phaseToDelete = phases[index];
-        try {
-            const response = await fetch(`${config.baseURL}/phases/${uuid}/${phaseToDelete.uuid}`, {
-                method: "DELETE",
+        if (!uuid || !phaseToDelete?.uuid) {
+            console.error("UUID is missing:", uuid, phaseToDelete?.uuid);
+            return; 
+        }
+        const result = await Swal.fire({
+              title: 'Are you sure?',
+              text: `You are about to delete ${name} `,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: 'Yes, delete',
+              cancelButtonText: 'Cancel'
             });
-
+            
+            if (result.isConfirmed) {
+              setDeleting(uuid);
+    
+        console.log("Deleting phase with UUID:", uuid, phaseToDelete.uuid);
+    
+        try {
+            const response = await fetch(`${config.baseURL}/milestones/delete/${phaseToDelete.uuid}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ phaseId: phaseToDelete.uuid }),
+            });
+    
             if (response.ok) {
                 setPhases((prevPhases) => prevPhases.filter((_, i) => i !== index));
                 fetchPhases();
+                 Swal.fire({
+                            title: 'Deleted!',
+                            text: `${name} has been successfully deleted.`,
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6',
+                          });
             } else {
                 console.error("Failed to delete phase");
+                // showErrorAlert(error || 'Failed to delete phase.');
             }
         } catch (error) {
             console.error("Error deleting phase:", error);
+            showErrorAlert('An error occurred while trying to delete the phase.');
         }
+        finally {
+            setDeleting(null);
+        }   
+    }
     };
+    
+
+    // const updatePhase = async () => {
+    //     if (editPhaseData) {
+    //         try {
+    //             const response = await fetch(`${config.baseURL}/phases/${uuid}/${editPhaseData.uuid}/update`, {
+    //                 method: "PUT",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify(editPhaseData),
+    //             });
+
+    //             if (response.ok) {
+    //                 fetchPhases();
+    //                 setEditPhaseData(null); // Close the edit modal
+    //             } else {
+    //                 console.error("Failed to update phase");
+    //             }
+    //         } catch (error) {
+    //             console.error("Error updating phase:", error);
+    //         }
+    //     }
+    // };
 
     const updatePhase = async () => {
-        if (editPhaseData) {
-            try {
-                const response = await fetch(`${config.baseURL}/phases/${uuid}/${editPhaseData.uuid}`, {
+        if (!editPhaseData.name.trim()) {
+            alert("Please provide all required details including name and status!");
+            return;
+        }
+    
+        if (!editPhaseData.startDate || !editPhaseData.endDate) {
+            alert("Please provide both Start Date and End Date.");
+            return;
+        }
+    
+        const startDate = new Date(editPhaseData.startDate);
+        const endDate = new Date(editPhaseData.endDate);
+    
+        // Check if End Date is before Start Date
+        if (endDate < startDate) {
+            alert("End Date cannot be before Start Date.");
+            return;
+        }
+        setAddPhaseError("");
+    
+        try {
+            const payload = {
+                phases: [
+                    {
+                        phaseId: editPhaseData.uuid,
+                        name: editPhaseData.name,
+                        status: editPhaseData.status,
+                        startDate: startDate.toISOString(),
+                        endDate: endDate.toISOString(),
+                        deliverables: editPhaseData.deliverables || [] // Ensure deliverables exist
+                    }
+                ]
+            };
+    
+            console.log("Payload:", JSON.stringify(payload, null, 2));
+            console.log("Updating phase with:", uuid, editPhaseData.uuid);
+    
+            const response = await fetch(
+                `${config.baseURL}/milestones/update/${editPhaseData.uuid}`,
+                {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(editPhaseData),
-                });
-
-                if (response.ok) {
-                    fetchPhases();
-                    setEditPhaseData(null); // Close the edit modal
-                } else {
-                    console.error("Failed to update phase");
+                    body: JSON.stringify(payload),
                 }
-            } catch (error) {
-                console.error("Error updating phase:", error);
+            );
+    
+            if (response.ok) {
+                fetchPhases();
+                console.log("Phase updated successfully");
+                setSuccessMessage("Phase updated successfully");
+                setTimeout(() => setSuccessMessage(""), 3000);
+                setEditPhase(null);
+                setEditPhaseData(null);
+            } else {
+                const responseText = await response.text();
+                console.error("Failed to update phase:", responseText);
             }
+        } catch (error) {
+            console.error("Error updating phase:", error);
         }
     };
-
+    
     return (
+        // <div className= {styles.container}></div>
         <div className={styles.phases}>
             <div className = {styles.top}>
-                <h2>Phases</h2>
+                <h2>Milestones</h2>
+             {successMessage && <p className={styles.successMessage}>{successMessage}</p>} 
                 <button
                     onClick={() => setShowPhaseInput(true)}
                     className={styles.addButton}
@@ -150,38 +279,56 @@ const Phases = () => {
                 </button>
             </div>
             
-            <div className={styles.phaseCards}>
+            <div className="flex p-6 flex-wrap gap-6">
                 {phases.map((phase, index) => (
-                    <div key={index} className={styles.phaseCard}>
-                        <div className={styles.top}>
-                            <h3>{phase.name}</h3>
-                            <div className={styles.cardActions}>
-                                <FaEdit
-                                    className={styles.editIcon}
-                                    onClick={() => setEditPhaseData(phase)}
-                                />
-                                <FaTrash
-                                    className={styles.deleteIcon}
-                                    onClick={() => deletePhase(index)}
-                                />
-                            </div>
-                        </div>
+                    <div
+                    key={index}
+                    className="bg-[#1a253a] rounded-lg p-4 w-[300px] h-[200px] shadow-md cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                    >
+                    <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2">
+                        <h3 className="capitalize text-xl font-semibold text-[#1c86ee]">
+                        {phase.name}
+                        </h3>
+                        <div className="flex gap-3">
+                        <FaEye
+                            className="text-gray-400 hover:text-gray-200 cursor-pointer"
+                            onClick={() =>
+                            router.push(
+                                `/pages/project/dashboard/${uuid}/dashboard/phases/${phase.uuid}/dashboard`
+                            )
+                            }
+                        />
+                        <FaEdit
+                            className="text-green-400 hover:text-green-300 cursor-pointer"
+                            onClick={() => setEditPhaseData(phase)}
+                        />
+                        <FaTrash
+                            className="text-red-400 hover:text-red-300 cursor-pointer"
+                            onClick={() => deletePhase(index, phase.name)}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-1 mt-2 text-gray-300">
+        <p>
+          <strong>Start Date:</strong>{" "}
+          {phase.startDate
+            ? new Date(phase.startDate).toLocaleDateString()
+            : ""}
+        </p>
+        <p>
+          <strong>End Date:</strong>{" "}
+          {phase.endDate
+            ? new Date(phase.endDate).toLocaleDateString()
+            : ""}
+        </p>
+        <p>
+          <strong>Status:</strong> {phase.status}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
 
-                        <p>
-                        <strong>Start Date:</strong>{" "}
-                        {phase.startDate ? new Date(phase.startDate).toLocaleDateString() : ""}
-                        </p>
-                        <p>
-                        <strong>End Date:</strong>{" "}
-                        {phase.endDate ? new Date(phase.endDate).toLocaleDateString() : ""}
-                        </p>
-                        <p>
-                            <strong>Status:</strong> {phase.status}
-                        </p>
-
-                    </div>
-                ))}
-            </div>
 
 
 
@@ -238,15 +385,16 @@ const Phases = () => {
                         </select>
                         </div>
                         <div className={styles.modalActions}>
-                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
-                            <button
+                        <button
                                 onClick={() => setShowPhaseInput(false)}
-                                className={styles.closeButton}
+                                className={styles.closeButton1}
                             >
                                 Cancel
                             </button>
+                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+                            
                         </div>
                         {addPhaseError && <p className={styles.errorMessage}>{addPhaseError}</p>}
                     </div>
@@ -319,16 +467,18 @@ const Phases = () => {
                         </div>
               
                         <div className={styles.modalActions}>
-                            <button onClick={updatePhase} className={styles.addButton}>
-                                Update
-                            </button>
-                            <button
+                        <button
                                 onClick={() => setEditPhaseData(null)}
-                                className={styles.closeButton}
+                                className={styles.closeButton1}
                             >
                                 Cancel
                             </button>
+                            <button onClick={updatePhase} className={styles.addButton1}>
+                                Update
+                            </button>
+                           
                         </div>
+                        {addPhaseError && <p className={styles.errorMessage}>{addPhaseError}</p>}
                     </div>
                 </div>
             )}

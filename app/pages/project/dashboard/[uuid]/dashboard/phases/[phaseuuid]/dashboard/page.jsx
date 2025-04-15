@@ -182,8 +182,8 @@ const OutputsList = () => {
           {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
             <div className={styles.top}>
                 <Search placeholder="Search for an output..." />
-                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addButton}>Add
-</button>
+                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addBtn}>Add
+           </button>
             </div>
             {Array.isArray(outputs) && outputs.length > 0 ? (
                 <table className={styles.table}>
@@ -203,12 +203,14 @@ const OutputsList = () => {
                                 <td>{output.description}</td>
                                 <td>{output.status}</td>
                                 <td>{formatDate(output.completionDate)}</td>
+
                                 <td>
                                     <ActionButton
                                         onEdit={() => handleUpdateClick(output)}
                                         onDelete={() => handleDelete(output.uuid, output.name)}
                                         onView={() => handleView(output.uuid)}   
                                     />
+
                                 </td>
                             </tr>
                         ))}               

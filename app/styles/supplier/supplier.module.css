@@ -1,5 +1,5 @@
 .container {
-    background-color: var(--bgSoft);
+    background-color: #C6E7E7;
     padding: 20px;
     border-radius: 10px;
     margin-top: 20px;
@@ -10,6 +10,19 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  .search {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+}
   
   .addButton,
   .downloadButton {
@@ -22,9 +35,14 @@
     margin-left: 10px;
   }
   
+  /* .addBtn{
+    background-color: #ff7211; 
+  } */
+
+
   /* Styles for Add New button */
   .addButton {
-    background-color: #5d57c9; /* Base color */
+    background-color: #ff7211; /* Base color */
   }
   
   .downloadButton {
@@ -34,7 +52,7 @@
   
   /* Styles for Filter button */
   .filterButton {
-    background-color: #007bff; /* Base color */
+    background-color: #007bff; 
     color: white;
     border-radius: 5px 5px 0 0; /* Rounded top corners */
     width: 150px; /* Fixed width */
@@ -69,12 +87,12 @@
     border-radius: 5px; /* Uniform border radius for filter options */
     cursor: pointer;
     transition: background-color 0.3s ease; /* Transition for smooth hover effect */
-    background-color: #007bff; /* Base color for filter options */
+    /* background-color: #007bff; */
     color: white;
   }
   
   .filterOptions button:hover {
-    background-color: #0056b3; /* Darker blue on hover for filter options */
+    background-color: #0056b3; 
   }
   
   /* Styles for filter input and apply button */

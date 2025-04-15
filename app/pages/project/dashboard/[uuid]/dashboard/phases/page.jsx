@@ -5,6 +5,8 @@ import { FaEdit, FaPlus, FaTrash,FaEye } from "react-icons/fa";
 import { config } from "/config";
 import { useParams, useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
+import { FiMoreVertical } from "react-icons/fi";
+
 
 const Phases = () => {
     const [phases, setPhases] = useState([]);
@@ -26,6 +28,13 @@ const Phases = () => {
     const { uuid, id } = params;
     const [successMessage, setSuccessMessage] = useState("");
     const [deleting, setDeleting] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+
+ 
+
+
+   
 
     const fetchPhases = async () => {
         try {
@@ -264,6 +273,19 @@ const Phases = () => {
             console.error("Error updating phase:", error);
         }
     };
+
+        // Added for drop down
+      const DropdownToggle = ({ onView, onEdit, onDelete }) => {
+        const [isOpen, setIsOpen] = useState(false);
+      
+        const handleOptionClick = (callback) => {
+          callback?.(); // Call the passed function if it exists
+          setIsOpen(false);
+        }};
+
+     
+   
+
     
     return (
         // <div className= {styles.container}></div>
@@ -273,22 +295,61 @@ const Phases = () => {
              {successMessage && <p className={styles.successMessage}>{successMessage}</p>} 
                 <button
                     onClick={() => setShowPhaseInput(true)}
-                    className={styles.addButton}
+                    className={styles.addBtn}
                 >
                     <FaPlus /> Add Milestone
                 </button>
             </div>
             
-            <div className="flex p-6 flex-wrap gap-6">
+            <div className={styles.milestoneContainer}>
                 {phases.map((phase, index) => (
                     <div
                     key={index}
-                    className="bg-[#1a253a] rounded-lg p-4 w-[300px] h-[200px] shadow-md cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                     className={styles.milestone}
                     >
-                    <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2">
-                        <h3 className="capitalize text-xl font-semibold text-[#1c86ee]">
+                    {/* <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2"> */}
+                    <div>
+                        <h3 className={styles.h3}>
                         {phase.name}
                         </h3>
+
+
+                        <button
+                          className={styles.iconButton}
+                          onClick={() => setIsOpen(!isOpen)} 
+                        >
+                       <FiMoreVertical className={styles.icon} />
+                       </button>
+
+                       {isOpen && (
+                        <div className={styles.drop}>
+                        <button
+                        className={styles.menuItem}
+                       onClick={() => handleOptionClick(onView)}
+                 >
+                 View
+          </button>
+          <button
+            className={styles.menuItem}
+            onClick={() => handleOptionClick(onEdit)}
+          >
+            Edit
+          </button>
+          <button
+            className={`${styles.menuItem} ${styles.delete}`}
+            onClick={() => handleOptionClick(onDelete)}
+          >
+            Delete
+          </button>
+        </div>
+      )}
+
+
+
+
+
+                        {/* TO BE COMMENTED OR REMOVED*/}
+
                         <div className="flex gap-3">
                         <FaEye
                             className="text-gray-400 hover:text-gray-200 cursor-pointer"
@@ -307,8 +368,11 @@ const Phases = () => {
                             onClick={() => deletePhase(index, phase.name)}
           />
         </div>
+
+       
       </div>
-      <div className="flex flex-col gap-1 mt-2 text-gray-300">
+      {/* <div className="flex flex-col gap-1 mt-2 text-gray-300"> */}
+      <div className={styles.detail}>
         <p>
           <strong>Start Date:</strong>{" "}
           {phase.startDate
@@ -330,8 +394,6 @@ const Phases = () => {
 </div>
 
 
-
-
             {/* Add Phase Modal */}
             {showPhaseInput && (
                 <div className={styles.modalOverlay}>
@@ -343,7 +405,7 @@ const Phases = () => {
                                 type="text"
                                 value={newPhase.name}
                                 onChange={(e) => setNewPhase({ ...newPhase, name: e.target.value })}
-                                placeholder="Phase Name"
+                                placeholder="Milestone Name"
                                 className={styles.inputField}
                             />
                         </div>
@@ -385,14 +447,16 @@ const Phases = () => {
                         </select>
                         </div>
                         <div className={styles.modalActions}>
-                        <button
+                        
+                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+
+                            <button
                                 onClick={() => setShowPhaseInput(false)}
                                 className={styles.closeButton1}
                             >
                                 Cancel
-                            </button>
-                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
                             </button>
                             
                         </div>

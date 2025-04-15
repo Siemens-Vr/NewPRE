@@ -1,111 +1,112 @@
 .container{
-    background-color: var(--bgSoft);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 20px;
-  }
-  
-  .top{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .addButton{
-    padding: 10px;
-    background-color: #ff7211;
-    color: var(--text);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .table{
-    width: 100%;
-  }
-  .tables{
-    background-color: #c6e7e7;
-  }
-  
-  .table td{
-    padding: 10px;
-  }
-  
-  .user{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .userImage{
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .buttons{
-    display: flex;
-    gap: 10px;
-  }
-  
-  .button{
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: var(--text);
-    border: none;
-    cursor: pointer;
-  }
-  
-  .view{
-    background-color: teal;
-  }
-  
-  .delete{
-    background-color: crimson;
-  }
-  .loader{
-    text-align: center;
-    font-size: 20px;
-    color:rgb(175, 47, 72);
-  }
-  /* staff.module.css */
+  background-color: var(--bgSoft);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addButton{
+  padding: 10px;
+  background-color: #ff7211;
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.table{
+  width: 100%;
+}
+.tables{
+  background-color: #c6e7e7;
+}
+
+.table td{
+  padding: 10px;
+}
+
+.user{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userImage{
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.buttons{
+  display: flex;
+  gap: 10px;
+}
+
+.button{
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--text);
+  border: none;
+  cursor: pointer;
+}
+
+.view{
+  background-color: teal;
+}
+
+.delete{
+  background-color: crimson;
+}
+.loader{
+  text-align: center;
+  font-size: 20px;
+  color:rgb(175, 47, 72);
+}
+/* staff.module.css */
 
 .dashboardContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  height: auto;
-  width: 100%;
-  padding: 20px;
+display: flex;
+flex-direction: column;
+gap: 16px;
+height: auto;
+width: 100%;
+padding: 20px;
 }
 
 /* Card Styles */
 .card {
-  background-color: rgb(25, 124, 141);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 16px;
+background-color: rgb(25, 124, 141);
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+border-radius: 8px;
+padding: 16px;
 }
 
 /* Quick Actions Container */
 .quickActions {
-  display: flex;
-  gap: 16px;
+justify-content: end;
+display: flex;
+gap: 16px;
 }
 
 /* Quick Link Styles */
 .quickLink {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background-color: #f0f0f0;
-  border-radius: 6px;
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  transition: background 0.3s ease;
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 10px 14px;
+background-color: teal;
+border-radius: 6px;
+text-decoration: none;
+color: white;
+font-weight: 500;
+transition: background 0.3s ease;
 }
 
 .quickLink:hover {
-  background-color: #e0e0e0;
+background-color: #46a7b4;
 }

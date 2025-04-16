@@ -150,7 +150,7 @@
 .popup {
     background-color: #c6e7e7;
     border-radius: 10px;
-    padding: 2rem;
+    padding: 20px;
     max-height: 100vh;
     overflow-y: auto;
     width: 100%;
@@ -158,11 +158,10 @@
 }
 
 .stickyHeader {
-    position: sticky;
-    top: 0;
-    /*background: white;*/
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+
+   text-align: center;
+    color: #ff7211;
+
 }
 
 .form {
@@ -173,7 +172,7 @@
 .formBody {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 10px;
 }
 
 .inputGroup {
@@ -216,11 +215,16 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 5px;
     /*background-color: #ff7211;*/
 }
 .button{
     background-color: #ff7211;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+.buttons{
+    background-color: #ff0000;
     padding: 10px 12px;
     border-radius: 8px;
 }

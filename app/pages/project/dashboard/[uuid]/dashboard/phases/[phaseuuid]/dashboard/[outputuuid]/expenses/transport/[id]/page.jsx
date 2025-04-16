@@ -321,9 +321,9 @@ const SingleTransportPage = ({ params }) => {
             <div className={styles.cardWrapper}>
                 {/* Card 1 */}
                 <div className={styles.card}>
-                    <h2>Travel Info</h2>
+                    <h2 className={styles.text}>Travel Info</h2>
                     <table className={styles.table}>
-                        <tbody>
+                        <tbody className={styles.tables}>
                         <tr><th>Destination:</th><td>{transport.destination}</td></tr>
                         <tr><th>Travel Period:</th><td>{transport.travelPeriod}</td></tr>
                         <tr><th>Description:</th><td>{transport.description}</td></tr>
@@ -337,9 +337,9 @@ const SingleTransportPage = ({ params }) => {
 
                 {/* Card 2 */}
                 <div className={styles.card}>
-                    <h2>Finance & Approval</h2>
+                    <h2 className={styles.text}>Finance & Approval</h2>
                     <table className={styles.table}>
-                        <tbody>
+                        <tbody className={styles.tables}>
                         <tr><th>Approver:</th><td>{transport.approver || "N/A"}</td></tr>
                         <tr><th>Approval Date:</th><td>{formatDate(getDateValue("approvalDate"))}</td></tr>
                         <tr><th>Type:</th><td>{transport.type || "N/A"}</td></tr>

@@ -141,10 +141,19 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.text{
+    color: #000000;
+    text-align: center;
+    align-items: center;
+    font-weight: bold;
+}
 .table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+}
+.tables{
+    text-align: justify;
 }
 
 .th {
@@ -157,4 +166,13 @@
 .td {
     padding: 6px 8px;
     word-break: break-word;
+}
+.backButton{
+    background: #ff7211;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+.backButton:hover{
+    background: #c6e7e7;
 }

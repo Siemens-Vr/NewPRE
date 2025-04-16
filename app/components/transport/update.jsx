@@ -618,17 +618,17 @@ const UpdateTransportPopup = ({ onClose, transport, onSave }) => {
                             <label htmlFor="transport">Document</label>
                             <div className={styles.doc}>
                                 <div className={styles.docs}>
-                                    <input
-                                        type="text"
-                                        readOnly
-                                        value={
-                                            formData.transport instanceof File
-                                                ? formData.transport.name
-                                                : formData.transport
-                                                    ? formData.transport.split('/').pop()
-                                                    : "No document"
-                                        }
-                                    />
+                                    {/*<input*/}
+                                    {/*    type="text"*/}
+                                    {/*    readOnly*/}
+                                    {/*    value={*/}
+                                    {/*        formData.transport instanceof File*/}
+                                    {/*            ? formData.transport.name*/}
+                                    {/*            : formData.transport*/}
+                                    {/*                ? formData.transport.split('/').pop()*/}
+                                    {/*                : "No document"*/}
+                                    {/*    }*/}
+                                    {/*/>*/}
                                     {formData.transport && typeof formData.transport === "string" && (
                                         <a
                                             href={`${config.baseURL}/${formData.transport}`}
@@ -651,7 +651,7 @@ const UpdateTransportPopup = ({ onClose, transport, onSave }) => {
 
                     <div className={styles.buttonGroup}>
                         <button className={styles.button} type="button" onClick={handleSave}>Update</button>
-                        <button  className={styles.button} type="button" onClick={onClose}>Cancel</button>
+                        <button  className={styles.buttons} type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>

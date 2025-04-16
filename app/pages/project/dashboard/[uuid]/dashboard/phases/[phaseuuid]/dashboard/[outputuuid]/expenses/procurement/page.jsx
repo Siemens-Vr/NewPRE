@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import Pagination from "@/app/components/pagination/pagination";
 import Search from "@/app/components/search/searchFilter";
-import styles from "@/app/styles/supplier/supplier.module.css";
+import styles from "@/app/styles/supplier/suppliers.module.css";
 import Link from "next/link";
 import { config } from "/config";
 import ActionButton from "@/app/components/actionButton/actionButton";
@@ -184,44 +184,48 @@ const ProcurementPage = () => {
       </div>
 
       {Array.isArray(procurement) && procurement.length > 0 ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <td>Item Name</td>
-              <td>Type</td>
-              <td>Suppliers</td>
-              <td>Approval Date</td>
-              <td>Payment Date</td>
-              <td>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {procurement.map((procurement) => (
-              <tr key={procurement.id}>
-                <td>{procurement.itemName}</td>
-                <td>{procurement.type}</td>
-                <td>{procurement.suppliers}</td>
-                <td>
-                  {procurement.approvalDate ? new Date(procurement.approvalDate).toLocaleDateString() : ""}
-                </td>
-                <td>
-                  {procurement.paymentDate ? new Date(procurement.paymentDate).toLocaleDateString() : ""}
-                </td>
-                <td>
-                  <ActionButton
-                    onEdit={() => handleUpdateClick(procurement)}
-                    onDownload={() => handleDownloadAll(procurement)}
-                    onDelete={() => handleDelete(procurement.uuid, procurement.itemName)}
-                    onView={() => handleView(procurement.uuid)}   
-                  />
-                </td>
+          <div className="overflow-x-auto mt-6 bg-white shadow-md">
+            <table className="min-w-full text-sm text-left text-gray-600">
+              <thead className="text-xs text-white uppercase bg-[#1b9392]">
+              <tr>
+                <th scope="col" className="px-6 py-3">Item Name</th>
+                <th scope="col" className="px-6 py-3">Type</th>
+                <th scope="col" className="px-6 py-3">Suppliers</th>
+                <th scope="col" className="px-6 py-3">Approval Date</th>
+                <th scope="col" className="px-6 py-3">Payment Date</th>
+                <th scope="col" className="px-6 py-3">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+              {procurement.map((item) => (
+                  <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                    <td className="px-6 py-4 text-black">{item.itemName}</td>
+                    <td className="px-6 py-4 text-black">{item.type}</td>
+                    <td className="px-6 py-4 text-black">{item.suppliers}</td>
+                    <td className="px-6 py-4 text-black">
+                      {item.approvalDate ? new Date(item.approvalDate).toLocaleDateString() : ""}
+                    </td>
+                    <td className="px-6 py-4 text-black">
+                      {item.paymentDate ? new Date(item.paymentDate).toLocaleDateString() : ""}
+                    </td>
+                    <td className="px-6 py-4 text-black">
+                      <ActionButton
+                          onEdit={() => handleUpdateClick(item)}
+                          onDownload={() => handleDownloadAll(item)}
+                          onDelete={() => handleDelete(item.uuid, item.itemName)}
+                          onView={() => handleView(item.uuid)}
+                      />
+                    </td>
+                  </tr>
+              ))}
+              </tbody>
+            </table>
+          </div>
       ) : (
-        <p className={styles.noItem}>No procurements available</p>
+          <p className="text-center text-gray-600 mt-6">No procurements available</p>
       )}
+
+
       <Pagination count={count} />
 
       {showPopup && (

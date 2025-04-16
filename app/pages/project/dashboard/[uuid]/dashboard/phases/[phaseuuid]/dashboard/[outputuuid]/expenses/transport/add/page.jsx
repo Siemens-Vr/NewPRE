@@ -367,14 +367,14 @@
 
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import styles from '@/app/styles/supplier/addSupplier.module.css';
 import { config } from "/config";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AddTransportPage = () => {
+const AddTransportPage = ( {onClose} ) => {
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [formData, setFormData] = useState({
@@ -464,11 +464,14 @@ const AddTransportPage = () => {
     };
 
     return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modal}>
+        <div className={styles.modalOverlay}  onClick={onClose} >
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+
                 <div className={styles.container}>
+
                     {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
                     <ToastContainer position="top-center" autoClose={3000}/>
+
                     <form onSubmit={handleSubmit} className={styles.form}>
                         {[
                             ["destination", "Destination", "text"],
@@ -614,7 +617,9 @@ const AddTransportPage = () => {
                             <button type="submit" className={styles.button}>
                                 {isLoading ? "Submitting..." : "Submit"}
                             </button>
+                            <button  className={styles.buttons} type="button" onClick={onClose}>Cancel</button>
                         </div>
+
                     </form>
 
                 </div>

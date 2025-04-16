@@ -1,3 +1,30 @@
+
+/*//MODAL*/
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px); /* Blurs background */
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+}
+
+
+
+
 .container {
     background-color: var(--bgSoft);
     padding: 20px;
@@ -24,7 +51,7 @@
   
   /* Styles for Add New button */
   .addButton {
-    background-color: #5d57c9; /* Base color */
+    background-color: #ff7211; /* Base color */
   }
   
   .downloadButton {
@@ -34,7 +61,7 @@
   
   /* Styles for Filter button */
   .filterButton {
-    background-color: #007bff; /* Base color */
+    background-color: #c6e7e7; /* Base color */
     color: white;
     border-radius: 5px 5px 0 0; /* Rounded top corners */
     width: 150px; /* Fixed width */
@@ -46,15 +73,15 @@
   .addButton:hover,
   .downloadButton:hover,
   .filterButton:hover {
-    background-color: #4a54a8; /* Slightly darker color for Add New button */
+    background-color: #ff7211; /* Slightly darker color for Add New button */
   }
   
   .downloadButton:hover {
-    background-color: darkcyan; /* Darker color for hover on Download PDF button */
+    background-color: #c6e7e7; /* Darker color for hover on Download PDF button */
   }
   
   .filterButton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #c6e7e7; /* Darker blue on hover */
   }
   
   
@@ -69,12 +96,12 @@
     border-radius: 5px; /* Uniform border radius for filter options */
     cursor: pointer;
     transition: background-color 0.3s ease; /* Transition for smooth hover effect */
-    background-color: #007bff; /* Base color for filter options */
+    background-color: #c6e7e7; /* Base color for filter options */
     color: white;
   }
   
   .filterOptions button:hover {
-    background-color: #0056b3; /* Darker blue on hover for filter options */
+    background-color: #c6e7e7; /* Darker blue on hover for filter options */
   }
   
   /* Styles for filter input and apply button */
@@ -295,7 +322,7 @@
     font-size: 16px;
     width: 250px; /* Adjust width as needed */
     transition: border-color 0.3s ease; /* Smooth transition for focus */
-    color: black;
+    color: #000000;
   }
   
   /* Change border color on focus */

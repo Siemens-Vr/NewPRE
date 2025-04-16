@@ -1,123 +1,160 @@
-.container {
+/*.container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 30px;*/
+/*    margin-top: 20px;*/
+/*}*/
+/*  */
+/*.formContainer {*/
+/*    flex: 1;*/
+/*    background-color: var(--bgSoft);*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.form {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+/*  */
+/*.form input, .form textarea, .form select {*/
+/*    padding: 20px;*/
+/*    border: 2px solid #2e374a;*/
+/*    border-radius: 5px;*/
+/*    background-color: var(--bg);*/
+/*    color: var(--text);*/
+/*}*/
+/*  */
+/*.form label {*/
+/*    font-size: 16px;*/
+/*}*/
+/*  */
+/*.form button {*/
+/*    width: 100%;*/
+/*    padding: 20px;*/
+/*    color: var(--text);*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*    margin-top: 20px;*/
+/*}*/
+
+/*.twoInputsRow {*/
+/*    display: flex;*/
+/*    gap: 20px; !* Space between the two inputs *!*/
+/*}*/
+/*  */
+/*.twoInputsRow div {*/
+/*    flex: 1; !* Make each div take equal space *!*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.editInputField {*/
+/*    width: 100%; !* Ensure the input fills the parent div *!*/
+/*    padding: 15px; !* Adjust padding for a better look *!*/
+/*    border: 2px solid #2e374a;*/
+/*    border-radius: 5px;*/
+/*    background-color: var(--bg);*/
+/*    color: var(--text);*/
+/*    box-sizing: border-box; !* Include padding and borders in width *!*/
+/*    padding-right: 130px; !* Add space for links inside the input *!*/
+/*    position: relative;*/
+/*}*/
+/*.view{*/
+/*    background-color: teal;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    padding: 5px 10px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.deleteButton {*/
+/*    background-color: crimson;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    padding: 5px 10px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.two {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*.inputWithLink {*/
+/*    position: relative; !* Enables positioning for the links inside *!*/
+/*    display: flex;*/
+/*    flex-direction: column; !* Stack label, input, and links *!*/
+/*    gap: 5px; !* Add space between label and input *!*/
+/*}*/
+
+/*.linksInsideInput {*/
+/*    position: absolute;*/
+/*    top: 50%;*/
+/*    right: 10px; !* Align links to the right inside the input *!*/
+/*    transform: translateY(-50%);*/
+/*    display: flex;*/
+/*    gap: 10px; !* Space between "View" and "Download" links *!*/
+/*}*/
+
+/*.fileLink {*/
+/*    color: teal; !* Customize link color *!*/
+/*    text-decoration: underline ; !* Underline links *!*/
+/*    font-size: 14px;*/
+/*    cursor: pointer;*/
+/*    margin-top: 45px;*/
+/*}*/
+
+/*.fileLink:hover {*/
+/*    color: darkcyan; !* Hover effect for links *!*/
+/*}*/
+
+/*.naText {*/
+/*    position: absolute;*/
+/*    right: 10px;*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    color: gray; !* Style for "N/A" text *!*/
+/*    font-size: 14px;*/
+/*    margin-top: 5px; !* Add spacing if N/A is displayed *!*/
+/*}*/
+.pageWrapper {
+    padding: 20px;
+}
+
+.cardWrapper {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    margin-top: 20px;
+    gap: 20px;
 }
-  
-.formContainer {
+
+.card {
     flex: 1;
-    background-color: var(--bgSoft);
+    min-width: 300px;
+    background: linear-gradient(to right, #168d8e, #67a9b6);
+    color: #fff;
     padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-}
-  
-.form input, .form textarea, .form select {
-    padding: 20px;
-    border: 2px solid #2e374a;
-    border-radius: 5px;
-    background-color: var(--bg);
-    color: var(--text);
-}
-  
-.form label {
-    font-size: 16px;
-}
-  
-.form button {
+.table {
     width: 100%;
-    padding: 20px;
-    color: var(--text);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
-.twoInputsRow {
-    display: flex;
-    gap: 20px; /* Space between the two inputs */
-}
-  
-.twoInputsRow div {
-    flex: 1; /* Make each div take equal space */
-    margin-bottom: 20px;
+.th {
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: bold;
+    white-space: nowrap;
 }
 
-.editInputField {
-    width: 100%; /* Ensure the input fills the parent div */
-    padding: 15px; /* Adjust padding for a better look */
-    border: 2px solid #2e374a;
-    border-radius: 5px;
-    background-color: var(--bg);
-    color: var(--text);
-    box-sizing: border-box; /* Include padding and borders in width */
-    padding-right: 130px; /* Add space for links inside the input */
-    position: relative;
-}
-.view{
-    background-color: teal;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.deleteButton {
-    background-color: crimson;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.two {
-    display: flex;
-    flex-direction: column;
-}
-
-.inputWithLink {
-    position: relative; /* Enables positioning for the links inside */
-    display: flex;
-    flex-direction: column; /* Stack label, input, and links */
-    gap: 5px; /* Add space between label and input */
-}
-
-.linksInsideInput {
-    position: absolute;
-    top: 50%;
-    right: 10px; /* Align links to the right inside the input */
-    transform: translateY(-50%);
-    display: flex;
-    gap: 10px; /* Space between "View" and "Download" links */
-}
-
-.fileLink {
-    color: teal; /* Customize link color */
-    text-decoration: underline ; /* Underline links */
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 45px;
-}
-
-.fileLink:hover {
-    color: darkcyan; /* Hover effect for links */
-}
-
-.naText {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: gray; /* Style for "N/A" text */
-    font-size: 14px;
-    margin-top: 5px; /* Add spacing if N/A is displayed */
+.td {
+    padding: 6px 8px;
+    word-break: break-word;
 }

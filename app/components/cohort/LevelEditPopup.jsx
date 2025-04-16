@@ -96,8 +96,8 @@ const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
                 </select>
               </div>
             </div>
-            <div className={styles.popupActions}>
-              <button type="submit">Update</button>
+            <div >
+              <button type="submit" className={styles.popups}>Update</button>
               {/*<button type="button" onClick={onClose}>Cancel</button>*/}
             </div>
           </form>

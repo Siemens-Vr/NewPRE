@@ -730,7 +730,7 @@ const handleClickOutside = (event) => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            cancelButtonColor: '#ff7211',
             confirmButtonText: 'Yes, delete',
             cancelButtonText: 'Cancel'
           });
@@ -750,7 +750,7 @@ const handleClickOutside = (event) => {
                     title: 'Deleted!',
                     text: `${name} has been successfully deleted.`,
                     icon: 'success',
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#ff7211',
                 });
             } else {
                 console.error("Error deleting file:", await response.text());
@@ -898,7 +898,8 @@ const handleClickOutside = (event) => {
             {foldersToRender.map((folder) => (
               <div
                 key={folder.uuid}
-                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
+                className="flex items-center justify-between  rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
+                style={{ backgroundColor: '#c6e7e7' }}
                 onClick={() => handleOpenFolder(folder, state.currentFolder)}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -972,7 +973,8 @@ const handleClickOutside = (event) => {
               return (
                 <div
                   key={file?.uuid || file?.documentName}
-                  className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
+                  className="flex items-center justify-between  rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
+                  style={{ backgroundColor: '#c6e7e7' }}
                   onClick={() => handleView(file)}
                 >
                   <div className="flex items-center gap-3 min-w-0">

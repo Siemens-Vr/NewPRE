@@ -1,139 +1,226 @@
+/*.overlay {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background: rgba(0, 0, 0, 0.5);*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*}*/
+
+/*.popup {*/
+/*    background: white; !* Changed the background to white *!*/
+/*    padding: 20px;*/
+/*    border-radius: 10px; !* Added a border-radius *!*/
+/*    width: 90%;*/
+/*    max-width: 600px;*/
+/*    max-height: 80%;*/
+/*    overflow-y: auto;*/
+/*    color: var(--text);*/
+/*    position: relative; !* Ensures sticky elements work within the popup *!*/
+/*}*/
+
+/*!* Centering the h2 and setting its color to black *!*/
+/*.popup h2 {*/
+/*    text-align: center;*/
+/*    color: black;*/
+/*}*/
+
+/*!* Styling the inputGroup elements *!*/
+/*.inputGroup {*/
+/*    margin-bottom: 15px;*/
+/*}*/
+
+/*.inputGroup label {*/
+/*    display: block;*/
+/*    margin-bottom: 5px;*/
+/*    font-weight: bold;*/
+/*    color: black; !* Set labels to black *!*/
+/*}*/
+/*.doc {*/
+/*    width: 100%;*/
+/*    border: 1px solid var(--textSoft);*/
+/*    border-radius: 5px;*/
+/*    display: flex;*/
+/*    background: white; !* Changed the input background to white *!*/
+/*    color: black; !* Set the input text color to black *!*/
+/*    gap:10px;*/
+/*    align-items: center;*/
+/*    !* justify-content: space-between; *!*/
+/*}*/
+/*.inputGroup .doc input{*/
+/*    width:40%;*/
+/*    margin-left: auto;*/
+/*    font-size: 12px;*/
+/*    border:none;*/
+
+/*}*/
+/*.inputGroup .docs{*/
+/*    display: flex;*/
+/*    flex-grow: 1;*/
+/*    flex-direction: row;*/
+/*    justify-content: space-between;*/
+/*    !* align-items: center; *!*/
+/*    gap:10px;*/
+/*    border: 1px solid var(--textSoft);*/
+/*    !* padding: 0px 10px; *!*/
+
+/*}*/
+
+/*.inputGroup .doc .docs input{*/
+/*    width:100%;*/
+/*}*/
+/*.inputGroup .doc a{*/
+/*    margin-left: 10px;*/
+/*    font-size: 12px;*/
+/*}*/
+
+/*.inputGroup input,*/
+/*.inputGroup select {*/
+/*    width: 100%;*/
+/*    padding: 10px;*/
+/*    border: 1px solid var(--textSoft);*/
+/*    border-radius: 5px;*/
+/*    background: white; !* Changed the input background to white *!*/
+/*    color: black; !* Set the input text color to black *!*/
+/*}*/
+
+/*.buttonGroup {*/
+/*    display: flex;*/
+/*    justify-content: flex-end;*/
+/*    margin-top: 20px;*/
+/*    position: sticky;*/
+/*    bottom: 0; !* Make buttons sticky *!*/
+/*    background: white;*/
+/*    padding: 10px 0;*/
+/*}*/
+
+/*.buttonGroup button {*/
+/*    margin-left: 10px;*/
+/*    padding: 10px 20px;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.buttonGroup button:first-of-type {*/
+/*    background-color: green;*/
+/*    color: white; !* Set button text color to white *!*/
+/*}*/
+
+/*.buttonGroup button:last-of-type {*/
+/*    background-color: crimson;*/
+/*    color: var(--text);*/
+/*}*/
+/*.fileLink {*/
+/*    color: blue; !* Customize link color *!*/
+/*    text-decoration: underline ; !* Underline links *!*/
+/*    font-size: 14px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.fileLink:hover {*/
+/*    color: #81a6eb; !* Hover effect for links *!*/
+/*}*/
+
+/*.successMessage {*/
+/*    background-color: #4CAF50;*/
+/*    color: white;*/
+/*    padding: 15px;*/
+/*    border-radius: 5px;*/
+/*    margin-bottom: 20px;*/
+/*    text-align: center;*/
+/*    font-weight: bold;*/
+/*    animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;*/
+/*    width: 100%;*/
+/*    max-width: 400px;*/
+/*}*/
 .overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
 .popup {
-    background: white; /* Changed the background to white */
-    padding: 20px;
-    border-radius: 10px; /* Added a border-radius */
-    width: 90%;
-    max-width: 600px;
-    max-height: 80%;
+    background-color: #c6e7e7;
+    border-radius: 10px;
+    padding: 2rem;
+    max-height: 100vh;
     overflow-y: auto;
-    color: var(--text);
-    position: relative; /* Ensures sticky elements work within the popup */
+    width: 100%;
+    max-width: 800px;
 }
 
-/* Centering the h2 and setting its color to black */
-.popup h2 {
-    text-align: center;
-    color: black;
+.stickyHeader {
+    position: sticky;
+    top: 0;
+    /*background: white;*/
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
-/* Styling the inputGroup elements */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.formBody {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
 .inputGroup {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .inputGroup label {
-    display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     font-weight: bold;
-    color: black; /* Set labels to black */
-}
-.doc {
-    width: 100%;
-    border: 1px solid var(--textSoft);
-    border-radius: 5px;
-    display: flex;
-    background: white; /* Changed the input background to white */
-    color: black; /* Set the input text color to black */
-    gap:10px;
-    align-items: center;
-    /* justify-content: space-between; */
-}
-.inputGroup .doc input{
-    width:40%;
-    margin-left: auto;
-    font-size: 12px;
-    border:none;
-
-}
-.inputGroup .docs{
-    display: flex;
-    flex-grow: 1;
-    flex-direction: row;
-    justify-content: space-between;
-    /* align-items: center; */
-    gap:10px;
-    border: 1px solid var(--textSoft);
-    /* padding: 0px 10px; */
-
-}
-
-.inputGroup .doc .docs input{
-    width:100%;
-}
-.inputGroup .doc a{
-    margin-left: 10px;
-    font-size: 12px;
 }
 
 .inputGroup input,
 .inputGroup select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--textSoft);
+    padding: 0.5rem;
+    font-size: 1rem;
     border-radius: 5px;
-    background: white; /* Changed the input background to white */
-    color: black; /* Set the input text color to black */
+    border: 1px solid #ccc;
 }
 
-.buttonGroup {
+.doc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.docs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.fileLink {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 0.9rem;
+}
+
+.buttonGroup{
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
-    position: sticky;
-    bottom: 0; /* Make buttons sticky */
-    background: white;
-    padding: 10px 0;
+    gap: 1rem;
+    margin-top: 2rem;
+    /*background-color: #ff7211;*/
 }
-
-.buttonGroup button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.buttonGroup button:first-of-type {
-    background-color: green;
-    color: white; /* Set button text color to white */
-}
-
-.buttonGroup button:last-of-type {
-    background-color: crimson;
-    color: var(--text);
-}
-.fileLink {
-    color: blue; /* Customize link color */
-    text-decoration: underline ; /* Underline links */
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.fileLink:hover {
-    color: #81a6eb; /* Hover effect for links */
-}
-
-.successMessage {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: bold;
-    animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
-    width: 100%;
-    max-width: 400px;
+.button{
+    background-color: #ff7211;
+    padding: 10px 12px;
+    border-radius: 8px;
 }

@@ -135,7 +135,7 @@
     padding: 0 20px;
     margin-bottom: 10px;
     font-size: 24px;
-    color: #1e90ff
+    color: #1b9392
 }
 
 .projectDropdown {
@@ -149,7 +149,7 @@
     margin-left: auto;
     padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid #1a253a;
+    border: 1px solid #c6e7e7;
     border-radius: 4px;
     color: black;
 }
@@ -157,7 +157,7 @@
 .dropdown {
     padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid #1a253a;
+    border: 1px solid #c6e7e7;
     border-radius: 4px;
     color: black;
 }
@@ -177,7 +177,7 @@
 
 
 .active {
-    background-color: #1e90ff;
+    background-color: #1b9392;
     color: var(--text);
 }
 
@@ -221,15 +221,15 @@
     padding: 8px 16px;
     font-size: 14px;
     background-color: var(--bgSoft);
-    border: 1px solid #1e90ff;
+    border: 1px solid #ff7211;
     border-radius: 4px;
-    color: #1e90ff;
+    color: #ff7211;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .navButtons button:hover {
-    background-color: #1e90ff;
+    background-color: #ff7211;
     color: var(--text);
 }
 
@@ -261,7 +261,7 @@
 
 .card h2 {
     margin-top: 0;
-    color: #1e90ff;
+    color: #1b9392;
     margin-bottom: 10px;
 }
 
@@ -344,7 +344,7 @@
     display: inline-flex;
     align-items: center;
     padding: 10px 20px;
-    background-color: #1e90ff;
+    background-color: #ff7211;
     color: white;
     border: none;
     border-radius: 4px;
@@ -354,7 +354,7 @@
 }
 
 .addButton:hover {
-    background-color: #1c86ee;
+    background-color: #c6e7e7;
 }
 
 .inputField {
@@ -376,7 +376,7 @@
     display: inline-flex;
     align-items: center;
     padding: 8px 16px;
-    background-color: #1e90ff;
+    background-color: #ff7211;
     color: white;
     border: none;
     border-radius: 4px;
@@ -385,7 +385,7 @@
 }
 
 .addButtonTopRight:hover {
-    background-color: #1c86ee;
+    background-color: #c6e7e7;
 }
 
 .phases 
@@ -411,7 +411,7 @@
 }
 
 .phaseCard {
-    background-color: #1a253a;
+    background-color: #1b9392;
     border-radius: 8px;
     padding: 10px;
     width: 300px;
@@ -965,13 +965,13 @@
 
 /* Create Folder Button */
 .inputDocumentButtonsContainer button:first-of-type {
-    background-color: #4caf50; /* Green */
+    background-color: #ff7211; /* Green */
     color: white;
 }
 
 /* Upload File Button */
 .inputDocumentButtonsContainer button:last-of-type {
-    background-color: #2196f3; /* Blue */
+    background-color: #ff7211; /* Blue */
     color: white;
 }
 
@@ -995,7 +995,7 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
-    background-color: #007bff; /* Primary button color */
+    background-color: #ff7211; /* Primary button color */
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -1005,7 +1005,7 @@
 }
 
 .button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #1b9392; /* Darker blue on hover */
     transform: translateY(-2px); /* Slight lift effect */
 }
 
@@ -1049,7 +1049,7 @@
 
 /* Modal Content */
 .inputDocumentModalContent {
-    background: #25203e; /* White background */
+    background: #c6e7e7; /* White background */
     padding: 30px 25px;
     border-radius: 12px;
     width: 320px; /* Slightly wider for better appearance */
@@ -1065,7 +1065,7 @@
     padding: 10px; /* Inner padding */
     width: 100%; /* Full width */
     font-size: 16px;
-    border: 1px solid #ddd; /* Light border */
+    /*border: 1px solid #ddd; !* Light border *!*/
     border-radius: 8px; /* Rounded corners */
     transition: border-color 0.3s;
     color: black;
@@ -1074,7 +1074,7 @@
 /* Input Focus Effect */
 .inputDocumentModalContent input:focus {
     outline: none;
-    border-color: #2196f3; /* Blue focus color */
+    border-color: #c6e7e7; /* Blue focus color */
 }
 
 /* Modal Button Container */
@@ -1098,7 +1098,7 @@
 
 /* Create Button */
 .inputDocumentModalButtons button:first-of-type {
-    background-color: #4caf50; /* Green */
+    background-color: #ff7211; /* Green */
     color: white;
 }
 
@@ -1111,7 +1111,7 @@
 /* Hover Effect */
 .inputDocumentModalButtons button:hover {
     transform: scale(1.05);
-    background-color: #333;
+    background-color: #1b9392;
 }
 
 /* Active/Pressed Effect */
@@ -1127,7 +1127,7 @@
     align-items: center;
     gap: 5px; /* Space between icon and text */
     padding: 0 5px; /* Inner padding */
-    background-color: #6c757d; /* Secondary button color */
+    background-color: #ff7211; /* Secondary button color */
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -1142,7 +1142,7 @@
 
 /* Back Button Hover Effect */
 .inputDocumentBackButton:hover {
-    background-color: #5a6268; /* Darker gray on hover */
+    background-color: #1b9392; /* Darker gray on hover */
     transform: scale(1.05); /* Slight scale-up effect */
 }
 

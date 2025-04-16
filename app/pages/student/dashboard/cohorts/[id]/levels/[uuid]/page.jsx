@@ -216,7 +216,7 @@ const LevelDetails = ({ searchParams }) => {
                   <p>Count: {levelData.students.length}</p>
                   <p>Pass: {passCount}</p>
                   <p>Fail: {failCount}</p>
-                  <Search value={searchQuery} onChange={handleSearchChange} placeholder="Search"/>
+                  {/*<Search value={searchQuery} onChange={handleSearchChange} placeholder="Search"/>*/}
                 </div>
 
                 <table className={styles.table}>

@@ -38,15 +38,27 @@
   flex-direction: column;
   gap: 20px;
 }
+.studentMain{
+  display: flex;
+  flex-direction: column;
+  flex: 5;
+  gap: 20px;
+  margin: auto;
+  height: 100%;
 
 
+}
+@media (min-width: 768px) {
+  .studentMain {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* Ensures equal width */
+  }
+}
 .cards {
   display: flex;
   gap: 20px;
   justify-content: space-between;
   /*height: 100px;*/
 }
-
 
 .card {
   display: grid;

@@ -309,6 +309,7 @@ const Phases = () => {
                 <h2>Milestones</h2>
              {successMessage && <p className={styles.successMessage}>{successMessage}</p>} 
                 <button
+
                     onClick={() => setShowPhaseInput(true)}
                     className={styles.addBtn}
                 >
@@ -439,7 +440,7 @@ const Phases = () => {
                                 onClick={() => setShowPhaseInput(false)}
                                 className={styles.closeButton1}
                             >
-                                Cancel
+                                X
                             </button>
                             
                         </div>

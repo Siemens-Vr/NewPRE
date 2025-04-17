@@ -277,15 +277,17 @@ const OutputsList = () => {
                             />
                         </div>
                         <div className={style.modalActions}>
+
+                        <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+                            
                         <button
                                 onClick={() => setShowOutputInput(false)}
                                 className={style.closeButton1}
                             >
-                                Cancel
-                            </button>
-                        <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
+                                X
+                            </button>                        
                             
                         </div>
                     </div>

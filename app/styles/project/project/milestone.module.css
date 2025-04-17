@@ -58,12 +58,12 @@
 }
 
 .milestone {
-    background-color: #C6E7E7;
+    background-color: #1B9392;
     border-radius: 0.5rem; /* rounded-lg */
     padding: 1rem;         /* p-4 */
     width: 320px;
     height: 200px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s; 
     position: relative;
@@ -73,9 +73,9 @@
 .h3{
     text-transform: capitalize;
     font-size: 1.25rem;       /* text-xl */
-    font-weight: 600;         /* font-semibold */
-    color: #1B9392;
-     border-bottom: 2px solid black; /* Custom underline */
+    /* font-weight: 600;          */
+    color: #ffffff;
+     border-bottom: 2px solid #ff7211; 
     padding-bottom: 1px;      
 }
 
@@ -86,7 +86,7 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    color: black;
+    color: white;
     padding: 0.25rem;
     transition: transform 0.2s ease;
     
@@ -123,7 +123,7 @@
     flex-direction: column;  
     gap: 0.25rem;            
     margin-top: 0.5rem;      
-    color: #1B9392; 
+    color: #ffffff; 
 }
 
 
@@ -181,6 +181,7 @@
     width: 400px;
     text-align: center;
     background-color: #C6E7E7;
+    position: relative;
 
 }
 
@@ -206,21 +207,24 @@
     /* justify-content: space-between; */
     margin-top: 20px;
     margin-left:170px;
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 .closeButton1 {
-    background-color: #ff7211;
-    color: white;
+    position: absolute;
+    /* background-color: #ff7211; */
+    color: #ff7211;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    top: 12px;
+    right: 12px;
     /* margin-right: 12px; */
 }
 
 .closeButton1:hover {
-    background-color: #cc5b0e;
+    /* background-color: #cc5b0e; */
 }
 .closeButton:hover {
     background-color: #e53935;
@@ -233,6 +237,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: 100px;
 }
 
 .addButtons1{

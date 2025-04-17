@@ -2,7 +2,9 @@
     background-color: #C6E7E7;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    padding-top: 3px;
+    margin-left: 22px;
   }
   
   .top {
@@ -22,6 +24,26 @@
     color: #333;
     transition: all 0.3s ease;
     outline: none;
+}
+
+.addBtn{
+   align-items: center;
+  padding: 10px 20px;
+  background-color: #ff7211;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+  width: 90px;
+  /* text-align: center; */
+
+}
+
+.addBtn:hover {
+  background-color: #d85e0b;
 }
   
   .addButton,
@@ -64,7 +86,7 @@
   .addButton:hover,
   .downloadButton:hover,
   .filterButton:hover {
-    background-color: #4a54a8; /* Slightly darker color for Add New button */
+    background-color: #4a54a8; 
   }
   
   .downloadButton:hover {
@@ -150,6 +172,11 @@
     border-radius: 10px;
 }
 
+
+.th{
+  color: #1B9392;
+  font-weight: 600;
+}
 .table th{
     padding: 15px 20px;
     border: 2px solid var(--text);
@@ -164,6 +191,10 @@
     text-align: left;
     border: 1px solid rgb(196, 186, 186); /* Set the cell borders to white */
     font-size: 14px;
+}
+
+.table tbody tr td{
+  color: black;
 }
 
 

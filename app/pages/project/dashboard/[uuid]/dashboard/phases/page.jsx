@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import styles from "@/app/styles/project/project/project.module.css";
+// import styles from "@/app/styles/project/project/project.module.css";
+import styles from "@/app/styles/project/project/milestone.module.css"
 import { FaEdit, FaPlus, FaTrash,FaEye } from "react-icons/fa";
 import { config } from "/config";
 import { useParams, useRouter } from 'next/navigation';
@@ -146,6 +147,7 @@ const Phases = () => {
               cancelButtonColor: '#3085d6',
               confirmButtonText: 'Yes, delete',
               cancelButtonText: 'Cancel'
+
             });
             
             if (result.isConfirmed) {

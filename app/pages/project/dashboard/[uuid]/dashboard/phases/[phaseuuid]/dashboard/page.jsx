@@ -48,7 +48,9 @@ const OutputsList = () => {
                 console.error("Failed to fetch outputs");
             }
         } catch (error) {
+
             console.error("Error fetching outputs:", error);
+
         } finally {
             setLoading(false);
         }
@@ -182,7 +184,8 @@ const OutputsList = () => {
           {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
             <div className={styles.top}>
                 <Search placeholder="Search for an output..." />
-                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addBtn}>Add
+                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={styles.addBtn}>Add
+
            </button>
             </div>
             {Array.isArray(outputs) && outputs.length > 0 ? (

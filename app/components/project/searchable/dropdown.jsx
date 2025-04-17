@@ -119,7 +119,7 @@ const DropDown = () => {
   return (
       <div className={styles.projectInfoContainer}>
         {/* Navbar */}
-        <h1 className={styles.project}>Project</h1>
+        <h1 className={styles.projecth1}>Project</h1>
         <div className={styles.project}>
         
         <div className={styles.projectDropdown}>

@@ -117,7 +117,7 @@
     font-size: 1.25rem;       /* text-xl */
     font-weight: 600;         /* font-semibold */
     color: #1B9392;
-     border-bottom: 2px solid black; /* Custom underline */
+     border-bottom: 2px solid black; 
     padding-bottom: 1px;      
 }
 
@@ -230,7 +230,8 @@
     font-size: 16px;
     border: 1px solid #1a253a;
     border-radius: 4px;
-    color: black;
+    color: #1B9392;
+    /* background-color: #C6E7E7; */
 }
 
 
@@ -244,8 +245,18 @@
     background-color: var(--bg);
     font-family: 'Roboto', sans-serif;
     color: var(--text);
+    margin-top: -30px;
 }
 
+.projecth1{
+    
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 26px;
+    color: #1B9392;
+
+}
 
 .img {
     width: 130px;
@@ -331,12 +342,12 @@
 
 .card {
     background-color: #C6E7E7;
-    /* padding: 10px; */
+    padding: 10px;
     /* border-radius: 8px; */
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     flex: 1 1 300px;
-    margin-left: 20px;
-    margin-right:30px;
+    /* margin-left: 20px; */
+    margin-right:18px;
     margin-top: 10px;
 }
 
@@ -456,8 +467,6 @@
 .addBtn:hover {
     background-color: #d85e0b;
 }
-
-
  
 .inputField {
     width: 100%;
@@ -1626,18 +1635,17 @@
 
 .card {
     background-color: #C6E7E7;
-    color: white;
-    border-radius: 10px;
-    padding: 20px;
+    color: #1B9392;
+     padding: 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     justify-content: space-between;
-}
+ }
+
 .cardContent {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
-    gap: 60px;
+     gap: 60px;
     height: 100%; 
 }
 
@@ -1663,5 +1671,5 @@
 }
 
 .card h3 span {
-    color: #1B9392;
+    color: black;
 }

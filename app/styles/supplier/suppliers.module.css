@@ -418,6 +418,127 @@
     transition: background-color 0.3s ease;
 }
 
+
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.addButton,
+.downloadButton {
+    padding: 10px 15px; /* Consistent padding */
+    color: var(--text);
+    border: none;
+    border-radius: 5px; /* Uniform border radius for all buttons */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition for hover effects */
+    margin-left: 10px;
+}
+
+/* Styles for Add New button */
+.addButton {
+    background-color: #ff7211; /* Base color */
+}
+
+.downloadButton {
+    background-color: teal; /* Base color */
+    color: white;
+}
+
+/* Styles for Filter button */
+.filterButton {
+    background-color: #c6e7e7; /* Base color */
+    color: white;
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+    width: 150px; /* Fixed width */
+    text-align: center; /* Left-aligned text */
+    padding: 10px 15px; /* Consistent padding */
+}
+
+/* Hover effects */
+.addButton:hover,
+.downloadButton:hover,
+.filterButton:hover {
+    background-color: #ff7211; /* Slightly darker color for Add New button */
+}
+
+.downloadButton:hover {
+    background-color: #c6e7e7; /* Darker color for hover on Download PDF button */
+}
+
+.filterButton:hover {
+    background-color: #c6e7e7; /* Darker blue on hover */
+}
+
+
+.filterOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filterOptions button {
+    padding: 10px; /* Increased padding */
+    border-radius: 5px; /* Uniform border radius for filter options */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transition for smooth hover effect */
+    background-color: #c6e7e7; /* Base color for filter options */
+    color: white;
+}
+
+.filterOptions button:hover {
+    background-color: #c6e7e7; /* Darker blue on hover for filter options */
+}
+
+/* Styles for filter input and apply button */
+.filterInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: black;
+}
+
+.filterInput input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s; /* Transition for smooth border color change */
+}
+
+.filterInput input:focus {
+    border-color: #007bff; /* Change border color on focus */
+}
+
+.filterInput button {
+    background-color: #28a745; /* Base color for apply button */
+    color: white;
+    border-radius: 5px;
+}
+
+.filterInput button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.filterDropdown {
+    max-height: 0; /* Hidden by default */
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0 0 5px 5px; /* Rounded bottom corners */
+    padding: 0; /* Remove padding to reduce space */
+    margin-top: -1px; /* Make the dropdown appear closer to the button */
+}
+
+/* Active class to show the dropdown */
+.filterDropdown.show {
+    max-height: 300px; /* Adjust to fit content */
+    padding: 10px 15px; /* Add padding when opened */
+}
+
+
 .button:hover {
     background-color: #1b9392;
 }

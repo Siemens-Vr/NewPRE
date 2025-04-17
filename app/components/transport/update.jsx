@@ -651,7 +651,7 @@ const UpdateTransportPopup = ({ onClose, transport, onSave }) => {
 
                     <div className={styles.buttonGroup}>
                         <button className={styles.button} type="button" onClick={handleSave}>Update</button>
-                        <button  className={styles.buttons} type="button" onClick={onClose}>Cancel</button>
+                        <button  className={styles.button} type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import Pagination from "@/app/components/pagination/pagination";
 import Search from "@/app/components/search/searchFilter";
@@ -10,6 +10,10 @@ import { config } from "/config";
 import ActionButton from "@/app/components/actionButton/actionButton";
 import UpdateSupplierPopup from '@/app/components/suppliers/update';
 import Swal from 'sweetalert2';
+import AddTransportPage
+  from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/transport/add/page";
+import ProcurementAddPage
+  from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/procurement/add/page";
 
 const ProcurementPage = () => {
   const [procurement, setProcurement] = useState([]);
@@ -25,6 +29,8 @@ const ProcurementPage = () => {
   const [selectedProcurement, setSelectedProcurement] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const[showAddNewPopup,setShowAddNewPopups]=useState(false);
+
 
   useEffect(() => {
     if (!searchParams.has("page")) {
@@ -169,7 +175,13 @@ const ProcurementPage = () => {
   const handleBack = () => {
     router.back(); // Go to the previous page
   };
-
+  const handleAddNewClick=()=>{
+    setShowAddNewPopups(true);
+  };
+  const handleClosePopups = () => {
+    console.log("Closing the modal...");
+    setShowAddNewPopups(false);
+  };
   return (
     <div>
       <button className={styles.backButton} onClick={handleBack}>
@@ -177,10 +189,22 @@ const ProcurementPage = () => {
         </button>
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search for item..." />
-        <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/procurement/add/`}>
-          <button className={styles.addButton}>Add</button>
-        </Link>
+        <Search  placeholder="Search for item..." />
+        {/*<Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/procurement/add/`}>*/}
+        {/*  <button className={styles.addButton}>Add</button>*/}
+        {/*</Link>*/}
+
+        <button
+            type="button"
+            onClick={handleAddNewClick}
+            className={`${styles.addButton} ${styles.button}`}
+        >
+          Add
+        </button>
+
+        {showAddNewPopup && (
+            < ProcurementAddPage onClose={handleClosePopups}/>
+        )}
       </div>
 
       {Array.isArray(procurement) && procurement.length > 0 ? (

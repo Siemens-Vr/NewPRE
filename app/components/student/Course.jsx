@@ -2,8 +2,8 @@
 
 
 const enrolledCourses = [
-    'simens 1',
-    'simens 1',
+    'siemens 1',
+    'siemens 1',
 ];
 
 

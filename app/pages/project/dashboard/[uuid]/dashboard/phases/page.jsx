@@ -30,6 +30,8 @@ const Phases = () => {
     const [successMessage, setSuccessMessage] = useState("");
     const [deleting, setDeleting] = useState(null);
     const closeTimeoutRef = useRef(null);
+    const dropdownRef = useRef(null);
+
 
 
 
@@ -141,6 +143,25 @@ const Phases = () => {
             setIsAdding(false);
         }
     };
+
+
+    // Attaching a click listener
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target)
+          ) {
+            setSelectedMilestone(null); // Close the dropdown
+          }
+        };
+      
+        document.addEventListener("mousedown", handleClickOutside);
+      
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
     
 
     const deletePhase = async (index, name) => {
@@ -319,7 +340,7 @@ const Phases = () => {
        
                        {selectedMilestone === phase && (
 
-                         <div className={styles.menuOptions}>
+                        <div ref={dropdownRef} className={styles.menuOptions}>
                              <button onClick={() => handleCardClick(phase)}>View</button>
                              <button onClick={() => handleEdit(phase)}>Edit</button>
                              <button onClick={() => deletePhase(index, phase.name)}>Delete</button>
@@ -330,26 +351,7 @@ const Phases = () => {
 
 
 
-
-                        {/* TO BE COMMENTED OR REMOVED*/}
-                        {/* <div className="flex gap-3">
-                        <FaEye
-                            className="text-gray-400 hover:text-gray-200 cursor-pointer"
-                            onClick={() =>
-                            router.push(
-                                `/pages/project/dashboard/${uuid}/dashboard/phases/${phase.uuid}/dashboard`
-                            )
-                            }
-                        />
-                        <FaEdit
-                            className="text-green-400 hover:text-green-300 cursor-pointer"
-                            onClick={() => setEditPhaseData(phase)}
-                        />
-                        <FaTrash
-                            className="text-red-400 hover:text-red-300 cursor-pointer"
-                            onClick={() => deletePhase(index, phase.name)}
-          />
-        </div> */}
+ 
 
        
       </div>
@@ -512,15 +514,18 @@ const Phases = () => {
                         </div>
               
                         <div className={styles.modalActions}>
+
+                        <button onClick={updatePhase} className={styles.addButtons1}>
+                                Update
+                            </button>
+
                         <button
                                 onClick={() => setEditPhaseData(null)}
                                 className={styles.closeButton1}
                             >
                                 Cancel
                             </button>
-                            <button onClick={updatePhase} className={styles.addButton1}>
-                                Update
-                            </button>
+                            
                            
                         </div>
                         {addPhaseError && <p className={styles.errorMessage}>{addPhaseError}</p>}

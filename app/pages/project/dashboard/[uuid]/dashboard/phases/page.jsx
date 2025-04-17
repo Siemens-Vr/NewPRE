@@ -349,11 +349,6 @@ const Phases = () => {
                          </div>
                      )}
 
-
-
-
- 
-
        
       </div>
        <div className={styles.detail}>

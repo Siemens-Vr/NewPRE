@@ -23,10 +23,16 @@
     justify-content: space-between;
 
 }
+
+.top h2{
+    color: #1B9392;
+    font-size: 22px;
+}
 .deliverablesManager .top h2{
     font-size: 24px;
-    /* margin-left: 10px; */
-}
+
+ }
+
 
 /* Deliverable Edit button styles */
 .deliverable-editButton {
@@ -89,7 +95,73 @@
 }
 
 
+.milestoneContainer{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    padding-top: 12px;
+}
 
+.milestone {
+    background-color: #C6E7E7;
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1rem;         /* p-4 */
+    width: 320px;
+    height: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; 
+    position: relative;
+}
+
+.h3{
+    text-transform: capitalize;
+    font-size: 1.25rem;       /* text-xl */
+    font-weight: 600;         /* font-semibold */
+    color: #1B9392;
+     border-bottom: 2px solid black; 
+    padding-bottom: 1px;      
+}
+
+.detail{
+    display: flex;
+    flex-direction: column;  
+    gap: 0.25rem;            
+    margin-top: 0.5rem;      
+    color: #1B9392; 
+}
+
+
+
+.drop {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    margin-top: 2px;
+    width: 80px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+
+
+.iconButton {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: black;
+    padding: 0.25rem;
+    transition: transform 0.2s ease;
+}
+
+
+ 
 .deliverablesTable td button.deleteButton {
     background-color: #ff4d4f;
     color: #1a253a;
@@ -136,11 +208,11 @@
     margin-bottom: 10px;
     font-size: 24px;
     color: #1b9392
+
 }
 
 .projectDropdown {
-    margin-right: auto;
-   
+    margin-right: auto;   
 }
 .milestoneButton{
     margin-left:auto;
@@ -159,7 +231,8 @@
     font-size: 16px;
     border: 1px solid #c6e7e7;
     border-radius: 4px;
-    color: black;
+    color: #1B9392;
+    /* background-color: #C6E7E7; */
 }
 
 
@@ -173,8 +246,27 @@
     background-color: var(--bg);
     font-family: 'Roboto', sans-serif;
     color: var(--text);
+    margin-top: -30px;
 }
 
+.projecth1{
+    
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 26px;
+    color: #1B9392;
+
+}
+
+.img {
+    width: 130px;
+     height: 130px;
+    /* display: block; */
+    /* margin: 0 auto; */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 
 .active {
     background-color: #1b9392;
@@ -237,6 +329,7 @@
 .projectDetails {
     display: flex;
     flex-direction: column;
+    /* margin-left: -200px; */
     /* flex-wrap: wrap; */
     /* gap: 20px; */
 }
@@ -249,19 +342,30 @@
 }
 
 .card {
-    background-color: var(--bgSoft);
-    /* padding: 10px; */
+    background-color: #C6E7E7;
+    padding: 10px;
     /* border-radius: 8px; */
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     flex: 1 1 300px;
-    margin-left: 20px;
-    margin-right:30px;
+    /* margin-left: 20px; */
+    margin-left:23px;
     margin-top: 10px;
+
+/*     background-color: var(--bgSoft); */
+    /* padding: 10px; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+/*     flex: 1 1 300px; */
+/*     margin-left: 20px; */
+/*     margin-right:30px; */
+/*     margin-top: 10px; */
+
 }
 
 .card h2 {
     margin-top: 0;
     color: #1b9392;
+
     margin-bottom: 10px;
 }
 
@@ -355,14 +459,36 @@
 
 .addButton:hover {
     background-color: #c6e7e7;
+/*     background-color: #ff7211; */
+
 }
 
+
+.addBtn{
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ff7211;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    margin-right: 20px;
+}
+
+.addBtn:hover {
+    background-color: #d85e0b;
+}
+ 
 .inputField {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    color: #C6E7E7;
 }
 
 .assigneesHeader {
@@ -390,6 +516,15 @@
 
 .phases 
 .top{
+
+/*     display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0px;
+    margin-left: 20px;
+}
+.phases 
+.top1{ */
     display:flex;
     justify-content: space-between;
     align-items: center;
@@ -402,6 +537,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 0px;
+
 
 }
 .phaseCards {
@@ -995,7 +1131,9 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
+
     background-color: #ff7211; /* Primary button color */
+
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -1006,6 +1144,7 @@
 
 .button:hover {
     background-color: #1b9392; /* Darker blue on hover */
+
     transform: translateY(-2px); /* Slight lift effect */
 }
 
@@ -1250,18 +1389,24 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+ 
 }
 
 .modalContent {
-    background: #ffffff;
+    position: relative;
+    /* background: #ffffff; */
     padding: 28px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 400px;
     text-align: center;
+    background-color: #C6E7E7;
+
 }
+
+
 .modalContent h3{
-    color:teal;
+    color:black;
     font-size: 20px;
     font-weight: 500;
 }
@@ -1270,11 +1415,18 @@
     flex-direction: column;
 }
 .modalContent .divInput label{
-    color: black;
+    color: #1B9392;
     justify-content: flex-start;
     align-self: flex-start;
     margin-top:10px;
 }
+
+
+ /* .divInput input{
+    color: #1B9392;
+     
+} */
+
 /* .modalContent div .modalActions{
     display: flex;
     justify-content: space-between;
@@ -1284,20 +1436,32 @@
 
 .modalActions {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     margin-top: 20px;
-}
+    margin-left:170px;
+    gap: 10px;
+ }
 
 .closeButton1 {
-    background-color: #f44336;
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    /* background-color: #ff7211; */
+    color: #ff7211;
+    /* padding: 10px 20px; */
+
+/*     background-color: #f44336;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 20px; */
+
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    /* width:50%; */
-}
+ }
 
+/* .closeButton1:hover {
+    background-color: #cc5b0e;
+} */
 .closeButton:hover {
     background-color: #e53935;
 }
@@ -1306,6 +1470,7 @@
     background-color: #ff7211;
     color: white;
     padding: 10px 20px;
+    margin-left: 100px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -1500,6 +1665,7 @@
     justify-content: center;
 }
 
+
 @media (max-width: 768px) {
     .outputDetails {
         grid-template-columns: repeat(1, 1fr); /* Stacks cards in one column on smaller screens */
@@ -1508,6 +1674,32 @@
 
 .card {
     background-color: #1b9392;
+
+/*     background-color: #C6E7E7;
+    color: #1B9392;
+     padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    justify-content: space-between;
+ }
+
+.cardContent {
+    display: flex;
+    flex-direction: row;
+     gap: 60px;
+    height: 100%; 
+}
+
+
+
+ @media (max-width: 768px) {
+    .outputDetails {
+        grid-template-columns: repeat(1, 1fr);  Stacks cards in one column on smaller screens 
+    }
+}
+
+.card {
+    background-color: #1a253a; */
     color: white;
     border-radius: 10px;
     padding: 20px;
@@ -1520,7 +1712,8 @@
     flex-direction: row;
     justify-content: space-between;
     height: 100%; 
-}
+} */
+
 
 .card:hover {
     transform: translateY(-5px);
@@ -1536,3 +1729,12 @@
     font-size: 16px;
     margin: 0;
 }
+
+.card h3{
+    /* color: black; */
+}
+
+.card h3 span {
+    color: black;
+}
+

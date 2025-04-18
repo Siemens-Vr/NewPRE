@@ -375,7 +375,7 @@ const result = await Swal.fire({
                         />
                         <div className={styles.editModalActions}>
                         <button onClick={closeEditModal} className={styles.editCancelButton}>
-                                Cancel
+                                X
                             </button>
                             <button
                                 onClick={updateProject}
@@ -471,6 +471,7 @@ const result = await Swal.fire({
                                 className={style.closeButton1}
                             >
                                 Cancel
+
                             </button>
                          
                             

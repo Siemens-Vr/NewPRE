@@ -27,6 +27,11 @@
     width: 100%;
     height: 100%;
   }
+  .card:hover{
+    background-color: #141414;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
   
   .react-calendar {
     width: 100% !important;
@@ -50,6 +55,11 @@
     height: 100%;
     color:white;
   }
+  .notificationCard:hover{
+    background-color: #141414;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
   .staffCard{
     background-color: #c6e7e7;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -62,6 +72,11 @@
     width: 100%;
     height: 100%;
   }
+  .staffCard:hover{
+    background-color: #141414;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
   .todoCard{
     background-color: #1b9392;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -73,6 +88,11 @@
     justify-content: center;
     width: 100%;
     height: 100%;
+  }
+  .todoCard:hover{
+    background-color: #141414;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
   }
 
   /* calendarCard.module.css */
@@ -90,10 +110,18 @@
   height: 100%;
 }
 
+.calendarCard:hover {
+  background-color: #141414;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+}
+
 .calendarTitle {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: #fff;
 }
 
 .markedDates {

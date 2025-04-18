@@ -1,10 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import styles from "@/app/styles/project/project/project.module.css";
+import React, { useState, useEffect,useRef } from "react";
+// import styles from "@/app/styles/project/project/project.module.css";
+import styles from "@/app/styles/project/project/milestone.module.css"
 import { FaEdit, FaPlus, FaTrash,FaEye } from "react-icons/fa";
 import { config } from "/config";
 import { useParams, useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
+import { FiMoreVertical } from "react-icons/fi";
+
 
 const Phases = () => {
     const [phases, setPhases] = useState([]);
@@ -26,6 +29,26 @@ const Phases = () => {
     const { uuid, id } = params;
     const [successMessage, setSuccessMessage] = useState("");
     const [deleting, setDeleting] = useState(null);
+    const closeTimeoutRef = useRef(null);
+    const dropdownRef = useRef(null);
+
+
+
+
+
+     const [selectedMilestone, setSelectedMilestone] = useState(null); // To store the selected Milestone for actions
+     const [editModalOpen, setEditModalOpen] = useState(false); // Edit modal visibility
+
+
+
+
+    const handleMenuClick = (phase) => {
+        setSelectedMilestone(phase); // Set the selected project for actions
+    };
+ 
+
+
+   
 
     const fetchPhases = async () => {
         try {
@@ -120,6 +143,25 @@ const Phases = () => {
             setIsAdding(false);
         }
     };
+
+
+    // Attaching a click listener
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target)
+          ) {
+            setSelectedMilestone(null); // Close the dropdown
+          }
+        };
+      
+        document.addEventListener("mousedown", handleClickOutside);
+      
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
     
 
     const deletePhase = async (index, name) => {
@@ -137,6 +179,7 @@ const Phases = () => {
               cancelButtonColor: '#3085d6',
               confirmButtonText: 'Yes, delete',
               cancelButtonText: 'Cancel'
+
             });
             
             if (result.isConfirmed) {
@@ -177,29 +220,7 @@ const Phases = () => {
     };
     
 
-    // const updatePhase = async () => {
-    //     if (editPhaseData) {
-    //         try {
-    //             const response = await fetch(`${config.baseURL}/phases/${uuid}/${editPhaseData.uuid}/update`, {
-    //                 method: "PUT",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(editPhaseData),
-    //             });
-
-    //             if (response.ok) {
-    //                 fetchPhases();
-    //                 setEditPhaseData(null); // Close the edit modal
-    //             } else {
-    //                 console.error("Failed to update phase");
-    //             }
-    //         } catch (error) {
-    //             console.error("Error updating phase:", error);
-    //         }
-    //     }
-    // };
-
+    
     const updatePhase = async () => {
         if (!editPhaseData.name.trim()) {
             alert("Please provide all required details including name and status!");
@@ -264,6 +285,22 @@ const Phases = () => {
             console.error("Error updating phase:", error);
         }
     };
+
+        // View click
+
+        const handleCardClick = (phase) => {
+            console.log(phase.uuid)
+             router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phase.uuid}/dashboard`)
+            clearTimeout(closeTimeoutRef.current); 
+        };
+       
+        const handleEdit = (phase) => {
+             setEditPhaseData(phase);
+             setEditModalOpen(true);
+             clearTimeout(closeTimeoutRef.current); 
+        };
+   
+
     
     return (
         // <div className= {styles.container}></div>
@@ -272,43 +309,49 @@ const Phases = () => {
                 <h2>Milestones</h2>
              {successMessage && <p className={styles.successMessage}>{successMessage}</p>} 
                 <button
+
                     onClick={() => setShowPhaseInput(true)}
-                    className={styles.addButton}
+                    className={styles.addBtn}
                 >
                     <FaPlus /> Add Milestone
                 </button>
             </div>
             
-            <div className="flex p-6 flex-wrap gap-6">
+            <div className={styles.milestoneContainer}>
                 {phases.map((phase, index) => (
                     <div
-                    key={index}
-                    className="bg-[#1a253a] rounded-lg p-4 w-[300px] h-[200px] shadow-md cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                     key={index}
+                     className={styles.milestone}
                     >
-                    <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2">
-                        <h3 className="capitalize text-xl font-semibold text-[#1c86ee]">
+                    {/* <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2"> */}
+                    <div className="relative">
+                        <h3 className={styles.h3}>
                         {phase.name}
-                        </h3>
-                        <div className="flex gap-3">
-                        <FaEye
-                            className="text-gray-400 hover:text-gray-200 cursor-pointer"
-                            onClick={() =>
-                            router.push(
-                                `/pages/project/dashboard/${uuid}/dashboard/phases/${phase.uuid}/dashboard`
-                            )
-                            }
-                        />
-                        <FaEdit
-                            className="text-green-400 hover:text-green-300 cursor-pointer"
-                            onClick={() => setEditPhaseData(phase)}
-                        />
-                        <FaTrash
-                            className="text-red-400 hover:text-red-300 cursor-pointer"
-                            onClick={() => deletePhase(index, phase.name)}
-          />
-        </div>
+                        </h3>                 
+                        
+                       <div className={styles.iconButton} onClick={(e) => {
+                                  e.stopPropagation(); // Prevent card click
+                                  handleMenuClick(phase);
+                               }}>
+                              <div className={styles.icon}>&#x022EE;</div> 
+                         </div>
+
+
+
+       
+                       {selectedMilestone === phase && (
+
+                        <div ref={dropdownRef} className={styles.menuOptions}>
+                             <button onClick={() => handleCardClick(phase)}>View</button>
+                             <button onClick={() => handleEdit(phase)}>Edit</button>
+                             <button onClick={() => deletePhase(index, phase.name)}>Delete</button>
+                             
+                         </div>
+                     )}
+
+       
       </div>
-      <div className="flex flex-col gap-1 mt-2 text-gray-300">
+       <div className={styles.detail}>
         <p>
           <strong>Start Date:</strong>{" "}
           {phase.startDate
@@ -330,8 +373,6 @@ const Phases = () => {
 </div>
 
 
-
-
             {/* Add Phase Modal */}
             {showPhaseInput && (
                 <div className={styles.modalOverlay}>
@@ -343,7 +384,7 @@ const Phases = () => {
                                 type="text"
                                 value={newPhase.name}
                                 onChange={(e) => setNewPhase({ ...newPhase, name: e.target.value })}
-                                placeholder="Phase Name"
+                                placeholder="Milestone Name"
                                 className={styles.inputField}
                             />
                         </div>
@@ -385,14 +426,16 @@ const Phases = () => {
                         </select>
                         </div>
                         <div className={styles.modalActions}>
-                        <button
+                        
+                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+
+                            <button
                                 onClick={() => setShowPhaseInput(false)}
                                 className={styles.closeButton1}
                             >
-                                Cancel
-                            </button>
-                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
+                                X
                             </button>
                             
                         </div>
@@ -402,7 +445,7 @@ const Phases = () => {
             )}
 
             {/* Edit Phase Modal */}
-            {editPhaseData && (
+            {editModalOpen && editPhaseData && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
                         <h3>Edit Milestone</h3>
@@ -467,15 +510,18 @@ const Phases = () => {
                         </div>
               
                         <div className={styles.modalActions}>
+
+                        <button onClick={updatePhase} className={styles.addButtons1}>
+                                Update
+                            </button>
+
                         <button
                                 onClick={() => setEditPhaseData(null)}
                                 className={styles.closeButton1}
                             >
                                 Cancel
                             </button>
-                            <button onClick={updatePhase} className={styles.addButton1}>
-                                Update
-                            </button>
+                            
                            
                         </div>
                         {addPhaseError && <p className={styles.errorMessage}>{addPhaseError}</p>}

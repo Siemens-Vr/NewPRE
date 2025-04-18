@@ -9,7 +9,7 @@
 
 .menu {
   min-height: 100vh;
-  /*background-color: #1E88E5;*/
+  background-color: #1b9392;
   width: 250px;
   margin-right: 0;
 }
@@ -17,19 +17,19 @@
 
 .content {
   width: 100%;
-  padding: 20px;
-  
-  /*display: grid;*/
-  /*grid-template-columns: repeat(2, 1fr);*/
+  padding: 15px;
+  margin-top: 10px;
+  /* display: grid; */
+  grid-template-columns: repeat(2, 1fr);
 }
 
 
-.wrapper {
+/* .wrapper {
   display: flex;
-  gap: 10px; /* Reduce space */
+  gap: 10px; 
   margin-right: 0;
   width:auto;
-}
+} */
 
 
 .main {
@@ -38,8 +38,19 @@
   flex-direction: column;
   gap: 20px;
 }
-
-
+.studentMain{
+  display: flex;
+  flex-direction: column;
+  flex: 5;
+  gap: 20px;
+  margin: auto;
+  height: 100%;
+}
+@media (min-width: 768px) {
+  .studentMain {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* Ensures equal width */
+  }
+}
 .cards {
   display: flex;
   gap: 20px;
@@ -47,7 +58,14 @@
   /*height: 100px;*/
 }
 
-
+.view {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-left: 20px;
+  margin-right: 10px;
+}
 .card {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -92,13 +110,6 @@
   gap: 200px;
   margin-top: 20px;
 }
-
-
-.side {
-  flex: 1;
-}
-
-
 .calendarContainer {
   margin-top: 20px;
   padding: 10px;
@@ -130,36 +141,62 @@
 }
 
 /*Responsive*/
-@media (min-width: 1600px) {
+/* @media (min-width: 1600px) {
   .wrapper {
     gap: 20px; /* Add more space between columns */
-    margin-right: 20px;
-  }
+    /* margin-right: 20px; 
+  } 
 
   .menu {
-    width: 300px; /* Increase sidebar width */
+    width: 300px; /* Increase sidebar width 
   }
 
   .contents {
-    grid-template-columns: repeat(3, 1fr); /* Change to 3 columns for larger screens */
-    gap: 40px; /* Decrease gap between items */
+    grid-template-columns: repeat(3, 1fr); /* Change to 3 columns for larger screens 
+    gap: 40px; /* Decrease gap between items 
   }
 
   .containercard {
-    height: 250px; /* Increase card height */
+    height: 250px; /* Increase card height 
   }
 
-  .containercards {
-    height: 350px; /* Increase project card height */
-    width: 600px; /* Increase width for larger screens */
+  .containercards 
+    height: 350px; /* Increase project card height 
+    width: 600px; /* Increase width for larger screens 
   }
 
   .calendars {
-    grid-template-columns: repeat(3, 1fr); /* Display 3 columns for the calendar section */
+    grid-template-columns: repeat(3, 1fr); /* Display 3 columns for the calendar section 
     gap: 30px;
   }
 
   .calendarContainer {
-    max-width: 400px; /* Increase calendar container size */
+    max-width: 400px; /* Increase calendar container size 
   }
-}
+} 
+  */
+
+  .wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Main dashboard content */
+  /* .studentMain {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  } */
+  
+  /* Rightbar container */
+  .side {
+    position: sticky;
+    flex: 1;
+    display: block;
+    height: 50%;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  

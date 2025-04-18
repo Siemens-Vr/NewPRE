@@ -1,16 +1,18 @@
 .container1 {
   display: flex;
-  align-items: center;
+   align-items: center;
   justify-content: space-between;
   margin-top: 30px;
   color: #4fa9a9;
-   /* background: linear-gradient(to left, #c2f3f3, #4fa9a9);  */
-}
+
+ }
 
 .logo {
   font-weight: bold;
+  
 }
 
 .text {
   font-size: 12px;
+  
 }

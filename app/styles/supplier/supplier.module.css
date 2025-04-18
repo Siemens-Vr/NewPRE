@@ -26,10 +26,12 @@
 
 
 .container {
-    background-color: var(--bgSoft);
+    background-color: #C6E7E7;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    padding-top: 3px;
+    margin-left: 22px;
   }
   
   .top {
@@ -37,6 +39,39 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  .search {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.addBtn{
+   align-items: center;
+  padding: 10px 20px;
+  background-color: #ff7211;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+  width: 90px;
+  /* text-align: center; */
+
+}
+
+.addBtn:hover {
+  background-color: #d85e0b;
+}
   
   .addButton,
   .downloadButton {
@@ -49,6 +84,11 @@
     margin-left: 10px;
   }
   
+  /* .addBtn{
+    background-color: #ff7211; 
+  } */
+
+
   /* Styles for Add New button */
   .addButton {
     background-color: #ff7211; /* Base color */
@@ -62,6 +102,7 @@
   /* Styles for Filter button */
   .filterButton {
     background-color: #c6e7e7; /* Base color */
+
     color: white;
     border-radius: 5px 5px 0 0; /* Rounded top corners */
     width: 150px; /* Fixed width */
@@ -73,6 +114,7 @@
   .addButton:hover,
   .downloadButton:hover,
   .filterButton:hover {
+
     background-color: #ff7211; /* Slightly darker color for Add New button */
   }
   
@@ -97,11 +139,14 @@
     cursor: pointer;
     transition: background-color 0.3s ease; /* Transition for smooth hover effect */
     background-color: #c6e7e7; /* Base color for filter options */
+
     color: white;
   }
   
   .filterOptions button:hover {
+
     background-color: #c6e7e7; /* Darker blue on hover for filter options */
+
   }
   
   /* Styles for filter input and apply button */
@@ -159,6 +204,11 @@
     border-radius: 10px;
 }
 
+
+.th{
+  color: #1B9392;
+  font-weight: 600;
+}
 .table th{
     padding: 15px 20px;
     border: 2px solid var(--text);
@@ -173,6 +223,10 @@
     text-align: left;
     border: 1px solid rgb(196, 186, 186); /* Set the cell borders to white */
     font-size: 14px;
+}
+
+.table tbody tr td{
+  color: black;
 }
 
 

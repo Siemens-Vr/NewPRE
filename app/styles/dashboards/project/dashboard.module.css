@@ -17,10 +17,19 @@
 } 
 
 .content {
+
+  flex: 4;
+  padding: 20px;
+  margin-left: -30px;
+  margin-top: 1px;
+
+}
+
   /* flex: 4; */
   /* padding: 15px; */
  
- }
+ 
+
 
 .wrapper {
   display: flex;
@@ -49,6 +58,9 @@
   display: flex;
   flex-direction: column;
    margin-left: -30px;
+
+/*    margin-left: 1px; */
+
   padding-left: 12px;
   padding-right: 12px;
 
@@ -203,19 +215,6 @@
 .menuOptions button:hover {
   background-color: #f0f0f0; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .editModalOverlay {

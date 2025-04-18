@@ -18,7 +18,7 @@ const Dashboard = () => {
           {/* <div className={styles.menu}> */}
               <div className={styles.contents}>
 
-              <div className={styles.containercard}>
+              <div className={styles.studentCard}>
                   <div className={styles.cards}>
                       {cards.map((item) => (
                           <Card item={item} key={item.id}/>

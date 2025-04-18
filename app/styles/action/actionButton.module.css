@@ -1,73 +1,21 @@
-/*.actionContainer {*/
-/*    position: relative;*/
-/*    display: inline-block;*/
-/*  }*/
-/*  */
-/*  .actionButton {*/
-/*    background-color: #007bff;*/
-/*    color: white;*/
-/*    padding: 8px 16px;*/
-/*    border: none;*/
-/*    border-radius: 6px;*/
-/*    cursor: pointer;*/
-/*    font-weight: bold;*/
-/*    transition: background 0.3s ease;*/
-/*  }*/
-/*  */
-/*  .actionButton:hover {*/
-/*    background-color: #0056b3;*/
-/*  }*/
-/*  */
-/*  .dropdownMenu {*/
-/*    position: absolute;*/
-/*    right: 60;*/
-/*    top: 100%;*/
-/*    width: 180px;*/
-/*    background: white;*/
-/*    border-radius: 6px;*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);*/
-/*    z-index: 1000;*/
-/*    border: 1px solid #ddd;*/
-/*  }*/
-/*  */
-/*  .dropdownItem,*/
-/*  .dropdownItemDelete {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    padding: 10px 15px;*/
-/*    width: 100%;*/
-/*    font-size: 14px;*/
-/*    background: white;*/
-/*    color: black;*/
-/*    border: none;*/
-/*    text-align: left;*/
-/*    cursor: pointer;*/
-/*    transition: background 0.2s ease;*/
-/*  }*/
-/*  */
-/*  .dropdownItem:hover {*/
-/*    background-color: #d7d8da;*/
-/*  }*/
-/*  */
-/*  .dropdownItemDelete {*/
-/*    color: red;*/
-/*  }*/
-/*  */
-/*  .dropdownItemDelete:hover {*/
-/*    background-color: #ffecec;*/
-/*  }*/
-/*  */
-/*  .icon {*/
-/*    margin-right: 8px;*/
-/*    font-size: 16px;*/
-/*  }*/
-/**/
+
 
 .dotsButton {
     background: transparent;
+/* .actionContainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .actionButton {
+    background-color: #1b9392;
+    color: white;
+    padding: 8px 16px; */
+
     border: none;
     font-size: 20px;
     cursor: pointer;
+
     color: #333;
 }
 
@@ -76,6 +24,30 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 8px 0;
+
+/*     font-weight: bold;
+    transition: background 0.3s ease;
+  }
+  
+  .actionButton:hover {
+    background-color: #156f6e;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    right: 60;
+    top: 100%;
+    width: 180px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    border: 1px solid #ddd;
+  }
+  
+  .dropdownItem,
+  .dropdownItemDelete { */
+
     display: flex;
     flex-direction: column;
     position: absolute;

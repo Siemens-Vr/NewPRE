@@ -102,7 +102,7 @@ const StaffCard = () => {
           tileClassName={tileClassName}
         />
         <div className={styles.markedDates}>
-          <h4>Marked Dates:</h4>
+          <h4 className="text-white">Marked Dates:</h4>
           <ul className={styles.markedDateList}>
             {Object.keys(markedDates).length > 0 ? (
               Object.entries(markedDates).map(([date, desc], index) => (

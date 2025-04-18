@@ -17,17 +17,7 @@
 .whiteTexts{
   color: white;
 }
-/*@media (min-width: 1150px) {*/
-/*  .containers{*/
-/*    height: 1000px;*/
-/*    position: sticky;*/
-/*  }*/
-/*}*/
-/*@media (max-width: 1800px) {*/
-/* .containers{*/
-/*   height: 100vh;*/
-/* }*/
-/*}*/
+
 
 /* Adjust width for large screens */
 @media (min-width: 1800px) {

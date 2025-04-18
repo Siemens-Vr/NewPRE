@@ -33,11 +33,11 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             return; // Don't redirect automatically, let the protected route handle it
           }
-      
+          // console.log(token)
           const { data } = await axios.get(`${config.baseURL}/api/auth/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          console.log(data)
+          // console.log(data)
       
           setUser(data);
         }
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
         password,
       });
   
-      console.log(data);
+      // console.log(data);
   
       // Store JWT Token in Cookies
       document.cookie = `token=${data.accessToken}; path=/; secure; samesite=strict`;
@@ -79,11 +79,15 @@ export const AuthProvider = ({ children }) => {
       // }
   
       setUser(data.user);
-      console.log(data.user);
+      // console.log(data.user);
   
-      // Redirect user based on role
+       // ✅ Check for staff and redirect to profile
+    if (data.user.role === "employee" || data.user.role === "staff") {
+      router.push(`/staffs/${data.user.uuid}/profile`);
+    } else {
       const dashboardRoute = ROLE_DASHBOARDS[data.user.role] || "/pages/dashboard";
       router.push(dashboardRoute);
+    }
   
       return { success: true };
     } catch (error) {

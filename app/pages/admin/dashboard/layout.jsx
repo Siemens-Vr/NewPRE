@@ -9,7 +9,6 @@ const Layout = ({children}) => {
     <div className={styles.container}>
         <div className={styles.menu}>
         <Sidebar dashboardType="admin" />
-
         </div>
        <div className={styles.content}>
         <Navbar/>
@@ -17,6 +16,7 @@ const Layout = ({children}) => {
         {/*<Footer/>*/}
        </div>
     </div>
+   
   )
 }
 

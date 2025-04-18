@@ -2,10 +2,10 @@
 
 import { Bell, ClipboardList, User, Calendar as CalendarIcon, FolderKanban, Package } from "lucide-react";
 import styles from "@/app/styles/staff/staffComponent.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
+import { useParams } from "next/navigation";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Default styles
-import { useSearchParams } from 'next/navigation';
 import { config } from "@/config";
 
 const Card = ({ children }) => (
@@ -13,10 +13,15 @@ const Card = ({ children }) => (
 );
 
 const StaffCard = () => {
+  const params = useParams()
+  const uuid = params?.uuid;
   const [staff, setStaff] = useState(null);
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const uuid = searchParams.get("uuid"); // Get staff UUID from query params
+
+ 
+  // console.log(uuid)
+
+
 
   useEffect(() => {
     const fetchStaff = async () => {

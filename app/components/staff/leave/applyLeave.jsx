@@ -53,11 +53,13 @@ const ApplyLeaveModal = ({ staffUUID, onClose }) => {
   
     const leaveData = {
       userId: staffUUID, // Backend expects userId, not staffUUID
-      leaveId: selectedLeave.id, // Map leaveType to leaveId
+      leaveId: selectedLeave.uuid, // Map leaveType to leaveId
       startDate: formData.startDate,
       endDate: formData.endDate,
       reason: formData.reason, // Ensure reason is provided
     };
+
+    console.log(leaveData)
   
     try {
       const response = await fetch(`${config.baseURL}/leaveRequests/`, {

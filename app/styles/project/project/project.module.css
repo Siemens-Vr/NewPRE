@@ -1687,7 +1687,7 @@
 
 /* @media (max-width: 768px) {
     .outputDetails {
-        grid-template-columns: repeat(1, 1fr); /* Stacks cards in one column on smaller screens */
+        grid-template-columns: repeat(1, 1fr);  Stacks cards in one column on smaller screens 
     }
 }
 

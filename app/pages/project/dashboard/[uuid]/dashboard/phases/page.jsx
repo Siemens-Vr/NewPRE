@@ -1,11 +1,7 @@
 "use client";
-
 import React, { useState, useEffect,useRef } from "react";
 // import styles from "@/app/styles/project/project/project.module.css";
 import styles from "@/app/styles/project/project/milestone.module.css"
-// import React, { useState, useEffect } from "react";
-// import styles from "@/app/styles/project/project/project.module.css";
-
 import { FaEdit, FaPlus, FaTrash,FaEye } from "react-icons/fa";
 import { config } from "/config";
 import { useParams, useRouter } from 'next/navigation';
@@ -50,6 +46,9 @@ const Phases = () => {
         setSelectedMilestone(phase); // Set the selected project for actions
     };
  
+
+
+   
 
     const fetchPhases = async () => {
         try {
@@ -144,7 +143,7 @@ const Phases = () => {
             setIsAdding(false);
         }
     };
-    
+
 
     // Attaching a click listener
     useEffect(() => {
@@ -164,7 +163,6 @@ const Phases = () => {
         };
       }, []);
     
-
 
     const deletePhase = async (index, name) => {
         const phaseToDelete = phases[index];
@@ -221,30 +219,6 @@ const Phases = () => {
     }
     };
     
-
-
-    // const updatePhase = async () => {
-    //     if (editPhaseData) {
-    //         try {
-    //             const response = await fetch(`${config.baseURL}/phases/${uuid}/${editPhaseData.uuid}/update`, {
-    //                 method: "PUT",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(editPhaseData),
-    //             });
-
-    //             if (response.ok) {
-    //                 fetchPhases();
-    //                 setEditPhaseData(null); // Close the edit modal
-    //             } else {
-    //                 console.error("Failed to update phase");
-    //             }
-    //         } catch (error) {
-    //             console.error("Error updating phase:", error);
-    //         }
-    //     }
-    // };
 
     
     const updatePhase = async () => {
@@ -312,7 +286,6 @@ const Phases = () => {
         }
     };
 
-
         // View click
 
         const handleCardClick = (phase) => {
@@ -327,7 +300,6 @@ const Phases = () => {
              clearTimeout(closeTimeoutRef.current); 
         };
    
-
 
     
     return (
@@ -364,56 +336,6 @@ const Phases = () => {
                               <div className={styles.icon}>&#x022EE;</div> 
                          </div>
 
-
-//             <div className="flex p-6 flex-wrap gap-6">
-//                 {phases.map((phase, index) => (
-//                     <div
-//                     key={index}
-//                     className="bg-[#1a253a] rounded-lg p-4 w-[300px] h-[200px] shadow-md cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
-//                     >
-//                     <div className="flex justify-between items-center mb-2 border-b border-gray-500 pb-2">
-//                         <h3 className="capitalize text-xl font-semibold text-[#1c86ee]">
-//                         {phase.name}
-//                         </h3>
-//                         <div className="flex gap-3">
-//                         <FaEye
-//                             className="text-gray-400 hover:text-gray-200 cursor-pointer"
-//                             onClick={() =>
-//                             router.push(
-//                                 `/pages/project/dashboard/${uuid}/dashboard/phases/${phase.uuid}/dashboard`
-//                             )
-//                             }
-//                         />
-//                         <FaEdit
-//                             className="text-green-400 hover:text-green-300 cursor-pointer"
-//                             onClick={() => setEditPhaseData(phase)}
-//                         />
-//                         <FaTrash
-//                             className="text-red-400 hover:text-red-300 cursor-pointer"
-//                             onClick={() => deletePhase(index, phase.name)}
-//           />
-//         </div>
-//       </div>
-//       <div className="flex flex-col gap-1 mt-2 text-gray-300">
-//         <p>
-//           <strong>Start Date:</strong>{" "}
-//           {phase.startDate
-//             ? new Date(phase.startDate).toLocaleDateString()
-//             : ""}
-//         </p>
-//         <p>
-//           <strong>End Date:</strong>{" "}
-//           {phase.endDate
-//             ? new Date(phase.endDate).toLocaleDateString()
-//             : ""}
-//         </p>
-//         <p>
-//           <strong>Status:</strong> {phase.status}
-//         </p>
-//       </div>
-//     </div>
-//   ))}
-// </div>
 
 
        
@@ -510,17 +432,10 @@ const Phases = () => {
                             </button>
 
                             <button
-
-//                         <button
-
                                 onClick={() => setShowPhaseInput(false)}
                                 className={styles.closeButton1}
                             >
                                 X
-                            </button>
-
-                            <button onClick={addPhase} disabled={isAdding} className={styles.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
                             </button>
                             
                         </div>
@@ -600,17 +515,13 @@ const Phases = () => {
                                 Update
                             </button>
 
-
                         <button
                                 onClick={() => setEditPhaseData(null)}
                                 className={styles.closeButton1}
                             >
                                 Cancel
                             </button>
-
-                            <button onClick={updatePhase} className={styles.addButton1}>
-                                Update
-                            </button>
+                            
                            
                         </div>
                         {addPhaseError && <p className={styles.errorMessage}>{addPhaseError}</p>}

@@ -190,8 +190,7 @@ const OutputsList = () => {
                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={styles.addBtn}>Add
 
            </button>
-//                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addButton}>Add
-// </button>
+
 
             </div>
             {Array.isArray(outputs) && outputs.length > 0 ? (

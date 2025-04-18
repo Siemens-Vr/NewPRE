@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useParams, useRouter } from "next/navigation";
 import Pagination from "@/app/components/pagination/pagination";
 import Search from "@/app/components/search/searchFilter";
-import styles from "@/app/styles/supplier/supplier.module.css";
+import styles from "@/app/styles/supplier/suppliers.module.css";
 import Link from "next/link";
 import { config } from "/config";
 import ActionButton from "@/app/components/actionButton/actionButton";
 import UpdateSupplierPopup from '@/app/components/suppliers/update';
 import Swal from 'sweetalert2';
+import AddTransportPage
+  from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/transport/add/page";
+import ProcurementAddPage
+  from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/procurement/add/page";
 
 const ProcurementPage = () => {
   const [procurement, setProcurement] = useState([]);
@@ -25,6 +29,8 @@ const ProcurementPage = () => {
   const [selectedProcurement, setSelectedProcurement] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const[showAddNewPopup,setShowAddNewPopups]=useState(false);
+
 
   useEffect(() => {
     if (!searchParams.has("page")) {
@@ -169,7 +175,13 @@ const ProcurementPage = () => {
   const handleBack = () => {
     router.back(); // Go to the previous page
   };
-
+  const handleAddNewClick=()=>{
+    setShowAddNewPopups(true);
+  };
+  const handleClosePopups = () => {
+    console.log("Closing the modal...");
+    setShowAddNewPopups(false);
+  };
   return (
     <div>
       <button className={styles.backButton} onClick={handleBack}>
@@ -177,51 +189,67 @@ const ProcurementPage = () => {
         </button>
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search for item..." />
-        <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/procurement/add/`}>
-          <button className={styles.addButton}>Add</button>
-        </Link>
+        <Search  placeholder="Search for item..." />
+        {/*<Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/procurement/add/`}>*/}
+        {/*  <button className={styles.addButton}>Add</button>*/}
+        {/*</Link>*/}
+
+        <button
+            type="button"
+            onClick={handleAddNewClick}
+            className={`${styles.addButton} ${styles.button}`}
+        >
+          Add
+        </button>
+
+        {showAddNewPopup && (
+            < ProcurementAddPage onClose={handleClosePopups}/>
+        )}
       </div>
 
       {Array.isArray(procurement) && procurement.length > 0 ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <td>Item Name</td>
-              <td>Type</td>
-              <td>Suppliers</td>
-              <td>Approval Date</td>
-              <td>Payment Date</td>
-              <td>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {procurement.map((procurement) => (
-              <tr key={procurement.id}>
-                <td>{procurement.itemName}</td>
-                <td>{procurement.type}</td>
-                <td>{procurement.suppliers}</td>
-                <td>
-                  {procurement.approvalDate ? new Date(procurement.approvalDate).toLocaleDateString() : ""}
-                </td>
-                <td>
-                  {procurement.paymentDate ? new Date(procurement.paymentDate).toLocaleDateString() : ""}
-                </td>
-                <td>
-                  <ActionButton
-                    onEdit={() => handleUpdateClick(procurement)}
-                    onDownload={() => handleDownloadAll(procurement)}
-                    onDelete={() => handleDelete(procurement.uuid, procurement.itemName)}
-                    onView={() => handleView(procurement.uuid)}   
-                  />
-                </td>
+          <div className="overflow-x-auto mt-6 bg-white shadow-md">
+            <table className="min-w-full text-sm text-left text-gray-600">
+              <thead className="text-xs text-white uppercase bg-[#1b9392]">
+              <tr>
+                <th scope="col" className="px-6 py-3">Item Name</th>
+                <th scope="col" className="px-6 py-3">Type</th>
+                <th scope="col" className="px-6 py-3">Suppliers</th>
+                <th scope="col" className="px-6 py-3">Approval Date</th>
+                <th scope="col" className="px-6 py-3">Payment Date</th>
+                <th scope="col" className="px-6 py-3">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+              {procurement.map((item) => (
+                  <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                    <td className="px-6 py-4 text-black">{item.itemName}</td>
+                    <td className="px-6 py-4 text-black">{item.type}</td>
+                    <td className="px-6 py-4 text-black">{item.suppliers}</td>
+                    <td className="px-6 py-4 text-black">
+                      {item.approvalDate ? new Date(item.approvalDate).toLocaleDateString() : ""}
+                    </td>
+                    <td className="px-6 py-4 text-black">
+                      {item.paymentDate ? new Date(item.paymentDate).toLocaleDateString() : ""}
+                    </td>
+                    <td className="px-6 py-4 text-black">
+                      <ActionButton
+                          onEdit={() => handleUpdateClick(item)}
+                          onDownload={() => handleDownloadAll(item)}
+                          onDelete={() => handleDelete(item.uuid, item.itemName)}
+                          onView={() => handleView(item.uuid)}
+                      />
+                    </td>
+                  </tr>
+              ))}
+              </tbody>
+            </table>
+          </div>
       ) : (
-        <p className={styles.noItem}>No procurements available</p>
+          <p className="text-center text-gray-600 mt-6">No procurements available</p>
       )}
+
+
       <Pagination count={count} />
 
       {showPopup && (

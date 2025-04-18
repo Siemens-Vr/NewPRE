@@ -470,7 +470,8 @@ const result = await Swal.fire({
                                 onClick={() => setShowProjectInput(false)}
                                 className={style.closeButton1}
                             >
-                                X
+                                Cancel
+
                             </button>
                          
                             

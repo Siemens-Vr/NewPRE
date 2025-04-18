@@ -2,12 +2,26 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: #2e374a;
-    padding: 10px;
-    border-radius: 10px;
-    width: max-content;
+
+    padding: 10px 12px;
+    border-radius: 5px;
+
   }
-  
+.selects{
+    background-color: #c6e7e7;
+    padding: 10px 12px;
+    height: 45px;
+    align-items: center;
+    border-radius: 8px;
+}
+  .search{
+      background-color: #c6e7e7;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 8px;
+  }
   .input {
     background-color: transparent;
     border: none;
@@ -25,5 +39,5 @@
   }
   
   .select option {
-    background-color: #2e374a;
+    background-color: #c6e7e7;
   }

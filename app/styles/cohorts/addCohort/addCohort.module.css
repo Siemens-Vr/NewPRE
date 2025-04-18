@@ -8,9 +8,21 @@
   max-width: 800px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: relative;
-  margin-left: 250px;
-  height: 100%;
+  /*margin-left: 250px;*/
+  height: 320px;
   /* Semi-transparent background */
+
+}
+.containers{
+  background-color: #c6e7e7;
+  padding: 20px;
+  border-radius: 10px;
+  width: 60%;
+  max-width: 800px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  /*margin-left: 100px;*/
+  height: 620px;
 
 }
 
@@ -22,7 +34,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #ff4d4d;
+  color: #ff7211;
 }
 
 .form {
@@ -52,7 +64,7 @@
 
 .input,
 .select {
-  padding: 12px 15px;
+  padding: 15px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -88,18 +100,21 @@
   /*gap: 50px;*/
   justify-content: space-between;
 }
-.addFacilitatorRoleButton{
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #1b9392;
-  font-size: 16px;
-  color: white;
-  font-weight: bold;
-  transition: background 0.3s;
-}
+/*.addFacilitatorRoleButton{*/
+/*  padding: 12px 20px;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*  background-color: #1b9392;*/
+/*  font-size: 16px;*/
+/*  color: white;*/
+/*  font-weight: bold;*/
+/*  transition: background 0.3s;*/
 
+/*}*/
+.Rolebutton{
+  margin-top :5px;
+margin-left: 590px;}
 .button {
   padding: 12px 20px;
   border: none;
@@ -153,7 +168,7 @@ font-size: 20px;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 5px;
-}
+margin-top:0px;}
 
 .addFacilitatorRoleButton {
   /*padding: 8px;*/
@@ -169,6 +184,14 @@ font-size: 20px;
 .addFacilitatorRoleButton:hover {
   background-color: #ff7211;
 }
+.selects{ padding: 12px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);}
 
 
 
@@ -180,7 +203,7 @@ font-size: 20px;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color:red;
+  color: #ff7211;
 }
 
 .closeButtons {
@@ -191,7 +214,7 @@ font-size: 20px;
   border: none;
   font-size: 90px;
   cursor: pointer;
-  color:red;
+  color: #ff7211;
 
 }
 /*//MODAL*/

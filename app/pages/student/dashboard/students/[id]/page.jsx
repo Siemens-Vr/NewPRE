@@ -435,6 +435,43 @@ const SinstudentPage = ({ params }) => {
 
           {showUpdate && <UpdateStudent onClose={handleshowDelete} />}
       </div>
+        <div>
+          <table className={styles.studentTable}>
+            <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Reg No</th>
+              <th>Course</th>
+              <th>Level(s)</th>
+              <th>Total Fee Paid</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{student.firstName} {student.lastName}</td>
+              <td>{student.regNo}</td>
+              <td>
+                {student.levels?.length > 0
+                    ? student.levels[0].Course?.courseName || "N/A"
+                    : "N/A"}
+              </td>
+              <td>
+                {student.levels?.length > 0
+                    ? student.levels.map(level => level.levelName).join(", ")
+                    : "N/A"}
+              </td>
+              <td>
+                KES{" "}
+                {student.levels?.reduce((sum, level) => {
+                  return sum + (level?.StudentLevels?.fee || 0);
+                }, 0)}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+
+        </div>
       </div>
   );
 };

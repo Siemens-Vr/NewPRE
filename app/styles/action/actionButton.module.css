@@ -1,4 +1,8 @@
-.actionContainer {
+
+
+.dotsButton {
+    background: transparent;
+/* .actionContainer {
     position: relative;
     display: inline-block;
   }
@@ -6,11 +10,22 @@
   .actionButton {
     background-color: #1b9392;
     color: white;
-    padding: 8px 16px;
+    padding: 8px 16px; */
+
     border: none;
-    border-radius: 6px;
+    font-size: 20px;
     cursor: pointer;
-    font-weight: bold;
+
+    color: #333;
+}
+
+.dropdownMenu {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+
+/*     font-weight: bold;
     transition: background 0.3s ease;
   }
   
@@ -31,34 +46,32 @@
   }
   
   .dropdownItem,
-  .dropdownItemDelete {
+  .dropdownItemDelete { */
+
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    min-width: 130px;
+    z-index: 9999;
+}
+
+.dropdownMenu button {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    width: 100%;
-    font-size: 14px;
-    background: white;
-    color: black;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-  
-  .dropdownItem:hover {
-    background-color: #d7d8da;
-  }
-  
-  .dropdownItemDelete {
+    gap: 8px;
+}
+
+.dropdownMenu button:hover {
+    background-color: #f2f2f2;
+}
+
+.deleteButton {
     color: red;
-  }
-  
-  .dropdownItemDelete:hover {
-    background-color: #ffecec;
-  }
-  
-  .icon {
-    margin-right: 8px;
-    font-size: 16px;
-  }
-  
+}

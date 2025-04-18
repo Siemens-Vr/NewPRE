@@ -2,8 +2,8 @@
 import styles from '../../styles/students/facilitators.module.css';
 
 const enrolledCourses = [
-    'simens 1',
-    'simens 1',
+    'siemens 1',
+    'siemens 1',
 ];
 
 

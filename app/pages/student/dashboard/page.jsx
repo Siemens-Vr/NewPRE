@@ -40,6 +40,35 @@ const Dashboard = () => {
   </div>
 </div>
 
+
+      <div className="p-6 bg-white min-h-screen">
+        {/*/!* Title *!/*/}
+        {/*<h2 className="text-2xl font-semibold mb-6">Student Page</h2>*/}
+
+        {/* Cards Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-5">
+          {card.map((item) => (
+              <Card item={item} key={item.id}/>
+          ))}
+        </div>
+
+        {/* Calendar Section */}
+        <div className="w-full flex justify-center mb-5">
+          <div /*className="bg-white rounded-xl shadow p-6 w-full max-w-xl"*/>
+            {/*<h3 className="text-lg font-semibold text-center mb-4">Calendar</h3>*/}
+            <CalendarComponent/>
+
+          </div>
+            <Instructors/>
+        </div>
+
+        {/* Reminders and Courses */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Reminders/>
+          <Course/>
+        </div>
+      </div>
+
   );
 };
 

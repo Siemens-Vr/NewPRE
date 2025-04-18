@@ -9,15 +9,17 @@
 /*.studentTable,*/
 .instructorsTable {
   background-color: var(--bgSoft);
-  padding: 20px;
+  padding: 10px;
   margin-top: 30px;
   border-radius: 10px;
+  margin-left: -10px;
 }
 .studentTable {
   min-height: 5px;
   max-height: 600px; /* or any sensible limit */
   /*overflow-y: auto;*/
   transition: height 0.3s ease-in-out;
+  padding: 10px;
 }
 .studentTable.empty {
   height: 5px;
@@ -27,7 +29,9 @@
 }
 .tableTop {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 100px;
+  /*margin-top: 10px;*/
 }
 .tableTop h3{
   font-size: 24px;
@@ -38,7 +42,7 @@
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
+  /*border-radius: 8px;*/
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
@@ -368,7 +372,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color:red;
+  color: #ff7211;
 }
 
 .closeButtons {
@@ -542,4 +546,14 @@ margin-left: 450px;
 
 .addButton:hover {
   background: #c6e7e7;
+}
+.popups{
+  margin-left: 450px;
+  background-color: #ff7211;
+  /*background-color: #1b9392; !* Teal *!*/
+  color: white;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px;
+  border-radius: 5px;
 }

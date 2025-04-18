@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Pagination from "@/app/components/pagination/pagination";
 import Search from "@/app/components/search/searchFilterTransport";
@@ -10,6 +10,9 @@ import { config } from "/config";
 import ActionButton from "@/app/components/actionButton/actionButton";
 import UpdateTransportPopup from  '@/app/components/transport/update';
 import Swal from "sweetalert2";
+import LevelForm from "@/app/components/cohort/Add level";
+import AddTransportPage
+  from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/transport/add/page";
 
 const TransportPage = () => {
   const [transport, setTransport] = useState([]);
@@ -27,7 +30,8 @@ const TransportPage = () => {
   const [selectedTransport, setSelectedTransport] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [deleting, setDeleting] = useState(false);
- 
+  const[showAddNewPopup,setShowAddNewPopups]=useState(false);
+
 
   useEffect(() => {
     if (!searchParams.has("page")) {
@@ -46,7 +50,7 @@ const TransportPage = () => {
   }, [q, page, filter]);
 
   const fetchTransport = async () => {
-    setLoading(true); 
+    setLoading(true);
     try {
       let url = `${config.baseURL}/transports/${outputuuid}?`;
       const params = new URLSearchParams();
@@ -95,30 +99,30 @@ const TransportPage = () => {
     });
   };
 
- 
-  
-  
+
+
+
   const handleDelete = async (id, name) => {
     console.log(uuid, phaseuuid, outputuuid, id)
     if (!id) {
       console.error("Transport data is not loaded");
       return;
     }
-  
+
     const result = await Swal.fire({
                     title: 'Are you sure?',
                     text: `You are about to delete ${name} `,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
+                    cancelButtonColor: '#ff7211',
                     confirmButtonText: 'Yes, delete',
                     cancelButtonText: 'Cancel'
                   });
-                  
+
                   if (result.isConfirmed) {
                     setDeleting(uuid);
-  
+
     // if (confirmDelete) {
       try {
         const response = await fetch(`${config.baseURL}/transports/${id}/delete`, {
@@ -127,19 +131,19 @@ const TransportPage = () => {
             "Content-Type": "application/json",
           },
         });
-  
+
         if (response.ok) {
           Swal.fire({
             title: 'Deleted!',
             text: `${name} has been successfully deleted.`,
             icon: 'success',
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#ff7211',
           });
 
           await fetchTransport();
           window.location.reload();
 
-  
+
 // Immediate navigation without state updates
           // window.location.href = `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/transport`;
         } else {
@@ -172,88 +176,102 @@ const TransportPage = () => {
     console.log("UUID:", uuid);
     console.log("Phase UUID:", phaseuuid);
     console.log("Output UUID:", outputuuid);
-  
+
     if (!id || !uuid || !phaseuuid || !outputuuid) {
       console.error("One or more required parameters are missing");
       return;
     }
-  
+
     router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/transport/${id}`);
-    
+
   };
   const handleBack = () => {
     router.back(); // Go to the previous page
   };
-
+// added
+  const handleAddNewClick=()=>{
+    setShowAddNewPopups(true);
+  };
+  const handleClosePopups=()=>{
+    setShowAddNewPopups(false);
+  }
   return (
-    <div>
-      <button className={styles.backButton} onClick={handleBack}>
-          Back
-        </button>
-    
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <Search placeholder="Search for travel..." />
 
-        <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/transport/add/`}>
-  <button className={styles.addButton}>Add</button>
-</Link>
-      </div>
+          <div>
+            <button className={styles.backButton} onClick={handleBack}>
+              Back
+            </button>
 
-      {Array.isArray(transport) && transport.length > 0 ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <td>Destination</td>
-              <td>Travel Period</td>
-              <td>Travelers</td>
-              <td>Date of Request</td>
-              {/* <td>Date Received</td>
-              <td>Approver</td>
-              <td>Approval Date</td>
-              <td>Payment Date</td> */}
-              <td>Action</td>
-            </tr>
-          </thead>
-          <tbody>
-            {transport.map((transport) => (
-              <tr key={transport.id}>
-                <td>{transport.destination}</td>
-                <td>{transport.travelPeriod}</td>
-                <td>{transport.travelers ? transport.travelers.length : 0}</td>
-                <td>
-                  {transport.dateOfRequest
-                    ? new Date(transport.dateOfRequest).toLocaleDateString()
-                    : ""}
-                </td>
-                <td>
-                  <ActionButton
-                    onEdit={() => handleUpdateClick(transport)}
-                    onDownload={() => handleDownloadAll(transport)}
-                    onDelete={() => handleDelete (transport.id, transport.destination)}
-                    onView={ () => handleView (transport.id)}
-            
+            <div className={styles.container}>
+              <div className={styles.top}>
+                <Search placeholder="Search for travel..."/>
+
+                <button
+                    type="button"
+                    onClick={handleAddNewClick}
+                    className={`${styles.addButton} ${styles.button}`}
+                >
+                  Add
+                </button>
+
+                {showAddNewPopup && (
+                    < AddTransportPage onClose={handleClosePopups}/>
+                )}
+                {/*      <Link href={`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}/expenses/transport/add/`}>*/}
+                {/*<button className={styles.addButton}>Add</button>*/}
+                {/*</Link>*/}
+              </div>
+
+              {Array.isArray(transport) && transport.length > 0 ? (
+                  <div className="overflow-x-auto mt-6 bg-white shadow-md ">
+                    <table className="min-w-full text-sm text-left text-gray-600">
+                      <thead className="text-xs text-white uppercase bg-[#1b9392]">
+                      <tr>
+                        <th scope="col" className="px-6 py-3">Destination</th>
+                        <th scope="col" className="px-6 py-3">Travel Period</th>
+                        <th scope="col" className="px-6 py-3">Travelers</th>
+                        <th scope="col" className="px-6 py-3">Date of Request</th>
+                        <th scope="col" className="px-6 py-3">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {transport.map((item) => (
+                          <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                            <td className="px-6 py-4 text-black">{item.destination}</td>
+                            <td className="px-6 py-4 text-black">{item.travelPeriod}</td>
+                            <td className="px-6 py-4 text-black">{item.travelers ? item.travelers.length : 0}</td>
+                            <td className="px-6 py-4 text-black">
+                              {item.dateOfRequest ? new Date(item.dateOfRequest).toLocaleDateString() : ""}
+                            </td>
+                            <td className="px-6 py-4 text-black">
+                              <ActionButton
+                                  onEdit={() => handleUpdateClick(item)}
+                                  onDownload={() => handleDownloadAll(item)}
+                                  onDelete={() => handleDelete(item.id, item.destination)}
+                                  onView={() => handleView(item.id)}
+                              />
+                            </td>
+                          </tr>
+                      ))}
+                      </tbody>
+                    </table>
+                  </div>
+              ) : (
+                  <p className={styles.noItems}>No travel items available</p>
+              )}
+              <Pagination count={count}/>
+
+              {showPopup && (
+                  <UpdateTransportPopup
+                      transport={selectedTransport}
+                      onClose={handleClosePopup}
+                      onSave={handleSavePopup}
                   />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className={styles.noItems}>No travel items available</p>
-      )}
-      <Pagination count={count} />
+              )}
+            </div>
+          </div>
 
-      {showPopup && (
-        <UpdateTransportPopup
-          transport={selectedTransport}
-          onClose={handleClosePopup}
-          onSave={handleSavePopup}
-        />
-      )}
-    </div>
-    </div>
-  );
-};
+        );
+        };
 
-export default TransportPage;
+        export default TransportPage;

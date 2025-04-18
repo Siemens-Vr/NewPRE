@@ -5,18 +5,31 @@
  }
 
 .menu {
-  flex: 1;
-  background-color: var(--bgSoft);
+  /* flex: 1; */
+  /* background-color: #000000; */
    min-height: 100vh;
 }
 
+ .contents{
+    /* flex: 4; */
+    padding: 15px;
+
+} 
+
 .content {
+
   flex: 4;
   padding: 20px;
   margin-left: -30px;
   margin-top: 1px;
 
 }
+
+  /* flex: 4; */
+  /* padding: 15px; */
+ 
+ }
+
 
 .wrapper {
   display: flex;
@@ -199,19 +212,6 @@
 .menuOptions button:hover {
   background-color: #f0f0f0; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .editModalOverlay {

@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+     background-color: #c6e7e7;
+    padding: 20px;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* width: 100%; */
+  }
+  
+  .card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .instructors {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .instructorItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .instructorImg {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    border: 2px solid #f97316; /* Tailwind orange-500 */
+    object-fit: cover;
+  }
+  
+  .instructorName {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #188080; /* Tailwind gray-700 */
+    text-align: center;
+  }
+  
+  .noticeTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    
+  }
+  
+  .noticeItem {
+    font-size: 0.9rem;
+    color: #4b5563; /* Tailwind gray-600 */
+  }
+  
+  .noticeItemTitle {
+    font-weight: bold;
+    color: #111; /* Tailwind gray-800 */
+  }
+  .containers {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+     background-color: #188080;
+    padding: 20px;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    color: #ffffff;
+  }

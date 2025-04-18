@@ -1,49 +1,46 @@
+import styles from '../../styles/students/facilitators.module.css';
+
 const instructors = [
-    {
-        name: "Instructor One",
-        img: "/instructor1.jpg", // update paths
-    },
-    {
-        name: "Instructor Two",
-        img: "/instructor2.jpg",
-    },
-    {
-        name: "Instructor Three",
-        img: "/instructor3.jpg",
-    },
+    { name: "Instructor One", img: "/noavatar.png" },
+    { name: "Instructor Two", img: "/noavatar.png" },
+    { name: "Instructor Three", img: "/noavatar.png" },
+    { name: "Instructor Four", img: "/noavatar.png" },
+    { name: "Instructor Five", img: "/noavatar.png" },
 ];
 
 const InstructorsAndNotice = () => {
     return (
-        <div className="bg-white p-4 rounded-xl shadow-md w-full max-w-md mx-auto mt-6 space-y-6">
+        <div className={styles.container}>
             {/* Instructors */}
-            <div>
-                <h3 className="text-lg font-semibold mb-2">Course Instructors</h3>
-                <div className="flex items-center space-x-4">
+            <div className={styles.card}>
+                <h3 className={styles.noticeTitle}>Course Instructors</h3>
+                <div className={styles.instructors}>
                     {instructors.map((inst, index) => (
-                        <img
-                            key={index}
-                            src={inst.img}
-                            alt={inst.name}
-                            className="w-12 h-12 rounded-full border-2 border-orange-500 object-cover"
-                        />
+                        <div key={index} className={styles.instructorItem}>
+                            <img
+                                src={inst.img}
+                                alt={inst.name}
+                                className={styles.instructorImg}
+                            />
+                            <p className={styles.instructorName}>
+                                {inst.name}
+                            </p>
+                        </div>
                     ))}
                 </div>
             </div>
 
             {/* Daily Notice */}
             <div>
-                <h3 className="text-lg font-semibold mb-2">Daily Notice</h3>
+                <h3 className={styles.noticeTitle}>Daily Notice</h3>
                 <div className="space-y-4 text-sm">
                     <div>
-                        <p className="font-bold text-gray-800">payment due</p>
-                        <p className="text-gray-600">Cohort 3 exams payment date.</p>
-
+                        <p className={styles.noticeItemTitle}>Payment Due</p>
+                        <p className={styles.noticeItem}>Cohort 3 exams payment date.</p>
                     </div>
                     <div>
-                        <p className="font-bold text-gray-800">Exam schedule</p>
-                        <p className="text-gray-600">Cohort 3 exams schedule to begin next week.</p>
-
+                        <p className={styles.noticeItemTitle}>Exam Schedule</p>
+                        <p className={styles.noticeItem}>Cohort 3 exams scheduled to begin next week.</p>
                     </div>
                 </div>
             </div>

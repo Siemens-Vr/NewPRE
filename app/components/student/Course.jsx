@@ -1,5 +1,5 @@
 
-
+import styles from '../../styles/students/facilitators.module.css';
 
 const enrolledCourses = [
     'simens 1',
@@ -12,8 +12,9 @@ const EnrolledCourses = () => {
 
 
     return (
-        <div className="bg-peach-100 rounded-xl shadow p-4 col-span-1">
-            <h3 className="font-semibold mb-2">Enrolled courses</h3>
+        <div className={styles.containers}>
+             <h3 className={styles.noticeTitle}>Enrolled courses</h3>
+            <div className={styles.instructors}>
             <ul>
                 {enrolledCourses.map((course, index) => (
                     <li key={index}>
@@ -21,6 +22,7 @@ const EnrolledCourses = () => {
                     </li>
                 ))}
             </ul>
+            </div>
         </div>
     );
 };

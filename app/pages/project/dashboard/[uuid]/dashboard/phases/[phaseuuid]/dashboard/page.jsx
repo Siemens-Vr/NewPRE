@@ -49,8 +49,11 @@ const OutputsList = () => {
             }
         } catch (error) {
 
+
             console.error("Error fetching outputs:", error);
 
+
+//             console.error("Error fetching outputs:", error);
         } finally {
             setLoading(false);
         }
@@ -187,6 +190,9 @@ const OutputsList = () => {
                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={styles.addBtn}>Add
 
            </button>
+//                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addButton}>Add
+// </button>
+
             </div>
             {Array.isArray(outputs) && outputs.length > 0 ? (
                 <table className={styles.table}>
@@ -213,7 +219,6 @@ const OutputsList = () => {
                                         onDelete={() => handleDelete(output.uuid, output.name)}
                                         onView={() => handleView(output.uuid)}   
                                     />
-
                                 </td>
                             </tr>
                         ))}               
@@ -282,12 +287,15 @@ const OutputsList = () => {
                                 {isAdding ? "Adding..." : "Add"}
                             </button>
                             
+
                         <button
                                 onClick={() => setShowOutputInput(false)}
                                 className={style.closeButton1}
                             >
+
                                 X
                             </button>                        
+
                             
                         </div>
                     </div>

@@ -67,19 +67,48 @@ const Details = () => {
             >
               Milestones
             </button>
+
             </div>
             </div>
             <div className={styles.projectDetail}>
     <div className={styles.card}>
         <div className={styles.cardContent}>
-            <div>
-                <h2>Name</h2>
-                <p>{projectDetails.projectName}</p>
+
+        <img src="/60111.jpg" 
+               alt="Your image description" 
+                  className={styles.img}/> 
+
+       <div>
+          <div>          
+             <h2>{projectDetails.projectName}</h2>
             </div>
-            <div style={{ textAlign: 'right' }}>
-                <h2>Status</h2>
-                <p>{projectDetails.status}</p>
+
+            <div style={{ }}>
+
+                {/* <h2>Status</h2> */}
+                <h3> Status : <span> {projectDetails.status}</span></h3>
+                <h3> Startdate :<span>{} </span></h3>
+                <h3> Enddate :<span>{} </span></h3>
             </div>
+
+    </div>
+
+
+
+//             </div>
+//             </div>
+//             <div className={styles.projectDetail}>
+//     <div className={styles.card}>
+//         <div className={styles.cardContent}>
+//             <div>
+//                 <h2>Name</h2>
+//                 <p>{projectDetails.projectName}</p>
+//             </div>
+//             <div style={{ textAlign: 'right' }}>
+//                 <h2>Status</h2>
+//                 <p>{projectDetails.status}</p>
+//             </div>
+
         </div>
     </div>
     <div className={styles.card}>

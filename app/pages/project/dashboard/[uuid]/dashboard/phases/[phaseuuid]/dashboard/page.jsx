@@ -48,7 +48,12 @@ const OutputsList = () => {
                 console.error("Failed to fetch outputs");
             }
         } catch (error) {
+
+
             console.error("Error fetching outputs:", error);
+
+
+//             console.error("Error fetching outputs:", error);
         } finally {
             setLoading(false);
         }
@@ -182,8 +187,12 @@ const OutputsList = () => {
           {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
             <div className={styles.top}>
                 <Search placeholder="Search for an output..." />
-                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addButton}>Add
-</button>
+                <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={styles.addBtn}>Add
+
+           </button>
+//                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={style.addButton}>Add
+// </button>
+
             </div>
             {Array.isArray(outputs) && outputs.length > 0 ? (
                 <table className={styles.table}>
@@ -203,6 +212,7 @@ const OutputsList = () => {
                                 <td>{output.description}</td>
                                 <td>{output.status}</td>
                                 <td>{formatDate(output.completionDate)}</td>
+
                                 <td>
                                     <ActionButton
                                         onEdit={() => handleUpdateClick(output)}
@@ -272,15 +282,20 @@ const OutputsList = () => {
                             />
                         </div>
                         <div className={style.modalActions}>
+
+                        <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+                            
+
                         <button
                                 onClick={() => setShowOutputInput(false)}
                                 className={style.closeButton1}
                             >
-                                Cancel
-                            </button>
-                        <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
+
+                                X
+                            </button>                        
+
                             
                         </div>
                     </div>

@@ -375,7 +375,7 @@ const result = await Swal.fire({
                         />
                         <div className={styles.editModalActions}>
                         <button onClick={closeEditModal} className={styles.editCancelButton}>
-                                Cancel
+                                X
                             </button>
                             <button
                                 onClick={updateProject}
@@ -461,15 +461,18 @@ const result = await Swal.fire({
                             />
                         </div>
                         <div className={style.modalActions}>
+
+                        <button onClick={addProject} disabled={isAdding} className={style.addButton1}>
+                                {isAdding ? "Adding..." : "Add"}
+                            </button>
+                            
                         <button
                                 onClick={() => setShowProjectInput(false)}
                                 className={style.closeButton1}
                             >
-                                Cancel
+                                X
                             </button>
-                        <button onClick={addProject} disabled={isAdding} className={style.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
+                         
                             
                         </div>
                     </div>

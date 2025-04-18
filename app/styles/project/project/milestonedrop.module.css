@@ -1,0 +1,42 @@
+.projectInfoContainer {
+    display: flex;
+    flex-direction: column;
+    /* min-height: 100vh; */
+    background-color: var(--bg);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text);
+    margin-top: -30px;
+}
+
+.project{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #1B9392;
+}
+
+.project h1{
+    margin-left: 12px;
+}
+
+.milestoneDropdown {
+    margin-left: auto;
+    padding: 4px 4px;
+    font-size: 16px;
+    border: 1px solid #1B9392;
+    border-radius: 4px;
+    color: black;
+    background-color: #C6E7E7;
+}
+
+.dropdown {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #1B9392;
+    border-radius: 4px;
+    color: #1B9392;
+    /* background-color: #C6E7E7; */
+ }

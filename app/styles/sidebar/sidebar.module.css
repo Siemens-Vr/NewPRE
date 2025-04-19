@@ -214,3 +214,30 @@
   }
 
 }
+/* Add these to your sidebar.module.css file */
+.adminBadge {
+  background-color: #ff9800;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.returnButton, .adminReturn {
+  background-color: #3085d6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+  text-align: center;
+}
+
+.adminReturn {
+  margin-bottom: 10px;
+}

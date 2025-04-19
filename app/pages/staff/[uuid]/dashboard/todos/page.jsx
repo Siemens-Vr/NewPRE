@@ -2,9 +2,14 @@
 import React, { useState } from "react";
 import styles from "@/app/styles/staff/todo.module.css";
 import style from "@/app/styles/staff/leave/leave.module.css";
+import { useParams } from "next/navigation";
 import { config } from "/config";
 
 const TodoPage = () => {
+  const params = useParams()
+  const {uuid} = params
+
+
   const [todos, setTodos] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
@@ -28,15 +33,16 @@ const TodoPage = () => {
   
   const handleAddTask = () => {
     if (taskInput.trim() !== "") {
-      setTasks([...tasks, { text: taskInput, completed: false }]);
+      setTasks([...tasks, { text: taskInput, completed: false , date:currentDate}]);
       setTaskInput("");
     }
   };
 
 
   const handleSaveTasks = async () => {
+    console.log(tasks)
     try {
-      const response = await fetch(`${config.baseURL}/todos/${currentDate}`, {
+      const response = await fetch(`${config.baseURL}/todos/${uuid}`, {
 
         method: "POST",
         headers: { "Content-Type": "application/json" },

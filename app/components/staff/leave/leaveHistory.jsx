@@ -12,7 +12,7 @@ const LeaveHistory = () => {
     useEffect(() => {
         const fetchLeaveHistory = async () => {
           try {
-            const response = await fetch(`${config.baseURL}/leaves/${staffuuid}`);
+            const response = await fetch(`${config.baseURL}/leaveRequests/staff/${staffuuid}`);
             const data = await response.json();
             console.log("Leave history:", data);
           } catch (error) {

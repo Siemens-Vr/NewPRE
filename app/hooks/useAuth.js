@@ -9,7 +9,7 @@ export const ROLES = {
   ADMIN: 'Admin',
   EQUIPMENT: 'equipment',
   EMPLOYEE: 'employee',
-  USER: 'user'
+  STAFF: 'staff'
 };
 
 // Define dashboard routes for each role
@@ -17,11 +17,11 @@ const ROLE_DASHBOARDS = {
   [ROLES.ADMIN]: '../pages/admin/dashboard',
   [ROLES.EQUIPMENT]: '/equipment/dashboard',
   [ROLES.EMPLOYEE]: '/employee/dashboard',
-  [ROLES.USER]: '/user/dashboard'
+  [ROLES.STAFF]: '../pages/staff/dashboard'
 };
 
 export default function useAuth(allowedRoles = []) {
-  const { user, loading } = useContext(AuthContext);
+  const { Staff, loading } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +50,6 @@ export default function useAuth(allowedRoles = []) {
     isAdmin: user?.role === ROLES.ADMIN,
     isEquipment: user?.role === ROLES.EQUIPMENT,
     isEmployee: user?.role === ROLES.EMPLOYEE,
-    isUser: user?.role === ROLES.USER
+    isStaff: user?.role === ROLES.STAFF
   };
 }

@@ -4,19 +4,23 @@ import Navbar from  '@/app/components/navbar/staffNavbar'
 import styles from   '@/app/styles/dashboards/dashboard.module.css'
 
 
+
+
 const Layout = ({children}) => {
   return (
-    <div className={styles.container}>
-        <div className={styles.menu}>
-        <Sidebar dashboardType="staff" />
 
+      <div className={styles.container}>
+          <div className={styles.menu}>
+          <Sidebar dashboardType="staff" />
+
+          </div>
+        <div className={styles.content}>
+          <Navbar/>
+          {children}
+          <Footer/>
         </div>
-       <div className={styles.content}>
-        <Navbar/>
-        {children}
-        <Footer/>
-       </div>
-    </div>
+      </div>
+
   )
 }
 

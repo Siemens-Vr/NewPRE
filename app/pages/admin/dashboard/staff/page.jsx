@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/staff/staff.module.css'
 import Link from "next/link";
 import Search from '@/app/components/search/search'
+
+
 import Swal from 'sweetalert2';
 import { config } from "/config";
 
@@ -41,7 +43,6 @@ const StaffPage = () => {
       confirmButtonColor: '#3085d6',
     });
   };
-
 
   
   const handleDeleteStaff = async (uuid, fullName) => {
@@ -122,20 +123,17 @@ const StaffPage = () => {
                       <td>{staff.phoneNumber}</td>
                       <td>{staff.idNo}</td>
                       <td>
-                        <div className={styles.buttons}>
-                          <Link href={`/pages/admin/dashboard/staff/${staff.uuid}`}>
-                            <button className={`${styles.button} ${styles.view}`}>
-                              View
-                            </button>
-                          </Link>
-                          <button
-                            className={`${styles.button} ${styles.delete}`}
-                            onClick={() => handleDeleteStaff(staff.uuid, fullName)}
-                            disabled={deleting === staff.uuid}
-                          >
-                            {deleting === staff.uuid ? 'Deleting...' : 'Delete'}
-                          </button>
-                        </div>
+                      <Link href={`/pages/staff/${staff.uuid}/dashboard`}>
+                        <button
+                          className={`${styles.button} ${styles.view}`}
+                          onClick={() => {
+                            console.log("clicked this", staff.uuid)
+                            }}
+                        >
+                          View
+                        </button>
+                      </Link>
+
                       </td>
                     </tr>
                   );

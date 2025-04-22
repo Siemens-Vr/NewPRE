@@ -1,47 +1,46 @@
+/* Base styles */
 .container {
-  background-color:#ff7211;
-  padding: 20px;
+  background-color: #ff7211;
+  padding: 10px;
   border-radius: 10px;
   display: flex;
   gap: 20px;
   cursor: pointer;
   width: 100%;
-  display: flex;
-  height: 150px;
+  height: 100px;
+  flex-direction: row;
+  align-items: center;
+  transition: background-color 0.3s ease;
 }
+
 .cardContainer {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap:5px;
   justify-content: space-around;
   padding: 20px;
 }
 
-/* .container {
- background: #f8f9fa;
- padding: 20px;
- border-radius: 8px;
- text-align: center;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  width: 200px;
-} */
-
-.container:hover{
+/* Hover effect */
+.container:hover {
   background-color: #000000;
 }
 
+/* Text styles */
 .texts {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.title{
+.title,
+.number {
   color: white;
 }
+
 .number {
   font-size: 24px;
   font-weight: 500;
-  color: white;
 }
 
 .detail {
@@ -56,26 +55,80 @@
 .negative {
   color: red;
 }
-/* Assign different colors */
+
+/* Card color variations */
 .color1 {
   background-color: #ff7211;
 }
-
-.color2 {
-  background-color: #1b9392;
-}
-
+.color2,
 .color3 {
   background-color: #1b9392;
 }
-
 .color4 {
   background-color: #ff7211;
 }
-.color1 .color3 :hover {
+
+/* Individual hover effects for colored cards */
+.color1:hover,
+.color3:hover {
   background-color: #1b9392;
 }
-.color2 .color4{
 
+.color2:hover,
+.color4:hover {
   background-color: #ff7211;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .cardContainer {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .container {
+    flex: 1 1 calc(50% - 20px);
+    height: auto;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex: 1 1 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .texts {
+    gap: 8px;
+  }
+
+  .number {
+    font-size: 20px;
+  }
+
+  .detail {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardContainer {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .container {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .number {
+    font-size: 18px;
+  }
+
+  .detail {
+    font-size: 12px;
+  }
 }

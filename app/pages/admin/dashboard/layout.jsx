@@ -7,11 +7,12 @@ import styles from   '@/app/styles/dashboards/dashboard.module.css'
 const Layout = ({children}) => {
   return (
     <div className={styles.container}>
-        <div className={styles.menu}>
+      <div className={styles.menu}>
         <Sidebar dashboardType="admin" />
         </div>
-       <div className={styles.content}>
+        <div className={styles.content}>
         <Navbar/>
+        <h1 className={styles.texts}> Dasboard</h1>
         {children}
         {/*<Footer/>*/}
        </div>

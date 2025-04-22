@@ -1,11 +1,11 @@
 import styles from '../../styles/students/facilitators.module.css';
 
 const instructors = [
-    { name: "Instructor One", img: "/noavatar.png" },
-    { name: "Instructor Two", img: "/noavatar.png" },
-    { name: "Instructor Three", img: "/noavatar.png" },
-    { name: "Instructor Four", img: "/noavatar.png" },
-    { name: "Instructor Five", img: "/noavatar.png" },
+    { name: "Maxwel Magoi", img: "/maxwel.jpg" },
+    { name: "Edwin Ngari", img: "/edwin.png" },
+    { name: "Blair Carson", img: "/blair.jpeg" },
+    { name: "Victor Kanumbi", img: "/victor.jpg" },
+    { name: "Charles Murage", img: "/murage.jpg" },
 ];
 
 const InstructorsAndNotice = () => {

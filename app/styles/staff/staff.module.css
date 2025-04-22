@@ -20,9 +20,26 @@
     cursor: pointer;
   }
   
-  .table{
+  .table {
     width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+    border-collapse: collapse; 
   }
+
+  .table thead td{
+    background-color: #1B9392;
+    color: white;
+  }
+
+  /* Styling the table rows */
+  .table tbody tr:nth-child(odd) {
+    background-color: white;
+  }
+  
+  .table tbody tr:nth-child(even) {
+    background-color: #f0f0f0; 
+  }
+
   .tables{
     background-color: #c6e7e7;
   }

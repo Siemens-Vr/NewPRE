@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import ProjectCard from '@/app/components/project/projectCard';
 import styles from '@/app/styles/dashboards/project/dashboard.module.css';
-// import style from "@/app/styles/project/project/project.module.css";
+import style from "@/app/styles/project/project/project.module.css";
 import Spinner from "@/app/components/spinner/spinner";
 import { config } from "/config";
 import Swal from 'sweetalert2';
@@ -271,8 +271,8 @@ const result = await Swal.fire({
             <div className={styles.mainContent}>
                 <header className={styles.header}>
                     <h1>Project Management Dashboard</h1>
-                     {successMessage && <p className={style.successMessage}>{successMessage}</p>}
-                    {errorMessage && <p className={style.errorMessage}>{errorMessage}</p>} 
+                     {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
+                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>} 
                     <div className={styles.controls}>
                         <input
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -470,7 +470,7 @@ const result = await Swal.fire({
                                 onClick={() => setShowProjectInput(false)}
                                 className={style.closeButton1}
                             >
-                                Cancel
+                                X
 
                             </button>
                          

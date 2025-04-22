@@ -12,7 +12,7 @@ const Layout = ({children}) => {
 
     <div className={styles.container}>
 
-      <div className={styles.content}>
+      <div className={styles.allContents}>
         <DropDown/>
 
         {children}

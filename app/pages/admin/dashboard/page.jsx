@@ -16,24 +16,15 @@ const Dashboard = () => {
   return (
       <div className={styles.wrapper}>
           {/* <div className={styles.menu}> */}
-              <div className={styles.contents}>
 
-              <div className={styles.studentCard}>
-                  <div className={styles.cards}>
-                      {cards.map((item) => (
-                          <Card item={item} key={item.id}/>
-                      ))}
-                  </div>
-              </div>
+              <div className={styles.studentMain}>
+              <div className={styles.card}>
+      {cards.map((item) => (
+        <Card item={item} key={item.id} />
+      ))}
+    </div>
+    <div className={styles.view}>
                   <Chart/>
-
-          {/* </div> */}
-              <div className={styles.calendars}>
-              <CalendarComponent/>
-          {/*<div className={style.container}>*/}
-          {/*    /!*<Rightbar />*!/*/}
-          {/*</div>*/}
-             <div className={styles.commonlink}>
                   <div className={styles.containercards}>
                       <h1 className={styles.text}>Projects</h1>
                       <div className={styles.card}>
@@ -42,14 +33,19 @@ const Dashboard = () => {
                           ))}
                       </div>
                   </div>
+                  </div>
+
+          {/* </div> */}
+             <div className={styles.commonlink}>
                  <CommonLinks/>
              </div>
+            
+
               </div>
-
-
+              <div className={styles.side}>
+    <Rightbar />
+  </div>
           </div>
-
-      </div>
   );
 };
 

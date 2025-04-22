@@ -75,3 +75,14 @@
 .deleteButton {
     color: red;
 }
+
+.actionButton {
+  background-color: #1b9392;
+  color: white;
+  padding: 8px 16px; 
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 15px;
+}

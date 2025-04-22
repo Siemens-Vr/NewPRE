@@ -5,6 +5,7 @@ import { config } from "/config";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
+import style from "@/app/styles/project/project/milestone.module.css"
 
 const UpdateOutputPopup = ({ output, onClose, onSave }) => {
 const params = useParams();
@@ -77,7 +78,7 @@ const params = useParams();
         <div className={styles.overlay}>
             <div className={styles.popup}>
                 <div className={styles.stickyHeader}>
-                    <h2>Update Outputr</h2>
+                    <h2>Update Output</h2>
                 </div>
                 <ToastContainer position="top-center" autoClose={3000} />
                 <form>
@@ -133,8 +134,8 @@ const params = useParams();
 
 
                     <div className={`${styles.stickyButtons} ${styles.buttonGroup}`}>
-                        <button type="button" onClick={handleSave}>Update</button>
-                        <button type="button" onClick={onClose}>Cancel</button>
+                        <button type="button" className={style.addButton1} onClick={handleSave}>Update</button>
+                        <button type="button" className={style.closeButton1} onClick={onClose}>X</button>
                     </div>
                 </form>
             </div>

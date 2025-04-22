@@ -69,7 +69,7 @@ const Expenses = () => {
         <div className="mb-6">
           <Navbar />
         </div>
-        <div className="flex justify-center items-center gap-8 flex-wrap">
+        <div className="flex justify-start items-center gap-8 flex-wrap">
           <ExpenseCard
               name="Transport"
               icon={<FaCar />}

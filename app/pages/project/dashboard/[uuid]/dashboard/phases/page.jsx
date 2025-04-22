@@ -519,7 +519,7 @@ const Phases = () => {
                                 onClick={() => setEditPhaseData(null)}
                                 className={styles.closeButton1}
                             >
-                                Cancel
+                                X
                             </button>
                             
                            

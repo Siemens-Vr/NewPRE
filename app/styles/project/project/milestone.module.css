@@ -4,7 +4,6 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 0px;
-    margin-left: 20px;
 }
 .phases 
 .top1{
@@ -53,8 +52,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 22px;
-    padding-top: 12px;
-    padding-left: 22px;
 }
 
 .milestone {

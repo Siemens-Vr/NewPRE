@@ -212,11 +212,9 @@ const StudentsPage = () => {
     return (
       <div className={styles.container}>
         <div className={styles.top}>
-          <div className={styles.filterSection}>
-            <div className={styles.horizontalFilters}>
-              <div className={styles.filterField}>
-
-                <div className={styles.filterField}>
+          <div>
+            <div className={styles.filterField}>
+                <div className={styles.horizontalFilters}>
                   <label htmlFor="filterType" className={styles.text}>Filter by:</label>
                   <select
                       id="filterType"
@@ -229,17 +227,13 @@ const StudentsPage = () => {
                     <option value="level">Level</option>
                     <option value="kcseNo">KCSE No</option>
                   </select>
-                </div>
-
-                <div className={styles.filterField}>
                   <input
                       type="text"
                       placeholder={`Enter ${selectedFilter}`}
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
                   />
-                </div>
-                <button
+                   <button
                     className={styles.filterButton}
                     onClick={() => {
                       setFilters((prev) => {
@@ -260,24 +254,20 @@ const StudentsPage = () => {
                 >
                   Search
                 </button>
-
-
-                {/*< div className={styles.search}>*/}
-                {/*  <Search placeholder="Search for a student..."/>*/}
-                {/*</div>*/}
-                {/*<div className={styles.buttonsGroup}>*/}
+                </div>
+                <div className={styles.filterField}>
                 <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
-                {/* Button to open the "Add New" student popup */}
                 <button onClick={handleAddNewClick} className={styles.addButton}>
                   Add New
                 </button>
+                </div>
+                </div>              
 
                 {/* Conditionally render the Add New Student Popup */}
                 {showAddNewPopup && (
                     <AddStudentPage onClose={handleClosePopup}/>
                 )}
-              </div>
-            </div>
+         
             {/*</div>*/}
           </div>
         </div>

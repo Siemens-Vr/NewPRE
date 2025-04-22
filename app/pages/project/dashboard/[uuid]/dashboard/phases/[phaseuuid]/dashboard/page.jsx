@@ -48,12 +48,7 @@ const OutputsList = () => {
                 console.error("Failed to fetch outputs");
             }
         } catch (error) {
-
-
             console.error("Error fetching outputs:", error);
-
-
-//             console.error("Error fetching outputs:", error);
         } finally {
             setLoading(false);
         }
@@ -184,7 +179,6 @@ const OutputsList = () => {
 
     return (
 
-
                 <div className={styles.container}>
                     {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
                     <div className={styles.top}>
@@ -284,7 +278,7 @@ const OutputsList = () => {
                                         onClick={() => setShowOutputInput(false)}
                                         className={style.closeButton1}
                                     >
-                                        Cancel
+                                      X
                                     </button>
                                     <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
                                         {isAdding ? "Adding..." : "Add"}
@@ -292,121 +286,6 @@ const OutputsList = () => {
 
                                 </div>
                             </div>
-
-//         <div className={styles.container}>
-//           {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
-//             <div className={styles.top}>
-//                 <Search placeholder="Search for an output..." />
-//                 <button onClick={() => setShowOutputInput(true)} disabled={isAdding} className={styles.addBtn}>Add
-
-//            </button>
-
-
-//             </div>
-//             {Array.isArray(outputs) && outputs.length > 0 ? (
-//                 <table className={styles.table}>
-//                     <thead>
-//                         <tr>
-//                             <td className={styles.th}>Output Name</td>
-//                             <td className={styles.th}>Description</td>
-//                             <td className={styles.th}>Status</td>
-//                             <td className={styles.th}>Completion Date</td>
-//                             <td className={styles.th}>Action</td>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {outputs.map((output) => (
-//                             <tr key={output.id}>
-//                                 <td>{output.name}</td>
-//                                 <td>{output.description}</td>
-//                                 <td>{output.status}</td>
-//                                 <td>{formatDate(output.completionDate)}</td>
-
-//                                 <td>
-//                                     <ActionButton
-//                                         onEdit={() => handleUpdateClick(output)}
-//                                         onDelete={() => handleDelete(output.uuid, output.name)}
-//                                         onView={() => handleView(output.uuid)}   
-//                                     />
-//                                 </td>
-//                             </tr>
-//                         ))}               
-//                     </tbody>
-//                 </table>
-//             ) : (
-//                 <p className={styles.noItem}>No output available</p>
-//             )}
-//             <Pagination count={count} />
-//             <AddOutputModal isModalOpen={isModalOpen} closeModal={closeModal} addOutput={addOutput} />
-//             {showOutputInput && (
-//                 <div className={style.modalOverlay}>
-//                     <div className={style.modalContent}>
-//                         <h3>Add Output</h3>
-//                         <div className={style.divInput}>
-//                             <label htmlFor="Name">Name</label>
-//                             <input
-//                                 type="text"
-//                                 value={newOutput.name}
-//                                 onChange={(e) => setNewOutput({ ...newOutput, name: e.target.value })}
-//                                 placeholder="Output Name"
-//                                 required
-//                                 className={style.inputField}
-//                             />
-//                         </div>
-//                         <div className={style.divInput}>
-//                             <label htmlFor="Completion Date">Completion Date</label>
-//                             <input
-//                                 type="date"
-//                                 value={newOutput.completionDate}
-//                                 onChange={(e) =>
-//                                     setNewOutput({ ...newOutput, completionDate: e.target.value })
-//                                 }
-//                                 required
-//                                 className={style.inputField}
-//                             />
-//                         </div>
-//                         <div className={style.divInput}>
-//                         <label htmlFor="Status">Status</label>
-//                         <select
-//                             value={newOutput.status}
-//                             onChange={(e) =>
-//                                 setNewOutput({ ...newOutput, status: e.target.value })
-//                             }
-//                             className={style.inputField}
-//                         >
-//                             <option value="">Select Status</option>
-//                             <option value="todo">To Do</option>
-//                             <option value="progress">In Progress</option>
-//                             <option value="completed">Completed</option>
-//                         </select>
-//                         </div>
-//                         <div className={style.divInput}>
-//                             <label htmlFor="description">Description</label>
-//                             <input
-//                                 type="text"
-//                                 value={newOutput.description}
-//                                 onChange={(e) => setNewOutput({ ...newOutput, description: e.target.value })}
-//                                 className={style.inputField}
-//                                 required
-//                             />
-//                         </div>
-//                         <div className={style.modalActions}>
-
-//                         <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
-//                                 {isAdding ? "Adding..." : "Add"}
-//                             </button>
-                            
-
-//                         <button
-//                                 onClick={() => setShowOutputInput(false)}
-//                                 className={style.closeButton1}
-//                             >
-
-//                                 X
-//                             </button>                        
-
-                            
-
                         </div>
                     )}
 

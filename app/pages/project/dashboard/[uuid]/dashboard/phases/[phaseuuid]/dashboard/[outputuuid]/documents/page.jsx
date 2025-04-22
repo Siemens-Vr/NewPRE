@@ -1055,7 +1055,7 @@ const handleClickOutside = (event) => {
             <div className={styles.inputDocumentHeader}>
             <div className={styles.inputDocumentHeaderLeft}>
                 {state.breadcrumbs.length > 0 && (
-                    <button className=" flex gap-2 p-4 justify-center align-center"onClick={handleBackToParent}>
+                    <button className=" flex gap-2  justify-center align-center"onClick={handleBackToParent}>
                         <FaArrowLeft className='w-8'/> 
                     </button>
                 )}
@@ -1070,10 +1070,10 @@ const handleClickOutside = (event) => {
             </div>
             </div>
 
-            <div className="flex flex-wrap gap-4 justify-start items-start p-4 md:gap-3 sm:gap-2 ">
+            <div className="flex flex-wrap gap-4 justify-start items-start md:gap-3 sm:gap-2 ">
             {/* Folders Section */}
             <div className="w-full">
-                <h2 className="text-lg font-semibold text-white mb-2">Folders</h2>
+                <h2 className="text-lg font-semibold text-black mb-2">Folders</h2>
                 <div className="flex flex-wrap gap-4">
                 {renderFolders()}
                 </div>
@@ -1081,7 +1081,7 @@ const handleClickOutside = (event) => {
 
             {/* Files Section */}
             <div className="w-full">
-                <h2 className="text-lg font-semibold text-white mt-6 mb-2">Files</h2>
+                <h2 className="text-lg font-semibold text-black mt-3 ">Files</h2>
                 <div className="flex flex-wrap gap-4">
                 {renderFiles()}
                 </div>

@@ -13,7 +13,7 @@ const Layout = ({children}) => {
       </div>
       <div className={styles.content}>
         {children}
-        <Footer/>
+        {/* <Footer/> */}
       </div>
     </div>
   )

@@ -1,8 +1,6 @@
 .container {
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    padding: 20px;
-    /*background: #1b9392;*/
+
+    margin-top: 20px;
     border-radius: 8px;
 }
 
@@ -10,6 +8,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    justify-content: space-between;
     /*background: white;*/
     /*!*padding: 20px;*!*/
     border-radius: 10px;
@@ -19,24 +18,25 @@
 .filterSection {
     display: flex;
     flex-wrap: wrap;
-  margin-left: 400px;
     align-items: center;
     justify-content: space-between;
-    /*height: 50px;*/
+    gap: 20px;
 }
 .horizontalFilters{
     /*height: 50px;*/
+    justify-content: space-between;
+    gap: 20px;
+
 }
 .filterField{
     height: 50px;
+    justify-content: space-between;
+    gap: 20px;
 }
 .text{
     font-size: 10px;
 }
 @media screen and (min-width: 1545px) {
-    .filterSection {
-        margin-left: 900px;
-    }
 }
 .filterField {
     display: flex;
@@ -44,12 +44,14 @@
     gap: 20px;
 }
 
+
 .filterField label {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 5px;
     align-items: center;
     margin-top: 10px;
+    margin-right: 10px;
 }
 
 .filterField select,
@@ -58,6 +60,7 @@
     border: 1px solid #d1d5db;
     border-radius: 5px;
     outline: none;
+    margin-right: 10px;
 }
 
 .filterButton {

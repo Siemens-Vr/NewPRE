@@ -6,9 +6,11 @@
   }
   
   .top{
+    margin-top: -12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 12px;
   }
   
   .addButton{
@@ -73,11 +75,15 @@
   }
   
   .view{
-    background-color: teal;
+    background-color: #c6e7e7;
+  }
+
+  .view:hover{
+    background-color: #1B9392;
   }
   
   .delete{
-    background-color: crimson;
+    background-color: #ff7211;
   }
   .loader{
     text-align: center;

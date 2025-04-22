@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/staff/staff.module.css'
+import AddStaffPage from "@/app/components/staff/addStaff";
 import Link from "next/link";
 import Search from '@/app/components/search/search'
 import Swal from 'sweetalert2';
@@ -14,6 +15,8 @@ const StaffPage = () => {
   const [deleting, setDeleting] = useState(null); // Stores the UUID of the staff being deleted
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
+  const [staff, setAddStaff] = useState(false);
+  
 
   useEffect(() => {
     const fetchStaffs = async () => {
@@ -88,10 +91,14 @@ const StaffPage = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <Search placeholder="Search for a staff..." />
-        <Link href="/pages/admin/dashboard/staff/add">
-          <button className={styles.addButton}>Add New</button>
-        </Link>
+       
+
+        <button onClick={() => setAddStaff(true)} className={styles.addButton}>
+          Add New
+        </button>
+
       </div>
+
       {loading ? (
         <p className={styles.loader}>Loading staff members...</p>
       ) : (
@@ -142,9 +149,14 @@ const StaffPage = () => {
                 })}
               </tbody>
             </table>
+
+             
           ) : (
             <p className={styles.noStudents}>No staff members available</p>
           )}
+
+          {staff && <AddStaffPage onClose={() => setAddStaff(false)} />}
+
         </>
       )}
     </div>

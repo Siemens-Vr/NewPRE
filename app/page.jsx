@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.topCircle}></div>
-      {/* <div className={styles.bottomCircle}></div>
-      <div className={styles.smallCircle}></div> */}
+      <div className={styles.bottomCircle}></div>
+      <div className={styles.smallCircle}></div>
       <div className={styles.cloudShape}></div>
 
       <div className={styles.imageSection}>

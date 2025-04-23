@@ -43,7 +43,7 @@
     border-radius: 50%;
   }
   
-  .cloudShape {
+  /* .cloudShape {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -55,7 +55,7 @@
   border-top-left-radius: 100% 50%;
   z-index: 0;
   opacity: 0.8;
-  }
+  } */
   .bottomCircle {
     position: absolute;
     bottom: -2px;

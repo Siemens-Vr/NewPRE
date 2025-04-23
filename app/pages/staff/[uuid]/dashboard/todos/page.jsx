@@ -9,36 +9,36 @@ const TodoPage = () => {
   const params = useParams();
   const { uuid } = params;
   const [showModal, setShowModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [mode, setMode] = useState("add"); // "add" or "update"
   const [currentDate, setCurrentDate] = useState("");
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState({});
 
-  const handleOpenModal = () => {
-    const today = new Date().toISOString().split("T")[0];
-    setCurrentDate(today);
+  const openModal = (type, date = new Date().toISOString().split("T")[0]) => {
+    setMode(type);
+    setCurrentDate(date);
+    setTaskInput("");
     setTasks([]);
     setShowModal(true);
-  };
 
-  const handleOpenUpdateModal = async (date) => {
-    setCurrentDate(date);
-    try {
-      const response = await fetch(`${config.baseURL}/todos/${uuid}`);
-      const data = await response.json();
-      const filteredTasks = (data[date] || []).map((task) => ({
-        task: task.todo,
-        status: task.status,
-        uuid: task.uuid,
-        date,
-      }));
-      setTasks(filteredTasks);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-      setTasks([]);
+    if (type === "update") {
+      fetch(`${config.baseURL}/todos/${uuid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const filtered = (data[date] || []).map((task) => ({
+            task: task.todo,
+            status: task.status,
+            uuid: task.uuid,
+            date,
+          }));
+          setTasks(filtered);
+        })
+        .catch((err) => {
+          console.error("Error fetching tasks:", err);
+          setTasks([]);
+        });
     }
-    setShowUpdateModal(true);
   };
 
   const handleAddTask = () => {
@@ -81,7 +81,6 @@ const TodoPage = () => {
 
       await loadAllTodos();
       setShowModal(false);
-      setShowUpdateModal(false);
     } catch (error) {
       console.error("Error processing tasks:", error);
     }
@@ -91,7 +90,6 @@ const TodoPage = () => {
     const updatedTodos = [...todos[date]];
     const task = updatedTodos[index];
     task.status = !task.status;
-
     setTodos({ ...todos, [date]: updatedTodos });
 
     try {
@@ -122,7 +120,7 @@ const TodoPage = () => {
   return (
     <div className={style.pageContainer}>
       <div className="flex justify-end">
-        <button className={style.applyButton} onClick={handleOpenModal}>
+        <button className={style.applyButton} onClick={() => openModal("add")}>
           Add To-Do
         </button>
       </div>
@@ -136,12 +134,11 @@ const TodoPage = () => {
               <h3>{date}</h3>
               <button
                 className={styles.editButton}
-                onClick={() => handleOpenUpdateModal(date)}
+                onClick={() => openModal("update", date)}
               >
                 Update
               </button>
             </div>
-
             <ul>
               {todos[date].map((task, index) => (
                 <li
@@ -165,84 +162,25 @@ const TodoPage = () => {
         ))}
       </div>
 
-      {/* Update Modal */}
-      {showUpdateModal && (
-        <div className={style.modalOverlay} onClick={() => setShowUpdateModal(false)}>
-          <div className={style.modalContainer} onClick={(e) => e.stopPropagation()}>
-            <button
-              className={style.closeButton}
-              onClick={() => setShowUpdateModal(false)}
-            >
-              &times;
-            </button>
-            <h2 className={styles.h2}>Update Tasks for {currentDate}</h2>
-
-            <input
-              type="text"
-              placeholder="Enter task..."
-              value={taskInput}
-              onChange={(e) => setTaskInput(e.target.value)}
-              className={styles.inputField}
-            />
-
-            <ul>
-              {tasks.map((task, index) => (
-                <li key={index} className="flex justify-between items-center mb-2">
-                  <input
-                    type="text"
-                    value={task.task}
-                    onChange={(e) => {
-                      const updated = [...tasks];
-                      updated[index].task = e.target.value;
-                      setTasks(updated);
-                    }}
-                    className="border p-1 rounded w-4/5"
-                  />
-                  <button
-                    onClick={() => {
-                      const updated = [...tasks];
-                      if (updated[index].uuid) {
-                        updated[index].markedForDeletion = true;
-                      } else {
-                        updated.splice(index, 1);
-                      }
-                      setTasks(updated);
-                    }}
-                    className="text-red-500 font-bold ml-2"
-                  >
-                    X
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            <div className={styles.buttonContainer}>
-              <button onClick={handleAddTask} className={styles.addTaskButton}>
-                Add Task
-              </button>
-              <button onClick={handleSaveTasks} className={styles.saveButton}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Modal */}
       {showModal && (
         <div className={style.modalOverlay} onClick={() => setShowModal(false)}>
           <div className={style.modalContainer} onClick={(e) => e.stopPropagation()}>
             <button className={style.closeButton} onClick={() => setShowModal(false)}>
               &times;
             </button>
-            <h2 className={styles.h2}>Add Tasks</h2>
+            <h2 className={styles.h2}>
+              {mode === "add" ? "Add Tasks" : `Update Tasks for ${currentDate}`}
+            </h2>
 
-            <input
-              type="date"
-              value={currentDate}
-              onChange={(e) => setCurrentDate(e.target.value)}
-              className={styles.inputField}
-            />
+            {mode === "add" && (
+              <input
+                type="date"
+                value={currentDate}
+                onChange={(e) => setCurrentDate(e.target.value)}
+                className={styles.inputField}
+              />
+            )}
+
             <input
               type="text"
               placeholder="Enter task..."
@@ -254,9 +192,60 @@ const TodoPage = () => {
 
             <ul>
               {tasks.map((task, index) => (
-                <li key={index}>{task.task}</li>
+                !task.markedForDeletion && (
+                  <li key={index} className="flex justify-between items-center mb-2">
+                    <input
+                      type="text"
+                      value={task.task}
+                      onChange={(e) => {
+                        const updated = [...tasks];
+                        updated[index].task = e.target.value;
+                        setTasks(updated);
+                      }}
+                      className="border p-1 rounded w-4/5"
+                    />
+                    <button
+                      onClick={() => {
+                        const updated = [...tasks];
+                        if (updated[index].uuid) {
+                          updated[index].markedForDeletion = true;
+                        } else {
+                          updated.splice(index, 1);
+                        }
+                        setTasks(updated);
+                      }}
+                      className="text-red-500 font-bold ml-2"
+                    >
+                      X
+                    </button>
+                  </li>
+                )
               ))}
             </ul>
+
+            {tasks.some((t) => t.markedForDeletion) && (
+              <>
+                <h4 className="text-sm mt-4 text-red-600">Tasks marked for deletion:</h4>
+                <ul>
+                  {tasks.filter((t) => t.markedForDeletion).map((task, index) => (
+                    <li key={index} className="flex justify-between items-center mb-2 text-red-500">
+                      <span className="line-through">{task.task}</span>
+                      <button
+                        onClick={() => {
+                          const updated = [...tasks];
+                          const i = tasks.findIndex((t) => t.uuid === task.uuid);
+                          updated[i].markedForDeletion = false;
+                          setTasks(updated);
+                        }}
+                        className="text-green-500 font-bold ml-2"
+                      >
+                        Undo
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
 
             <div className={styles.buttonContainer}>
               <button

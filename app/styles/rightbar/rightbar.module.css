@@ -3,7 +3,7 @@
 }
 
 .item {
-  background: linear-gradient(to top, #182237, #253352);
+  background: linear-gradient(to bottom, #c2f3f3, #4fa9a9);
   padding: 20px 24px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -34,13 +34,13 @@
 }
 
 .subtitle {
-  color: var(--textSoft);
+  color: gray;
   font-weight: 500;
   font-size: 12px;
 }
 
 .desc {
-  color: var(--textSoft);
+  color: rgb(36, 35, 35);
   font-size: 14px;
 }
 
@@ -50,7 +50,7 @@
   align-items: center;
   gap: 10px;
   width: max-content;
-  background-color: #5d57c9;
+  background-color: #ff7211;
   color: white;
   border: none;
   border-radius: 5px;

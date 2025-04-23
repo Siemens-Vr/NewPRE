@@ -35,9 +35,9 @@ const Dashboard = () => {
   </div>
 
   {/* Right Sidebar */}
-  <div className={styles.side}>
+  {/* <div className={'${styles.side} hidden lg:block'}>
     <Rightbar />
-  </div>
+  </div> */}
 </div>
 
   );

@@ -10,18 +10,18 @@ const Rightbar = () => {
           <Image className={styles.bg} src="/astronaut.png" alt="" fill />
         </div>
         <div className={styles.text}>
-          <span className={styles.notification}>🔥 Available Now</span>
+          <span className={styles.notification}>Ongoing Training🔥</span>
           <h3 className={styles.title}>
-            How to use the new version of the admin dashboard?
+          Siemens Mechatronic Systems Certification Program (SMSCP) Level 1 & 2 ongoing training
           </h3>
-          <span className={styles.subtitle}>Takes 4 minutes to learn</span>
+          {/* <span className={styles.subtitle}>Takes 4 minutes to learn</span> */}
           <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Reprehenderit eius libero perspiciatis recusandae possimus.
+          From mastering PLCs and robotics to real-world troubleshooting and system-smart thinking, our trainees are diving deep into globally 
+          recognized mechatronic skills that bridge theory with industry.
           </p>
           <button className={styles.button}>
             <MdPlayCircleFilled />
-            Watch
+            Apply
           </button>
         </div>
       </div>
@@ -29,10 +29,9 @@ const Rightbar = () => {
         <div className={styles.text}>
           <span className={styles.notification}>🚀 Coming Soon</span>
           <h3 className={styles.title}>
-            New server actions are available, partial pre-rendering is coming
+            New staff portal is available, partial personalization is coming
             up!
           </h3>
-          <span className={styles.subtitle}>Boost your productivity</span>
           <p className={styles.desc}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
             Reprehenderit eius libero perspiciatis recusandae possimus.

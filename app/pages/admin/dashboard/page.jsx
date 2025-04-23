@@ -24,14 +24,14 @@ const Dashboard = () => {
       </div>
     <div className={styles.view}>
                   <Chart/>
-                  <div className={styles.containercards}>
+                   <div className={styles.containercards}>
                       <h1 className={styles.text}>Projects</h1>
-                      <div className={styles.card}>
-                          {projectdata.map((item) => (
-                              <ProjectCard item={item} key={item.id}/>
-                          ))}
+                     <div className={styles.card}>
+                        {projectdata.map((item) => (
+                            <ProjectCard item={item} key={item.id}/>
+                        ))}
                       </div>
-                  </div>
+                  </div> 
                   </div>
 
           {/* </div> */}
@@ -41,9 +41,9 @@ const Dashboard = () => {
             
 
               </div>
-              <div className={styles.side}>
-    <Rightbar />
-  </div>
+              <div className={`${styles.side} hidden 2xl-custom:block`}>
+  <Rightbar />
+</div>
           </div>
   );
 };

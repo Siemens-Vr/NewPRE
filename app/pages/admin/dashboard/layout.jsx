@@ -14,7 +14,7 @@ const Layout = ({children}) => {
         <Navbar/>
         <h1 className={styles.texts}> Dasboard</h1>
         {children}
-        {/*<Footer/>*/}
+        {/* <Footer/> */}
        </div>
     </div>
    

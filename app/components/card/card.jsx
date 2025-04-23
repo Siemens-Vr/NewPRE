@@ -9,11 +9,11 @@ const Card = ({ item }) => {
             <div className={styles.texts}>
                 <span className={styles.title}>{item.title}</span>
                 <span className={styles.number}>{item.number}</span>
-        {/*        <span*/}
-        {/*            className={item.change > 0 ? styles.positive : styles.negative}*/}
-        {/*        >*/}
-        {/*  {item.change > 0 ? `+${item.change}%` : `${item.change}%`}*/}
-        {/*</span>*/}
+               {/* <span
+                   className={item.change > 0 ? styles.positive : styles.negative}
+               >
+         {item.change > 0 ? `+${item.change}%` : `${item.change}%`}
+        </span> */}
             </div>
         </div>
     );

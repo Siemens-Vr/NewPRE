@@ -35,9 +35,11 @@ const Dashboard = () => {
   </div>
 
   {/* Right Sidebar */}
-  {/* <div className={'${styles.side} hidden lg:block'}>
-    <Rightbar />
-  </div> */}
+  <div className={`${styles.side} hidden 2xl-custom:block`}>
+  <Rightbar />
+</div>
+
+
 </div>
 
   );

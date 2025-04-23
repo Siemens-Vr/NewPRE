@@ -20,13 +20,14 @@ const Dashboard = () => {
         {/* <Transactions /> */}
         <div className={styles.view}>
         <Chart /> 
+        <CalendarComponent/>
           </div>
           <div>
-            <CalendarComponent/>
+           
 
           </div>
       </div>
-      <div className={`${styles.side} hidden lg:block`}>
+      <div className={`${styles.side} hidden 2xl-custom:block`}>
   <Rightbar />
 </div>
 

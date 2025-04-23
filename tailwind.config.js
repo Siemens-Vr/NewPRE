@@ -6,7 +6,11 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}', // If you're using the new app directory in Next.js 13
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        '2xl-custom': '1650px',
+      },
+    },
   },
   plugins: [],
 }

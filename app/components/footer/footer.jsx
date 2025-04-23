@@ -14,7 +14,7 @@
 
 const Footer = () => {
   return (
-    <div className="flex items-center justify-start text-[#4fa9a9] ml-[-20px] gap-x-[709px]">
+    <div className="flex items-center ml-3 justify-start text-[#4fa9a9] ml-[-20px] gap-x-[709px]">
       <div className="font-bold">Siemens Erp</div>
       <div className="text-xs">© All rights reserved.</div>
     </div>

@@ -80,6 +80,7 @@
 
   .view:hover{
     background-color: #1B9392;
+    color: white;
   }
   
   .delete{

@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation'; // Use useSearchParams for qu
 import styles from '@/app/styles/borrow/add/borrowForm.module.css';
 import { config } from '/config';
 
+
 const BorrowForm = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id'); // Get the 'id' from the query parameters
@@ -125,6 +126,8 @@ const BorrowForm = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         {!id && (
           <>
+           <div className={styles.divInput}>
+          <label htmlFor="componentType">Component Type</label>
             <select 
               name="componentType" 
               value={formData.componentType}
@@ -137,7 +140,9 @@ const BorrowForm = () => {
                 </option>
               ))}
             </select>
-
+            </div>
+            <div className={styles.divInput}>
+            <label htmlFor="componentUUID">Component</label>
             <select 
               name="componentUUID" 
               value={formData.componentUUID}
@@ -150,9 +155,12 @@ const BorrowForm = () => {
                 </option>
               ))}
             </select>
+            </div>
           </>
         )}
         
+         <div className={styles.divInput}>
+        <label htmlFor="quantity">Quantity</label>
             <input 
           type="number" 
           name="quantity" 
@@ -160,14 +168,22 @@ const BorrowForm = () => {
           onChange={handleChange} 
           placeholder="quantity" 
         />
+        </div>
 
-        <input 
-          type="text" 
-          name="fullName" 
-          value={formData.fullName} 
-          onChange={handleChange} 
-          placeholder="Full Name" 
-        />
+        <div className={styles.divInput}>
+  <label htmlFor="fullName" className={styles.label}>Full Name</label>
+  <input 
+    type="text" 
+    id="fullName"
+    name="fullName" 
+    value={formData.fullName} 
+    onChange={handleChange} 
+    placeholder="Full Name" 
+  />
+</div>
+
+        <div className={styles.divInput}>
+        <label className={styles.label}>Contact</label>
         <input 
           type="text" 
           name="borrowerContact" 
@@ -175,6 +191,9 @@ const BorrowForm = () => {
           onChange={handleChange} 
           placeholder="Contact" 
         />
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="borrowerID">ID/Registration Number</label>
         <input 
           type="text" 
           name="borrowerID" 
@@ -182,7 +201,9 @@ const BorrowForm = () => {
           onChange={handleChange} 
           placeholder="ID/Registration Number" 
         />
-
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="departmentName">Department</label>
         <select 
           name="departmentName" 
           value={formData.departmentName} 
@@ -195,7 +216,9 @@ const BorrowForm = () => {
             </option>
           ))}
         </select>
-        
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="dateOfIssue">Return Date</label>
         <input 
           type="date" 
           name="expectedReturnDate" 
@@ -203,20 +226,25 @@ const BorrowForm = () => {
           onChange={handleChange} 
           placeholder="Expected Return Date" 
         />
-       
+       </div>
+       <div className={styles.divInput}>
+        <label htmlFor="purpose">Purpose</label>
         <textarea 
           name="purpose" 
           value={formData.purpose} 
           onChange={handleChange} 
           placeholder="Purpose"
         />
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="reasonForBorrowing">Reason for Borrowing</label>
         <textarea 
           name="reasonForBorrowing" 
           value={formData.reasonForBorrowing} 
           onChange={handleChange} 
           placeholder="Reason for Borrowing"
         />
-
+</div>
         <button type="submit">Submit</button>
       </form>
       

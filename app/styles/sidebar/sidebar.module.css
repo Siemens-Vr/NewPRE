@@ -3,7 +3,7 @@
   position: sticky;
   top: 0;
   background-color: #1b9392;
-  width: 230px;
+  width: 270px;
   /*height: 850px;*/
   height: 100%;
   padding: 20px;
@@ -22,7 +22,7 @@
 /* Adjust width for large screens */
 @media (min-width: 1800px) {
   .containers {
-    width: 250px;
+    width: 270px;
     padding: 20px;
     height: 100vh;
   }

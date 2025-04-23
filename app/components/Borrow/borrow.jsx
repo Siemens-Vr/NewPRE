@@ -122,72 +122,125 @@ const AddBorrow = ({ onClose, id }) => {
 
         {!id && (
           <>
-            <select name="componentType"
-             value={formData.componentType} 
-             onChange={handleChange}>
+          <div className={styles.divInput}>
+          <label htmlFor="componentType"className={styles.label}>Component Type</label>
+            <select 
+              name="componentType" 
+              value={formData.componentType}
+              onChange={handleChange}
+            >
               <option value="">Select Component Type</option>
-              {componentTypes.map((type, index) => (
-                <option key={index} value={type.componentType}>{type.componentType}</option>
+              {componentTypes.map((componentType, index) => (
+                <option key={index} value={componentType.componentType}>
+                  {componentType.componentType}
+                </option>
               ))}
             </select>
-
-            <select name="componentUUID"
-             value={formData.componentUUID} 
-             onChange={handleChange}>
+            </div>
+            <div className={styles.divInput}>
+            <label htmlFor="componentUUID"className={styles.label}>Component</label>
+            <select 
+              name="componentUUID" 
+              value={formData.componentUUID}
+              onChange={handleChange}
+            >
               <option value="">Select the Component</option>
               {components.map((component, index) => (
-                <option key={index} value={component.uuid}>{component.componentName}</option>
+                <option key={index} value={component.uuid}>
+                  {component.componentName}
+                </option>
               ))}
             </select>
+            </div>
           </>
         )}
 
-        <input type="number" 
-        name="quantity" 
-         value={formData.quantity} 
-         onChange={handleChange}
-          placeholder="Quantity" />
+<div className={styles.divInput}>
+        <label htmlFor="quantity"className={styles.label}>Quantity</label>
+            <input 
+          type="number" 
+          name="quantity" 
+          value={formData.quantity} 
+          onChange={handleChange} 
+          placeholder="quantity" 
+        />
+        </div>
 
-        <input type="text" 
-        name="fullName" 
-        value={formData.fullName} 
-        onChange={handleChange} 
-        placeholder="Full Name" />
+        <div className={styles.divInput}>
+  <label htmlFor="fullName" className={styles.label}>Full Name</label>
+  <input 
+    type="text" 
+    id="fullName"
+    name="fullName" 
+    value={formData.fullName} 
+    onChange={handleChange} 
+    placeholder="Full Name" 
+  />
+</div>
 
-        <input type="text" 
-        name="borrowerContact"
-         value={formData.borrowerContact} 
-         onChange={handleChange} 
-         placeholder="Contact" />
-
-        <input type="text"
-         name="borrowerID" 
-         value={formData.borrowerID} 
-         onChange={handleChange}
-         placeholder="ID/Registration Number" />
-        
-        <select name="departmentName" value={formData.departmentName} onChange={handleChange}>
+        <div className={styles.divInput}>
+        <label className={styles.label}>Contact</label>
+        <input 
+          type="text" 
+          name="borrowerContact" 
+          value={formData.borrowerContact} 
+          onChange={handleChange} 
+          placeholder="Contact" 
+        />
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="borrowerID"className={styles.label}>ID/Registration Number</label>
+        <input 
+          type="text" 
+          name="borrowerID" 
+          value={formData.borrowerID} 
+          onChange={handleChange} 
+          placeholder="ID/Registration Number" 
+        />
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="departmentName"className={styles.label}>Department</label>
+        <select 
+          name="departmentName" 
+          value={formData.departmentName} 
+          onChange={handleChange}
+        >
           <option value="">Select Department</option>
           {departments.map((department, index) => (
-            <option key={index} value={department}>{department}</option>
+            <option key={index} value={department}>
+              {department}
+            </option>
           ))}
         </select>
-
-        <input type="date"
-         name="expectedReturnDate" 
-         value={formData.expectedReturnDate}
-          onChange={handleChange} />
-
-        <textarea name="purpose"
-         value={formData.purpose}
-          onChange={handleChange}
-           placeholder="Purpose" />
-
-        <textarea name="reasonForBorrowing" 
-        value={formData.reasonForBorrowing} 
-        onChange={handleChange} 
-        placeholder="Reason for Borrowing" />
-        
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="dateOfIssue"className={styles.label}>Return Date</label>
+        <input 
+          type="date" 
+          name="expectedReturnDate" 
+          value={formData.expectedReturnDate} 
+          onChange={handleChange} 
+          placeholder="Expected Return Date" 
+        />
+       </div>
+       <div className={styles.divInput}>
+        <label htmlFor="purpose"className={styles.label}>Purpose</label>
+        <textarea 
+          name="purpose" 
+          value={formData.purpose} 
+          onChange={handleChange} 
+          placeholder="Purpose"
+        />
+        </div>
+        <div className={styles.divInput}>
+        <label htmlFor="reasonForBorrowing"className={styles.label}>Reason for Borrowing</label>
+        <textarea 
+          name="reasonForBorrowing" 
+          value={formData.reasonForBorrowing} 
+          onChange={handleChange} 
+          placeholder="Reason for Borrowing"
+        />
+</div>
         <button type="submit" className={styles.submit}>SUBMIT</button>
  
       </form>

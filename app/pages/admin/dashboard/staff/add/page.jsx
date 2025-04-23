@@ -181,7 +181,7 @@ const AddStaffPage = () => {
           />
         </div>
         <div className={styles.buttonContainer}>
-          <button type="submit">Submit</button>
+          <button className={styles.submit1} type="submit">Submit</button>
         </div>
         <ToastContainer />
       </form>

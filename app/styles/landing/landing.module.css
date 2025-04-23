@@ -1,0 +1,78 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f3f4f6; /* Tailwind's bg-gray-100 */
+    position: relative;
+    /* padding: 1rem; */
+  }
+  
+  .imageSection {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .textSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  
+  .topCircle {
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    width: 150px;
+    height: 150px;
+    background-color: #c6e7e7;
+    border-radius: 50%;
+  }
+  .smallCircle {
+    position: absolute;
+    bottom: 120px;
+    right: -18px;
+    width: 100px;
+    height: 100px;
+    background-color: rgb(255, 114, 17);
+    border-radius: 50%;
+  }
+  
+  .cloudShape {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #1b9392;
+    width: 300px;
+  height: 150px;
+  background: radial-gradient(circle at 50% 100%, #93c5fd 60%, transparent 61%);
+  border-top-right-radius: 100% 50%;
+  border-top-left-radius: 100% 50%;
+  z-index: 0;
+  opacity: 0.8;
+  }
+  .bottomCircle {
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    background-color: #1b9392;
+    width: 1200px;
+    height: 200px;
+    border-top-right-radius:0px;
+    border-top-left-radius: 200px;
+    opacity: 0.7;
+  }
+  
+  .image {
+    width: 80%;
+    max-width: 400px;
+    object-fit: contain;
+    margin-top: 180px;
+    margin-left: 250px;
+  }
+  

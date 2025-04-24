@@ -6,6 +6,7 @@ import React, { useState, useEffect} from "react";
 import { useParams } from "next/navigation";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Default styles
+import api, { setAccessToken } from "@/app/lib/utils/axios";
 import { config } from "@/config";
 
 const Card = ({ children }) => (
@@ -29,9 +30,8 @@ const StaffCard = () => {
 
       setLoading(true);
       try {
-        const response = await fetch(`${config.baseURL}/staffs/${uuid}`);
-        if (!response.ok) throw new Error("Failed to fetch staff data");
-        const data = await response.json();
+        const response = await api.get(`/staffs/${uuid}`);
+        const data = response.data
         setStaff(data);
       } catch (error) {
         console.error("Error fetching staff:", error);

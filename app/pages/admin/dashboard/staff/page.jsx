@@ -6,6 +6,7 @@ import styles from '@/app/styles/staff/staff.module.css'
 import AddStaffPage from "@/app/components/staff/addStaff";
 import Link from "next/link";
 import Search from '@/app/components/search/search'
+import api from "@/app/lib/utils/axios";
 
 
 import Swal from 'sweetalert2';
@@ -24,10 +25,13 @@ const StaffPage = () => {
     const fetchStaffs = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${config.baseURL}/staffs${q ? `?q=${q}` : ''}`);
-        const data = await response.json();
-        console.log(data)
-        setStaffs(data);
+        const response = await api.get(`/staffs${q ? `?q=${q}` : ''}`);
+        console.log("Running")
+        console.log(response.data)
+    
+        if (response.status < 200 || response.status >= 300) throw new Error("Failed to fetch staff data");
+
+        setStaffs(response.data);
       } catch (error) {
         console.error('Error fetching staff:', error);
       } finally {

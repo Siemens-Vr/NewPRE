@@ -2,26 +2,30 @@ import { useEffect, useState } from "react";
 import { config } from "@/config";
 import styles from "@/app/styles/staff/staff.module.css";
 import { useParams } from "next/navigation";
+import api from "@/app/lib/utils/axios";
 
 const LeaveHistory = () => {
     const [leaveHistory, setLeaveHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [history, setHistory] = useState([]);
     const params = useParams();
-  const { staffuuid } = params;
-    useEffect(() => {
-        const fetchLeaveHistory = async () => {
-          try {
-            const response = await fetch(`${config.baseURL}/leaveRequests/staff/${staffuuid}`);
-            const data = await response.json();
-            console.log("Leave history:", data);
-          } catch (error) {
-            console.error("Error fetching leave history:", error);
-          }
-        };
-    
-        fetchLeaveHistory();
-    }, []);
+    const { uuid } = params;
+
+
+
+      useEffect(() => {
+          const fetchLeaveHistory = async () => {
+            try {
+              const response = await api.get(`/leaveRequests/staff/${uuid}`);
+              const data = response.json();
+              console.log("Leave history:", data);
+            } catch (error) {
+              console.error("Error fetching leave history:", error);
+            }
+          };
+      
+          fetchLeaveHistory();
+      }, []);
     
 
   return (

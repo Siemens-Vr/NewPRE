@@ -3,6 +3,7 @@ import { createContext, useState, useEffect } from "react";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import api, { setAccessToken } from "@/app/lib/utils/axios";
 import { config } from "@/config";
 
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
             return; // Don't redirect automatically, let the protected route handle it
           }
           // console.log(token)
-          const { data } = await axios.get(`${config.baseURL}/api/auth/profile`, {
+          const { data } = await api.get(`api/auth/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           // console.log(data)
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const { data } = await axios.post(`${config.baseURL}/api/auth/login`, {
+      const { data } = await api.post(`/api/auth/login`, {
         email,
         password,
       });
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }) => {
       document.cookie = `token=${data.accessToken}; path=/; secure; samesite=strict`;
   
       // Store Token in Local Storage
+      setAccessToken(data.accessToken);
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("refreshtoken", data.refreshToken);
   

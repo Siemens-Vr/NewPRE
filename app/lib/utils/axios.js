@@ -16,14 +16,26 @@ const api = axios.create({
   withCredentials: true, // required for cookies
 });
 
-api.interceptors.request.use((config) => {
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-        console.log("📦 Request with token:", config.headers.Authorization); // DEBUG
-      } else {
-        console.log("⚠️ No access token set in interceptor");
-      }
+api.interceptors.request.use(async (config) => {
+  if (!accessToken) {
+    console.log("⚠️ No access token set in interceptor - getting a new one first");
+    // Try to get a new token before proceeding
+    const newToken = await refreshAccessToken();
+    if (newToken) {
+      accessToken = newToken;
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      console.log("📦 Obtained new token before request:", config.headers.Authorization);
+    } else {
+      console.log("❌ Failed to obtain token before request");
+      // You could decide to continue anyway or reject the request here
+    }
+  } else {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+    console.log("📦 Request with token:", config.headers.Authorization);
+  }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 api.interceptors.response.use(

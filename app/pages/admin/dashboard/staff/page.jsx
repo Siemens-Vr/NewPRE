@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/staff/staff.module.css'
 import Link from "next/link";
 import Search from '@/app/components/search/search'
-import api, { setAccessToken } from "@/app/lib/utils/axios";
+import api from "@/app/lib/utils/axios";
 
 
 import Swal from 'sweetalert2';
@@ -23,8 +23,11 @@ const StaffPage = () => {
       setLoading(true);
       try {
         const response = await api.get(`/staffs${q ? `?q=${q}` : ''}`);
-        // const data = await response.json();
+        console.log("Running")
         console.log(response.data)
+    
+        if (response.status < 200 || response.status >= 300) throw new Error("Failed to fetch staff data");
+
         setStaffs(response.data);
       } catch (error) {
         console.error('Error fetching staff:', error);

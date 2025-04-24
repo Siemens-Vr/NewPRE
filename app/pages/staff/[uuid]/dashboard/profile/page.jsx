@@ -4,9 +4,9 @@ import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/styles/staff/profile/profile.module.css";
 import { useParams } from "next/navigation";
-import { AuthContext } from "@/app/context/AuthContext";
 import { config } from "@/config";
 import style from "@/app/styles/staff/leave/leave.module.css";
+import api from "@/app/lib/utils/axios";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -25,9 +25,10 @@ const ProfilePage = () => {
   
       setLoading(true);
       try {
-        const response = await fetch(`${config.baseURL}/staffs/${uuid}`);
-        if (!response.ok) throw new Error("Failed to fetch staff data");
-        const data = await response.json();
+        const response = await api.get(`/staffs/${uuid}`);
+        console.log(response)
+        if (response.request.status !== 201) throw new Error("Failed to fetch staff data");
+        const data = await response.data;
   
         setUser(data);
   

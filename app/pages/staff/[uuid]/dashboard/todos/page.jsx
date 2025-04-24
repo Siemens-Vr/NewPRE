@@ -4,6 +4,7 @@ import styles from "@/app/styles/staff/todo.module.css";
 import style from "@/app/styles/staff/leave/leave.module.css";
 import { useParams } from "next/navigation";
 import { config } from "/config";
+import api from "@/app/lib/utils/axios";
 
 const TodoPage = () => {
   const params = useParams();
@@ -15,32 +16,33 @@ const TodoPage = () => {
   const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState({});
 
-  const openModal = (type, date = new Date().toISOString().split("T")[0]) => {
+  const openModal = async (type, date = new Date().toISOString().split("T")[0]) => {
     setMode(type);
     setCurrentDate(date);
     setTaskInput("");
     setTasks([]);
     setShowModal(true);
-
+  
     if (type === "update") {
-      fetch(`${config.baseURL}/todos/${uuid}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const filtered = (data[date] || []).map((task) => ({
-            task: task.todo,
-            status: task.status,
-            uuid: task.uuid,
-            date,
-          }));
-          setTasks(filtered);
-        })
-        .catch((err) => {
-          console.error("Error fetching tasks:", err);
-          setTasks([]);
-        });
+      try {
+        const response = await api.get(`/todos/${uuid}`);
+        const data = response.data;
+  
+        const filtered = (data[date] || []).map((task) => ({
+          task: task.todo,
+          status: task.status,
+          uuid: task.uuid,
+          date,
+        }));
+  
+        setTasks(filtered);
+      } catch (err) {
+        console.error("Error fetching tasks:", err);
+        setTasks([]);
+      }
     }
   };
-
+  
   const handleAddTask = () => {
     if (taskInput.trim() !== "") {
       setTasks([
@@ -55,36 +57,34 @@ const TodoPage = () => {
     const newTasks = tasks.filter((t) => t.isNew && !t.markedForDeletion);
     const updatedTasks = tasks.filter((t) => t.uuid && !t.markedForDeletion);
     const deletedTasks = tasks.filter((t) => t.markedForDeletion && t.uuid);
-
+  
     try {
+      // ✅ Create new tasks
       if (newTasks.length > 0) {
-        await fetch(`${config.baseURL}/todos/${uuid}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tasks: newTasks }),
-        });
+        // console.log(newTasks);
+        await api.post(`/todos/${uuid}`, { tasks: newTasks });
       }
-
+  
+      // ✅ Update existing tasks
       for (let task of updatedTasks) {
-        await fetch(`${config.baseURL}/todos/task/${task.uuid}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ task: task.task, status: task.status }),
+        await api.patch(`/todos/task/${task.uuid}`, {
+          task: task.task,
+          status: task.status,
         });
       }
-
+  
+      // ✅ Delete tasks
       for (let task of deletedTasks) {
-        await fetch(`${config.baseURL}/todos/task/${task.uuid}`, {
-          method: "DELETE",
-        });
+        await api.delete(`/todos/task/${task.uuid}`);
       }
-
+  
       await loadAllTodos();
       setShowModal(false);
     } catch (error) {
       console.error("Error processing tasks:", error);
     }
   };
+  
 
   const toggleTask = async (date, index) => {
     const updatedTodos = [...todos[date]];
@@ -93,20 +93,16 @@ const TodoPage = () => {
     setTodos({ ...todos, [date]: updatedTodos });
 
     try {
-      await fetch(`${config.baseURL}/todos/task/${task.uuid}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: task.status }),
-      });
-    } catch (error) {
+      await api.post(`/todos/task/${task.uuid}`, { status: task.status });
+      }catch (error) {
       console.error("Error updating task:", error);
     }
   };
 
   const loadAllTodos = async () => {
     try {
-      const res = await fetch(`${config.baseURL}/todos/${uuid}`);
-      const data = await res.json();
+      const res = await api.get(`/todos/${uuid}`);
+      const data = res.data;
       setTodos(data);
     } catch (error) {
       console.error("Error loading all todos:", error);

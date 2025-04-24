@@ -27,10 +27,10 @@ export default function Home() {
       <div className={styles.textSection}>
         <h1 className="text-4xl font-extrabold text-black-700">Take Control</h1>
         <h1 className="text-4xl font-extrabold text-black-700">Smarter, Faster</h1>
-        <h1 className="text-4xl font-extrabold text-black-700">and <span className="text-orange-500">More Efficient</span>!</h1>
+        <h1 className="text-4xl font-extrabold text-black-700">and <span className="text-orange-500">More Efficient </span>!!</h1>
       
         <Link href="/login">
-          <button className="px-6 py-3 bg-teal-700 text-white rounded-lg hover:bg-blue-600 transition">
+          <button className="px-6 py-3 bg-teal-700 text-white rounded-lg hover:bg-teal-500 transition">
             GET STARTED
           </button>
         </Link>

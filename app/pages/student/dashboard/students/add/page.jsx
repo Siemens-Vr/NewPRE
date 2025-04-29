@@ -12,9 +12,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const AddStudentPage = ({onClose}) => {
+  const router= useRouter();
   const [showCohortModal, setShowCohortModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router= useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cohortLevelList, setCohortLevelList] = useState([]);
@@ -67,16 +67,14 @@ const AddStudentPage = ({onClose}) => {
     // console.log("Data to be sent to the backend:", dataToSend);
 
     try {
-      const response = await fetch(`${config.baseURL}/students`, {
-        method: "POST",
+    const response = await api.post("/students", dataToSend, {
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataToSend),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
+        });
+        const data = response.data;
+         
+      if (response.statusText === 'OK') {
         // console.log("Student added successfully");
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '@/app/styles/categories/categories.module.css'
-import { config } from '/config';
+import api from '@/app/lib/utils/axios';
+
 
 const CategoriesPopUp = ({ onClose }) => {
     const [category, setCategory] = useState('');
@@ -13,15 +14,26 @@ const CategoriesPopUp = ({ onClose }) => {
         setLoading(true); 
 
         try {
-            const response = await fetch(`${config.baseURL}/categories`, {
-                method: 'POST',
+            const categoriesArray = category
+            .split(',')
+            .map(c => c.trim())
+            .filter(c => c !== '');
+
+            if (categoriesArray.length === 0) {
+                setError("Please enter at least one valid category.");
+                setLoading(false);
+                return;
+            }
+
+            const payload = { categories: categoriesArray };
+
+            const response = await api.post(`/categories`, payload, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ category })
             });
 
-            if (response.ok) {
+            if (response.statusText === "OK") {
                 console.log("Added successfully");
                 setCategory(''); 
                 onClose(); 

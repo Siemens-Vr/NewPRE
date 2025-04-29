@@ -1,12 +1,37 @@
-import { fetchUsers } from '@/app/lib/data';
+"use client"
+import api from '@/app/lib/utils/axios';
 import styles from '@/app/styles/users/users.module.css';
 import Search from '@/app/components/search/search';
 import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-const UsersPage = async () => {
-    const data = await fetchUsers();
-    const users = data.users;
-    console.log(users);
+const UsersPage =  () => {
+    const [users, setUsers] =useState([])
+    const [loading, setLoading] =useState(              )
+    const searchParams = useSearchParams();
+    const q = searchParams.get('q') || '';
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+          setLoading(true);
+          try {
+            const response = await api.get(`/staffs${q ? `?q=${q}` : ''}`);
+            console.log("Running")
+            console.log(response.data)
+        
+            if (response.status < 200 || response.status >= 300) throw new Error("Failed to fetch staff data");
+    
+            setUsers(response.data);
+          } catch (error) {
+            console.error('Error fetching staff:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchUsers();
+      }, [q]);
 
     return (
         <div className={styles.container}>

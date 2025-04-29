@@ -5,7 +5,7 @@ import Search from '@/app/components/search/search';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AddBorrow from '@/app/components/Borrow/borrow';
-
+import api from '@/app/lib/utils/axios';
 import { MdSearch} from "react-icons/md";
 
 
@@ -27,11 +27,11 @@ const SingleComponentPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `${config.baseURL}/components/components/${componentsType}${q ? `?q=${q}` : ''}`;
+        const url = `/components/components/${componentsType}${q ? `?q=${q}` : ''}`;
         // console.log('Fetching URL:', url);
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(url);
+        if (response.statusText === 'OK') {
+          const data = response.data;
           if (Array.isArray(data.rows)) {
             setComponents(data.rows);
           } else {

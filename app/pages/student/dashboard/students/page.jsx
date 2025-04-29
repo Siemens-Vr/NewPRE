@@ -1,6 +1,7 @@
 
 "use client";
 
+import api from '@/app/lib/utils/axios';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import AddLevelPopup from '@/app/components/student/AddLevelPopUp';
@@ -18,7 +19,7 @@ const StudentsPage = () => {
   const [count, setCount] = useState(0);
   const [popupStudentId, setPopupStudentId] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
-    const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('name');
   const [searchValue, setSearchValue] = useState('');
 
@@ -65,11 +66,12 @@ const StudentsPage = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const url = `${config.baseURL}/students${q ? `?q=${q}` : ''}${page ? `${q ? '&' : '?'}page=${page}` : ''}`;
+        const url = `/students${q ? `?q=${q}` : ''}${page ? `${q ? '&' : '?'}page=${page}` : ''}`;
         console.log(url);
-        const response = await fetch(url);
-        const data = await response.json();
-        if (response.ok) {
+        const response = await api.get(url);
+        console.log(response)
+        const data =  response.data;
+        if (response.statusText === 'OK') {
           const { content, count } = data;
           setStudents(content || []);
           setFilteredStudents(content || []);
@@ -96,10 +98,10 @@ const StudentsPage = () => {
 
     while (page < totalPages) {
       try {
-        const url = `${config.baseURL}/students?page=${page}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        if (response.ok) {
+        const url = `/students?page=${page}`;
+        const response = await api.get(url);
+        const data = await response.data;
+        if (response.statusText === 'OK') {
           const { content, totalPages: fetchedTotalPages } = data;
           allStudents.push(...content);
           totalPages = fetchedTotalPages;
@@ -166,11 +168,9 @@ const StudentsPage = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`${config.baseURL}/students/${uuid}/delete`, {
-          method: 'GET',
-        });
+        const response = await api.get(`/students/${uuid}/delete`);
 
-        if (response.ok) {
+        if (response.statusText === 'OK') {
           setStudents(students.filter((student) => student.uuid !== uuid));
           Swal.fire({
             title: 'Deleted!',

@@ -58,6 +58,9 @@ export const AuthProvider = ({ children }) => {
       const { data } = await api.post(`/api/auth/login`, {
         email,
         password,
+      },  {
+        withCredentials: true,
+        skipAuth: true, 
       });
   
       // console.log(data);
@@ -121,6 +124,7 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshtoken");
     setUser(null);
     router.push("/login");
   };

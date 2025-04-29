@@ -7,6 +7,7 @@ import styles from '@/app/styles/dashboards/project/dashboard.module.css';
 import style from "@/app/styles/project/project/project.module.css";
 import Spinner from "@/app/components/spinner/spinner";
 import { config } from "/config";
+import api from '@/app/lib/utils/axios';
 import Swal from 'sweetalert2';
 
 const Dashboard = () => {
@@ -43,11 +44,11 @@ const Dashboard = () => {
     const fetchProjects = async () => {
         setLoading(true); // Start loading state
         try {
-            const response = await fetch(`${config.baseURL}/projects`);
+            const response = await api.get(`/projects`);
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
-            const data = await response.json();
+            const data = response.data;
             setProjects(data);
         } catch (err) {
             setError(err.message);

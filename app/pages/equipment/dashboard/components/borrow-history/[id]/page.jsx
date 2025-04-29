@@ -2,34 +2,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/app/styles/components/borrowHistory/borrowHistory.module.css';
-
+import api from '@/app/lib/utils/axios';
 import { config } from '/config';
 
 const BorrowHistory = () => {
   const { id } = useParams();
   const [borrowHistory, setBorrowHistory] = useState([]);
   const [componentDetails, setComponentDetails] = useState(null);
+   const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
     const fetchBorrowHistory = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/borrow?componentUUID=${id}`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/borrow?componentUUID=${id}`);
+        if (response.statusText == 'OK') {
+          const data =  response.data;
           setBorrowHistory(data);
+          setNoResults(data.length === 0);
         } else {
           console.log("Failed to fetch borrow history");
         }
       } catch (error) {
         console.log("Error fetching borrow history", error);
+        setNoResults(true);
       }
     };
 
     const fetchComponentDetails = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/components/${id}`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/components/${id}`);
+        if (response.statusText == 'OK') {
+          const data = response.data;
           setComponentDetails(data);
         } else {
           console.log("Failed to fetch component details");
@@ -71,23 +74,32 @@ const BorrowHistory = () => {
           </tr>
         </thead>
         <tbody>
-          {borrowHistory.map((borrow) => (
-            <tr key={borrow.uuid}>
-              <td>{borrow.fullName}</td>
-              <td>{borrow.borrowerID}</td>
-              <td>{borrow.departmentName}</td>
-              <td>{new Date(borrow.dateOfIssue).toLocaleDateString()}</td>
-              <td>{new Date(borrow.expectedReturnDate).toLocaleDateString()}</td>
-              <td>{borrow.actualReturnDate ? new Date(borrow.actualReturnDate).toLocaleDateString() : 'Not returned'}</td>
-              <td>{borrow.quantity}</td>
-              <td>
-                <span className={`${styles.badge} ${borrow.actualReturnDate ? styles.returned : styles.borrowed}`}>
-                  {borrow.actualReturnDate ? 'Returned' : 'Borrowed'}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {noResults ? (
+    <tr>
+      <td colSpan="8" style={{ textAlign: "center", padding: "1rem" }}>
+        No Borrowers History found
+      </td>
+    </tr>
+  ) : (
+    borrowHistory.map((borrow) => (
+      <tr key={borrow.uuid}>
+        <td>{borrow.fullName}</td>
+        <td>{borrow.borrowerID}</td>
+        <td>{borrow.departmentName}</td>
+        <td>{new Date(borrow.dateOfIssue).toLocaleDateString()}</td>
+        <td>{new Date(borrow.expectedReturnDate).toLocaleDateString()}</td>
+        <td>{borrow.actualReturnDate ? new Date(borrow.actualReturnDate).toLocaleDateString() : 'Not returned'}</td>
+        <td>{borrow.quantity}</td>
+        <td>
+          <span className={`${styles.badge} ${borrow.actualReturnDate ? styles.returned : styles.borrowed}`}>
+            {borrow.actualReturnDate ? 'Returned' : 'Borrowed'}
+          </span>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
       </table>
     </div>
     

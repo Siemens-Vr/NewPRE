@@ -6,6 +6,7 @@ import UpdatePopUp from '@/app/components/update/update';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import api from '@/app/lib/utils/axios';
 import { config } from '/config';
 
 const EditComponent = () => {
@@ -18,9 +19,9 @@ const EditComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${config.baseURL}/components/${id}`);
-      if (response.ok) {
-        const data = await response.json();
+      const response = await api.get(`${config.baseURL}/components/${id}`);
+      if (response.statusText === 'OK') {
+        const data =  response.data;
         setComponent(data);
       } else {
         console.log("Failed to fetch data");

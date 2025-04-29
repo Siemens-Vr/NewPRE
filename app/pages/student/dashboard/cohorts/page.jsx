@@ -5,6 +5,7 @@ import styles from "@/app/styles/students/students.module.css";
 import Swal from "sweetalert2";
 import { config } from "/config";
 import { MdSearch } from "react-icons/md";
+import api from "@/app/lib/utils/axios";
 import CohortForm from "@/app/pages/student/dashboard/cohorts/add/page";
 import CohortEditPopup from "@/app/components/cohort/CohortEditPopup";
 
@@ -34,8 +35,8 @@ const CohortsPage = () => {
 
     const fetchCohorts = async () => {
         try {
-            const response = await fetch(`${config.baseURL}/cohorts`);
-            const data = await response.json();
+            const response = await api.get(`/cohorts`);
+            const data = await response.data;
             setCohorts(data);
             setFilteredCohorts(data);
         } catch (error) {
@@ -48,15 +49,13 @@ const CohortsPage = () => {
     };
     const handleUpdateCohort = async (updatedCohortData) => {
         try {
-            const response = await fetch(`${config.baseURL}/cohorts/${selectedCohort.uuid}/update`, {
-                method: 'PATCH',
+            const response = await api.patch(`/cohorts/${selectedCohort.uuid}/update`,updatedCohortData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedCohortData),
             });
 
-            if (response.ok) {
+            if (response.statusText === 'OK') {
                 setCohorts(cohorts.map(cohort => (cohort.id === selectedCohort.id ? updatedCohortData : cohort)));
                 console.log('Cohort updated successfully');
             } else {

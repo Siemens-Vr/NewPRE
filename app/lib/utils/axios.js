@@ -1,6 +1,7 @@
 // utils/axios.js
 import axios from "axios";
 import { refreshAccessToken } from "./auth";
+import { isTokenExpired } from "./token"; // 👈 import it
 require('dotenv').config();
 
 let accessToken = null;
@@ -17,7 +18,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  if (!accessToken) {
+    // Check for a custom skipAuth flag
+    if (config.skipAuth) return config;
+    
+    if (!accessToken || isTokenExpired(accessToken)) {
     console.log("⚠️ No access token set in interceptor - getting a new one first");
     // Try to get a new token before proceeding
     const newToken = await refreshAccessToken();
@@ -33,6 +37,7 @@ api.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
     console.log("📦 Request with token:", config.headers.Authorization);
   }
+  // console.log("Request config", config)
   return config;
 }, (error) => {
   return Promise.reject(error);

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from '@/app/styles/components/add/addComponent.module.css'; // Adjust the import to your CSS file
 import ConditionPopUp from '@/app/components/condition/condition';
 import UploadForm from '@/app/components/uploadForm/uploadForm' // Adjust the import to the correct path
+
 import { config } from '/config';
 
 const AddComponent = () => {
@@ -27,15 +28,13 @@ const AddComponent = () => {
   });
 
   useEffect(() => {
+ 
     const fetchComponentTypeData = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/categories`);
-        if (response.ok) {
-          const data = await response.json();
-          setComponentTypes(data);
-        } else {
-          console.log("Failed to fetch component types");
-        }
+        const response = await api.get(`/categories`);
+        const data = await response.json();
+        setComponentTypes(data);
+        
       } catch (error) {
         console.log("Error fetching categories");
       }

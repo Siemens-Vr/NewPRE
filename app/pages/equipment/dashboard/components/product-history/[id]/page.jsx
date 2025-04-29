@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import styles from '@/app/styles/components/productHistory/productHistory.module.css'
 import { config } from '/config';
+import api from '@/app/lib/utils/axios';
 
 
 
@@ -16,12 +17,12 @@ const ProductHistory = () => {
   useEffect(() => {
     const fetchProductHistory = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/components/${id}/history`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`${config.baseURL}/components/${id}/history`);
+        if (response.statusText === 'OK') {
+          const data = response.data;
           setProductHistory(data);
         } else {
-          const errorData = await response.json();
+          const errorData = response.message;
           console.error("Failed to fetch product history:", errorData);
           setError(`Failed to fetch product history: ${errorData.message || response.statusText}`);
         }
@@ -33,9 +34,9 @@ const ProductHistory = () => {
 
     const fetchComponentDetails = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/components/${id}`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/components/${id}`);
+        if (response.statusText === 'OK') {
+          const data = response.data;
           setComponentDetails(data);
         } else {
           console.error("Failed to fetch component details");

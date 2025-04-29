@@ -2,7 +2,8 @@
 
 export async function refreshAccessToken() {
     try {
-      const res = await fetch("https://backenderp-u19m.onrender.com/api/auth/refresh-token", {
+      const res = await fetch("http://localhost:10600/api/auth/refresh-token", {
+      // const res = await fetch("https://backenderp-u19m.onrender.com/api/auth/refresh-token", {
         method: "POST",
         credentials: "include", // very important to include cookies
       });
@@ -16,4 +17,4 @@ export async function refreshAccessToken() {
       return null;
     }
   }
-  
+  // await api.get("/api/public/endpoint", { skipAuth: true });

@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import Search from '@/app/components/search/search';
 import BorrowedCard from '@/app/components/card/borrowCard';
+import api from '@/app/lib/utils/axios';
 import {MdSearch} from "react-icons/md";
 
 import { config } from '/config';
@@ -17,9 +18,9 @@ const BorrowedComponentPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/borrow`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`${config.baseURL}/borrow`);
+        if (response.statusText === 'OK') {
+          const data =  response.data;
           setBorrowsData(data);
         } else {
           console.log('Error fetching data');

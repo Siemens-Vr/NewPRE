@@ -45,12 +45,12 @@ const Dashboard = () => {
         setLoading(true); // Start loading state
         try {
             const response = await api.get(`/projects`);
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            const data = response.data;
-            setProjects(data);
+            if (response.status == 200) {
+                const data = response.data;
+                setProjects(data);
+            }  
         } catch (err) {
+            throw new Error(`Error: ${response.statusText}`);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -161,17 +161,16 @@ const result = await Swal.fire({
         }
     
         try {
-            const response = await fetch(`${config.baseURL}/projects/create`, {
-                method: 'POST',
+            const response = await api.post(`${config.baseURL}/projects/create`,newProject, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newProject),
+               
             });
     
-            console.log("New project data:", newProject);
+            // console.log("New project data:", newProject);
     
-            if (response.ok) {
+            if (response.statusText === 'OK') {
                 fetchProjects();
                 setShowProjectInput(false);
                 setSuccessMessage("Project added successfully");
@@ -184,7 +183,7 @@ const result = await Swal.fire({
                     description: "",
                 });
             } else {
-                const errorText = await response.text();
+                const errorText = response.message;
                 console.error("Failed to add project:", errorText);
                 setAddProjectError("Failed to add project.");
                 setErrorMessage("Failed to add project");
@@ -238,19 +237,15 @@ const result = await Swal.fire({
 
             };
 
-            console.log(cleanedProjectData)
-
             try {
-                const response = await fetch(
-                    `${config.baseURL}/projects/update/${editProjectData.uuid}`,
+                const response = await api.post(
+                    `/projects/update/${editProjectData.uuid}`,cleanedProjectData,
                     {
-                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(cleanedProjectData),
                     }
                 );
 
-                if (response.ok) {
+                if (response.statusText === 'OK') {
                     closeEditModal(); // Close the modal on success
                 } else {
                     const errorData = await response.json();

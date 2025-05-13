@@ -12,6 +12,7 @@ import UpdateOutputPopup from '@/app/components/project/output/update';
 import ActionButton from "@/app/components/project/output/actionButton";
 import Pagination from "@/app/components/pagination/pagination";
 import Swal from 'sweetalert2';
+import api from "@/app/lib/utils/axios";
 
 const OutputsList = () => {
     const { uuid, phaseuuid } = useParams();
@@ -40,9 +41,10 @@ const OutputsList = () => {
     const fetchOutputs = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${config.baseURL}/outputs/${phaseuuid}`);
-            if (response.ok) {
-                const data = await response.json();
+            const response = await api.get(`/outputs/${phaseuuid}`);
+            console.log(response)
+            if (response.status === 200) {
+                const data =  response.data;
                 setOutputs(data);
             } else {
                 console.error("Failed to fetch outputs");
@@ -67,13 +69,12 @@ const OutputsList = () => {
 
     const addOutput = async () => {
         try {
-            const response = await fetch(`${config.baseURL}/outputs/${phaseuuid}`, {
-                method: 'POST',
+            const response = await api.post(`/outputs/${phaseuuid}`,newOutput, {
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newOutput),
             });
+            console.log(response)
     
-            if (response.ok) {
+            if (response.status === 201) {
                 fetchOutputs();
                 setShowOutputInput(false);
                 setSuccessMessage("Output added successfully");
@@ -126,8 +127,7 @@ const OutputsList = () => {
             setDeleting(outputuuid);
     
             try {
-                const response = await fetch(`${config.baseURL}/outputs/${phaseuuid}/${outputuuid}/`, {
-                    method: "DELETE",
+                const response = await api.delete(`${config.baseURL}/outputs/${phaseuuid}/${outputuuid}/`, {
                     headers: { "Content-Type": "application/json" },
                 });
     

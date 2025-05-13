@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import styles from '@/app/styles/project/project/project.module.css';
 import { config } from "/config";
 import Navbar from "@/app/components/project/output/navbar/navbar";
+import api from "@/app/lib/utils/axios";
 
 const OutputDetails = () => {
   const params = useParams();
@@ -21,18 +22,21 @@ const OutputDetails = () => {
     if (!phaseuuid) return;
 
     try {
-      const outputRes = await fetch(`${config.baseURL}/outputs/${phaseuuid}/${outputuuid}`);
-      if (!outputRes.ok) throw new Error("Error fetching output data");
-  
-      const outputData = await outputRes.json();
+      const response = await api.get(`/outputs/${phaseuuid}/${outputuuid}`);
+      if (response.statusText === 'OK') {
+        
+      const outputData =  response.data;
       setOutputDetails({
         name: outputData.name,
         status: outputData.status,
         description: outputData.description,
         completionDate: outputData.completionDate,
       });
+
+      }
+  
     } catch (error) {
-      
+      throw new Error("Error fetching output data");
       console.error("Failed to fetch output data:", error);
     }
   };

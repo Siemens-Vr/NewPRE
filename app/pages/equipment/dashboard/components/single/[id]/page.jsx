@@ -37,19 +37,17 @@ const EditComponent = () => {
 
   const handleComponentUpdate = async (updatedData) => {
     try {
-      const response = await fetch(`${config.baseURL}/components/${id}/update`, {
-        method: 'PATCH',
+      const response = await api.patch(`/components/${id}/update`,updatedData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData),
       });
 
-      if (response.ok) {
+      if (response.statusText === 'OK') {
         await fetchData();
         setShowPopup(false);
       } else {
-        const errorData = await response.json();
+        const errorData = response.message;
         console.error('Failed to update component:', errorData);
       }
     } catch (error) {

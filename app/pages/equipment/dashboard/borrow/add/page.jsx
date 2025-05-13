@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation'; // Use useSearchParams for query parameters
 import styles from '@/app/styles/borrow/add/borrowForm.module.css';
+import api from '@/app/lib/utils/axios';
 import { config } from '/config';
 
 
@@ -46,11 +47,12 @@ const BorrowForm = () => {
   }, [id]);
 
   useEffect(() => {
+
     const fetchComponentTypes = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/components`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`${config.baseURL}/components`);
+        if (response.status == 200) {
+          const data = response.data;
           setComponentTypes(data);
         } else {
           console.log("Could not fetch data");
@@ -67,9 +69,9 @@ const BorrowForm = () => {
       if (!formData.componentType) return;
 
       try {
-        const response = await fetch(`${config.baseURL}/components/components/${formData.componentType}`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/components/components/${formData.componentType}`);
+        if (response.status == 200) {
+          const data =  response.data;
           setComponents(data.rows);
         } else {
           console.log("Error fetching data");
@@ -171,16 +173,16 @@ const BorrowForm = () => {
         </div>
 
         <div className={styles.divInput}>
-  <label htmlFor="fullName" className={styles.label}>Full Name</label>
-  <input 
-    type="text" 
-    id="fullName"
-    name="fullName" 
-    value={formData.fullName} 
-    onChange={handleChange} 
-    placeholder="Full Name" 
-  />
-</div>
+        <label htmlFor="fullName" className={styles.label}>Full Name</label>
+        <input 
+          type="text" 
+          id="fullName"
+          name="fullName" 
+          value={formData.fullName} 
+          onChange={handleChange} 
+          placeholder="Full Name" 
+        />
+      </div>
 
         <div className={styles.divInput}>
         <label className={styles.label}>Contact</label>
@@ -244,7 +246,7 @@ const BorrowForm = () => {
           onChange={handleChange} 
           placeholder="Reason for Borrowing"
         />
-</div>
+      </div>
         <button type="submit">Submit</button>
       </form>
       

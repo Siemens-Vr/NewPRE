@@ -8,6 +8,7 @@ import UploadDropdown from '@/app/components/uploadDropdown/uploadDropdown';
 import { useParams } from 'next/navigation';
 import Navbar from "@/app/components/project/output/navbar/navbar";
 import Swal from "sweetalert2";
+import api from '@/app/lib/utils/axios';
 
 // Action Types
 const ACTION_TYPES = {
@@ -17,10 +18,13 @@ const ACTION_TYPES = {
     CREATE_FOLDER: 'CREATE_FOLDER',
     CREATE_SUBFOLDER: 'CREATE_SUBFOLDER',
     DELETE_FOLDER: 'DELETE_FOLDER',
+    DELETE_SUBFOLDER: 'DELETE_SUBFOLDER',
     UPLOAD_FILE: 'UPLOAD_FILE',
     UPLOAD_FOLDER_FILES: 'UPLOAD_FOLDER_FILES',
     DELETE_FILE: 'DELETE_FILE',
     UPDATE_FOLDER: 'UPDATE_FOLDER',
+    UPDATE_SUBFOLDER: 'UPDATE_SUBFOLDER',
+    UPDATE_FOLDER_LIST:'UPDATE_FOLDER_LIST',
     BACK_TO_PARENT: 'BACK_TO_PARENT'
 };
 
@@ -205,13 +209,56 @@ function folderReducer(state, action) {
             };
 
         case ACTION_TYPES.DELETE_FOLDER:
-            return {
-                ...state,
-                currentFolder: {
-                    ...state.currentFolder,
-                    subfolders: state.currentFolder.subfolders.filter(folder => folder.uuid !== action.payload)
-                }
-            };
+    return {
+        ...state,
+        currentFolder: {
+            ...state.currentFolder,
+           
+            subfolders: state.currentFolder.subfolders.filter(folder => folder.uuid !== action.payload),
+        },
+    };
+
+case ACTION_TYPES.DELETE_SUBFOLDER:
+    return {
+        ...state,
+        currentFolder: {
+            ...state.currentFolder,
+            subfolders: state.currentFolder.subfolders.filter(subfolder => subfolder.uuid !== action.payload),
+        },
+    };
+    case ACTION_TYPES.UPDATE_FOLDER_LIST:
+        return {
+            ...state,
+            folders: action.payload, // Update the folder list
+        };
+    
+    case ACTION_TYPES.UPDATE_FOLDER:
+        return {
+            ...state,
+            currentFolder: {
+                ...state.currentFolder,
+                subfolders: state.currentFolder.subfolders.map(folder =>
+                    folder.uuid === action.payload.uuid
+                        ? { ...folder, name: action.payload.name }
+                        : folder
+                ),
+            },
+        };
+
+    case ACTION_TYPES.UPDATE_SUBFOLDER:
+        return {
+            ...state,
+            currentFolder: {
+                ...state.currentFolder,
+                subfolders: state.currentFolder.subfolders.map(subfolder =>
+                    subfolder.uuid === action.payload.uuid
+                        ? { ...subfolder, name: action.payload.name }
+                        : subfolder
+                ),
+            },
+        };
+    
+
         case ACTION_TYPES.BACK_TO_PARENT:
             return {
                 ...state,
@@ -239,6 +286,7 @@ const Documents = () => {
     const [deleting, setDeleting] = useState(false);
     const [fileList, setFileList] = useState (false);
 
+
     
     const [modalStates, setModalStates] = useState({
         folderModal: false,
@@ -250,7 +298,8 @@ const Documents = () => {
     
     const [menuOpen, setMenuOpen] = useState({});
     const [folderMenuOpen, setFolderMenuOpen] = useState({});
-    const menuRefs = useRef({}); 
+    const menuRefs = useRef({});
+    const folderRef = useRef(null);
 
     const params = useParams()
     const {uuid, outputuuid} = params
@@ -259,31 +308,46 @@ const Documents = () => {
 
 
 //menu 
-const handleClickOutside = (event) => {
-    let isClickInsideMenu = Object.values(menuRefs.current).some(
-        (menu) => menu && menu.contains(event.target)
-    );
+useEffect(() => {
+    const handleClickOutside = (event) => {
+        let isClickInsideMenu = Object.values(menuRefs.current).some((menu) => menu && menu.contains(event.target));
+        if (!isClickInsideMenu) {
+            setMenuOpen({});
+        }
+    };
 
-    console.log("Clicked outside?", !isClickInsideMenu);
+    // Attach to document
+    document.addEventListener("mousedown", handleClickOutside);
 
-    if (!isClickInsideMenu) {
-        console.log("Closing menu...");
-        setMenuOpen({});
+    // Attach specifically to folder
+    const folderElement = folderRef?.current; // assuming you have a ref called folderRef
+    if (folderElement) {
+        folderElement.addEventListener("mousedown", handleClickOutside);
     }
-};
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        if (folderElement) {
+            folderElement.removeEventListener("mousedown", handleClickOutside);
+        }
+    };
+}, []);
+
 
 
     // Fetch initial folders
     const fetchInitialFolders = async () => {
+        
         try {
-            const response = await fetch(`${config.baseURL}/documents/${outputuuid}/folders`);
-            if (!response.ok) throw new Error('Failed to fetch folders');
+            const response = await api.get(`/documents/${outputuuid}/folders`);
+            if (response.status !== 200 && response.status !== 201) throw new Error('Failed to fetch folders');
             
-            const result = await response.json();
+            console.log(response)
+            const result =  response.data;
             // console.log('Fetched folders:', result);
 
             // Assuming the response matches the structure you showed
-            if (result.status === 'ok') {
+            if (response.status === 200 && response.status === 201) {
                 dispatch({
                     type: ACTION_TYPES.SET_INITIAL_FOLDERS,
                     payload: result.data
@@ -305,21 +369,21 @@ const handleClickOutside = (event) => {
         if (options.parentFolderId) {
             console.log("parentFolderid", options.parentFolderId)
             // If we have a parent folder ID, it means we're dealing with a nested subfolder
-            apiUrl = `${config.baseURL}/documents/${outputuuid}/${options.parentFolderId}/${folderId}`;
+            apiUrl = `/documents/${outputuuid}/${options.parentFolderId}/${folderId}`;
             // apiUrl = `${config.baseURL}/documents/${uuid}/${folderId}`;
 
         } else {
             // If no parent folder ID, we're dealing with a root-level folder
-            apiUrl = `${config.baseURL}/documents/${outputuuid}/${folderId}`;
+            apiUrl = `/documents/${outputuuid}/${folderId}`;
         }
         console.log("URL",apiUrl)
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Failed to fetch folder contents');
+        const response = await api.get(apiUrl);
+        if (response.status !== 200 && response.status !== 201) throw new Error('Failed to fetch folder contents');
         
-        const result = await response.json();
+        const result =  response.data;
         console.log('Full API response:', result);
         
-        if (result.status === 'ok') {
+        if (response.status === 200 && response.status === 201) {
             // Determine which action to dispatch based on nesting level
             const actionType = options.parentFolderId 
                 ? ACTION_TYPES.OPEN_SUBFOLDER 
@@ -370,26 +434,22 @@ const handleClickOutside = (event) => {
         };
     
         const folderUrl = parentFolderId
-            ? `${config.baseURL}/subFolders/${outputuuid}/${parentFolderId}`
-            : `${config.baseURL}/folders/${outputuuid}`;
+            ? `/subFolders/${outputuuid}/${parentFolderId}`
+            : `/folders/${outputuuid}`;
     
         try {
-            const response = await fetch(folderUrl, {
-                method: 'POST',
+            const response = await api.post(folderUrl,newFolder, {
                 headers: { 'Content-Type': 'application/json' ,
-                    'Authorization': 'Bearer ${userToken}'
-                },
-                
-                body: JSON.stringify(newFolder),
+                }
             });
     
-            if (!response.ok) {
-                const errorMessage = await response.text();
+            if (response.status !== 200 && response.status !== 201) {
+                const errorMessage = response.message;
                 console.error('Error response:', errorMessage);
                 throw new Error(errorMessage || 'Failed to create folder.');
             }
     
-            const createdFolder = await response.json();
+            const createdFolder =  response.data;
             console.log('Folder created successfully:', createdFolder);
             dispatch({
                 type: parentFolderId ? ACTION_TYPES.CREATE_SUBFOLDER : ACTION_TYPES.CREATE_FOLDER,
@@ -410,6 +470,7 @@ const handleClickOutside = (event) => {
 
 
    // File upload handler function
+    // File upload handler function
     const handleFileUpload = async (file, options = {}) => {
         if (!selectedFile) {
             alert('Please select a file to upload.');
@@ -421,31 +482,29 @@ const handleClickOutside = (event) => {
             formData.append('file', selectedFile);
 
             // Construct the appropriate URL based on folder hierarchy
-            let uploadUrl = `${config.baseURL}/documents/${outputuuid}`;
+            let uploadUrl = `/documents/${outputuuid}`;
+
         
             
             if (state.currentFolder?.uuid) {
                 if (state.currentFolder.parentFolderId) {
                     // For subfolders (nested folders)
-                    uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.parentFolderId}/${state.currentFolder.uuid}`;
+                 uploadUrl = `/documents/${outputuuid}/${state.currentFolder.parentFolderId}/${state.currentFolder.uuid}`;
                 } else {
                     // For root-level folders
-                    uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.uuid}`;
+                    uploadUrl = `/documents/${outputuuid}/${state.currentFolder.uuid}`;
                 }
             }
             console.log(uploadUrl)
-            const response = await fetch(uploadUrl, {
-                method: 'POST',
-                body: formData,
-            });
+            const response = await api.post(uploadUrl,formData);
 
-            if (!response.ok) {
-                const errorMessage = await response.text();
+            if (response.status !== 200 && response.status !== 201) {
+                const errorMessage = response.message;
                 console.error('Error response:', errorMessage);
                 throw new Error('Failed to upload file.');
             }
 
-            if (response.data) {
+            if (response.status === 200 && response.status === 201) {
                 dispatch({
                     type: ACTION_TYPES.UPLOAD_FILE,
                     payload: {
@@ -458,6 +517,8 @@ const handleClickOutside = (event) => {
             alert('File uploaded successfully!');
             setSelectedFile(null);
             setModalStates((prev) => ({ ...prev, fileModal: false }));
+            window.location.reload();
+
 
             return response.data;
         } catch (error) {
@@ -465,6 +526,9 @@ const handleClickOutside = (event) => {
             throw error;
         }
     };
+        
+
+
         
     // Updated folder upload handlers
     const handleFolderSelect = (e) => {
@@ -474,7 +538,7 @@ const handleClickOutside = (event) => {
 
     const handleFolderUpload = async () => {
         if (!selectedFiles?.length) {
-            alert('Please select files to upload.');
+            alert('Please select folder to upload.');
             return;
         }
     
@@ -515,10 +579,10 @@ const handleClickOutside = (event) => {
             console.log('Extracted UUID:', newFolderUuid);
     
             // Construct upload URL for files using the returned folder
-            let uploadUrl = `${config.baseURL}/documents/${outputuuid}/${newFolderUuid}`;
+            let uploadUrl = `/documents/${outputuuid}/${newFolderUuid}`;
             
             if (state.currentFolder.id !== "root" ) {
-                uploadUrl = `${config.baseURL}/documents/${outputuuid}/${state.currentFolder.uuid}/${newFolderUuid}`;
+                uploadUrl = `/documents/${outputuuid}/${state.currentFolder.uuid}/${newFolderUuid}`;
             }
 
             console.log(uploadUrl)
@@ -529,19 +593,18 @@ const handleClickOutside = (event) => {
                 formData.append('file', file);
     
                 try {
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        body: formData,
-                    });
+                    const response = await api.post(uploadUrl, formData);
     
-                    if (!response.ok) {
-                        const errorMessage = await response.text();
+                    if (response.status !== 200 && response.status !== 201){
+                        const errorMessage = await response.message;
                         errors.push(`Failed to upload ${file.name}: ${errorMessage}`);
                         continue;
                     }
     
-                    const responseData = await response.json();
+                    const responseData =  response.data;
                     uploadedFiles.push(responseData);
+                    window.location.reload();
+
                 } catch (error) {
                     errors.push(`Failed to upload ${file.name}: ${error.message}`);
                 }
@@ -580,7 +643,7 @@ const handleClickOutside = (event) => {
     const handleView = async (file) => {
         try {
             // Ensure the project UUID is correctly defined
-            const viewUrl = `${config.baseURL}/${file.documentPath}`;
+            const viewUrl = `/${file.documentPath}`;
     
             // Open a new tab
             const newTab = window.open('', '_blank');
@@ -599,22 +662,7 @@ const handleClickOutside = (event) => {
         }
     };
     
-      // New function to handle file download
-    //   const handleDownload = (file) => {
-    //     console.log(file)
-    //     if (!file.documentPath) {
-    //         alert("No file available to download.");
-    //         return;
-    //     }
-        
-    //     const filePath = `${config.baseURL}/download/${file.documentPath}`;
-    //     const link = document.createElement("a");
-    //     link.href = filePath;
-    //     link.download = file.documentName || "download";
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
+
 
     const handleDownload = (file) => {
         console.log("Download file:", file);
@@ -629,7 +677,7 @@ const handleClickOutside = (event) => {
         }
         
         try {
-            const filePath = `${config.baseURL}/download/${file.documentPath}`;
+            const filePath = `/download/${file.documentPath}`;
             const link = document.createElement("a");
             link.href = filePath;
             link.download = file.documentName || "download";
@@ -646,81 +694,13 @@ const handleClickOutside = (event) => {
             });
         }
     };
-    //handle file delete
-   
-    // const handleDeleteFile = async (file) => {
-    //     console.log("Delete function received:", file.documentName);
-    
-    //     if (!file) {
-    //         console.error("Invalid file object:", file);
-    //         alert("Cannot delete this file - missing file information");
-    //         return;
-    //     }
-    
-    //     try {
-    //         const result = await Swal.fire({
-    //             title: 'Are you sure?',
-    //             text: `You are about to delete ${file.documentName}`, // Use file.documentName instead of undefined 'name'
-    //             icon: 'warning',
-    //             showCancelButton: true,
-    //             confirmButtonColor: '#d33',
-    //             cancelButtonColor: '#3085d6',
-    //             confirmButtonText: 'Yes, delete',
-    //             cancelButtonText: 'Cancel'
-    //         });
-            
-    //         if (result.isConfirmed) {
-    //             // Ensure you're using the correct UUID
-    //             const outputUuid = file.outputUuid || outputuuid; // Check which UUID you actually need
-    
-    //             try {
-    //                 const response = await fetch(`${config.baseURL}/documents/delete/${outputUuid}/${file.uuid}`, {
-    //                     method: 'GET'
-    //                 });
-    
-    //                 console.log(response);
-    
-    //                 if (response.ok) {
-    //                     // Update your file list state 
-    //                     setFileList((prev) => prev.filter((f) => f.uuid !== file.uuid)); // Use uuid for consistent filtering
-                        
-    //                     // Show success message
-    //                     await Swal.fire({
-    //                         title: 'Deleted!',
-    //                         text: `${file.documentName} has been successfully deleted.`,
-    //                         icon: 'success',
-    //                         confirmButtonColor: '#3085d6',
-    //                     });
-    //                 } else {
-    //                     const errorText = await response.text();
-    //                     console.error("Error deleting file:", errorText);
-                        
-    //                     await Swal.fire({
-    //                         title: 'Error',
-    //                         text: errorText || 'Failed to delete file',
-    //                         icon: 'error'
-    //                     });
-    //                 }
-    //             } catch (error) {
-    //                 console.error("Error deleting file:", error);
-                    
-    //                 await Swal.fire({
-    //                     title: 'Error',
-    //                     text: error.message || 'An unexpected error occurred',
-    //                     icon: 'error'
-    //                 });
-    //             }
-    //         }
-    //     } catch (swallError) {
-    //         console.error("Swal fire error:", swallError);
-    //     }
-    // };
+
    
     const handleDeleteFile = async ( file) => {
-        console.log("Delete function received:", file.documentName  );
+        // console.log("Delete function received:", file.documentName  );
     
     if (!file) {
-        console.error("Invalid file object:", file);
+        // console.error("Invalid file object:", file);
         alert("Cannot delete this file - missing file information");
         return;
     }
@@ -730,7 +710,7 @@ const handleClickOutside = (event) => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            cancelButtonColor: '#ff7211',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete',
             cancelButtonText: 'Cancel'
           });
@@ -740,20 +720,19 @@ const handleClickOutside = (event) => {
         
 
         try {
-            const response = await fetch(`${config.baseURL}/documents/delete/${file.uuid}`, {
-                method: 'DELETE'
-            });
+            const response = await api.delete(`${config.baseURL}/documents/delete/${file.uuid}`);
             console.log(response)
-            if (response.ok) {
+            if (response.status === 200 && response.status === 201) {
         
                 Swal.fire({
                     title: 'Deleted!',
                     text: `${name} has been successfully deleted.`,
                     icon: 'success',
-                    confirmButtonColor: '#ff7211',
+                    confirmButtonColor: '#3085d6',
                 });
-            } else {
-                console.error("Error deleting file:", await response.text());
+                 }
+             else {
+                console.error("Error deleting file:",  response.data.message);
             }
             } catch (error) {
             console.error("Error deleting file:", error);
@@ -761,27 +740,32 @@ const handleClickOutside = (event) => {
     }
 };
 
-    // New function to handle folder deletion
+  
     const handleDeleteFolder = async (folder) => {
-        if (!confirm('Are you sure you want to delete this folder and all its contents?')) return;
-        
+        if (!confirm('Are you sure you want to delete this item and all its contents?')) return;
 
+        const parentFolderId = state.currentFolder?.uuid
+    
+        const folderUrls = parentFolderId
+        ? `/subFolders/${folder.uuid}`
+        : `/folders/${folder.uuid}`; 
+    
         try {
-            const response = await fetch(`${config.baseURL}/folders/${folder.uuid}`, {
-                method: 'DELETE'
-            });
-
-            if (!response.ok) throw new Error('Delete failed');
-
+            const response = await api.delete(folderUrls);
+    
+            if (response.status !== 200 && response.status !== 201) throw new Error('Delete failed');
+    
+            // Dispatch the appropriate action based on whether it's a folder or subfolder
             dispatch({
-                type: ACTION_TYPES.DELETE_FOLDER,
-                payload: folder.uuid
+                type: parentFolderId ? ACTION_TYPES.DELETE_SUBFOLDER : ACTION_TYPES.DELETE_FOLDER,
+                payload: folder.uuid,
             });
         } catch (error) {
-            console.error('Error deleting folder:', error);
-            alert('Failed to delete folder');
+            console.error('Error deleting item:', error);
+            alert('Failed to delete item');
         }
     };
+    
     
     // Back to Parent Folder
     const handleBackToParent = () => {
@@ -812,52 +796,79 @@ const handleClickOutside = (event) => {
       setMenuOpen(false);
     };
     
-    const submitFolderUpdate = async () => {
-        if (!selectedFolder) return;
-        console.log("folder to be updated folder name",folderName )
-      
-        try {
-          setIsLoading(true);
-          
-          const response = await fetch(`${config.baseURL}/folders/update/${selectedFolder.uuid}`, {
-            method: 'POST',
+const submitFolderUpdate = async () => {
+    if (!selectedFolder) return;
+
+    const isSubfolder = !!selectedFolder.folderId; // << This detects if it's a subfolder
+
+    let folderUrl = '';
+
+    if (!isSubfolder) {
+        // Updating a root folder
+        folderUrl = `/folders/update/${selectedFolder.uuid}`;
+    } else {
+        // Updating a subfolder
+        folderUrl = `/subFolders/${selectedFolder.uuid}`;
+    }
+
+    try {
+        setIsLoading(true);
+        console.log(folderName)
+
+        const response = await api.post(folderUrl,{folderName},  {
             headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({  folderName })
-          });
-      
-          if (!response.ok) {
-            // Handle non-200 responses
-            const errorData = await response.json();
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response.status !== 200 && response.status !== 201) {
+            const errorData = await response.data.message;
             throw new Error(errorData.message || 'Failed to update folder');
-          }
-      
-          const updatedFolder = await response.json();
-      
-          // Update the folders list or trigger a refresh
-          // This depends on how you're managing folders state
-          // For example:
-          // setFolders(prevFolders => 
-          //   prevFolders.map(folder => 
-          //     folder.uuid === selectedFolder.uuid 
-          //       ? { ...folder, name: folderName } 
-          //       : folder
-          //   )
-          // );
-      
-          // Close the modal
-          setModalStates(prev => ({ ...prev, folderUpdateModal: false }));
-          
-          // Optional: show success message
-         console.log('Folder updated successfully');
-        } catch (error) {
-          console.error('Error updating folder:', error);
-        //   toast.error(error.message || 'Failed to update folder');
-        } finally {
-          setIsLoading(false);
         }
-      };
+
+        const updatedFolder = await response.data;
+
+        // Dispatch action to update folder in state
+        dispatch({
+            type: isSubfolder ? ACTION_TYPES.UPDATE_SUBFOLDER : ACTION_TYPES.UPDATE_FOLDER,
+            payload: updatedFolder,
+        });
+
+        // Fetch the updated list of folders after successful update
+        await fetchUpdatedFolderList();
+
+        setModalStates(prev => ({ ...prev, folderUpdateModal: false }));
+
+        console.log('Folder updated successfully');
+    } catch (error) {
+        console.error('Error updating folder:', error);
+    } finally {
+        setIsLoading(false);
+    }
+    
+};
+
+// Function to fetch the updated list of folders after a successful update
+const fetchUpdatedFolderList = async () => {
+    try {
+        if (state.currentFolder.id === "root") {
+            // If we're at root level, fetch all folders
+            await fetchInitialFolders();
+        } else {
+            // If we're in a folder, refetch its contents
+            await fetchFolderContents(
+                state.currentFolder.uuid, 
+                { parentFolderId: state.currentFolder.parentFolderId }
+            );
+        }
+        console.log('Folder list updated successfully');
+    } catch (error) {
+        console.error('Error fetching updated folder list:', error);
+    }
+}; 
+
+
+
     
 
     // Open Folder
@@ -872,7 +883,6 @@ const handleClickOutside = (event) => {
 
     const toggleFolderMenu = (folderId) => {
         setFolderMenuOpen((prev) => ({
-          ...prev,
           [folderId]: !prev[folderId],
         }));
       };
@@ -880,7 +890,6 @@ const handleClickOutside = (event) => {
     // In your component
     const toggleMenu = (fileId) => {
         setMenuOpen(prev => ({
-          ...prev,
           [fileId]: !prev[fileId]
         }));
       };
@@ -898,8 +907,7 @@ const handleClickOutside = (event) => {
             {foldersToRender.map((folder) => (
               <div
                 key={folder.uuid}
-                className="flex items-center justify-between  rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
-                style={{ backgroundColor: '#c6e7e7' }}
+                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
                 onClick={() => handleOpenFolder(folder, state.currentFolder)}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -909,7 +917,7 @@ const handleClickOutside = (event) => {
                   </h3>
                 </div>
                  {/* Toggle button */}
-          <div className="relative">
+          <div className="relative" ref={folderRef}>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -917,6 +925,7 @@ const handleClickOutside = (event) => {
                 
               }}
               className="text-gray-500 hover:text-gray-700"
+            
             >
               <FaEllipsisV size={16} />
             </button>
@@ -963,18 +972,18 @@ const handleClickOutside = (event) => {
         const filesToRender = state.currentFolder?.files || [];
       
         return (
-          <div className="flex flex-wrap gap-4 overflow-visible">
-            {filesToRender.map((file) => {
-              const fileName =
-                file?.documentName?.split('-').pop()?.length > 20
-                  ? `${file?.documentName?.split('-').pop().slice(0, 26)}...`
-                  : file?.documentName?.split('-').pop() || 'Unnamed Document';
+            <div className="flex flex-wrap gap-4 overflow-visible">
+  {filesToRender.map((file) => {
+    const nameParts = file?.documentName?.split('-');
+    const fileName =
+      nameParts && nameParts.length > 2
+        ? nameParts.slice(2).join('-')
+        : file?.documentName || 'Unnamed Document';
       
               return (
                 <div
                   key={file?.uuid || file?.documentName}
-                  className="flex items-center justify-between  rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
-                  style={{ backgroundColor: '#c6e7e7' }}
+                  className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
                   onClick={() => handleView(file)}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -983,7 +992,7 @@ const handleClickOutside = (event) => {
                       {fileName}
                     </span>
                   </div>
-                  <div className="relative">
+                  <div className="relative"  ref={(el) => (menuRefs.current[file.uuid] = el)}>
                     {/* Three dots button */}
                     <button
                       type="button"
@@ -993,6 +1002,7 @@ const handleClickOutside = (event) => {
                         console.log("Menu toggled for:", file.uuid);
                       }}
                       className="text-gray-500 hover:text-gray-700"
+                     
                     >
                       <FaEllipsisV size={16} />
                     </button>
@@ -1055,8 +1065,8 @@ const handleClickOutside = (event) => {
             <div className={styles.inputDocumentHeader}>
             <div className={styles.inputDocumentHeaderLeft}>
                 {state.breadcrumbs.length > 0 && (
-                    <button className=" flex gap-2  justify-center align-center"onClick={handleBackToParent}>
-                        <FaArrowLeft className='w-8'/> 
+                    <button className=" flex gap-2 p-4 justify-center align-center"onClick={handleBackToParent}>
+                        {/* <FaArrowLeft className='w-8'/>  */}
                     </button>
                 )}
                 {/* <h2>
@@ -1070,10 +1080,10 @@ const handleClickOutside = (event) => {
             </div>
             </div>
 
-            <div className="flex flex-wrap gap-4 justify-start items-start md:gap-3 sm:gap-2 ">
+            <div className="flex flex-wrap gap-4 justify-start items-start p-4 md:gap-3 sm:gap-2 ">
             {/* Folders Section */}
             <div className="w-full">
-                <h2 className="text-lg font-semibold text-black mb-2">Folders</h2>
+                <h2 className="text-lg font-semibold text-white mb-2">Folders</h2>
                 <div className="flex flex-wrap gap-4">
                 {renderFolders()}
                 </div>
@@ -1081,7 +1091,7 @@ const handleClickOutside = (event) => {
 
             {/* Files Section */}
             <div className="w-full">
-                <h2 className="text-lg font-semibold text-black mt-3 ">Files</h2>
+                <h2 className="text-lg font-semibold text-white mt-6 mb-2">Files</h2>
                 <div className="flex flex-wrap gap-4">
                 {renderFiles()}
                 </div>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from  '@/app/styles/notifications/notifications.module.css'
 import Search from '@/app/components/search/search'
-
+import api from '@/app/lib/utils/axios';
 import { config } from '/config';
 
 
@@ -13,9 +13,9 @@ const NotificationsPage = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/notifications`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/notifications`);
+        if (response.statusText === 'OK') {
+          const data =  response.data;
           const formattedNotifications = data.rows.map(notification => ({
             ...notification,
             createdAt: new Date(notification.createdAt), // Convert createdAt to Date object

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import styles from "@/app/styles/project/project/project.module.css";
+import api from "@/app/lib/utils/axios";
 
 
 import { config } from "/config";
@@ -27,12 +28,12 @@ const DropDown = () => {
   });
   const [activeSection, setActiveSection] = useState("details");
 
-  const backendUrl = `${config.baseURL}`;
+
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`${backendUrl}/projects`);
-      if (!response.ok) throw new Error("Error fetching projects");
-      const data = await response.json();
+      const response = await api.get(`/projects`);
+      if (response.status!== 200) throw new Error("Error fetching projects");
+      const data =  response.data;
       setProjects(data);
     } catch (error) {
       console.error("Failed to fetch projects:", error);
@@ -40,30 +41,30 @@ const DropDown = () => {
   };
   const fetchPhases = async () => {
     try {
-      const response = await fetch(`${backendUrl}/milestones/${uuid}`);
-      if (!response.ok) throw new Error("Error fetching phases");
-      const data = await response.json();
+      const response = await api.get(`/milestones/${uuid}`);
+      // console.log(response)
+      if (response.status!== 200) throw new Error("Error fetching phases");
+      const data = response.data;
       setPhases(data);
     } catch (error) {
       console.error("Failed to fetch phases:", error);
     }
   };
+  // console.log(phases)
   useEffect(() => {
+    fetchProjects();
     fetchPhases();
   }, []);
 
-  // Fetch all projects
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+
   const fetchProjectData = async () => {
     if (!uuid) return;
 
     try {
-      const projectRes = await fetch(`${backendUrl}/projects/${uuid}`);
-      if (!projectRes.ok) throw new Error("Error fetching project data");
+      const projectRes = await api.get(`/projects/${uuid}`);
+      if (projectRes.status !== 200) throw new Error("Error fetching project data");
 
-      const projectData = await projectRes.json();
+      const projectData =  projectRes.data;
       setProjectDetails({
         projectName: projectData.name,
         status: projectData.status,
@@ -80,10 +81,10 @@ const DropDown = () => {
     if (!phaseuuid) return;
 
     try {
-      const phaseRes = await fetch(`${backendUrl}/outputs/${phaseuuid}`);
-      if (!phaseRes.ok) throw new Error("Error fetching project data");
+      const phaseRes = await api.get(`outputs/${phaseuuid}`);
+      if (phaseRes.status !== 200) throw new Error("Error fetching project data");
 
-      const phaseData = await phaseRes.json();
+      const phaseData =  phaseRes.data;
       setProjectDetails({
         name: phase.name,
         completionDate: phase.completionDate,
@@ -110,6 +111,7 @@ const DropDown = () => {
     fetchProjectData()
     fetchProjects()
   };
+  
   const handleMilestoneChange = (e) => {
     router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phases.phaseuuid}/dashboard`);
     fetchPhaseData();

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/styles/borrow/add/borrowForm.module.css";
+import api from "@/app/lib/utils/axios";
 import { config } from "/config";
 
 const getCurrentDate = () => {
@@ -38,9 +39,9 @@ const AddBorrow = ({ onClose, id }) => {
   useEffect(() => {
     const fetchComponentTypes = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/categories`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`${config.baseURL}/components`);
+        if (response.statusText === 'OK') {
+          const data = response.data;
           setComponentTypes(data);
         } else {
           console.error("Failed to fetch component types");
@@ -56,9 +57,10 @@ const AddBorrow = ({ onClose, id }) => {
     const fetchComponents = async () => {
       if (!formData.componentType) return;
       try {
-        const response = await fetch(`${config.baseURL}/components/${formData.componentType}`);
-        if (response.ok) {
-          const data = await response.json();
+        const response = await api.get(`/components/components/${formData.componentType}`);
+        console.log(response)
+        if (response.statusText === 'OK') {
+          const data =  response.data;
           setComponents(data.rows);
         } else {
           console.error("Error fetching components");
@@ -81,12 +83,10 @@ const AddBorrow = ({ onClose, id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${config.baseURL}/borrow`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      const response = await api.post(`/borrow`,formData, {
+        headers: { "Content-Type": "application/json" }
       });
-      if (response.ok) {
+      if (response.statusText === 'OK') {
         alert("Borrow request submitted successfully");
         setFormData({
           componentUUID: id || "",

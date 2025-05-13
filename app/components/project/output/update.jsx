@@ -6,11 +6,11 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useRouter } from "next/navigation";
 import style from "@/app/styles/project/project/milestone.module.css"
+import api from '@/app/lib/utils/axios';
 
 const UpdateOutputPopup = ({ output, onClose, onSave }) => {
 const params = useParams();
   const {phaseuuid, outputuuid } = params;
-    // console.log(supplier)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -43,31 +43,30 @@ const params = useParams();
         const updatedData = { ...formData }; // Clone formData to avoid mutation
     
         try {
-            const url = `${config.baseURL}/outputs/${phaseuuid}/${output.uuid}`;
-            console.log('Update URL:', url);
-            console.log('Data being sent:', updatedData);
+            const url = `/outputs/${phaseuuid}/${output.uuid}`;
+            // console.log('Update URL:', url);
+            // console.log('Data being sent:', updatedData);
         
-            const response = await fetch(url, {
-                method: 'PUT',
+            const response = await api.put(url, updatedData, {
                 headers: {
                     "Content-Type": "application/json",  // Ensure backend sees it as JSON
-                },
-                body: JSON.stringify(updatedData),
+                }
+                
             });
     
-            const responseData = await response.json();
-            console.log('Update Response:', responseData);
+            const responseData = response.data;
+            // console.log('Update Response:', responseData);
     
-            if (response.ok) {
+            if (response.statusText === 'OK') {
                 alert('Output updated successfully!');
                 await onSave(true);
             } else {
-                console.error('Failed to update output', responseData);
+                // console.error('Failed to update output', responseData);
                 alert(responseData.message || 'Failed to update the output!');
                 onSave(false);
             }
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             alert('An unexpected error occurred. Please try again.');
             onSave(false);
         }

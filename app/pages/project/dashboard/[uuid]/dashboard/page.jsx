@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from '@/app/styles/project/project/project.module.css';
 import { useParams, useRouter } from 'next/navigation';
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import api from '@/app/lib/utils/axios';
 import { config } from "/config";
 
 const Details = () => {
@@ -18,26 +19,24 @@ const Details = () => {
     budget: 0,
     funding: 0,
   });
-
- 
   const fetchProjectData = async () => {
      if (!uuid) return;
- 
+
      try {
-       const projectRes = await fetch(`${config.baseURL}/projects/${uuid}`);
-       if (!projectRes.ok) throw new Error("Error fetching project data");
- 
-       const projectData = await projectRes.json();
-       setProjectDetails({
-         projectName: projectData.name,
-         status: projectData.status,
-         description: projectData.description,
-         budget: projectData.budget,
-         funding: projectData.funding,
-       });
- 
+       const projectRes = await api.get(`/projects/${uuid}`);
+      //  console.log(projectRes)
+       if (projectRes.statusText === 'OK') {
+        const projectData = projectRes.data;
+        setProjectDetails({
+          projectName: projectData.name,
+          status: projectData.status,
+          description: projectData.description,
+          budget: projectData.budget,
+          funding: projectData.funding,
+        });
+       }
      } catch (error) {
-       console.error("Failed to fetch project data:", error);
+      throw new Error("Error fetching project data");
      }
    };
  
@@ -54,7 +53,7 @@ const Details = () => {
         { month: 'Jun', Budget: 2390, Funding: 3800 },
         { month: 'Jul', Budget: 3490, Funding: 4300 },
     ];
-    console.log(projectDetails)
+    // console.log(projectDetails)
 
     return (
         <div className={styles.projectDetails}>

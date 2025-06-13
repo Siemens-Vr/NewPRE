@@ -1,42 +1,40 @@
 /* Base styles */
-.container {
-  background-color: #ff7211;
+.card {
+  background-color: #f8f9fa;
   padding: 10px;
   border-radius: 10px;
   display: flex;
   gap: 10px;
+  color: black;
   cursor: pointer;
-  width: 100%;
-  height: 80px;
-  flex-direction: row;
   align-items: center;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.cardContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap:5px;
-  justify-content: space-around;
-  padding: 20px;
+.card:hover {
+  background-color: #e9ecef;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Hover effect */
-.container:hover {
-  background-color: #000000;
+
+.avatar{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  border-radius:10px ;
+  background-color: #333399;
+  height: 50px;
+  width:50px;
 }
 
 /* Text styles */
 .texts {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
 }
 
-.title,
-.number {
-  color: white;
-}
 
 .number {
   font-size: 24px;
@@ -48,36 +46,9 @@
   font-weight: 300;
 }
 
-.positive {
-  color: lime;
-}
 
-.negative {
-  color: red;
-}
 
-/* Card color variations */
-.color1 {
-  background-color: #ff7211;
-}
-.color2,
-.color3 {
-  background-color: #1b9392;
-}
-.color4 {
-  background-color: #ff7211;
-}
 
-/* Individual hover effects for colored cards */
-.color1:hover,
-.color3:hover {
-  background-color: #1b9392;
-}
-
-.color2:hover,
-.color4:hover {
-  background-color: #ff7211;
-}
 
 /* Responsive styles */
 @media (max-width: 1024px) {

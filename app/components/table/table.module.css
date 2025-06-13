@@ -1,0 +1,61 @@
+/* Table wrapper */
+.tableWrapper {
+  overflow-x: auto;
+  padding-bottom: 8px;           /* space for scrollbar */
+}
+
+/* Table itself */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  min-width: 600px;
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  text-align: left;
+   font-size: 0.95rem;
+  color: #212529;
+  transition: background-color 0.2s ease;
+}
+
+.table thead th {
+  background: #2bb3d2;           /* sky-blue */
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-weight: 600;
+}
+.table tr:nth-child(even) {
+  background: #f9fafb;           /* pale stripe */
+}
+.table tr:hover {
+  background: #e9ecef;           /* hover shade */
+}
+.missing {
+  color: #888888;                /* de-emphasized text */
+}
+
+
+
+@media (max-width: 640px) {
+  .tableWrapper {
+    font-size: 0.85rem;
+  }
+  .table th,
+  .table td {
+    padding: 8px 12px;
+  }
+  /* Card view fallback */
+  .table {
+    display: none;
+  }
+  .cardFallback {
+    display: block;
+  }
+}

@@ -1,18 +1,34 @@
-"use client";
+// app/components/calendar/CalendarComponent.jsx
+'use client';
 
-import { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import styles from "@/app/styles/calendar/calendar.module.css";
-const CalendarComponent = () => {
-    const [date, setDate] = useState(new Date());
+import React from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import styles from '@/app/styles/calendar/calendar.module.css';
 
-    return (
-        <div className={styles.calendarContainer}>
-            <h3 className={styles.calendarTitle}>Calendar</h3>
-            <Calendar onChange={setDate} value={date}  className={styles.calendar}  />
-        </div>
-    );
-};
+const localizer = momentLocalizer(moment);
 
-export default CalendarComponent;
+export default function CalendarComponent() {
+  // Example events; replace with your real data if needed
+  const events = [
+    {
+      title: 'New User Registered',
+      start: new Date(),
+      end:   new Date(),
+    }
+  ];
+
+  return (
+    <div className={styles.calendarWrapper}>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 400 }}
+        toolbar={true}
+        views={['month', 'week', 'day']}
+      />
+    </div>
+  );
+}

@@ -1,0 +1,226 @@
+
+
+.container {
+    background-color: #c6e7e7;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 800px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    /* margin-left: 250px; */
+    /* height: 320px; */
+  
+  
+  }
+  .containers{
+    background-color: #c6e7e7;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 800px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    /*margin-left: 100px;*/
+    /* height: 620px; */
+  
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ff7211;
+  }
+  
+  .forms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .formGroup {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    font-weight: bold;
+    margin-bottom: 3px;
+    color: #000;
+  }
+  .forms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .input,
+  .select {
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .input:focus,
+  .select:focus {
+    border: 1px solid #4CAF50;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .buttons2{
+    display: flex;
+    justify-content: flex-end;
+    gap:20px;
+  }
+  .facilitator{
+    display: flex;
+    flex-wrap: wrap;
+    /*gap: 50px;*/
+    justify-content: space-between;
+  }
+  /*.addFacilitatorRoleButton{*/
+  /*  padding: 12px 20px;*/
+  /*  border: none;*/
+  /*  border-radius: 5px;*/
+  /*  cursor: pointer;*/
+  /*  background-color: #1b9392;*/
+  /*  font-size: 16px;*/
+  /*  color: white;*/
+  /*  font-weight: bold;*/
+  /*  transition: background 0.3s;*/
+  
+  /*}*/
+  .Rolebutton{
+    margin-top :5px;
+  margin-left: 590px;}
+  .button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ff7211;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  
+  .addButton {
+    background-color: teal;
+  }
+  
+  .createButton {
+    background-color: #ff7211;
+  }
+  .deleteButton {
+    align-items: center;
+    margin-left: 280px;
+    background-color: #ff0000;
+  }
+  .deleteButton:hover{
+    background-color: #1b9392;
+  }
+  
+  .addButton:hover {
+    background-color: #ff7211;
+  }
+  
+  .createButton:hover {
+    background-color: #1b9392;
+  }
+  .submitButtons:hover{
+    background-color: #1b9392;
+  }
+  .title{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff7211;
+  }
+
+  
+  .facilitatorRoleSelection {
+    display: flex;
+    align-items: center;
+    gap:10px;
+    margin-bottom: 20px;
+    margin-top:10px;
+
+}
+  
+  .selects{ padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);}
+  
+  
+  
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #ff7211;
+  }
+  
+  .closeButtons {
+    position:absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 90px;
+    cursor: pointer;
+    color: #ff7211;
+  
+  }
+  /*//MODAL*/
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px); /* Blurs background */
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+  }
+  
+  

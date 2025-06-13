@@ -1,20 +1,33 @@
+/* app/styles/search/search.module.css */
+
 .container {
+  position: relative;           /* for absolute icon if you want that later */
   display: flex;
   align-items: center;
-  gap: 8px;
-   padding: 10px ;
-  border-radius: 25px;
-  justify-content: space-between;
+  background: #f8f9fa;          /* soft gray bg, matches page */
+  border-radius: 20px;
+  padding: 0 12px;
   height: 40px;
-  /* margin-top: 20px; */
-   background-color: #C6E7E7;
-   padding-bottom: 12px;
+  flex: 1;                      /* allow toolbar to shrink/grow */
+  max-width: 360px;
+}
+
+.container :global(svg) {
+  color: #888888;               /* de-emphasized icon */
+  font-size: 1.2rem;
 }
 
 .input {
-  background-color:transparent ;
+  flex: 1;
   border: none;
-  color: #000000;
+  background: transparent;
   outline: none;
-  font-size: 12px;
+  font-size: 0.95rem;
+  color: #212529;
+  padding-left: 8px;            /* a little breathing room after icon */
+}
+
+.input::placeholder {
+  color: #888888;
+  opacity: 1;                   /* some browsers default lower */
 }

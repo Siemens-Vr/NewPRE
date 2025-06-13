@@ -92,6 +92,51 @@ const Sidebar = () => {
 
       {/* Sidebar Menu */}
       <ul className={styles.list}>
+  {menuItems.map((item) => {
+    const isActive = pathname === item.path;
+
+    return (
+      <li key={item.title}>
+        <div
+          className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
+          onClick={() => !item.subpages && router.push(item.path)}
+        >
+          <div className={styles.menuItemContent}>
+            <div className="flex items-center justify-center gap-2">
+              {item.icon}
+              <span className={styles.whiteText}>{item.title}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Always show subpages if they exist */}
+        {item.subpages && (
+          <ul className={styles.submenu}>
+            {item.subpages.map((sub) => {
+              const isSubActive = pathname === sub.path;
+              return (
+                <li key={sub.title}>
+                  <div
+                    className={`${styles.submenuItem} ${isSubActive ? styles.active : ""}`}
+                    onClick={() => router.push(sub.path)}
+                    style={{ cursor: "pointer", padding: "8px" }}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      {sub.icon}
+                      <span className={styles.whiteText}>{sub.title}</span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </li>
+    );
+  })}
+</ul>
+
+      {/* <ul className={styles.list}>
         {menuItems.map((item) => {
           const isActive = pathname === item.path;
 
@@ -115,7 +160,6 @@ const Sidebar = () => {
                 </div>
               </div>
 
-              {/* Render submenus */}
               {openMenus[item.title] && item.subpages && (
                 <ul className={styles.submenu}>
                   {item.subpages.map((sub) => {
@@ -142,20 +186,10 @@ const Sidebar = () => {
             </li>
           );
         })}
-      </ul>
+      </ul> */}
 
       <div className={styles.down}>
-        <form>
-          <button className={`${styles.logout} ${styles.blackText}`} type="button" onClick={() => router.push("/login")}>
-            <MdLogout className={styles.blackIcon} />
-            Logout
-          </button>
-        </form>
-
-        <div className={styles.settings}>
-          <MdSettings className={styles.whiteIcon} />
-          <span className={styles.whiteText}>Settings</span>
-        </div>
+       
 
         <div className={`${styles.footer} ${styles.whiteTexts}`}>&copy; 2025 SIEMENS ERP</div>
       </div>

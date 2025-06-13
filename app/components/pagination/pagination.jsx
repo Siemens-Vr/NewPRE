@@ -1,49 +1,49 @@
-"use client";
+// app/components/pagination/Pagination.jsx
+'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/pagination/pagination.module.css';
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const Pagination = ({ count }) => {
+export default function Pagination({ count, itemsPerPage = 10 }) {
   const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathname = usePathname();
+  const pathname     = usePathname();
+  const { replace }  = useRouter();
 
-  const page = searchParams.get("page") || 0;
+  // Current page from URL (0-based)
+  const page = parseInt(searchParams.get('page') ?? '0', 10);
 
-  const params = new URLSearchParams(searchParams);
-  const ITEM_PER_PAGE = 10;
+  // Compute whether prev/next exist
+  const hasPrev = page > 0;
+  const hasNext = (page + 1) * itemsPerPage < count;
 
-  const hasPrev = ITEM_PER_PAGE * (parseInt(page) ) > 0;
-  const hasNext = ITEM_PER_PAGE * (parseInt(page) ) + ITEM_PER_PAGE < count;
-
-  const handleChangePage = (type) => {
-    type === "prev"
-      ? params.set("page", parseInt(page) - 1)
-      : params.set("page", parseInt(page) + 1);
-    replace(`${pathname}?${params}`);
+  // Handler to bump page param
+  const changePage = (newPage) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', newPage);
+    replace(`${pathname}?${params.toString()}`);
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.pagination}>
       <button
         className={styles.button}
+        onClick={() => changePage(page - 1)}
         disabled={!hasPrev}
-        onClick={() => handleChangePage("prev")}
       >
         Previous
       </button>
+
+      <span className={styles.pageInfo}>
+        Page {page + 1} of {Math.ceil(count / itemsPerPage)}
+      </span>
+
       <button
         className={styles.button}
+        onClick={() => changePage(page + 1)}
         disabled={!hasNext}
-        onClick={() => handleChangePage("next")}
       >
         Next
       </button>
     </div>
   );
-};
-
-export default Pagination;
-
-
-
+}

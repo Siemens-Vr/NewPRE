@@ -12,36 +12,66 @@ import Instructors from "@/app/components/student/Instructors";
 
 const Dashboard = () => {
 
+    const stats = [
+    { id: 1, icon: '👥', title: 'Total Students',    value: 120 },
+    { id: 2, icon: '📚', title: 'Active Courses',    value:  12 },
+    { id: 3, icon: '🧑‍🏫', title: 'Instructors',      value:   8 },
+    { id: 4, icon: '📝', title: 'Pending Assignments', value:  25 },
+  ];
+
   return (
-    <div className={styles.wrapper}>
-  {/* Main Content */}
-  <div className={styles.studentMain}>
-    <div className={styles.card}>
-      {cards.map((item) => (
-        <Card item={item} key={item.id} />
-      ))}
+     <div className={styles.wrapper}>
+
+      {/* Row 1: Student Quick Stats */}
+      <div className={styles.row1}>
+        <div className={styles.containercards}>
+          <h2 className={styles.text}>Quick Stats</h2>
+          <div className={styles.cardGrid}>
+            {stats.map(s => (
+              <Card
+                key={s.id}
+                item={{ icon: s.icon, title: s.title, value: s.value }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: Academic Calendar + Reminders */}
+      <div className={styles.row2}>
+        <div className={styles.containercards}>
+          <h2 className={styles.text}>Academic Calendar</h2>
+          <CalendarComponent />
+        </div>
+        <div className={styles.containercards}>
+          <h2 className={styles.text}>Daily Notice</h2>
+          <Reminders />
+        </div>
+      </div>
+
+      {/* Row 3: Courses | Instructors | Performance */}
+      <div className={styles.row2}>
+        <div className={styles.flexFill}>
+          <h2 className={styles.text}>Performance</h2>
+          <Chart />
+       
+        </div>
+        <div className={styles.flexFill}>
+          <div>
+              <h2 className={styles.text}>Instructors</h2>
+              <Instructors />
+          </div>
+          <div>
+                <h2 className={styles.text}>Ongoing Courses</h2>
+                <Course />
+          </div>
+        </div>
+        <div className={styles.flexFill}>
+          
+        </div>
+      </div>
+
     </div>
-
-    <div className={styles.view}>
-      <Chart />
-      <Instructors />
-    </div>
-    <Course />
-    <div className={styles.view}>
-      {/* <CalendarComponent />
-   
-      <Reminders /> */}
-    </div>
-  </div>
-
-  {/* Right Sidebar */}
-  <div className={`${styles.side} hidden 2xl-custom:block`}>
-  <Rightbar />
-</div>
-
-
-</div>
-
   );
 };
 

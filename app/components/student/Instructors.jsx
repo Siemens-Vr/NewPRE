@@ -30,20 +30,7 @@ const InstructorsAndNotice = () => {
                 </div>
             </div>
 
-            {/* Daily Notice */}
-            <div>
-                <h3 className={styles.noticeTitle}>Daily Notice</h3>
-                <div className="space-y-4 text-sm">
-                    <div>
-                        <p className={styles.noticeItemTitle}>Payment Due</p>
-                        <p className={styles.noticeItem}>Cohort 3 exams payment date.</p>
-                    </div>
-                    <div>
-                        <p className={styles.noticeItemTitle}>Exam Schedule</p>
-                        <p className={styles.noticeItem}>Cohort 3 exams scheduled to begin next week.</p>
-                    </div>
-                </div>
-            </div>
+          
         </div>
     );
 };

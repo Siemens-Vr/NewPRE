@@ -10,7 +10,7 @@ import { config } from "/config";
 import ActionButton from "@/app/components/actionButton/actionButton";
 import UpdateTransportPopup from  '@/app/components/transport/update';
 import Swal from "sweetalert2";
-import LevelForm from "@/app/components/cohort/Add level";
+import LevelForm from "@/app/components/cohort/AddLevel";
 import AddTransportPage
   from "@/app/pages/project/dashboard/[uuid]/dashboard/phases/[phaseuuid]/dashboard/[outputuuid]/expenses/transport/add/page";
 

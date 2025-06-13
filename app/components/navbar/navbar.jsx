@@ -1,62 +1,80 @@
 "use client";
-import React from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from "next/navigation";
 import styles from '@/app/styles/navbar/navbar.module.css';
 import Image from "next/image";
-
-// import styles from '@/app/styles/sidebar/sidebar.module.css';
-
 import {
   MdNotifications,
   MdOutlineChat,
-  MdPublic,
-  MdSearch,
 } from "react-icons/md";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  console.log(pathname)
+
   const user = {
-    "username": "cheldean",
-    "role" : "Admin"
-  }
+    username: "cheldean",
+    role: "Admin"
+  };
 
-  if (!user) {
-    console.error("User data is not available.");
-    return <div className={styles.container}>User data not available</div>;
-  }
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  // Convert pathname (e.g., "/staff") to "Staff"
+  const pageTitle = pathname?.split("/").filter(Boolean).pop() || "Dashboard";
+  const formattedTitle = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
 
   return (
     <div className={styles.container}>
-      {/*<div className={styles.title}>{pathname.split("/").pop()}</div>*/}
-      <div className={styles.menu}>
+    <div className={styles.container1}>
+      <div className={styles.left}>
+        <span className={styles.welcome}>Welcome, <strong>{user.username}</strong> 👋</span>
+      </div>
 
-        {/*<div className={styles.search}>*/}
-
-        {/*  /!*<input type="text" placeholder="Search..." className={styles.input} />*!/*/}
-        {/*  /!*<MdSearch />*!/*/}
-        {/*</div>*/}
-
-        <div className={styles.icons}>
-          <MdOutlineChat size={20}/>
-          <MdNotifications size={20}/>
-          {/*<MdPublic size={20}/>*/}
-          <div className={styles.user}>
+      <div className={styles.right}>
+        <MdOutlineChat size={20} />
+        <MdNotifications size={20} />
+        <div className={styles.userMenu} ref={dropdownRef}>
+          <div className={styles.user} onClick={() => setDropdownOpen(!dropdownOpen)}>
             <Image
-                className={styles.userImage}
-                src="/noavatar.png"
-                alt=""
-                width="50"
-                height="50"
+              className={styles.userImage}
+              src="/noavatar.png"
+              alt=""
+              width="40"
+              height="40"
             />
             <div className={styles.userDetail}>
-              <span className={styles.username}>{user ? user.username.toUpperCase() : "Jane"}</span>
-              <span className={styles.userTitle}>{user ? user.role.toUpperCase() : "Admin"}</span>
+              <span className={styles.username}>{user.username.toUpperCase()}</span>
+              <span className={styles.userTitle}>{user.role.toUpperCase()}</span>
             </div>
           </div>
-
+          {dropdownOpen && (
+            <div className={styles.dropdownMenu}>
+              <ul>
+                <li>My Profile</li>
+                <li>Settings</li>
+                <li>Logout</li>
+              </ul>
+            </div>
+          )}
         </div>
+      </div>
+    </div>
+
+
+      {/* Dynamic breadcrumb-style page title */}
+      <div style={{ padding: "10px 20px" }}>
+        <h1 className={styles.component}>{formattedTitle}</h1>
       </div>
     </div>
   );

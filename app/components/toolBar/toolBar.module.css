@@ -1,0 +1,67 @@
+/* app/components/toolbar/toolbar.module.css */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+/* Pull your Search container in as a flex item */
+.toolbar :global(.container) {
+  flex: 1 1 240px;
+}
+
+/* Button group on the right */
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+}
+
+/* Primary “Add New” button in Coral */
+.primaryButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #2bb3d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.primaryButton:hover {
+  background-color: #e5673c;
+  transform: translateY(-1px);
+}
+
+/* Secondary “Filter” button */
+.secondaryButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #fff;
+  color: #212529;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.secondaryButton:hover {
+  background-color: #f1f3f5;
+  transform: translateY(-1px);
+}
+
+/* Icon inside the buttons */
+.buttonIcon {
+  font-size: 1.1rem;
+  line-height: 1;
+}

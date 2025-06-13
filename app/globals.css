@@ -1,4 +1,14 @@
 /* globals.css */
+/* app/globals.css */
+@import "react-big-calendar/lib/css/react-big-calendar.css";
+
+:global(html),
+:global(body),
+:global(#__next) {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 @tailwind base;
 @tailwind components;
@@ -6,12 +16,60 @@
 
 
 :root {
-  /*--bg: #121212;*/
-  /*--bgSoft: #1b9392;*/
-  --text: #000000;
-  --textSoft: #1b9392;
+  /* Primary palette */
+  --sidebar-bg:            #1c1c3c;  /* VML Navy Blue */
+  --sidebar-active:        #2bb3d2;  /* Sky Blue */
+  --cta-accent:            #ff7f50;  /* Coral */
+  --primary-blue:          #2bb3d2;  /* Sky Blue */
+  --primary-blue-hover:    #22a0c1;
+  --accent-coral-hover:    #e5673c;
+  --bg-soft:               #f8f9fa;  /* Soft Gray */
+  --text-dark:             #212529;  /* Near-black */
+
+  /* Cards & metrics */
+  --card-bg:               #f8f9fa;  /* Soft Gray */
+  --card-hover-bg:         #e9ecef;  /* Lighter Gray */
+
+  /* Danger / logout */
+  --danger-base:           #dc3545;
+  --danger-hover:          #bd2130;
 }
 
+
+/* ================================== */
+/* 4) Buttons                             */
+/* ================================== */
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.btn-primary:hover {
+  background-color: var(--primary-blue-hover);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background-color: var(--cta-accent);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.btn-accent:hover {
+  background-color: var(--accent-coral-hover);
+  transform: translateY(-1px);
+}
+
+/* For tertiary or outline buttons (e.g. Filter) */
+.btn-secondary {
+  background: #fff;
+  color: var(--text-dark);
+  border: 1px solid #d1d5db;
+}
+.btn-secondary:hover {
+  background: #f9fafb;
+}
 * {
   margin: 0;
   padding: 0;

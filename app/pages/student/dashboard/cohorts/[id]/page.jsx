@@ -7,6 +7,7 @@ import styles from '@/app/styles/cohorts/viewCohort/viewCohort.module.css'
 import LevelAddPopUp from '@/app/components/cohort/LevelAddPopUp';
 import LZString from 'lz-string';
 import { useRouter } from 'next/navigation';
+import api from "@/app/lib/utils/axios";
 
 
 import { config } from '/config';
@@ -49,14 +50,15 @@ const ViewCohort = () => {
   
   // Separate function to refetch cohort data
   const fetchCohortData = async () => {
+    
     try {
       if (id) { 
-        const response = await fetch(`${config.baseURL}/cohorts/${id}`);
+        const response = await fetch(`${config.baseURL}cohorts/${id}`);
         const data = await response.json();
-        // console.log(data)
+        
         setCohortsData(data.cohort);
         setLevelsData(data.levels || [])
-
+// console.log("data fetch:",data)
       }
     } catch (error) {
       console.error("Error fetching cohort data:", error);

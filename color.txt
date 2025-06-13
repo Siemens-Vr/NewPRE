@@ -1,0 +1,18 @@
+| Element        | Current Color | Suggested New Color         | Purpose                      |
+| -------------- | ------------- | --------------------------- | ---------------------------- |
+| Sidebar BG     | Teal Green    | **#1c1c3c** (VML Navy Blue) | Professional, modern         |
+| Sidebar Active | Orange        | **#2bb3d2** (Sky Blue)      | Highlighted tab              |
+| Header Cards   | Orange / Teal | **#2bb3d2** or neutral gray | Cleaner, unified look        |
+| Button (CTA)   | Orange        | **#ff7f50** (Coral) or Blue | Better contrast, modern      |
+| Background     | White         | **#f8f9fa** (Soft Gray)     | Reduced eye strain           |
+| Text Color     | Black         | **#212529** or near-black   | Readable on soft backgrounds |
+
+
+| Element               | Base Color            | Hover Color                 | Notes                                                           |
+| --------------------- | --------------------- | --------------------------- | --------------------------------------------------------------- |
+| **Sidebar Items**     | `#1c1c3c` (Navy Blue) | `#2bb3d2` (Sky Blue Tint)   | Text becomes white; slight left border or background highlight. |
+| **Buttons (Primary)** | `#2bb3d2` (Sky Blue)  | `#22a0c1` (Darker Sky Blue) | Add box-shadow or scale effect.                                 |
+| **Buttons (Accent)**  | `#ff7f50` (Coral)     | `#e5673c` (Deep Coral)      | Use for actions like “Add,” “Submit,” “Create.”                 |
+| **Cards / Metrics**   | `#f8f9fa` (Soft Gray) | `#e9ecef` (Lighter Gray)    | Subtle elevation + cursor pointer.                              |
+| **Quick Links**       | `#ff7f50` (Coral)     | `#2bb3d2` or `#f05c44`      | Background change + slight text color shift for contrast.       |
+| **Logout / Danger**   | `#dc3545` (Red)       | `#bd2130` (Dark Red)        | Critical actions should show strong hover feedback.             |

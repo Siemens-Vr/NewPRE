@@ -1,168 +1,153 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation';
-import styles from '@/app/styles/staff/staff.module.css'
-import AddStaffPage from "@/app/components/staff/addStaff";
-import Link from "next/link";
-import Search from '@/app/components/search/search'
-import api from "@/app/lib/utils/axios";
+import { useEffect, useState, useMemo } from 'react';
+import { useSearchParams }                from 'next/navigation';
+import Toolbar                            from '@/app/components/toolbar/Toolbar';
+import Table                              from '@/app/components/table/Table';
+import Pagination                         from '@/app/components/pagination/Pagination';
+import AddStaffPage                       from '@/app/components/staff/addStaff';
+import api                                from '@/app/lib/utils/axios';
+import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete } from 'react-icons/md';
+import styles                             from '@/app/styles/staff/staff.module.css';
+import Swal                               from 'sweetalert2';
+import Link                               from 'next/link';
 
+const ROWS_PER_PAGE = 10;
 
-import Swal from 'sweetalert2';
-import { config } from "/config";
+export default function StaffPage() {
+  const [staffs,    setStaffs]    = useState([]);
+  const [loading,   setLoading]   = useState(false);
+  const [adding,    setAdding]    = useState(false);
+  const [sortKey,   setSortKey]   = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
 
-const StaffPage = () => {
-  const [staffs, setStaffs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(null); // Stores the UUID of the staff being deleted
+  // Grab ?q= and ?page= from URL
   const searchParams = useSearchParams();
-  const q = searchParams.get('q') || '';
-  const [staff, setAddStaff] = useState(false);
-  
+  const q    = searchParams.get('q')    || '';
+  const page = parseInt(searchParams.get('page') ?? '0', 10);
 
+  // Fetch staff list whenever q changes
   useEffect(() => {
     const fetchStaffs = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`/staffs${q ? `?q=${q}` : ''}`);
-        console.log("Running")
-        console.log(response.data)
-    
-        if (response.status < 200 || response.status >= 300) throw new Error("Failed to fetch staff data");
-
-        setStaffs(response.data);
-      } catch (error) {
-        console.error('Error fetching staff:', error);
+        const url = `/staffs${q ? `?q=${encodeURIComponent(q)}` : ''}`;
+        const res = await api.get(url);
+        setStaffs(res.data);
+      } catch (err) {
+        console.error(err);
+        Swal.fire('Error', 'Failed to load staff list', 'error');
       } finally {
         setLoading(false);
       }
     };
-
     fetchStaffs();
   }, [q]);
 
-  const showErrorAlert = (message) => {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: message,
-      confirmButtonColor: '#3085d6',
+  // Sort in-memory
+  const sortedStaffs = useMemo(() => {
+    if (!sortKey) return staffs;
+    return [...staffs].sort((a, b) => {
+      const aVal = (a[sortKey] ?? '').toString().toLowerCase();
+      const bVal = (b[sortKey] ?? '').toString().toLowerCase();
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
     });
-  };
+  }, [staffs, sortKey, sortOrder]);
 
-  
-  const handleDeleteStaff = async (uuid, fullName) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete ${fullName}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete',
-      cancelButtonText: 'Cancel'
-    });
-    
-    if (result.isConfirmed) {
-      setDeleting(uuid);
-      try {
-        const response = await fetch(`${config.baseURL}/staffs/${uuid}/delete`, {
-          method: 'GET',
-        });
+  // Slice by page from URL
+  const paginatedStaffs = useMemo(() => {
+    const start = page * ROWS_PER_PAGE;
+    return sortedStaffs.slice(start, start + ROWS_PER_PAGE);
+  }, [sortedStaffs, page]);
 
-        if (response.ok) {
-          setStaffs(staffs.filter((staff) => staff.uuid !== uuid));
-          Swal.fire({
-            title: 'Deleted!',
-            text: `${fullName} has been successfully deleted.`,
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-          });
-        } else {
-          const errorData = await response.json();
-          showErrorAlert(errorData.error || 'Failed to delete staff member.');
-        }
-      } catch (error) {
-        console.error('Error deleting staff member:', error);
-        showErrorAlert('An error occurred while trying to delete the staff member.');
-      } finally {
-        setDeleting(null);
-      }
+  // Handle header click toggling
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortOrder(o => (o === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
     }
   };
 
+  // Column definitions
+  const columns = [
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      render: row => {
+        const first = row.firstName?.trim();
+        const last  = row.lastName?.trim();
+        if (!first && !last) return '—';
+        return [first, last].filter(Boolean).join(' ');
+      }
+    },
+    { key: 'email',       label: 'Email',    sortable: true },
+    { key: 'gender',      label: 'Gender' },
+    { key: 'phoneNumber', label: 'Phone' },
+    { key: 'idNumber',    label: 'ID No' },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: row => (
+        <div className={styles.actionGroup}>
+          <Link href={`/pages/staff/${row.uuid}/dashboard`}>
+            <button className="btn-primary" title="View">
+              <MdVisibility size={18} />
+            </button>
+          </Link>
+        </div>
+      )
+    }
+  ];
+
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <Search placeholder="Search for a staff..." />
-       
-
-        <button onClick={() => setAddStaff(true)} className={styles.addButton}>
-          Add New
-        </button>
-
-      </div>
+      <Toolbar
+        placeholder="Search staff..."
+        buttons={[
+          {
+            label: 'Filter',
+            onClick: () => {/* open filter UI */},
+            variant: 'secondary',
+            icon: MdFilterList
+          },
+          {
+            label: 'Add New',
+            onClick: () => setAdding(true),
+            variant: 'primary',
+            icon: MdAdd
+          }
+        ]}
+      />
 
       {loading ? (
-        <p className={styles.loader}>Loading staff members...</p>
+        <p className={styles.loader}>Loading staff members…</p>
       ) : (
         <>
-          {staffs.length > 0 ? (
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <td>Name</td>
-                  <td>Email</td>
-                  <td>Phone</td>
-                  <td>ID NO</td>
-                  <td>Action</td>
-                </tr>
-              </thead>
-              <tbody>
-                {staffs.map((staff) => {
-                  const fullName = `${staff.firstName} ${staff.lastName}`;
-                  return (
-                    <tr key={staff.uuid}>
-                      <td>
-                        <div className={styles.facilitator}>
-                          {fullName}
-                        </div>
-                      </td>
-                      <td>{staff.email}</td>
-                
-                      <td>{staff.phoneNumber}</td>
-                      <td>{staff.idNo}</td>
-                      <td>
-                      <Link href={`/pages/staff/${staff.uuid}/dashboard`}>
-                        <button
-                          className={`${styles.button} ${styles.view}`}
-                          onClick={() => {
-                            console.log("clicked this", staff.uuid)
-                            }}
-                        >
-                          View
-                        </button>
-                      </Link>
-
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-
-             
+          {paginatedStaffs.length > 0 ? (
+            <Table
+              columns={columns}
+              data={paginatedStaffs}
+              onSort={handleSort}
+              sortKey={sortKey}
+              sortOrder={sortOrder}
+            />
           ) : (
-            <p className={styles.noStudents}>No staff members available</p>
+            <p className={styles.noData}>No staff found.</p>
           )}
 
-          {staff && <AddStaffPage onClose={() => setAddStaff(false)} />}
-
+          <Pagination
+            count={sortedStaffs.length}
+            itemsPerPage={ROWS_PER_PAGE}
+          />
         </>
       )}
+
+      {adding && <AddStaffPage onClose={() => setAdding(false)} />}
     </div>
   );
-};
-
-export default StaffPage;
+}

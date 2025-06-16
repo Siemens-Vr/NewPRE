@@ -1,79 +1,68 @@
+// app/components/categories/CategoriesPopUp.jsx
+"use client";
 import React, { useState } from 'react';
-import styles from '@/app/styles/categories/categories.module.css'
+import FormModal from '@/app/components/Form/FormModal';
 import api from '@/app/lib/utils/axios';
 
+export default function CategoriesPopUp({ onClose }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState(null);
 
-const CategoriesPopUp = ({ onClose }) => {
-    const [category, setCategory] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null); 
-     
+  // initial form values
+  const initialValues = { categories: "" };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true); 
+  // called with { categories: "a, b, c" }
+  const handleSubmit = async ({ categories }) => {
+    setLoading(true);
+    setError(null);
 
-        try {
-            const categoriesArray = category
-            .split(',')
-            .map(c => c.trim())
-            .filter(c => c !== '');
+    // build array
+    const cats = categories
+      .split(",")
+      .map(c => c.trim())
+      .filter(c => c);
 
-            if (categoriesArray.length === 0) {
-                setError("Please enter at least one valid category.");
-                setLoading(false);
-                return;
-            }
-
-            const payload = { categories: categoriesArray };
-
-            const response = await api.post(`/categories`, payload, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (response.statusText === "OK") {
-                console.log("Added successfully");
-                setCategory(''); 
-                onClose(); 
-            } else {
-                setError("Failed to add categories. Please try again."); 
-            }
-        } catch (error) {
-            setError(error.message); 
-        } finally {
-            setLoading(false); 
-        }
+    if (cats.length === 0) {
+      setError("Please enter at least one category.");
+      setLoading(false);
+      return;
     }
 
-    return (
-        <div className={styles.popup}>
-            <div className={styles.popupContent}>
-            <button type="button" onClick={onClose} className={styles.btn}>X</button>
+    try {
+      const res = await api.post("/categories", { categories: cats });
+      if (res.status === 200) {
+        onClose();
+      } else {
+        setError("Failed to add categories");
+      }
+    } catch (e) {
+      setError(e.message || "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <h2>Add New Component Types</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.formGroup}>
-                        <label htmlFor="category">Component Types</label>
-                        <input
-                            type="text"
-                            id="category"
-                            name="category"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            placeholder="Enter categories separated by commas"
-                        />
-                    </div>
-                    {loading && <p className={styles.loader}>Adding, please wait...</p>}
-                    {error && <p className={styles.error}>{error}</p>} 
-                    <div className={styles.popupActions}>
-                        <button type="submit" disabled={loading}>Add</button>
-                     </div>
-                </form>
-            </div>
-        </div>
-    );
-};
+  // our single form field
+  const fields = [
+    {
+      name:        "categories",
+      label:       "Component Types (comma-separated)",
+      type:        "textarea",
+      placeholder: "e.g. Mechanical, Electrical, Pneumatics",
+    },
+  ];
 
-export default CategoriesPopUp;
+  return (
+    <FormModal
+      title="Add New Component Types"
+      fields={fields}
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      onClose={onClose}
+    >
+      {/* extra UI below the fields */}
+      {loading && <p style={{ color:"#888" }}>Adding, please wait…</p>}
+      {error   && <p style={{ color:"red"   }}>{error}</p>}
+    </FormModal>
+  );
+}

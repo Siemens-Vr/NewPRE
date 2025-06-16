@@ -3,9 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '@/app/styles/borrow/borrow.module.css';
 import AddBorrow from '@/app/components/Borrow/borrow';
-import { Suspense } from 'react';
 import Link from 'next/link';
-import Search from '@/app/components/search/search';
 import BorrowedCard from '@/app/components/card/borrowCard';
 import api from '@/app/lib/utils/axios';
 import {MdSearch} from "react-icons/md";

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/app/styles/components/add/addComponent.module.css';
 import ConditionPopUp from '@/app/components/condition/condition';
-import { config } from '/config';
+import api from '@/app/lib/utils/axios';
 
 const AddComponent = ({onClose}) => {
     const router = useRouter();
@@ -27,7 +27,8 @@ const AddComponent = ({onClose}) => {
     useEffect(() => {
         const fetchComponentTypeData = async () => {
             try {
-                const response = await fetch(`${config.baseURL}/categories`);
+                const response = await api.get(`${config.baseURL}/categories`);
+                
                 if (response.ok) {
                     const data = await response.json();
                     setComponentTypes(data);

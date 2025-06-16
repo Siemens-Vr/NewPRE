@@ -111,6 +111,29 @@ export const projectdata=[
     number: 6,
   }
 ]
+
+export const equipmentdata=[
+  {
+    id: 1,
+    title:"Total Equipments",
+    number: 2,
+  },
+  {
+    id: 2,
+    title:"Borrowed Equipment",
+    number: 3,
+  },
+  {
+    id: 3,
+    title:"Equipments To Return",
+    number: 1,
+  },
+  {
+    id: 4,
+    title:"Total",
+    number: 6,
+  }
+]
 export const instructors = [
   { id: 1, src: '/instructor1.jpg', alt: 'Instructor 1' },
   { id: 2, src: '/instructor2.jpg', alt: 'Instructor 2' },

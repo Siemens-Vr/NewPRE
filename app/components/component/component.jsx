@@ -27,10 +27,11 @@ const AddComponent = ({onClose}) => {
     useEffect(() => {
         const fetchComponentTypeData = async () => {
             try {
-                const response = await api.get(`${config.baseURL}/categories`);
+                const response = await api.get(`/categories`);
+                console.log(response)
                 
-                if (response.ok) {
-                    const data = await response.json();
+                if (response.status === 200) {
+                    const data = await response.data;
                     setComponentTypes(data);
                 } else {
                     console.error("Failed to fetch component types");
@@ -67,13 +68,9 @@ const AddComponent = ({onClose}) => {
         };
 
         try {
-            const response = await fetch(`${config.baseURL}/components`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSubmit),
-            });
+            const response = await api.post(`/components`, dataToSubmit );
 
-            if (response.ok) {
+            if (response.status === 200) {
                 alert("Component created successfully");
                 setFormData({
                     componentName: '',

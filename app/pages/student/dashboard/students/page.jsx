@@ -2,94 +2,57 @@
 "use client";
 
 import api from '@/app/lib/utils/axios';
-import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import AddLevelPopup from '@/app/components/student/AddLevelPopUp';
+import UpdateStudent from "@/app/components/student/UpdateStudent";
 import Pagination from '@/app/components/pagination/pagination';
-import Search from '@/app/components/search/search';
 import styles from '@/app/styles/students/Student.module.css';
-import Link from "next/link";
+import { useEffect, useState, useMemo } from 'react';
 import Swal from 'sweetalert2';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import { config } from '/config';
 import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
+import Toolbar from '@/app/components/toolbar/Toolbar';
+import Table from '@/app/components/table/Table';
+import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete, MdDownload  } from 'react-icons/md';
+import Loading from '@/app/components/Loading/Loading';
 
+
+
+
+const ROWS_PER_PAGE = 10;
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
-  const [count, setCount] = useState(0);
-  const [popupStudentId, setPopupStudentId] = useState(null);
   const [filteredStudents, setFilteredStudents] = useState([]);
-  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState('name');
-  const [searchValue, setSearchValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [popupStudentId, setPopupStudentId] = useState(null);
+  const [sortKey, setSortKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [page, setPage] = useState(0);
+  const [editingStudent, setEditingStudent] = useState(null);
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const q = searchParams.get('q') || '';
-  const page = searchParams.get('page') || '0';
-
-  useEffect(() => {
-    if (!searchParams.has('page')) {
-      const params = new URLSearchParams(searchParams);
-      params.set('page', '0');
-      replace(`${window.location.pathname}?${params.toString()}`);
-    }
-  }, [searchParams, replace]);
-
-//filters
-  const [filters, setFilters] = useState({
-    cohort: '',
-    level: '',
-    regNo: '',
-    kcseNo: '',
-    name: '',
-  });
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // const applyFilters = () => {
-  //   const filtered = students.filter((student) => {
-  //     return (
-  //       (filters.cohort === '' || student.cohort === filters.cohort) &&
-  //       (filters.level === '' || student.level === filters.level) &&
-  //       (filters.regNo === '' || student.regNo.includes(filters.regNo)) &&
-  //       (filters.name === '' || student.name.includes(filters.name))
-  //     );
-  //   });
-  //
-  //   setFilteredStudents(filtered);
-  // };
+  // const page = searchParams.get('page') || '0';
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const url = `/students${q ? `?q=${q}` : ''}${page ? `${q ? '&' : '?'}page=${page}` : ''}`;
+        const url = `/students${q ? `?q=${encodeURIComponent(q)}` : ''}`;
         console.log(url);
-        const response = await api.get(url);
-        console.log(response)
-        const data =  response.data;
-        if (response.statusText === 'OK') {
-          const { content, count } = data;
-          setStudents(content || []);
-          setFilteredStudents(content || []);
-          setCount(count || 0);
-        } else {
-          console.error('Error fetching students:', data);
-          showErrorAlert(data.message || 'Failed to fetch students. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error fetching students:', error);
-        showErrorAlert('Failed to fetch students. Please try again.');
+        const res = await api.get(url);
+       setStudents(res.data.content);
+setFilteredStudents(res.data.content);
+        console.log("data:",res.data);
+      } catch (err) {
+        console.error(err);
+        Swal.fire('Error', 'Failed to load students list', 'error');
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchStudents();
-  }, [q, page]);
-
-
+  }, [q]);
 
   const fetchAllStudents = async () => {
     const allStudents = [];
@@ -121,74 +84,17 @@ const StudentsPage = () => {
     return allStudents;
   };
 
-  const showErrorAlert = (message) => {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: message,
-      confirmButtonColor: '#1b9392',
-    });
-  };
-
-  // const handleAddLevel = (newLevel) => {
-  //   setLevels([...levels, newLevel]);
-
-  // };
-  // console.log(levels)
-  //added by me
-  const applyFilters = (customFilters = filters) => {
-    const filtered = students.filter((student) => {
-      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
-
-      return (
-          (customFilters.cohort === '' || student.cohort === customFilters.cohort) &&
-          (customFilters.level === '' || student.level === customFilters.level) &&
-          (customFilters.regNo === '' || student.regNo.toLowerCase().includes(customFilters.regNo.toLowerCase())) &&
-          (customFilters.kcseNo === '' || (student.kcseNo && student.kcseNo.toLowerCase().includes(customFilters.kcseNo.toLowerCase()))) &&
-          (customFilters.name === '' || fullName.includes(customFilters.name.toLowerCase()))
-      );
-    });
-
-    setFilteredStudents(filtered);
-  };
-
-
-
-  const handleDeleteStudent = async (uuid, fullName) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete ${fullName}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#ff7211',
-      confirmButtonText: 'Yes, delete',
-      cancelButtonText: 'Cancel'
-    });
-
-    if (result.isConfirmed) {
-      try {
-        const response = await api.get(`/students/${uuid}/delete`);
-
-        if (response.statusText === 'OK') {
-          setStudents(students.filter((student) => student.uuid !== uuid));
-          Swal.fire({
-            title: 'Deleted!',
-            text: `${fullName} has been successfully deleted.`,
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-          });
-        } else {
-          const errorData = await response.json();
-          showErrorAlert(errorData.error || 'Failed to delete student.');
-        }
-      } catch (error) {
-        console.error('Error deleting student:', error);
-        showErrorAlert('An error occurred while trying to delete the student.');
-      }
+  const handleAddNewClick = () => {
+    setShowAddNewPopup(true);
+};
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
     }
   };
-
   const handleDownloadPDF = async () => {
     const allStudents = await fetchAllStudents();
     if (allStudents.length > 0) {
@@ -199,133 +105,207 @@ const StudentsPage = () => {
       showErrorAlert('No students available to download.');
     }
   };
+  const handleDeleteStudent = async (uuid, fullName) => {
+    const confirm = await Swal.fire({
+      title: `Delete ${fullName}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete'
+    });
+    if (confirm.isConfirmed) {
+      try {
+        await api.delete(`/students/${uuid}/delete`);
+        setStudents((prev) => prev.filter((s) => s.uuid !== uuid));
+        Swal.fire('Deleted!', `${fullName} has been removed.`, 'success');
+      } catch (err) {
+        Swal.fire('Error', 'Something went wrong', 'error');
+      }
+    }
+  };
+const handleUpdateStudent = (student) => {
+  setEditingStudent(student);
+};
 
-    const handleAddNewClick = () => {
-        setShowAddNewPopup(true);
-    };
+  const sortedStudents = useMemo(() => {
+    if (!Array.isArray(filteredStudents)) return [];
+  
+    if (!sortKey) return filteredStudents;
+  
+    return [...filteredStudents].sort((a, b) => {
+      const aVal = (a[sortKey] ?? '').toString().toLowerCase();
+      const bVal = (b[sortKey] ?? '').toString().toLowerCase();
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [filteredStudents, sortKey, sortOrder]);
+  
 
-    // Close the "Add New" student popup
-    const handleClosePopup = () => {
-        setShowAddNewPopup(false);
-    };
+  const paginatedStudents = useMemo(() => {
+    const start = page * ROWS_PER_PAGE;
+    return Array.isArray(sortedStudents)
+      ? sortedStudents.slice(start, start + ROWS_PER_PAGE)
+      : [];
+  }, [sortedStudents, page]);
 
-    return (
-      <div className={styles.container}>
-        <div className={styles.top}>
-          <div>
-            <div className={styles.filterField}>
-                <div className={styles.horizontalFilters}>
-                  <label htmlFor="filterType" className={styles.text}>Filter by:</label>
-                  <select
-                      id="filterType"
-                      value={selectedFilter}
-                      onChange={(e) => setSelectedFilter(e.target.value)}
-                  >
-                    <option value="name">Name</option>
-                    <option value="regNo">Reg No</option>
-                    <option value="cohort">Cohort</option>
-                    <option value="level">Level</option>
-                    <option value="kcseNo">KCSE No</option>
-                  </select>
-                  <input
-                      type="text"
-                      placeholder={`Enter ${selectedFilter}`}
-                      value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                  />
-                   <button
-                    className={styles.filterButton}
-                    onClick={() => {
-                      setFilters((prev) => {
-                        const updated = {
-                          ...prev,
-                          cohort: '',
-                          level: '',
-                          regNo: '',
-                          kcseNo: '',
-                          name: '',
-                          [selectedFilter]: searchValue, // this sets the selected filter value dynamically
-                        };
-                        // applyFilters needs to run *after* state updates
-                        applyFilters(updated);
-                        return updated;
-                      });
-                    }}
-                >
-                  Search
-                </button>
-                </div>
-                <div className={styles.filterField}>
-                <button className={styles.downloadButton} onClick={handleDownloadPDF}>Download PDF</button>
-                <button onClick={handleAddNewClick} className={styles.addButton}>
-                  Add New
-                </button>
-                </div>
-                </div>              
+  const dropdownItemStyle = {
+  width: '100%',
+  padding: '8px 12px',
+  background: 'none',
+  border: 'none',
+  textAlign: 'left',
+  cursor: 'pointer',
+  fontSize: '0.9rem',
+};
 
-                {/* Conditionally render the Add New Student Popup */}
-                {showAddNewPopup && (
-                    <AddStudentPage onClose={handleClosePopup}/>
-                )}
-         
-            {/*</div>*/}
-          </div>
-        </div>
-        {Array.isArray(filteredStudents) && filteredStudents.length > 0 ? (
-            <table className={styles.table}>
-              <thead>
-              <tr>
-                <td>Reg No</td>
-                <td>Full Name</td>
-                <td>Phone</td>
-                <td>Action</td>
-              </tr>
-              </thead>
-              <tbody>
-              {filteredStudents.map((student) => {
-                const fullName = `${student.firstName} ${student.lastName}`;
-                return (
-                    <tr key={student.uuid}>
-                      <td>{student.regNo}</td>
-                      <td>
-                        <div className={styles.student}>
-                        {fullName}
-                      </div>
-                    </td>
-                    <td>{student.phone}</td>
-                    <td>
-                      <div className={styles.buttons}>
-                        <Link href={`/pages/student/dashboard/students/${student.uuid}`}>
-                          <button className={`${styles.button} ${styles.view}`}>
-                            View
-                          </button>
-                        </Link>
-                        <button  className={`${styles.button}  ${styles.addlevel}`} onClick={() => setPopupStudentId(student.uuid)}>Add Level</button>
-                        {popupStudentId === student.uuid && (
-                          <AddLevelPopup
-                            studentId={student.uuid}
-                            onClose={() => setPopupStudentId(null)}
-                          />
-                        )}
-                        <button
-                          className={`${styles.button} ${styles.delete}`}
-                          onClick={() => handleDeleteStudent(student.uuid, fullName)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        ) : (
-          <p className={styles.noStudents}>No students available</p>
-        )}
-        <Pagination count={count}/>
+  
+  const columns = [
+    { key: 'regNo',    label: 'Registration No',  sortable: true  },
+    {
+      key: 'name',
+      label: ' Full Name',
+      sortable: true,
+      render: row => {
+        const first = row.firstName?.trim();
+        const last  = row.lastName?.trim();
+        if (!first && !last) return '—';
+        return [first, last].filter(Boolean).join(' ');
+      }
+    },
+
+    { key: 'phone', label: 'Phone' },
+{
+  key: 'actions',
+  label: 'Actions',
+  render: row => (
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          const menu = document.getElementById(`dropdown-${row.uuid}`);
+          if (menu) {
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+          }
+        }}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '1.5rem',
+        }}
+        title="More"
+      >
+        ⋮
+      </button>
+
+      <div
+        id={`dropdown-${row.uuid}`}
+        style={{
+          display: 'none',
+          position: 'absolute',
+          top: '100%',
+          right: 0,
+          backgroundColor: '#fff',
+          border: '1px solid #ccc',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+          zIndex: 10,
+          minWidth: '120px',
+        }}
+      >
+        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          <li>
+            <button
+              style={dropdownItemStyle}
+              onClick={() => window.location.href = `/pages/student/dashboard/students/${row.uuid}/`}
+            >
+              View
+            </button>
+          </li>
+          <li>
+            <button
+              style={dropdownItemStyle}
+              onClick={() => {handleUpdateStudent;
+        }}
+            >   
+              Update
+            </button>
+          </li>
+          <li>
+            <button
+              style={{ ...dropdownItemStyle, color: 'red' }}
+              onClick={handleDeleteStudent}
+            >
+              Delete
+            </button>
+          </li>
+        </ul>
       </div>
-    );
+    </div>
+  )
+}
+
+
+  ];
+  return (
+    <div className={styles.container}>
+      <Toolbar
+        placeholder="Search student..."
+        buttons={[
+          {
+            label: 'Filter',
+            onClick: () => {}, 
+            variant: 'secondary',
+            icon: MdFilterList
+          },
+          {
+            label: 'Download PDF',
+            onClick: handleDownloadPDF, 
+            variant: 'primary',
+            icon: MdDownload
+          },
+           {
+            label: 'Add New',
+            onClick: () => setAdding(true),
+            variant: 'primary',
+            icon: MdAdd
+          },
+        ]}
+      />
+
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          {paginatedStudents.length > 0 ? (
+             <Table
+              columns={columns}
+              data={paginatedStudents}
+              onSort={handleSort}
+              sortKey={sortKey}
+              sortOrder={sortOrder}
+            />
+          ) : (
+            <p className={styles.noData}>No students found.</p>
+          )}
+
+          <Pagination
+            count={sortedStudents.length}
+            itemsPerPage={ROWS_PER_PAGE}
+            onPageChange={(p) => setPage(p)}
+          />
+        </>
+      )}
+
+      {adding && <AddStudentPage onClose={() => setAdding(false)} />}
+        {editingStudent && (
+  <UpdateStudent
+    student={editingStudent}
+    onClose={() => setEditingStudent(null)}
+  />
+)}
+
+    </div>
+  );
 };
 const StudentListPDF = ({students}) => {
   const styles = StyleSheet.create({

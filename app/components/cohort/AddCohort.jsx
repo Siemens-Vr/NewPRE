@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { config } from "/config";
 import styles from '@/app/styles/cohorts/AddCohortLevel/addCohortLevel.module.css';
+import api from '@/app/lib/utils/axios';
 
 const CohortModal = ({ onSave, onClose }) => {
   const [cohorts, setCohorts] = useState([]);
@@ -23,9 +24,9 @@ const CohortModal = ({ onSave, onClose }) => {
 
   const fetchCohorts = async () => {
     try {
-      const response = await fetch(`${config.baseURL}/cohorts`);
-      const data = await response.json();
-      setCohorts(data);
+      const response = await api.get(`/cohorts`);
+      // const data = await response.json();
+      setCohorts(response.data);
     } catch (error) {
       console.error("Error fetching cohorts:", error);
     }
@@ -33,9 +34,9 @@ const CohortModal = ({ onSave, onClose }) => {
 
   const fetchLevels = async (cohortUuid) => {
     try {
-      const response = await fetch(`${config.baseURL}/levels/${cohortUuid}`);
-      const data = await response.json();
-      setLevels(data);
+      const response = await api.get(`/levels/${cohortUuid}`);
+      // const data = await response.json();
+      setLevels(response.data);
     } catch (error) {
       console.error("Error fetching levels:", error);
     }

@@ -9,6 +9,7 @@ import { Label } from "recharts";
 import {useRouter} from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import api from '@/app/lib/utils/axios';
 
 
 const AddStudentPage = ({onClose}) => {
@@ -26,7 +27,7 @@ const AddStudentPage = ({onClose}) => {
     regNo: "",
     kcseNo: "",
     gender: "",
-    id: "",
+    idNo: "",
    
   });
 
@@ -51,7 +52,7 @@ const AddStudentPage = ({onClose}) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
-    onClose();
+    toast.success("Student added successfully! ");
     
     const dataToSend = {
       ...formData,
@@ -64,53 +65,34 @@ const AddStudentPage = ({onClose}) => {
       }))
     };
 
-    // console.log("Data to be sent to the backend:", dataToSend);
+    console.log("Data to be sent to the backend:", dataToSend);
 
     try {
-    const response = await api.post("/students", dataToSend, {
-        headers: {
+        const response = await api.post("/students", dataToSend, {
+          headers: {
             "Content-Type": "application/json",
-        },
+          },
         });
+      
         const data = response.data;
-         
-      if (response.statusText === 'OK') {
-        // console.log("Student added successfully");
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          regNo: "",
-          kcseNo: "",
-          gender: "",
-          id:"",
-          
-        });
-        setCohortLevelList([]);
-        if (router) {
-          router.push(`/pages/student/dashboard/students`);
-      } else {
-          console.error("Router is not available");
-      }
-      } else {
-        if (data.error && Array.isArray(data.error)) {
-          data.error.forEach(err => toast.error(err)); // Display each error as a toast
+
+        console.log("Backend responded with:", data);
+        
+        if (response.statusText === 200) {
+          toast.success("Student added successfully! 🎉");
+          // ... redirect, reset, etc.
         } else {
+          // Fallback error toast
           toast.error("Failed to add Facilitator");
         }
-        console.error("Failed to add Facilitator");
+      }  catch (error) {
+        console.error("Caught error:", error?.response?.data || error.message || error);
+        toast.error("An unexpected error occurred.");
       }
-    } catch (error) {
-      setErrorMessage("An error occurred while adding the student.");
-      toast.error("An unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-    
-  };
+       finally {
+        setLoading(false);
+      }
+    }      
 
   return (
       <div className={styles.modalOverlay} >
@@ -211,13 +193,13 @@ const AddStudentPage = ({onClose}) => {
                       </div>
 
                       <div className={styles.divInput}>
-                          <label htmlFor="id" className={styles.label}>Id NO</label>
+                          <label htmlFor="idNo" className={styles.label}>Id NO</label>
 
                           <input
                               type="text"
                               placeholder="Id NO"
-                              name="IdNO"
-                              value={formData.id}
+                              name="idNo"
+                              value={formData.idNo}
                               onChange={handleChange}
                               required
                           />
@@ -272,7 +254,7 @@ const AddStudentPage = ({onClose}) => {
                       <button type="submit" className={styles.submitButton} disabled={loading}>
                           {loading ? (
                               <>
-                                  <Spinner/> Please wait...
+                                   Please wait...
                               </>
                           ) : (
                               'SUBMIT'

@@ -6,7 +6,6 @@ import styles from '@/app/styles/components/add/addComponent.module.css'; // Adj
 import ConditionPopUp from '@/app/components/condition/condition';
 import UploadForm from '@/app/components/uploadForm/uploadForm' // Adjust the import to the correct path
 
-import { config } from '/config';
 
 const AddComponent = () => {
   const router = useRouter();
@@ -32,6 +31,7 @@ const AddComponent = () => {
     const fetchComponentTypeData = async () => {
       try {
         const response = await api.get(`/categories`);
+        console.log(response)
         const data = await response.json();
         setComponentTypes(data);
         
@@ -68,14 +68,8 @@ const AddComponent = () => {
 
     try {
       console.log(dataToSubmit);
-      const response = await fetch(`${config.baseURL}/components`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSubmit),
-      });
-      if (response.ok) {
+      const response = await api.post(`/components`, dataToSubmit);
+      if (response.status === 200) {
         alert("Component created Successfully");
         setFormData({
           componentName: '',

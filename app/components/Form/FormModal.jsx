@@ -4,22 +4,32 @@ import styles from './FormModal.module.css';
 
 /**
  * FormModal
- * A reusable modal that renders dynamic form fields.
- * 
+ * A reusable modal that renders dynamic form fields and optional footer buttons.
+ *
  * Props:
  * - title: string - modal header
  * - fields: array of {
  *     name: string,
  *     label: string,
- *     type: 'text'|'number'|'date'|'textarea'|'select',
+ *     type: 'text'|'number'|'date'|'textarea'|'select'|'button',
  *     options?: array of { value, label } for select,
- *     placeholder?: string
+ *     placeholder?: string,
+ *     onClick?: fn for button,
+ *     disabled?: boolean
  *   }
  * - initialValues: object
  * - onSubmit: fn(values)
  * - onClose: fn()
+ * - extraActions: array of { label: string, onClick: fn, className?: string }
  */
-export default function FormModal({ title, fields, initialValues, onSubmit, onClose }) {
+export default function FormModal({
+  title,
+  fields,
+  initialValues,
+  onSubmit,
+  onClose,
+  extraActions = []
+}) {
   const [values, setValues] = useState(initialValues || {});
 
   const handleChange = (name, val) => {
@@ -43,7 +53,15 @@ export default function FormModal({ title, fields, initialValues, onSubmit, onCl
           {fields.map(f => (
             <div className={styles.field} key={f.name}>
               <label htmlFor={f.name}>{f.label}</label>
-              {f.type === 'textarea' ? (
+              {f.type === 'button' ? (
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={f.onClick}
+                >
+                  {f.label}
+                </button>
+              ) : f.type === 'textarea' ? (
                 <textarea
                   id={f.name}
                   placeholder={f.placeholder}
@@ -55,6 +73,7 @@ export default function FormModal({ title, fields, initialValues, onSubmit, onCl
                   id={f.name}
                   value={values[f.name] || ''}
                   onChange={e => handleChange(f.name, e.target.value)}
+                  disabled={f.disabled}
                 >
                   <option value="">Select...</option>
                   {f.options.map(opt => (
@@ -68,13 +87,30 @@ export default function FormModal({ title, fields, initialValues, onSubmit, onCl
                   placeholder={f.placeholder}
                   value={values[f.name] || ''}
                   onChange={e => handleChange(f.name, e.target.value)}
+                  disabled={f.disabled}
                 />
               )}
             </div>
           ))}
+
           <div className={styles.actions}>
+            <div>
+            {extraActions.map((action, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={styles[action.className] || styles.button}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </button>
+            ))}
+            </div>
+            <div>
             <button type="button" className={styles.cancel} onClick={onClose}>Cancel</button>
             <button type="submit" className={styles.submit}>Submit</button>
+
+            </div>
           </div>
         </form>
       </div>
@@ -87,11 +123,18 @@ FormModal.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text','number','date','textarea','select']).isRequired,
+    type: PropTypes.oneOf(['text','number','date','textarea','select','button']).isRequired,
     options: PropTypes.array,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    onClick: PropTypes.func,
+    disabled: PropTypes.bool
   })).isRequired,
   initialValues: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  extraActions: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    className: PropTypes.string
+  }))
 };

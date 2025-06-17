@@ -263,7 +263,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams }         from "next/navigation";
 import api                         from "@/app/lib/utils/axios";
 import { config }                  from "/config";
-import FormModal                   from "@/app/components/FormModal/FormModal";
+import FormModal                   from "@/app/components/Form/FormModal";
 
 export default function BorrowForm() {
   const searchParams = useSearchParams();

@@ -13,6 +13,7 @@ import AddComponent from "@/app/components/component/component";
 import api                            from '@/app/lib/utils/axios';
 import { toast, ToastContainer }      from 'react-toastify';
 import { MdFilterList, MdAdd }        from 'react-icons/md';
+import Loading from '@/app/components/Loading/loading';
 import styles                         from '@/app/styles/components/components.module.css';
 
 const ROWS_PER_PAGE = 10;
@@ -22,6 +23,7 @@ export default function ComponentsPage() {
   const [loading, setLoading]       = useState(false);
   const [showCatPopup, setShowCat]  = useState(false);
   const [showAddPopup, setShowAdd]  = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const searchParams = useSearchParams();
   const q    = searchParams.get('q')    || '';
@@ -36,7 +38,10 @@ export default function ComponentsPage() {
         console.error(err);
         toast.error(err?.response?.data?.message || 'Failed to fetch components');
       })
-      .finally(() => setLoading(false));
+      .finally(() =>{ 
+        setLoading(false)
+         setHasFetched(true);
+      });
   }, [q]);
 
   // Paginate in‐memory
@@ -112,13 +117,13 @@ export default function ComponentsPage() {
       />
 
       {/* Loading indicator */}
-      {loading && <p className={styles.loader}>Loading...</p>}
+      {loading && <Loading/>}
 
       {/* Table or “No results” */}
       {!loading && (
         items.length > 0
         ? <Table columns={columns} data={paginated} />
-        : <p className={styles.noResults}>No components found</p>
+        : hasFetched && <p className={styles.noResults}>No components found</p>
       )}
 
       {/* Pagination */}

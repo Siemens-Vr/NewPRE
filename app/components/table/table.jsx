@@ -44,8 +44,11 @@ export default function Table({ columns, data, onSort, sortKey, sortOrder }) {
           {data.map((row, idx) => (
             <tr key={idx} className={idx % 2 === 0 ? styles.evenRow : ''}>
               {columns.map(col => (
-                <td key={col.key} className={row[col.key] == null ? styles.missing : ''}>
-                  {col.render ? col.render(row) : (row[col.key] ?? '—')}
+                <td
+                  key={col.key}
+                  className={row[col.key] == null ? styles.missing : ''}
+                >
+                  {col.render ? col.render(row, idx) : (row[col.key] ?? '—')}
                 </td>
               ))}
             </tr>

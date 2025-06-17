@@ -46,6 +46,7 @@ export default function AddComponent({ onClose }) {
       const response = await api.post(`/components`, dataToSubmit);
       if (response.status === 200) {
         alert("Component created successfully");
+         onClose();
         router.push('/pages/equipment/dashboard/components');
       } else {
         alert("Submission failed.");

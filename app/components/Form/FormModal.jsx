@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './FormModal.module.css';
 
 /**
  * FormModal
  * A reusable modal that renders dynamic form fields and optional footer buttons.
- *
  * Props:
  * - title: string - modal header
  * - fields: array of {
@@ -18,6 +19,7 @@ import styles from './FormModal.module.css';
  *     disabled?: boolean
  *   }
  * - initialValues: object
+ * - onChange: fn(name: string, value: any) called on each field change
  * - onSubmit: fn(values)
  * - onClose: fn()
  * - extraActions: array of { label: string, onClick: fn, className?: string }
@@ -26,14 +28,25 @@ export default function FormModal({
   title,
   fields,
   initialValues,
+  onChange,
   onSubmit,
   onClose,
   extraActions = []
 }) {
   const [values, setValues] = useState(initialValues || {});
 
+  // Keep local state in sync if initialValues change
+  useEffect(() => {
+    setValues(initialValues || {});
+  }, [initialValues]);
+
   const handleChange = (name, val) => {
-    setValues(v => ({ ...v, [name]: val }));
+    setValues(prev => {
+      const updated = { ...prev, [name]: val };
+      // propagate change up
+      if (onChange) onChange(name, val);
+      return updated;
+    });
   };
 
   const handleSubmit = e => {
@@ -44,20 +57,23 @@ export default function FormModal({
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.container}>
+      <div className={styles.container} role="dialog" aria-modal="true">
         <div className={styles.header}>
           <h3 className={styles.title}>{title}</h3>
           <button className={styles.closeBtn} onClick={onClose}>×</button>
         </div>
+
         <form className={styles.form} onSubmit={handleSubmit}>
           {fields.map(f => (
             <div className={styles.field} key={f.name}>
               <label htmlFor={f.name}>{f.label}</label>
+
               {f.type === 'button' ? (
                 <button
                   type="button"
                   className={styles.button}
                   onClick={f.onClick}
+                  disabled={f.disabled}
                 >
                   {f.label}
                 </button>
@@ -67,6 +83,7 @@ export default function FormModal({
                   placeholder={f.placeholder}
                   value={values[f.name] || ''}
                   onChange={e => handleChange(f.name, e.target.value)}
+                  disabled={f.disabled}
                 />
               ) : f.type === 'select' ? (
                 <select
@@ -77,7 +94,9 @@ export default function FormModal({
                 >
                   <option value="">Select...</option>
                   {f.options.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
                   ))}
                 </select>
               ) : (
@@ -94,22 +113,26 @@ export default function FormModal({
           ))}
 
           <div className={styles.actions}>
-            <div>
-            {extraActions.map((action, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className={styles[action.className] || styles.button}
-                onClick={action.onClick}
-              >
-                {action.label}
-              </button>
-            ))}
+            <div className={styles.extraActions}>
+              {extraActions.map((action, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={styles[action.className] || styles.button}
+                  onClick={action.onClick}
+                >
+                  {action.label}
+                </button>
+              ))}
             </div>
-            <div>
-            <button type="button" className={styles.cancel} onClick={onClose}>Cancel</button>
-            <button type="submit" className={styles.submit}>Submit</button>
 
+            <div className={styles.footerButtons}>
+              <button type="button" className={styles.cancel} onClick={onClose}>
+                Cancel
+              </button>
+              <button type="submit" className={styles.submit}>
+                Submit
+              </button>
             </div>
           </div>
         </form>
@@ -120,21 +143,27 @@ export default function FormModal({
 
 FormModal.propTypes = {
   title: PropTypes.string.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text','number','date','textarea','select','button']).isRequired,
-    options: PropTypes.array,
-    placeholder: PropTypes.string,
-    onClick: PropTypes.func,
-    disabled: PropTypes.bool
-  })).isRequired,
+  fields: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['text','number','date','textarea','select','button']).isRequired,
+      options: PropTypes.array,
+      placeholder: PropTypes.string,
+      onClick: PropTypes.func,
+      disabled: PropTypes.bool
+    })
+  ).isRequired,
   initialValues: PropTypes.object,
+  onChange: PropTypes.func,           // new prop
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  extraActions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    className: PropTypes.string
-  }))
+  extraActions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired,
+      className: PropTypes.string
+    })
+  )
 };
+

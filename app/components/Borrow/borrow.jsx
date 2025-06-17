@@ -254,12 +254,11 @@
 
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams }         from "next/navigation";
-import api                         from "@/app/lib/utils/axios";
-import { config }                  from "/config";
-import FormModal                   from "@/app/components/Form/FormModal";
+import { useSearchParams }  from "next/navigation";
+import api  from "@/app/lib/utils/axios";
+import FormModal from "@/app/components/Form/FormModal";
 
-export default function BorrowForm() {
+export default function BorrowForm({onClose}) {
   const searchParams = useSearchParams();
   const preselectedId = searchParams.get("id") || "";
 
@@ -309,12 +308,9 @@ export default function BorrowForm() {
 
   // your submit handler
   const handleSubmit = async (values) => {
-    const res = await fetch(`/borrow`, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(values)
-    });
-    if (res.ok) {
+    console.log(values)
+    const res = await api.post(`/borrow`, values);
+    if (res.status === 200) {
       alert("Borrow recorded!");
       setShow(false);
       // reset formData, preserving preselectedId & date
@@ -334,6 +330,8 @@ export default function BorrowForm() {
       alert("Failed to borrow");
     }
   };
+
+  // console.log("This are the componenst fetched by the api",components)
 
   // define FormModal fields
   const fields = [
@@ -367,13 +365,25 @@ export default function BorrowForm() {
 
   return (
     <div>
-        <FormModal
+
+          <FormModal
+            title="Borrow Component"
+            fields={fields}
+            initialValues={formData}
+            // ← wire up onChange so componentType changes propagate
+            onChange={(name, val) =>
+              setFormData(prev => ({ ...prev, [name]: val }))
+            }
+            onClose={onClose}
+            onSubmit={handleSubmit}
+    />
+        {/* <FormModal
           title="Borrow Component"
           fields={fields}
           initialValues={formData}
           onClose={onClose}
           onSubmit={handleSubmit}
-        />
+        /> */}
 
     </div>
   );

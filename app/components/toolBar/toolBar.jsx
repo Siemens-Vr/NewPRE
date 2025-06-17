@@ -5,7 +5,10 @@ import PropTypes from 'prop-types';
 import Search from '@/app/components/search/Search';
 import styles from './toolbar.module.css';
 
-export default function Toolbar({ placeholder, buttons }) {
+export default function Toolbar({ 
+  placeholder = 'Search...',
+  buttons = []
+ }) {
   return (
     <div className={styles.toolbar}>
       {/* 1) Your existing Search box */}
@@ -44,7 +47,4 @@ Toolbar.propTypes = {
   ),
 };
 
-Toolbar.defaultProps = {
-  placeholder: 'Search...',
-  buttons: [],
-};
+

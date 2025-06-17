@@ -1,214 +1,96 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '@/app/styles/components/add/addComponent.module.css';
+import FormModal from '@/app/components/Form/FormModal';
 import ConditionPopUp from '@/app/components/condition/condition';
 import api from '@/app/lib/utils/axios';
+import styles from '@/app/styles/components/add/addComponent.module.css';
 
-const AddComponent = ({onClose}) => {
-    const router = useRouter();
-    const [componentTypes, setComponentTypes] = useState([]);
-    const [disablePartNumber, setDisablePartNumber] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    const [conditions, setConditions] = useState([]);
+export default function AddComponent({ onClose }) {
+  const router = useRouter();
+  const [componentTypes, setComponentTypes] = useState([]);
+  const [disablePartNumber, setDisablePartNumber] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [conditions, setConditions] = useState([]);
 
-    const [formData, setFormData] = useState({
-        componentName: '',
-        componentType: '',
-        modelNumber: '',
-        partNumber: '',
-        quantity: '',
-        description: '',
-        status: false,
-        condition: true,
-        conditionDetails: ''
-    });
+  const [formData, setFormData] = useState({
+    componentType: '',
+    componentName: '',
+    modelNumber: '',
+    quantity: '',
+    partNumber: '',
+    description: '',
+    status: false,
+  });
 
-    useEffect(() => {
-        const fetchComponentTypeData = async () => {
-            try {
-                const response = await api.get(`/categories`);
-                console.log(response)
-                
-                if (response.status === 200) {
-                    const data = await response.data;
-                    setComponentTypes(data);
-                } else {
-                    console.error("Failed to fetch component types");
-                }
-            } catch (error) {
-                console.error("Error fetching categories", error);
-            }
-        };
-        fetchComponentTypeData();
-    }, []);
+  // Fetch component types on mount
+  useEffect(() => {
+    api.get(`/categories`)
+      .then(response => setComponentTypes(response.data || []))
+      .catch(error => console.error("Error fetching categories", error));
+  }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+  // Disable partNumber if quantity > 1
+  useEffect(() => {
+    setDisablePartNumber(parseInt(formData.quantity, 10) > 1);
+  }, [formData.quantity]);
 
-        if (name === 'quantity') {
-            setDisablePartNumber(parseInt(value, 10) > 1);
-        }
-
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            [name]: name === 'status' ? value === 'Borrowed' :
-                   name === 'condition' ? value === 'Not Okay' ? false : true :
-                   value,
-        }));
+  const handleSubmit = async (values) => {
+    const dataToSubmit = {
+      ...values,
+      partNumber: values.partNumber?.trim() || null,
+      conditions
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    try {
+      const response = await api.post(`/components`, dataToSubmit);
+      if (response.status === 200) {
+        alert("Component created successfully");
+        router.push('/pages/equipment/dashboard/components');
+      } else {
+        alert("Submission failed.");
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+      alert('An error occurred while submitting the form.');
+    }
+  };
 
-        const dataToSubmit = {
-            ...formData,
-            partNumber: formData.partNumber.trim() || null,
-            conditions
-        };
+  // Define fields for FormModal
+  const fields = [
+    {
+      name: 'componentType',
+      label: 'Component Type',
+      type: 'select',
+      options: componentTypes.map(c => ({ value: c.category, label: c.category })),
+    },
+    { name: 'componentName', label: 'Component Name', type: 'text', placeholder: 'Ethernet Cables' },
+    { name: 'modelNumber', label: 'Model Number', type: 'text', placeholder: 'U133345w' },
+    { name: 'quantity', label: 'Quantity', type: 'number', placeholder: '20' },
+    { name: 'partNumber', label: 'Serial Number', type: 'text', placeholder: '11222 (Optional)', disabled: disablePartNumber },
+    { name: 'description', label: 'Description', type: 'textarea' },
+  ];
 
-        try {
-            const response = await api.post(`/components`, dataToSubmit );
+  return (
+    <>
+      <FormModal
+        title="Add Component"
+        fields={fields}
+        initialValues={formData}
+        onSubmit={handleSubmit}
+        onClose={onClose}
+        extraActions={[
+          { label: 'Add Condition', onClick: () => setShowPopup(true), className: 'cancel' }
+        ]}
+      />
 
-            if (response.status === 200) {
-                alert("Component created successfully");
-                setFormData({
-                    componentName: '',
-                    componentType: '',
-                    modelNumber: '',
-                    partNumber: '',
-                    quantity: '',
-                    description: '',
-                    status: false,
-                    condition: true,
-                    conditionDetails: ''
-                });
-                router.push('/pages/equipment/dashboard/components');
-            } else {
-                const err = await response.json();
-                alert('Error: ' + err.message);
-            }
-        } catch (error) {
-            console.error("Error submitting form", error);
-            alert('An error occurred while submitting the form.');
-        }
-    };
-
-    const handleAddConditionClick = (e) => {
-        e.preventDefault();
-        setShowPopup(true);
-    };
-
-    return (
-        <>
-
-        <div className={styles.overlay}></div>
-
-        <div className={styles.container}>
- 
-             <form onSubmit={handleSubmit}>
-                <div className={styles.top}></div>
-                  
-                 <div className={styles.form}>
-
-                  <button type="button" onClick={onClose} className={styles.btn}>X</button>
-
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="componentType">Component Type</label>
-                        <select
-                            name="componentType"
-                            value={formData.componentType}
-                            onChange={handleChange}
-                        >
-                            <option value="">Select Component Type</option>
-                            {componentTypes.map((componentType, index) => (
-                                <option key={index} value={componentType.category}>
-                                    {componentType.category}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="componentName">Component Name</label>
-                        <input
-                            type="text"
-                            name="componentName"
-                            placeholder="Ethernet Cables"
-                            value={formData.componentName}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="modelNumber">Model Number</label>
-                        <input
-                            type="text"
-                            name="modelNumber"
-                            placeholder="U133345w"
-                            value={formData.modelNumber}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="quantity">Quantity</label>
-                        <input
-                            type="number"
-                            name="quantity"
-                            placeholder="20"
-                            value={formData.quantity}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="partNumber">Serial Number</label>
-                        <input
-                            type="text"
-                            name="partNumber"
-                            placeholder="11222 (Optional)"
-                            value={formData.partNumber}
-                            onChange={handleChange}
-                            disabled={disablePartNumber}
-                        />
-                    </div>
-
-                    <div className={styles.divInput}>
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        ></textarea>
-                    </div>
-
-                    {!formData.condition && (
-                        <textarea
-                            name="conditionDetails"
-                            placeholder="Condition Details"
-                            value={formData.conditionDetails}
-                            onChange={handleChange}
-                        />
-                    )}
-
-                    <button onClick={handleAddConditionClick} className={styles.add}>Add Condition</button>
-                    <button type="submit" className={styles.submit1}>Submit</button>
- 
-                </div>
-            </form>
-
-            {showPopup && (
-                <ConditionPopUp
-                    onClose={() => setShowPopup(false)}
-                    conditions={conditions}
-                    setConditions={setConditions}
-                />
-            )}
-        </div>
-        </>
-    );
-};
-
-export default AddComponent;
+      {showPopup && (
+        <ConditionPopUp
+          onClose={() => setShowPopup(false)}
+          conditions={conditions}
+          setConditions={setConditions}
+        />
+      )}
+    </>
+  );
+}

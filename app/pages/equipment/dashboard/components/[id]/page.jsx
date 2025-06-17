@@ -280,17 +280,16 @@
 
 
 'use client';
-import FormModal from '@/app/components/Form/FormModal';
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useSearchParams }   from 'next/navigation';
-import Link                             from 'next/link';
-import Toolbar                          from '@/app/components/toolbar/Toolbar';
-import Table                            from '@/app/components/table/Table';
-import Pagination                       from '@/app/components/pagination/Pagination';
-import AddBorrow                        from '@/app/components/borrow/Borrow';
-import api                              from '@/app/lib/utils/axios';
-import { MdFilterList, MdAdd }          from 'react-icons/md';
-import styles                           from '@/app/styles/components/singleComponent/singlecomponent.module.css';
+import Link from 'next/link';
+import Toolbar from '@/app/components/toolbar/Toolbar';
+import Table from '@/app/components/table/Table';
+import Pagination from '@/app/components/pagination/Pagination';
+import AddBorrow from '@/app/components/borrow/Borrow';
+import api  from '@/app/lib/utils/axios';
+import { MdFilterList, MdAdd }   from 'react-icons/md';
+import styles  from '@/app/styles/components/singleComponent/singlecomponent.module.css';
 
 const ROWS_PER_PAGE = 10;
 

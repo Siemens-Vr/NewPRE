@@ -1,31 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { config } from "/config";
-import styles from '@/app/styles/cohorts/AddCohortLevel/addCohortLevel.module.css';
-import api from '@/app/lib/utils/axios';
+"use client";
 
-const CohortModal = ({ onSave, onClose }) => {
+import { useState, useEffect } from "react";
+import styles from '@/app/styles/cohorts/addCohort/addCohort.module.css';
+import api from '@/app/lib/utils/axios';
+import FormModal from '@/app/components/Form/formTable';
+import CohortModal from '@/app/components/cohort/AddCohort'; // optional modal
+
+const AddCohortPage = ({ onClose, onSave }) => {
   const [cohorts, setCohorts] = useState([]);
   const [levels, setLevels] = useState([]);
-  const [selectedCohort, setSelectedCohort] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [fee, setFee] = useState("");
-  const [examResults, setExamResults] = useState("");
   const [cohortLevelList, setCohortLevelList] = useState([]);
+  const [showCohortModal, setShowCohortModal] = useState(false);
+
+  const [formState, setFormState] = useState({
+    cohortUuid: "",
+    levelUuid: "",
+    fee: "",
+    examResults: "",
+  });
 
   useEffect(() => {
     fetchCohorts();
   }, []);
 
   useEffect(() => {
-    if (selectedCohort) {
-      fetchLevels(selectedCohort);
+    if (formState.cohortUuid) {
+      fetchLevels(formState.cohortUuid);
     }
-  }, [selectedCohort]);
+  }, [formState.cohortUuid]);
 
   const fetchCohorts = async () => {
     try {
       const response = await api.get(`/cohorts`);
-      // const data = await response.json();
       setCohorts(response.data);
     } catch (error) {
       console.error("Error fetching cohorts:", error);
@@ -35,37 +41,40 @@ const CohortModal = ({ onSave, onClose }) => {
   const fetchLevels = async (cohortUuid) => {
     try {
       const response = await api.get(`/levels/${cohortUuid}`);
-      // const data = await response.json();
       setLevels(response.data);
     } catch (error) {
       console.error("Error fetching levels:", error);
     }
   };
 
-  const handleAdd = () => {
-    if (selectedCohort && selectedLevel) {
-      const cohortName = cohorts.find(c => c.uuid === selectedCohort)?.cohortName;
-      const levelName = levels.find(l => l.uuid === selectedLevel)?.levelName;
-      const newEntry = {
-        cohortUuid: selectedCohort,
-        cohortName,
-        levelUuid: selectedLevel,
-        levelName,
-        fee,
-        examResults
-      };
-      setCohortLevelList([...cohortLevelList, newEntry]);
-      
-      setSelectedCohort("");
-      setSelectedLevel("");
-      setFee("");
-      setExamResults("");
+  const handleSubmit = (values) => {
+    if (!values.levelUuid) {
+      alert("Please select a level.");
+      return;
     }
+
+    const cohortName = cohorts.find(c => c.uuid === values.cohortUuid)?.cohortName;
+    const levelName = levels.find(l => l.uuid === values.levelUuid)?.levelName;
+
+    const newEntry = {
+      ...values,
+      cohortName,
+      levelName
+    };
+
+    setCohortLevelList(prev => [...prev, newEntry]);
+
+    // Reset form
+    setFormState({
+      cohortUuid: "",
+      levelUuid: "",
+      fee: "",
+      examResults: "",
+    });
   };
 
   const handleDelete = (index) => {
-    const newList = cohortLevelList.filter((_, i) => i !== index);
-    setCohortLevelList(newList);
+    setCohortLevelList(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
@@ -73,101 +82,101 @@ const CohortModal = ({ onSave, onClose }) => {
     onClose();
   };
 
+
+
+ const filteredLevels = levels;
+
+  const fields = [
+    {
+      name: "cohortUuid",
+      label: "Cohort",
+      type: "select",
+      options: cohorts.map(c => ({
+        value: c.uuid,
+        label: c.cohortName
+      })),
+      required: true
+    },
+    {
+  name: "levelUuid",
+  label: "Level",
+  type: "select",
+  required: true,
+  options: filteredLevels.length
+    ? filteredLevels.map(l => ({ value: l.uuid, label: l.levelName }))
+    : [{ value: "", label: "No levels found" }],
+  disabled: !formState.cohortUuid
+},
+
+    {
+      name: "fee",
+      label: "Fee Amount Paid",
+      type: "number",
+      required: false,
+      placeholder: "Enter fee paid"
+    },
+    {
+      name: "examResults",
+      label: "Exam Result Status",
+      type: "select",
+      options: [
+        { value: "pass", label: "Pass" },
+        { value: "fail", label: "Fail" },
+        { value: "no-show", label: "No Show" }
+      ],
+      required: false
+    }
+  ];
+
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modal}>
-        {/*<h2>Add Cohort and Level</h2>*/}
-        <div className={styles.formGrid}>
-          <select
-            value={selectedCohort}
-            onChange={(e) => setSelectedCohort(e.target.value)}
-            className={styles.select}
-          >
-            <option value="">Select Cohort</option>
-            {cohorts.map((cohort) => (
-              <option key={cohort.uuid} value={cohort.uuid}>
-                {cohort.cohortName}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedLevel}
-            onChange={(e) => setSelectedLevel(e.target.value)}
-            className={styles.select}
-            disabled={!selectedCohort}
-          >
-            <option value="">Select Level</option>
-            {levels.map((level) => (
-              <option key={level.uuid} value={level.uuid}>
-                {level.levelName}
-              </option>
-            ))}
-          </select>
-          <input 
-            type="number"
-            className={styles.select}
-            value={fee}
-            onChange={(e) => setFee(e.target.value)}
-            placeholder="Fee Amount Paid"
-          />
-          <select
-            value={examResults}
-            onChange={(e) => setExamResults(e.target.value)}
-            className={styles.select}
-          >
-            <option value="">Exam Result Status</option>
-            <option value="pass">Pass</option>
-            <option value="fail">Fail</option>
-            <option value="no-show">No Show</option>
-          </select>
-        </div>
-
-        <button onClick={handleAdd} className={styles.addButton}>
-          Add
-        </button>
-
-        {cohortLevelList.length > 0 && (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Cohort</th>
-                <th>Level</th>
-                <th>Fee Payment</th>
-                <th>Exam Results</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cohortLevelList.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.cohortName}</td>
-                  <td>{item.levelName}</td>
-                  <td>{item.feePayment}</td>
-                  <td>{item.examResults}</td>
-                  <td>
-                    <button onClick={() => handleDelete(index)} className={styles.deleteButton}>
-                      Delete
-                    </button>
-                  </td>
+    <>
+      <FormModal
+        title="Add Cohort Level"
+        fields={fields}
+        initialValues={formState}
+        onSubmit={handleSubmit}
+        onClose={onClose}
+        onChange={setFormState}
+        extraActions={[
+          { label: 'Add Level', onClick: () => setShowCohortModal(true), className: 'cancel' }
+        ]}
+        tableContent={
+          cohortLevelList.length > 0 && (
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Cohort</th>
+                  <th>Level</th>
+                  <th>Fee Payment</th>
+                  <th>Exam Results</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        <div className={styles.buttonContainer}>
-          <button onClick={handleSave} className={styles.saveButton}>
-            Save
-          </button>
-          <button onClick={onClose} className={styles.closeButton}>
-            x
-          </button>
-          {/*<button className={styles.closeButton} onClick={onClose}>×</button>*/}
-        </div>
-      </div>
-    </div>
+              </thead>
+              <tbody>
+                {cohortLevelList.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.cohortName}</td>
+                    <td>{item.levelName}</td>
+                    <td>{item.fee}</td>
+                    <td>{item.examResults}</td>
+                    <td>
+                      <button onClick={handleSave} className={styles.submit}>
+                        Save
+                      </button>
+                      <button onClick={() => handleDelete(index)} className={styles.deleteButton}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )
+        }
+      />
+      {showCohortModal && <CohortModal onClose={() => setShowCohortModal(false)} />}
+    </>
   );
 };
 
-export default CohortModal;
+export default AddCohortPage;

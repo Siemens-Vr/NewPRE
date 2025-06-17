@@ -114,7 +114,7 @@ setFilteredStudents(res.data.content);
     });
     if (confirm.isConfirmed) {
       try {
-        await api.delete(`/students/${uuid}/delete`);
+        await api.delete(`/students/${row.uuid}/delete`);
         setStudents((prev) => prev.filter((s) => s.uuid !== uuid));
         Swal.fire('Deleted!', `${fullName} has been removed.`, 'success');
       } catch (err) {
@@ -160,6 +160,11 @@ const handleUpdateStudent = (student) => {
 
   
   const columns = [
+     {
+      key: 'no',
+      label: 'No',
+      render: (_row, idx) => idx + 1 + page * ROWS_PER_PAGE
+    },
     { key: 'regNo',    label: 'Registration No',  sortable: true  },
     {
       key: 'name',

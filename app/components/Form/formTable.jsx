@@ -2,39 +2,24 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './FormModal.module.css';
 
-/**
- * FormModal
- * A reusable modal that renders dynamic form fields and optional footer buttons.
- *
- * Props:
- * - title: string - modal header
- * - fields: array of {
- *     name: string,
- *     label: string,
- *     type: 'text'|'number'|'date'|'textarea'|'select'|'button',
- *     options?: array of { value, label } for select,
- *     placeholder?: string,
- *     onClick?: fn for button,
- *     disabled?: boolean
- *   }
- * - initialValues: object
- * - onSubmit: fn(values)
- * - onClose: fn()
- * - extraActions: array of { label: string, onClick: fn, className?: string }
- */
 export default function FormModal({
   title,
   fields,
   initialValues,
   onSubmit,
   onClose,
-  extraActions = []
+  onChange,
+  extraActions = [],
+  tableContent = null // <-- NEW
 }) {
   const [values, setValues] = useState(initialValues || {});
 
-  const handleChange = (name, val) => {
-    setValues(v => ({ ...v, [name]: val }));
+const handleChange = (name, val) => {
+    const updated = { ...values, [name]: val };
+    setValues(updated);
+    if (onChange) onChange(updated); // ✅ Propagate changes to parent
   };
+
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -95,24 +80,30 @@ export default function FormModal({
 
           <div className={styles.actions}>
             <div>
-            {extraActions.map((action, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className={styles[action.className] || styles.button}
-                onClick={action.onClick}
-              >
-                {action.label}
-              </button>
-            ))}
+              {extraActions.map((action, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={styles[action.className] || styles.button}
+                  onClick={action.onClick}
+                >
+                  {action.label}
+                </button>
+              ))}
             </div>
             <div>
-            <button type="button" className={styles.cancel} onClick={onClose}>Cancel</button>
-            <button type="submit" className={styles.submit}>Submit</button>
-
+              <button type="button" className={styles.cancel} onClick={onClose}>Cancel</button>
+              <button type="submit" className={styles.submit}>Submit</button>
             </div>
           </div>
         </form>
+
+        {/* 🔥 DROP-IN TABLE AREA */}
+        {tableContent && (
+          <div className={styles.tableWrapper}>
+            {tableContent}
+          </div>
+        )}
       </div>
     </>
   );
@@ -136,5 +127,6 @@ FormModal.propTypes = {
     label: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     className: PropTypes.string
-  }))
+  })),
+  tableContent: PropTypes.node // <-- NEW
 };

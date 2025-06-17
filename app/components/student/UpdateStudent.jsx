@@ -3,6 +3,7 @@ import styles from '@/app/styles/students/singleStudent/updateStudent.module.css
 import { useState, useEffect } from "react";
 import { config } from "../../../config";
 import { useParams } from "next/navigation";
+import api from '@/app/lib/utils/axios';
 
 const SinstudentPage = ({onClose}) => {
   const [student, setStudent] = useState(null);
@@ -13,7 +14,7 @@ const SinstudentPage = ({onClose}) => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/students/${id}`);
+        const response = await api.get(`/students/${id}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -43,8 +44,8 @@ const SinstudentPage = ({onClose}) => {
     };
 
     try {
-      const response = await fetch(`${config.baseURL}/students/${id}/update`, {
-        method: "PUT",
+      const response = await api.get(`/students/${id}/update`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

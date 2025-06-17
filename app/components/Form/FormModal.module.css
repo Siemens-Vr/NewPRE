@@ -128,3 +128,65 @@
     grid-column: span 1;
   }
 }
+
+
+/* Container for the table under the form */
+.tableWrapper {
+  margin-top: 2rem;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Basic table styling */
+.tableWrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+/* Header row */
+.tableWrapper th {
+  background-color: #f6f8fa;
+  color: #333;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+}
+
+/* Table rows */
+.tableWrapper td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+/* Last row bottom border fix */
+.tableWrapper tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover effect for rows */
+.tableWrapper tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Action buttons inside table */
+.deleteButton {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #d9363e;
+}

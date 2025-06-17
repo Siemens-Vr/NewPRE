@@ -366,6 +366,8 @@ import { config } from "/config";
 import Image from "next/image";
 import UpdateStudent from "@/app/components/student/UpdateStudent";
 import LevelAddPopUp from "@/app/components/cohort/LevelAddPopUp";
+import api from "@/app/lib/utils/axios";
+import Loading from '@/app/components/Loading/Loading';
 
 const SinstudentPage = ({ params }) => {
   const [student, setStudent] = useState(null);
@@ -385,7 +387,7 @@ const SinstudentPage = ({ params }) => {
 
   const fetchStudent = async () => {
     try {
-      const response = await fetch(`${config.baseURL}/students/${id}`);
+      const response = await api.get(`/students/${id}`);
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setStudent(data);
@@ -394,12 +396,12 @@ const SinstudentPage = ({ params }) => {
     }
   };
 
-  if (!student) return <div className={styles.loading}>Loading...</div>;
+  if (!student) return <Loading />;
 
   return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2>Welcome {student.firstName}</h2>
+          <h2>Welcome </h2>
           {/*<div className={styles.headerButtons}>*/}
           {/*  <button>Total fee paid</button>*/}
           {/*  <button>Course level</button>*/}

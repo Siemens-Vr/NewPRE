@@ -11,6 +11,7 @@ import Loading from '@/app/components/loading/Loading';
 import api from '@/app/lib/utils/axios';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
 import { MdSearch, MdAdd } from 'react-icons/md';
+import Link from 'next/link';
 
 const ROWS_PER_PAGE = 10;
 
@@ -56,8 +57,14 @@ export default function BorrowedComponentPage(onClose) {
     { key: 'departmentName', label: 'Department' },
     {
       key: 'dateOfIssue',
-      label: 'Borrow Date',
+      label: 'Issue Date',
       render: row => row.dateOfIssue.split('T')[0]
+    },
+    
+    {
+      key: 'expectedReturnDate',
+      label: 'Expected Return Date',
+      render: row => row.expectedReturnDate.split('T')[0]
     },
     {
       key: 'status',
@@ -65,23 +72,37 @@ export default function BorrowedComponentPage(onClose) {
       render: row => row.status ? 'Returned' : 'Not Returned'
     },
     {
-      key: 'expectedReturnDate',
-      label: 'Return Date',
-      render: row => row.expectedReturnDate.split('T')[0]
-    },
-    {
       key: 'actions',
       label: 'Action',
       render: row => (
+        <div>
         <button
           className="btn-primary"
           onClick={() => {
+            console.log("I have been clicked")
+            console.log(row)
             setSelected(row);
             setShowAdd(true);
           }}
         >
           Update
         </button>
+          <Link href={`/pages/equipment/dashboard/borrow/${row.uuid}`}>
+        <button
+          className="btn-primary"
+          // onClick={() => {
+          //   console.log("I have been clicked")
+          //   console.log(row)
+          //   setSelected(row);
+          //   setShowAdd(true);
+          // }}
+        >
+          view
+        </button>
+
+        </Link>
+
+        </div>
       )
     }
   ];

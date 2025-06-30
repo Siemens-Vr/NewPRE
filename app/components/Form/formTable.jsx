@@ -6,104 +6,117 @@ export default function FormModal({
   title,
   fields,
   initialValues,
-  onSubmit,
+  onAdd,      // called by the “Add” button
+  onSubmit,   // called by the “Done” (Submit) button
   onClose,
   onChange,
-  extraActions = [],
-  tableContent = null // <-- NEW
+  tableContent = null
 }) {
   const [values, setValues] = useState(initialValues || {});
 
-const handleChange = (name, val) => {
+  const handleChange = (name, val) => {
     const updated = { ...values, [name]: val };
     setValues(updated);
-    if (onChange) onChange(updated); // ✅ Propagate changes to parent
+    if (onChange) onChange(updated);
   };
 
+  // Add one row
+  const handleAdd = () => {
+    onAdd(values);
+    setValues(initialValues);      // clear the form
+    if (onChange) onChange(initialValues);
+  };
 
+  // Final “Done”
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit(values);
+    onSubmit();
   };
 
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.container}>
+      <div className={styles.container1}>
         <div className={styles.header}>
           <h3 className={styles.title}>{title}</h3>
           <button className={styles.closeBtn} onClick={onClose}>×</button>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {fields.map(f => (
-            <div className={styles.field} key={f.name}>
-              <label htmlFor={f.name}>{f.label}</label>
-              {f.type === 'button' ? (
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={f.onClick}
-                >
-                  {f.label}
-                </button>
-              ) : f.type === 'textarea' ? (
-                <textarea
-                  id={f.name}
-                  placeholder={f.placeholder}
-                  value={values[f.name] || ''}
-                  onChange={e => handleChange(f.name, e.target.value)}
-                />
-              ) : f.type === 'select' ? (
-                <select
-                  id={f.name}
-                  value={values[f.name] || ''}
-                  onChange={e => handleChange(f.name, e.target.value)}
-                  disabled={f.disabled}
-                >
-                  <option value="">Select...</option>
-                  {f.options.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  id={f.name}
-                  type={f.type}
-                  placeholder={f.placeholder}
-                  value={values[f.name] || ''}
-                  onChange={e => handleChange(f.name, e.target.value)}
-                  disabled={f.disabled}
-                />
-              )}
-            </div>
-          ))}
 
-          <div className={styles.actions}>
-            <div>
-              {extraActions.map((action, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className={styles[action.className] || styles.button}
-                  onClick={action.onClick}
-                >
-                  {action.label}
-                </button>
-              ))}
+        <form onSubmit={handleSubmit}>
+          <div className={styles.form}>
+            {fields.map(f => (
+              <div className={styles.field} key={f.name}>
+                <label htmlFor={f.name}>{f.label}</label>
+
+                {f.type === 'textarea' ? (
+                  <textarea
+                    id={f.name}
+                    placeholder={f.placeholder}
+                    value={values[f.name] || ''}
+                    onChange={e => handleChange(f.name, e.target.value)}
+                  />
+                ) : f.type === 'select' ? (
+                  <select
+                    id={f.name}
+                    value={values[f.name] || ''}
+                    onChange={e => handleChange(f.name, e.target.value)}
+                    disabled={f.disabled}
+                  >
+                    <option value="">Select…</option>
+                    {f.options.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    id={f.name}
+                    type={f.type}
+                    placeholder={f.placeholder}
+                    value={values[f.name] || ''}
+                    onChange={e => handleChange(f.name, e.target.value)}
+                    disabled={f.disabled}
+                  />
+                )}
+              </div>
+            ))}
+
+            <div className={styles.footerAddButton}>
+              <button
+                type="button"
+                className={styles.submit}
+                onClick={handleAdd}
+              >
+                Add
+              </button>
             </div>
-            <div>
-              <button type="button" className={styles.cancel} onClick={onClose}>Cancel</button>
-              <button type="submit" className={styles.submit}>Submit</button>
+          </div>
+
+          {tableContent && (
+            <div className={styles.tableWrapper}>
+              {tableContent}
+            </div>
+          )}
+
+          <div className={styles.actions1}>
+            <div className={styles.footerButtons}>
+              <button
+                type="button"
+                className={styles.cancel}
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={styles.submit}
+              >
+                Done
+              </button>
             </div>
           </div>
         </form>
-
-        {/* 🔥 DROP-IN TABLE AREA */}
-        {tableContent && (
-          <div className={styles.tableWrapper}>
-            {tableContent}
-          </div>
-        )}
       </div>
     </>
   );
@@ -111,22 +124,11 @@ const handleChange = (name, val) => {
 
 FormModal.propTypes = {
   title: PropTypes.string.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text','number','date','textarea','select','button']).isRequired,
-    options: PropTypes.array,
-    placeholder: PropTypes.string,
-    onClick: PropTypes.func,
-    disabled: PropTypes.bool
-  })).isRequired,
+  fields: PropTypes.array.isRequired,
   initialValues: PropTypes.object,
+  onAdd: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  extraActions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    className: PropTypes.string
-  })),
-  tableContent: PropTypes.node // <-- NEW
+  onChange: PropTypes.func,
+  tableContent: PropTypes.node
 };

@@ -5,12 +5,14 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Toolbar from '@/app/components/toolbar/Toolbar';
 import Table from '@/app/components/table/Table';
-import Pagination from '@/app/components/pagination/Pagination';
-import AddBorrow from '@/app/components/borrow/Borrow';
+import Pagination from '@/app/components/pagination/pagination';
+import AddBorrow from '@/app/components/Borrow/borrow';
 import Loading from '@/app/components/loading/Loading';
 import api from '@/app/lib/utils/axios';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
 import { MdSearch, MdAdd } from 'react-icons/md';
+import Link from 'next/link';
+import styles from "@/app/styles/borrow/borrow.module.css"
 
 const ROWS_PER_PAGE = 10;
 
@@ -19,7 +21,6 @@ export default function BorrowedComponentPage(onClose) {
   const router  = useRouter();
   const q = searchParams.get('q') ?? '';
   const page = parseInt(searchParams.get('page') ?? '0', 10);
-
   const [data,    setData]    = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -56,8 +57,14 @@ export default function BorrowedComponentPage(onClose) {
     { key: 'departmentName', label: 'Department' },
     {
       key: 'dateOfIssue',
-      label: 'Borrow Date',
+      label: 'Issue Date',
       render: row => row.dateOfIssue.split('T')[0]
+    },
+    
+    {
+      key: 'expectedReturnDate',
+      label: 'Expected Return Date',
+      render: row => row.expectedReturnDate.split('T')[0]
     },
     {
       key: 'status',
@@ -65,23 +72,32 @@ export default function BorrowedComponentPage(onClose) {
       render: row => row.status ? 'Returned' : 'Not Returned'
     },
     {
-      key: 'expectedReturnDate',
-      label: 'Return Date',
-      render: row => row.expectedReturnDate.split('T')[0]
-    },
-    {
       key: 'actions',
       label: 'Action',
       render: row => (
+        <div>
         <button
-          className="btn-primary"
+          className={styles.button}
           onClick={() => {
+            console.log("I have been clicked")
+            console.log(row)
             setSelected(row);
             setShowAdd(true);
           }}
         >
           Update
         </button>
+          <Link href={`/pages/equipment/dashboard/borrow/${row.uuid}`}>
+        <button
+          className={styles.button}
+          
+        >
+          view
+        </button>
+
+        </Link>
+
+        </div>
       )
     }
   ];

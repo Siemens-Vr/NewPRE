@@ -1,20 +1,18 @@
-
-
 'use client';
-
 import { useEffect, useState, useMemo } from 'react';
-import { useSearchParams }            from 'next/navigation';
-import Link                           from 'next/link';
-import Toolbar                        from '@/app/components/toolbar/Toolbar';
-import Table                          from '@/app/components/table/Table';
-import Pagination                     from '@/app/components/pagination/Pagination';
+import { useSearchParams } from 'next/navigation';
+import Link   from 'next/link';
+import Toolbar   from '@/app/components/toolbar/Toolbar';
+import Table   from '@/app/components/table/Table';
+import Pagination  from '@/app/components/pagination/pagination';
 import CategoriesPopUp from "@/app/components/categories/categories";
 import AddComponent from "@/app/components/component/component";
-import api                            from '@/app/lib/utils/axios';
+import api from '@/app/lib/utils/axios';
 import { toast, ToastContainer }      from 'react-toastify';
 import { MdFilterList, MdAdd }        from 'react-icons/md';
-import Loading from '@/app/components/Loading/loading';
-import styles                         from '@/app/styles/components/components.module.css';
+import Loading from '@/app/components/Loading/Loading';
+import styles  from '@/app/styles/components/components.module.css';
+import EmptyState from '@/app/components/EmptyState/EmptyState';
 
 const ROWS_PER_PAGE = 10;
 
@@ -123,12 +121,19 @@ export default function ComponentsPage() {
       {!loading && (
         items.length > 0
         ? <Table columns={columns} data={paginated} />
-        : hasFetched && <p className={styles.noResults}>No components found</p>
+        : hasFetched &&         
+            <EmptyState
+                  illustration="/undraw_no-data_ig65.svg"
+                  message="No equipments records found"
+                  details="You haven’t added any equipments yet. Start by creating an equipment now."
+                  actionLabel="Start a Borrow Request"
+                  onAction={() => setShowAdd(true)}
+            />
       )}
 
       {/* Pagination */}
       {!loading && items.length > ROWS_PER_PAGE && (
-        <div className={styles.paginationWrapper}>
+        <div>
           <Pagination
             count={items.length}
             itemsPerPage={ROWS_PER_PAGE}

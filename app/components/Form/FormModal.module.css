@@ -1,3 +1,4 @@
+
 /* app/components/FormModal/FormModal.module.css */
 
 /* 1) Full-screen backdrop */
@@ -175,55 +176,37 @@
 .tableWrapper table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  min-width: 600px;
-
+  font-size: 0.95rem;
 }
 
-.tableWrapper th,
-.tableWrapper td {
-  padding: 12px 16px;
+/* Header row */
+.tableWrapper th {
+  background-color: #f6f8fa;
+  color: #333;
+  padding: 0.75rem;
   text-align: left;
-   font-size: 0.95rem;
-  color: #212529;
-  transition: background-color 0.2s ease;
-}
-
-.tableWrapper thead th {
-  background: #2bb3d2;           
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 2;
+  border-bottom: 1px solid #ddd;
   font-weight: 600;
 }
 .tableWrapper tr:nth-child(even) {
   background: #f9fafb;           
 }
 .tableWrapper tr:hover {
-  background: #e9ecef;          
-}
-.missing {
-  color: #888888;                
+  background-color: #f9fafb;
 }
 
+/* Action buttons inside table */
+.deleteButton {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
-
-@media (max-width: 640px) {
-  .tableWrapper {
-    font-size: 0.85rem;
-  }
- .tableWrapper th,
- .tableWrapper td {
-    padding: 8px 12px;
-  }
-  /* Card view fallback */
-  .tableWrapper {
-    display: none;
-  }
-  .cardFallback {
-    display: block;
-  }
+.deleteButton:hover {
+  background-color: #d9363e;
 }

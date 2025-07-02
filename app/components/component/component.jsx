@@ -23,6 +23,8 @@ export default function AddComponent({ onClose }) {
     status: false,
   });
 
+  console.log("conditions",conditions);
+
   // Fetch component types on mount
   useEffect(() => {
     api.get(`/categories`)

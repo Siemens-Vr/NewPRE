@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Search from '@/app/components/search/Search';
+import Search from '@/app/components/search/search';
 import styles from './toolbar.module.css';
 
 export default function Toolbar({ 

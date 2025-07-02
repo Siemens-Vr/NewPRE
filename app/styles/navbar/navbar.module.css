@@ -184,3 +184,36 @@
 .dropdownMenu li:hover {
   background-color: #c6e7e7;
 }
+/* ——— Breadcrumbs ——— */
+.breadcrumbs {
+  padding: 0 24px;
+  font-size: 0.9rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumbLink {
+  color: #2bb3d2;
+  text-decoration: none;
+}
+
+.breadcrumbLink:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+  color: #999;
+}
+
+/* ——— Page Title ——— */
+.titleContainer {
+  padding: 8px 24px 16px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #222;
+}

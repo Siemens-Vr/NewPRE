@@ -1,22 +1,21 @@
-// app/components/pagination/Pagination.jsx
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import styles from '@/app/styles/pagination/pagination.module.css';
+import styles from './pagination.module.css';
 
 export default function Pagination({ count, itemsPerPage = 10 }) {
   const searchParams = useSearchParams();
   const pathname     = usePathname();
   const { replace }  = useRouter();
 
-  // Current page from URL (0-based)
+  // Current zero-based page from URL
   const page = parseInt(searchParams.get('page') ?? '0', 10);
 
-  // Compute whether prev/next exist
-  const hasPrev = page > 0;
-  const hasNext = (page + 1) * itemsPerPage < count;
+  const pageCount = Math.ceil(count / itemsPerPage);
 
-  // Handler to bump page param
+  const hasPrev = page > 0;
+  const hasNext = page + 1 < pageCount;
+
   const changePage = (newPage) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', newPage);
@@ -30,11 +29,11 @@ export default function Pagination({ count, itemsPerPage = 10 }) {
         onClick={() => changePage(page - 1)}
         disabled={!hasPrev}
       >
-        Previous
+        ← Prev
       </button>
 
       <span className={styles.pageInfo}>
-        Page {page + 1} of {Math.ceil(count / itemsPerPage)}
+        {page + 1} / {pageCount}
       </span>
 
       <button
@@ -42,7 +41,7 @@ export default function Pagination({ count, itemsPerPage = 10 }) {
         onClick={() => changePage(page + 1)}
         disabled={!hasNext}
       >
-        Next
+        Next →
       </button>
     </div>
   );

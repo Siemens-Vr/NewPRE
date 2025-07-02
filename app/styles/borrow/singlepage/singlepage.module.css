@@ -1,6 +1,6 @@
 .container {
-  max-width: 1200px;
-  margin: 2rem auto;
+  /* max-width: 1200px; */
+  /* margin: 2rem auto; */
   padding: 1rem;
   background: #F5FCFC;
 }
@@ -8,7 +8,7 @@
 .formContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 4rem;
 }
 
 @media (max-width: 768px) {

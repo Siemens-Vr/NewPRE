@@ -49,9 +49,9 @@ export default function BorrowForm({onClose, initialData, onSaved}) {
       borrowerContact:    initialData.borrowerContact,
       borrowerID:         initialData.borrowerID,
       departmentName:     initialData.departmentName,
-      expectedReturnDate: initialData.expectedReturnDate.split('T')[0],
-      dateOfIssue:        initialData.dateOfIssue.split('T')[0],
-      actualReturnDate:   initialData.actualReturnDate.split('T')[0],
+      expectedReturnDate: initialData.expectedReturnDate ?.split('T')[0] ?? "",
+      dateOfIssue:        initialData.dateOfIssue ?.split('T')[0]  ?? "",
+      actualReturnDate:   initialData.actualReturnDate ?.split('T')[0] ?? "",
     })
   }, [initialData])
 

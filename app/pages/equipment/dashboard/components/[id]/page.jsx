@@ -406,7 +406,7 @@ export default function SingleComponentPage() {
       key: 'actions',
       label: 'Actions',
       render: row => (
-        <div className={styles.buttons}>
+        <div >
           <Link href={`/pages/equipment/dashboard/components/single/${row.uuid}`}>
             <button className={styles.button}>View</button>
           </Link>

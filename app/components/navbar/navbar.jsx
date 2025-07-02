@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import styles from '@/app/styles/navbar/navbar.module.css';
 import Image from "next/image";
 import {
@@ -33,6 +34,20 @@ const Navbar = () => {
   // Convert pathname (e.g., "/staff") to "Staff"
   const pageTitle = pathname?.split("/").filter(Boolean).pop() || "Dashboard";
   const formattedTitle = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
+    // Build breadcrumb array
+  const segments = pathname.split("/").filter(Boolean);
+  const breadcrumbs = [
+    { href: "/", label: "Home" },
+    ...segments.map((seg, i) => {
+      const href = "/" + segments.slice(0, i + 1).join("/");
+      // Capitalize and replace hyphens
+      const label = seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ");
+      return { href, label };
+    }),
+  ];
+
+  // Current page title = last breadcrumb label
+  const currentTitle = breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard";
 
   return (
     <div className={styles.container}>
@@ -72,9 +87,23 @@ const Navbar = () => {
     </div>
 
 
-      {/* Dynamic breadcrumb-style page title */}
-      <div style={{ padding: "10px 20px" }}>
-        <h1 className={styles.component}>{formattedTitle}</h1>
+          {/* Breadcrumbs */}
+      <nav className={styles.breadcrumbs}>
+        {breadcrumbs.map((bc, idx) => (
+          <React.Fragment key={bc.href}>
+            <Link href={bc.href} className={styles.breadcrumbLink}>
+              {bc.label}
+            </Link>
+            {idx < breadcrumbs.length - 1 && (
+              <span className={styles.breadcrumbSeparator}>/</span>
+            )}
+          </React.Fragment>
+        ))}
+      </nav>
+
+      {/* Page Title */}
+      <div className={styles.titleContainer}>
+        <h1 className={styles.pageTitle}>{currentTitle}</h1>
       </div>
     </div>
   );

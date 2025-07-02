@@ -36,17 +36,14 @@ export default function FormModal({
   const [values, setValues] = useState(initialValues || {});
 
   // Keep local state in sync if initialValues change
-  useEffect(() => {
+   useEffect(() => {
     setValues(initialValues || {});
   }, [initialValues]);
 
   const handleChange = (name, val) => {
-    setValues(prev => {
-      const updated = { ...prev, [name]: val };
-      // propagate change up
-      if (onChange) onChange(name, val);
-      return updated;
-    });
+    const updated = { ...values, [name]: val };
+    setValues(updated);
+    if (onChange) onChange(updated);
   };
 
   const handleSubmit = e => {
@@ -166,4 +163,3 @@ FormModal.propTypes = {
     })
   )
 };
-

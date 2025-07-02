@@ -29,8 +29,8 @@
 }
 .tableTop {
   display: flex;
-  justify-content: flex-start;
-  gap: 100px;
+  justify-content: space-between;
+  /* gap: 100px; */
   /*margin-top: 10px;*/
 }
 .tableTop h3{
@@ -87,7 +87,7 @@
 .button {
   margin: 0 5px;
   padding: 5px 10px;
-  background-color: teal;
+  background-color: #22a0c1;
   color: white;
   border: none;
   border-radius: 4px;
@@ -95,7 +95,7 @@
 }
 
 .button:hover {
-  background-color: rgb(10, 97, 97);
+  background-color: rgb(97, 45, 10);
 }
 
 
@@ -149,7 +149,13 @@
   font-weight: bold;
   color: #000000;
 }
-
+.hoursButtons {
+  display: flex;
+  gap: 10px;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* margin-top: 10px; */
+}
 .formGroup input,
 .formGroup select {
   width: 100%;
@@ -422,7 +428,7 @@
   position: absolute;
   right: 10px;
   top: 160px;
-  background: #c6e7e7;
+  background: #fff;
   border-radius: 5px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -434,14 +440,14 @@
 .dropdownMenu button {
   padding: 10px;
   border: none;
-  background: #c6e7e7;
+  background: #fff;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
 }
 
 .dropdownMenu button:hover {
-  background: #ff7211;
+  background: #e9ecef;
 }
 
 /* Grid Layout for Multiple Cards */
@@ -472,23 +478,23 @@
 }
 
 .button {
-  padding: 12px 20px;
+  background: #ff7211;
+  color: white;
   border: none;
+  padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #ff7211;
-  font-size: 16px;
-  color: white;
-  font-weight: bold;
-  transition: background 0.3s;
+  transition: background 0.3s ease-in-out;
+  margin-bottom: 20px;
+  justify-content: flex-end;
 }
 
 .addButton {
-  background-color: teal;
+  background-color: #22a0c1;
 }
 
 .createButton {
-  background-color: #ff7211;
+  background-color: #22a0c1;
 }
 .deleteButton {
   align-items: center;
@@ -496,9 +502,9 @@
   background-color: #1b9392;
 }
 
-.addButton:hover {
-  background-color: #006666;
-}
+/* .addButton:hover {
+  background-color: #662500;
+} */
 
 .createButton:hover {
   background-color: #d65a00;
@@ -520,14 +526,14 @@
 }
 
 .addButton {
-  background: #ff7211;
+  background: #22a0c1;
   color: white;
   border: none;
   padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
-  margin-top: 20px;
+  margin-bottom: 20px;
   justify-content: flex-end;
 }
 .submit{
@@ -546,6 +552,7 @@ margin-left: 450px;
 
 .addButton:hover {
   background: #c6e7e7;
+  color: #000;
 }
 .popups{
   margin-left: 450px;

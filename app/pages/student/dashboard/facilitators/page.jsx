@@ -1,54 +1,45 @@
-"use client"; 
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Pagination from '@/app/components/pagination/pagination';
-import Search from '@/app/components/search/search';
+import Toolbar from '@/app/components/toolbar/Toolbar';
+import Table from '@/app/components/table/Table';
+import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
+import { MdAdd, MdFilterList } from 'react-icons/md';
+import api from '@/app/lib/utils/axios';
+import Swal from 'sweetalert2';
 import styles from '@/app/styles/students/addStudent/facilitators.module.css';
+import Loading from '@/app/components/Loading/Loading';
 import Link from "next/link";
 import { useSearchParams } from 'next/navigation';
-import Swal from 'sweetalert2';
-import { config } from '/config';
-import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
-// import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
+
+const ROWS_PER_PAGE = 10;
 
 const FacilitatorsPage = () => {
   const [facilitators, setFacilitators] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sortKey, setSortKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [page, setPage] = useState(0);
+  const [adding, setAdding] = useState(false);
   const searchParams = useSearchParams();
-  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
   const q = searchParams.get('q') || '';
 
-  useEffect(() => {  
+  useEffect(() => {
     const fetchFacilitators = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/facilitators${q ? `?q=${q}` : ''}`);
-        const data = await response.json();
-        setFacilitators(data);
+        setLoading(true);
+        const response = await api.get(`/facilitators${q ? `?q=${q}` : ''}`);
+        setFacilitators(Array.isArray(response.data) ? response.data : []);
+
       } catch (error) {
         console.error('Error fetching facilitators:', error);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchFacilitators();
   }, [q]);
-
-  // console.log(facilitators)
-  const showErrorAlert = (message) => {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: message,
-      confirmButtonColor: '#3085d6',
-    });
-  };
-
-  const handleAddNewClick = () => {
-    setShowAddNewPopup(true);
-  };
-
-  // Close the "Add New" student popup
-  const handleClosePopup = () => {
-    setShowAddNewPopup(false);
-  };
 
   const handleDeleteFacilitator = async (uuid, fullName) => {
     const result = await Swal.fire({
@@ -61,96 +52,115 @@ const FacilitatorsPage = () => {
       confirmButtonText: 'Yes, delete',
       cancelButtonText: 'Cancel'
     });
-    
+
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`${config.baseURL}/facilitators/${uuid}/delete`, {
-          method: 'GET',
-        });
-
-        if (response.ok) {
-          setFacilitators(facilitators.filter((facilitator) => facilitator.uuid !== uuid));
-          Swal.fire({
-            title: 'Deleted!',
-            text: `${fullName} has been successfully deleted.`,
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-          });
-        } else {
-          const errorData = await response.json();
-          // console.log(errorData)
-          showErrorAlert(errorData.error || 'Failed to delete facilitator.');
-        }
+        await api.delete(`/facilitators/${uuid}/delete`);
+        setFacilitators(prev => prev.filter(f => f.uuid !== uuid));
+        Swal.fire('Deleted!', `${fullName} has been deleted.`, 'success');
       } catch (error) {
         console.error('Error deleting facilitator:', error);
-        showErrorAlert('An error occurred while trying to delete the facilitator.');
+        Swal.fire('Error', 'Could not delete the facilitator.', 'error');
       }
     }
   };
 
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
+    }
+  };
+
+ const sortedFacilitators = useMemo(() => {
+  const data = Array.isArray(facilitators) ? facilitators : [];
+  if (!sortKey) return data;
+  return [...data].sort((a, b) => {
+    const aVal = (a[sortKey] ?? '').toString().toLowerCase();
+    const bVal = (b[sortKey] ?? '').toString().toLowerCase();
+    if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
+}, [facilitators, sortKey, sortOrder]);
+
+
+  const paginatedFacilitators = useMemo(() => {
+    const start = page * ROWS_PER_PAGE;
+    return sortedFacilitators.slice(start, start + ROWS_PER_PAGE);
+  }, [sortedFacilitators, page]);
+
+  const columns = [
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      render: row => `${row.firstName} ${row.lastName}`
+    },
+    { key: 'email', label: 'Email', sortable: true },
+    { key: 'phoneNo', label: 'Phone', sortable: true },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: row => (
+        <div className={styles.buttons}>
+          <Link href={`/pages/student/dashboard/facilitators/${row.uuid}`}>
+            <button className={`${styles.button} ${styles.view}`}>View</button>
+          </Link>
+          <button
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDeleteFacilitator(row.uuid, `${row.firstName} ${row.lastName}`)}
+          >
+            Delete
+          </button>
+        </div>
+      )
+    }
+  ];
+
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <Search placeholder="Search for a facilitator..."  />
-        <button onClick={handleAddNewClick} className={styles.addButton}>
-          Add New
-        </button>
+      <Toolbar
+        placeholder="Search facilitator..."
+        buttons={[
+          {
+            label: 'Filter',
+            onClick: () => {},
+            variant: 'secondary',
+            icon: MdFilterList
+          },
+          {
+            label: 'Add New',
+            onClick: () => setAdding(true),
+            variant: 'primary',
+            icon: MdAdd
+          }
+        ]}
+      />
 
-        {/* Conditionally render the Add New Student Popup */}
-        {showAddNewPopup && (
-            <AddFacilitatorPage onClose={handleClosePopup} />
-        )}
-      </div>
-      {facilitators.length > 0 ? (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Email</td>
-              <td>Gender</td>
-              <td>ID No</td>
-              <td>Phone</td>
-              <td>Actions</td>
-            </tr>
-          </thead>
-          <tbody>
-            {facilitators.map((facilitator) => {
-              const fullName = `${facilitator.firstName} ${facilitator.lastName}`;
-              return (
-                <tr key={facilitator.id}>
-                  <td>
-                    <div className={styles.facilitator}>
-                      {fullName}
-                    </div>
-                  </td>
-                  <td>{facilitator.email}</td>
-                  <td>{facilitator.gender}</td>
-                  <td>{facilitator.idNo}</td>
-                  <td>{facilitator.phoneNo}</td>
-                  <td>
-                    <div className={styles.buttons}>
-                      <Link href={`/pages/student/dashboard/facilitators/${facilitator.uuid}`}>
-                        <button className={`${styles.button} ${styles.view}`}>
-                          View
-                        </button>
-                      </Link>
-                      <button
-                        className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDeleteFacilitator(facilitator.uuid, fullName)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {loading ? (
+        <Loading />
+      ) : paginatedFacilitators.length > 0 ? (
+        <Table
+          columns={columns}
+          data={paginatedFacilitators}
+          onSort={handleSort}
+          sortKey={sortKey}
+          sortOrder={sortOrder}
+        />
       ) : (
-        <p className={styles.noStudents}>No facilitators available</p>
+        <p className={styles.noData}>No facilitators found.</p>
       )}
-      <Pagination count="" />
+
+      <Pagination
+        count={sortedFacilitators.length}
+        itemsPerPage={ROWS_PER_PAGE}
+        onPageChange={(p) => setPage(p)}
+      />
+
+      {adding && <AddFacilitatorPage onClose={() => setAdding(false)} />}
     </div>
   );
 };

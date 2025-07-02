@@ -1,11 +1,10 @@
 "use client"
-import styles from '@/app/styles/students/singleStudent/Facilitator.module.css'
 
+import styles from '@/app/styles/students/singleStudent/Facilitator.module.css'
 import React, { useState, useEffect } from "react";
 import { AddUpdateHoursPopup, ViewHoursPopup } from '@/app/components/facilitators/WorkHoursPopups'
-import { config } from "/config";
 import Image from "next/image";
-
+import api from '@/app/lib/utils/axios';
 import UpdateFacilitator from "@/app/components/facilitators/UpdateFacilitator";
 
 const SingleFacilitatorPage = ({ params }) => {
@@ -13,9 +12,9 @@ const SingleFacilitatorPage = ({ params }) => {
 const [successMessage, setSuccessMessage] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
 const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
-  const [popupType, setPopupType] = useState(null);
-    const [editingField, setEditingField] = useState(null);
-    const [showUpdate, setShowUpdate] = useState(false);
+const [popupType, setPopupType] = useState(null);
+const [editingField, setEditingField] = useState(null);
+const [showUpdate, setShowUpdate] = useState(false);
 
   
   const [formData, setFormData] = useState({
@@ -31,20 +30,15 @@ const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
   useEffect(() => {
     const fetchFacilitator = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/facilitators/${id}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        // console.log("Fetched facilitator data:", data);
-        setFacilitator(data);
+        const response = await api.get(`/facilitators/${id}`);
+        setFacilitator(response.data);
         setFormData({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          idNo: data.idNo,
-          phoneNo: data.phoneNo,
-          gender: data.gender,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+          idNo: response.data.idNo,
+          phoneNo: response.data.phoneNo,
+          gender: response.data.gender,
 
         });
       } catch (error) {
@@ -56,7 +50,7 @@ const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
   }, [id]);
 
 
-    const [showAddUpdateHours, setShowAddUpdateHours] = useState(false);
+  const [showAddUpdateHours, setShowAddUpdateHours] = useState(false);
   const [showViewHours, setShowViewHours] = useState(false);
 
   const handleChange = (e) => {
@@ -81,13 +75,8 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
     console.log(formData)
-    const response = await fetch(`${config.baseURL}/facilitators/${id}/update`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+   const response = await api.patch(`/facilitators/${id}/update`, formData);
+
     if (!response.ok) {
       
       throw new Error('Network response was not ok');
@@ -109,7 +98,7 @@ const handleSubmit = async (e) => {
 
     // console.log("Update response:", data);
 
-    const updatedFacilitator = await fetch(`${config.baseURL}/facilitators/${id}`);
+    const updatedFacilitator = await api.get(`/facilitators/${id}`);
     const updatedData = await updatedFacilitator.json();
     setFacilitator(updatedData);
 
@@ -125,7 +114,7 @@ const handleSubmit = async (e) => {
 const handleAddUpdateHours = async (entries) => {
   // console.log(entries)
   try {
-    const response = await fetch(`${config.baseURL}/facilitators/${id}/hours`, {
+    const response = await api.post(`/facilitators/${id}/hours`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -198,25 +187,25 @@ const handleAddUpdateHours = async (entries) => {
                       <p><strong>Full Name:</strong> {facilitator.firstName} {facilitator.lastName}</p>
                       <p><strong>Email:</strong> {facilitator.email}</p>
                       <p><strong>Phone:</strong> {facilitator.phoneNo}</p>
-                      <p><strong>Reg No:</strong> {facilitator.idNo}</p>
+                      <p><strong>Id Number:</strong> {facilitator.idNo}</p>
 
                       {showUpdate && <UpdateFacilitator onClose={handleshowDelete}/>}
                   </div>
               </div>
 
-              {/*<div className={styles.hoursButtons}>*/}
-          {/*    <button className={styles.button} onClick={() => setPopupType('addUpdate')}>Add Hours</button>*/}
-          {/*    <button className={styles.button} onClick={() => setPopupType('view')}>View Hours</button>*/}
-          {/*</div>*/}
+              {/* <div className={styles.hoursButtons}>
+             <button className={styles.button} onClick={() => setPopupType('addUpdate')}>Add Hours</button>
+             <button className={styles.button} onClick={() => setPopupType('view')}>View Hours</button>
+          </div> */}
+{/* 
+          {popupType === 'addUpdate' && (
+             <AddUpdateHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}
+                               onSubmit={(entries) => handleAddUpdateHours(entries)}/>
+        )}
 
-          {/*{popupType === 'addUpdate' && (*/}
-          {/*    <AddUpdateHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}*/}
-          {/*                         onSubmit={(entries) => handleAddUpdateHours(entries)}/>*/}
-          {/*)}*/}
-
-          {/*{popupType === 'view' && (*/}
-          {/*    <ViewHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}/>*/}
-          {/*)}*/}
+          {popupType === 'view' && (
+             <ViewHoursPopup facilitatorId={currentFacilitatorId} onClose={() => setPopupType(null)}/>
+          )} */}
       </div>
   );
 };

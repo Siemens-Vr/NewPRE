@@ -1,80 +1,72 @@
+"use client";
 
-import React, {useEffect, useState} from "react";
-import styles from "@/app/styles/cohorts/Facilitators/facilitatorsPopUp.module.css";
+import React, { useState } from "react";
+import FormModal from "@/app/components/Form/FormModal";
 import Select from "react-select";
-import Spinner from "@/app/components/spinner/spinner";
-import { config } from "/config";
 
-// New component for the Facilitator Popup
-const FacilitatorPopup = ({ onClose, onAddFacilitator, facilitators }) => {
-    const [selectedFacilitator, setSelectedFacilitator] = useState(null);
-    const [selectedRole, setSelectedRole] = useState(null);
+const FacilitatorFormModal = ({ onClose, onAddFacilitator, facilitators }) => {
+  const [formValues, setFormValues] = useState({
+    facilitator: null,
+    role: null,
+  });
 
-    const roleOptions = [
-        { value: 'Theory Instructor', label: 'Theory Instructor' },
-        { value: 'Practical Instructor', label: 'Practical Instructor' },
-    ];
+  const roleOptions = [
+    { value: 'Theory Instructor', label: 'Theory Instructor' },
+    { value: 'Practical Instructor', label: 'Practical Instructor' },
+  ];
 
-    const handleAddFacilitator = () => {
-        if (selectedFacilitator && selectedRole) {
-            onAddFacilitator({ 
-                value: selectedFacilitator.value, 
-                label: selectedFacilitator.label, 
-                role: selectedRole.value 
-            });
-            setSelectedFacilitator(null);
-            setSelectedRole(null);
-            onClose();
-        }
-    };
+  const handleFormChange = (updated) => {
+    setFormValues(updated);
+  };
 
-    return (
-        <div className={styles.modalOverlay} onClick={onClose}>
-            <div className={styles.containers} onClick={(e) => e.stopPropagation()}>
-                <button className={styles.closeButton} onClick={onClose}>
-                    &times;
-                </button>
-                <h3 className={styles.title}>Add Facilitator</h3>
-                
-                <div className={styles.facilitatorRoleSelection}>
-                    <Select
-                        className={styles.selects}
-                        placeholder="Select Facilitator"
-                        options={facilitators.map(facilitator => ({
-                            value: facilitator.uuid,
-                            label: `${facilitator.firstName} ${facilitator.lastName}`
-                        }))}
-                        value={selectedFacilitator}
-                        onChange={setSelectedFacilitator}
-                    />
-                    <Select
-                        className={styles.selects}
-                        placeholder="Select Role"
-                        options={roleOptions}
-                        value={selectedRole}
-                        onChange={setSelectedRole}
-                    />
-                </div>
-                
-                <div className={styles.buttons2}>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className={`${styles.cancelButton} ${styles.button}`}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleAddFacilitator}
-                        className={`${styles.saveButton} ${styles.button}`}
-                        disabled={!selectedFacilitator || !selectedRole}
-                    >
-                        Add Facilitator
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+ const handleSubmit = () => {
+  const { facilitator: facilitatorId, role } = formValues;
+
+  // Find the full facilitator object from facilitators list
+  const fullFacilitator = facilitators.find(fac => fac.uuid === facilitatorId);
+
+  if (fullFacilitator && role) {
+    onAddFacilitator({
+      uuid: fullFacilitator.uuid,
+      name: `${fullFacilitator.firstName} ${fullFacilitator.lastName}`, // full name string
+      role: role,  // role is already the string from select
+    });
+    onClose();
+  } else {
+    alert("Please select a valid facilitator and role");
+  }
 };
-export default FacilitatorPopup;
+
+
+  const fields = [
+    {
+      name: 'facilitator',
+      label: 'Select Facilitator',
+      type: 'select',
+      options: facilitators.map(fac => ({
+        value: fac.uuid,
+        label: `${fac.firstName} ${fac.lastName}`,
+      })),
+    },
+    {
+      name: 'role',
+      label: 'Select Role',
+      type: 'select',
+      options: roleOptions
+    }
+  ];
+
+  return (
+    <FormModal
+      title="Add Facilitator"
+      fields={fields}
+      initialValues={formValues}
+      onSubmit={handleSubmit}
+      onAdd={() => {}}
+      onChange={handleFormChange}
+      onClose={onClose}
+    />
+  );
+};
+
+export default FacilitatorFormModal;

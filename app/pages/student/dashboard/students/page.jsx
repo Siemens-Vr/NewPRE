@@ -14,7 +14,7 @@ import Toolbar from '@/app/components/toolbar/Toolbar';
 import Table from '@/app/components/table/Table';
 import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete, MdDownload  } from 'react-icons/md';
 import Loading from '@/app/components/Loading/Loading';
-
+import { useParams } from 'next/navigation';
 
 
 
@@ -24,7 +24,7 @@ const StudentsPage = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [popupStudentId, setPopupStudentId] = useState(null);
+  // const [popupStudentId, setPopupStudentId] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(0);
@@ -33,17 +33,19 @@ const StudentsPage = () => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const q = searchParams.get('q') || '';
+    const params = useParams();
+    const { uuid, id } = params;
   // const page = searchParams.get('page') || '0';
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const url = `/students${q ? `?q=${encodeURIComponent(q)}` : ''}`;
-        console.log(url);
+        // console.log(url);
         const res = await api.get(url);
        setStudents(res.data.content);
 setFilteredStudents(res.data.content);
-        console.log("data:",res.data);
+        // console.log("data:",res.data);
       } catch (err) {
         console.error(err);
         Swal.fire('Error', 'Failed to load students list', 'error');
@@ -105,7 +107,7 @@ setFilteredStudents(res.data.content);
       showErrorAlert('No students available to download.');
     }
   };
-  const handleDeleteStudent = async (uuid, fullName) => {
+  const handleDeleteStudent = async (uuid, fullName, row) => {
     const confirm = await Swal.fire({
       title: `Delete ${fullName}?`,
       icon: 'warning',
@@ -119,6 +121,7 @@ setFilteredStudents(res.data.content);
         Swal.fire('Deleted!', `${fullName} has been removed.`, 'success');
       } catch (err) {
         Swal.fire('Error', 'Something went wrong', 'error');
+        console.log(err);
       }
     }
   };
@@ -229,7 +232,7 @@ const handleUpdateStudent = (student) => {
           <li>
             <button
               style={dropdownItemStyle}
-              onClick={() => {handleUpdateStudent;
+              onClick={() => {handleUpdateStudent(row);
         }}
             >   
               Update
@@ -238,7 +241,7 @@ const handleUpdateStudent = (student) => {
           <li>
             <button
               style={{ ...dropdownItemStyle, color: 'red' }}
-              onClick={handleDeleteStudent}
+              onClick={() => handleDeleteStudent(row.uuid, row.fullName, row)}
             >
               Delete
             </button>
@@ -303,11 +306,13 @@ const handleUpdateStudent = (student) => {
 
       {adding && <AddStudentPage onClose={() => setAdding(false)} />}
         {editingStudent && (
-  <UpdateStudent
-    student={editingStudent}
-    onClose={() => setEditingStudent(null)}
-  />
+<UpdateStudent
+  uuid={editingStudent.uuid}
+  onClose={() => setEditingStudent(null)}
+/>
+
 )}
+
 
     </div>
   );

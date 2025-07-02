@@ -1,4 +1,5 @@
 "use client";
+
 import styles from '@/app/styles/cohorts/viewCohort/viewLevel.module.css'
 import Search from '@/app/components/cohort/search'
 import Pagination from '@/app/components/pagination/pagination'
@@ -10,13 +11,14 @@ import LevelDetailsPDF from '@/app/components/cohort/LevelDetailsPDF'
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
+import api from '@/app/lib/utils/axios';
+import Table from '@/app/components/table/Table';
 
 import Link from 'next/link';
 
 
-
+const ROWS_PER_PAGE = 10;
 const LevelDetails = ({ searchParams }) => {
-  
   const [levelData, setLevelData] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,28 +28,31 @@ const LevelDetails = ({ searchParams }) => {
   const [popupType, setPopupType] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+    const [sortKey, setSortKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const params = useParams();
-  // console.log(params)
 
   useEffect(() => {
     fetchData(); 
   }, []);
-  const [showMenu, setShowMenu] = useState(false);
 
-
-  const fetchData  = async (req, res)=>{
-    const response = await fetch(`${config.baseURL}/levels/${params.id}/levels/${params.uuid}`)
-    const data = await response.json();
-    console.log(data)
-    setLevelData(data)
+  const fetchData = async () => {
+    try {
+      const response = await api.get(`/levels/${params.id}/levels/${params.uuid}`);
+      const data = response.data;
+      setLevelData(data);
+    } catch (error) {
+      console.error("Error fetching level data:", error);
+    }
   }
-  
+
   useEffect(() => {
     const fetchFacilitators = async () => {
       try {
-        const response = await fetch(`${config.baseURL}/facilitators`);
-        const data = await response.json();
+        const response = await api.get('/facilitators');
+        const data = response.data;
         setFacilitators(data);
       } catch (error) {
         console.error('Error fetching facilitators:', error);
@@ -56,60 +61,48 @@ const LevelDetails = ({ searchParams }) => {
 
     fetchFacilitators();
   }, []);
+   const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
+    }
+  };
 
   if (!levelData) {
     return <p>Loading...</p>;
   }
 
-  // Calculate total pages
   const studentsPerPage = 10;
   const filteredStudents = levelData.students.filter(student =>
     student.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.lastName.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
-
-  // Get students for the current page
   const currentStudents = filteredStudents.slice(
     currentPage * studentsPerPage,
     (currentPage + 1) * studentsPerPage
   );
-
-  // Count pass and fail
   const passCount = levelData.students.filter(student => student.examResults === 'pass').length;
   const failCount = levelData.students.filter(student => student.examResults === 'fail').length;
 
-  // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(0); // Reset to first page on new search
+    setCurrentPage(0);
   };
 
-  // New function to handle level update
   const handleLevelUpdate = async (updatedData) => {
     try {
-      const response = await fetch(`${config.baseURL}/levels/${levelData.uuid}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-      });
-
-      if (response.ok) {
-        const updatedLevel = await response.json();
-        setLevelData({ ...levelData, ...updatedLevel });
-        alert("Level Information updated")
-        setShowPopup(false);
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to update level:', errorData);
-      }
+      const response = await api.patch(`/levels/${levelData.uuid}`, updatedData);
+      const updatedLevel = response.data;
+      setLevelData({ ...levelData, ...updatedLevel });
+      alert("Level Information updated")
+      setShowPopup(false);
     } catch (error) {
       console.error('Error updating level:', error);
     }
@@ -117,16 +110,7 @@ const LevelDetails = ({ searchParams }) => {
 
   const handleAddUpdateHours = async (facilitatorId, entries) => {
     try {
-      const response = await fetch(`${config.baseURL}/levels/${levelData.uuid}/facilitators/${facilitatorId}/hours`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ entries }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to add hours');
-      }
+      await api.post(`/levels/${levelData.uuid}/facilitators/${facilitatorId}/hours`, { entries });
       setSuccessMessage('Hours updated successfully');
       setTimeout(() => setSuccessMessage(''), 2000);
     } catch (error) {
@@ -145,7 +129,6 @@ const LevelDetails = ({ searchParams }) => {
     setLevelData({ ...levelData, facilitators: updatedFacilitators });
   };
 
-  // Handle PDF download
   const handleDownloadPDF = async () => {
     if (levelData) {
       const blob = await pdf(<LevelDetailsPDF levelData={levelData} />).toBlob();
@@ -155,182 +138,162 @@ const LevelDetails = ({ searchParams }) => {
       console.error('No level data available to download.');
     }
   };
+
   const handleAddNewClick = () => {
     setShowAddNewPopup(true);
   };
 
-  // Close the "Add New" student popup
   const handleClosePopup = () => {
     setShowAddNewPopup(false);
   };
 
-
-
-
   return (
-      <div className={styles.container}>
-        <div className={styles.card}>
-          <div className={styles.top}>
-            <table className={styles.table}>
-              <thead>
-              <tr>
-                <td>Name</td>
-                <td>Start Date</td>
-                <td>End Date</td>
-                <td>Exam Date</td>
-                <td>Exam Quotation Number</td>
-                <td>Action</td>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{levelData.levelName}</td>
-                <td>{new Date(levelData.startDate).toLocaleDateString()}</td>
-                <td>{new Date(levelData.endDate).toLocaleDateString()}</td>
-                <td>{new Date(levelData.examDates).toLocaleDateString()}</td>
-                <td>{levelData.examQuotationNumber}</td>
-                <td>
-                  <div className={styles.actionMenu}>
-                    <button className={styles.dotsButton} onClick={() => setShowMenu(!showMenu)}>⋮</button>
-                    {showMenu && (
-                        <div className={styles.dropdownMenu}>
-                          <button onClick={() => setShowPopup(true)}>Update</button>
-                          <button onClick={handleDownloadPDF}>Download PDF</button>
-                        </div>
-                    )}
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div   className={`${styles.studentTable} ${
-            filteredStudents.length > 0 ? styles.filled : styles.empty
-        }`}>
-          {filteredStudents.length > 0 ? (
-              <>
-                <div className={styles.tableTop}>
-                  <h3>Students</h3>
-                  <p>Count: {levelData.students.length}</p>
-                  <p>Pass: {passCount}</p>
-                  <p>Fail: {failCount}</p>
-                  {/*<Search value={searchQuery} onChange={handleSearchChange} placeholder="Search"/>*/}
-                </div>
-
-                <table className={styles.table}>
-                  <thead>
-                  <tr>
-                    <td>No.</td>
-                    <td>Registration Number</td>
-                    <td>Name</td>
-                    <td>Exam Results</td>
-                    <td>Phone</td>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {currentStudents.map((student, index) => (
-                      <tr key={index}>
-                        <td>{currentPage * studentsPerPage + index + 1}</td>
-                        <td>{student.regNo}</td>
-                        <td>{student.firstName} {student.lastName}</td>
-                        <td>{student.examResults}</td>
-                        <td>{student.phone}</td>
-                      </tr>
-                  ))}
-                  </tbody>
-                </table>
-                <Pagination
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                />
-              </>
-          ) : (
-              <p className={styles.nothing}>No students found.</p>
-          )}
-        </div>
-
-        <div className={styles.instructorsTable}>
-          {levelData.facilitators.length > 0 ? (
-              <>
-                <div className={styles.tableTop}>
-                  <h3>Instructors</h3>
-                  {/*<p>Paid: 20</p>*/}
-                  {/*<p>Not Paid: 18</p>*/}
-                  <button onClick={handleAddNewClick} className={styles.addButton}>
-                    Add New Instructor
-                  </button>
-                  {showAddNewPopup && (
-                      <AddFacilitatorPage onClose={handleClosePopup}/>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.top}>
+          <Table
+          columns={[
+            { key: 'levelName', label: 'Name' },
+            { key: 'startDate', label: 'Start Date', render: row => new Date(row.startDate).toLocaleDateString() },
+            { key: 'endDate', label: 'End Date', render: row => new Date(row.endDate).toLocaleDateString() },
+            { key: 'examDates', label: 'Exam Date', render: row => new Date(row.examDates).toLocaleDateString() },
+            { key: 'examQuotationNumber', label: 'Exam Quotation Number' },
+            {
+              key: 'actions',
+              label: 'Action',
+              render: () => (
+                <div className={styles.actionMenu}>
+                  <button className={styles.dotsButton} onClick={() => setShowMenu(!showMenu)}>⋮</button>
+                  {showMenu && (
+                    <div className={styles.dropdownMenu}>
+                      <button onClick={() => setShowPopup(true)}>Update</button>
+                      <button onClick={handleDownloadPDF}>Download PDF</button>
+                    </div>
                   )}
                 </div>
+              )
+            }
+          ]}
+          data={[levelData]}
+        />
 
-                <table className={styles.table}>
-                  <thead>
-                  <tr>
-                  <td>No.</td>
-                    <td>Name</td>
-                    <td>Phone</td>
-                    <td>Specification</td>
-                    <td>Total Hours</td>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {levelData.facilitators.map((facilitator, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{facilitator.firstName} {facilitator.lastName}</td>
-                        <td>{facilitator.phone}</td>
-                        <td>{facilitator.specification}</td>
-                        <td>
-                          <div className={styles.hoursButtons}>
-                            <button className={styles.button} onClick={() => {
-                              https://kevzkip.github.io/          setCurrentFacilitatorId(facilitator.uuid);
-                              setPopupType('addUpdate');
-                            }}>Add Hours
-                            </button>
-                            <button className={styles.button} onClick={() => {
-                              setCurrentFacilitatorId(facilitator.uuid);
-                              setPopupType('view');
-                            }}>View Hours
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                  ))}
-                  </tbody>
-                </table>
-              </>
-          ) : (
-              <p className={styles.nothing}>No facilitators found.</p>
-          )}
         </div>
+      </div>
 
-        {showPopup && (
-            <LevelEditPopup
-                levelData={levelData}
-                onClose={() => setShowPopup(false)}
-                onUpdate={handleLevelUpdate}
-            />
-        )}
+      <div className={`${styles.studentTable} ${filteredStudents.length > 0 ? styles.filled : styles.empty}`}>
+        {filteredStudents.length > 0 ? (
+          <>
+            <div className={styles.tableTop}>
+              <h3>Students</h3>
+              <p>Count: {levelData.students.length}</p>
+              <p>Pass: {passCount}</p>
+              <p>Fail: {failCount}</p>
+            </div>
 
-        {popupType === 'addUpdate' && (
-            <AddUpdateHoursPopup
-                facilitatorId={currentFacilitatorId}
-                onClose={() => setPopupType(null)}
-                onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}
-            />
-        )}
+            <Table
+            columns={[
+              {
+                key: 'no',
+                label: 'No.',
+                render: (_row, idx) => currentPage * studentsPerPage + idx + 1,
+              },
+              { key: 'regNo', label: 'Registration Number' },
+              {
+                key: 'name',
+                label: 'Name',
+                render: row => `${row.firstName} ${row.lastName}`,
+              },
+              { key: 'examResults', label: 'Exam Results' },
+              { key: 'phone', label: 'Phone' }
+            ]}
+            data={currentStudents}
+          />
 
-        {popupType === 'view' && (
-            <ViewHoursPopup
-                facilitatorId={currentFacilitatorId}
-                onClose={() => setPopupType(null)}
-            />
+            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+          </>
+        ) : (
+          <p className={styles.nothing}>No students found.</p>
         )}
       </div>
+
+      <div className={styles.instructorsTable}>
+        {levelData.facilitators.length > 0 ? (
+          <>
+            <div className={styles.tableTop}>
+              <h3>Instructors</h3>
+              <button onClick={handleAddNewClick} className={styles.addButton}>Add New Instructor</button>
+              {showAddNewPopup && (
+                <AddFacilitatorPage onClose={handleClosePopup} />
+              )}
+            </div>
+
+            <Table
+            columns={[
+              {
+                key: 'no',
+                label: 'No.',
+                render: (_row, idx) => idx + 1
+              },
+              {
+                key: 'name',
+                label: 'Name',
+                render: row => `${row.firstName} ${row.lastName}`
+              },
+              { key: 'phone', label: 'Phone' },
+              { key: 'specification', label: 'Specification' },
+              {
+                key: 'actions',
+                label: 'Total Hours',
+                render: (row) => (
+                  <div className={styles.hoursButtons}>
+                    <button className={styles.addButton} onClick={() => {
+                      setCurrentFacilitatorId(row.uuid);
+                      setPopupType('addUpdate');
+                    }}>
+                      Add Hours
+                    </button>
+                    <button className={styles.button} onClick={() => {
+                      setCurrentFacilitatorId(row.uuid);
+                      setPopupType('view');
+                    }}>
+                      View Hours
+                    </button>
+                  </div>
+                )
+              }
+            ]}
+            data={levelData.facilitators}
+          />
+
+          </>
+        ) : (
+          <p className={styles.nothing}>No facilitators found.</p>
+        )}
+      </div>
+
+      {showPopup && (
+        <LevelEditPopup
+          levelData={levelData}
+          onClose={() => setShowPopup(false)}
+          onUpdate={handleLevelUpdate}
+        />
+      )}
+
+      {popupType === 'addUpdate' && (
+        <AddUpdateHoursPopup
+          facilitatorId={currentFacilitatorId}
+          onClose={() => setPopupType(null)}
+          onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}
+        />
+      )}
+
+      {popupType === 'view' && (
+        <ViewHoursPopup
+          facilitatorId={currentFacilitatorId}
+          onClose={() => setPopupType(null)}
+        />
+      )}
+    </div>
   );
 };
 

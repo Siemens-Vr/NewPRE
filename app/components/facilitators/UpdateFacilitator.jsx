@@ -1,254 +1,89 @@
-"use client"
-import styles from '@/app/styles/students/singleStudent/updateFacilitator.module.css'
+"use client";
+
 import { useState, useEffect } from "react";
-import { AddUpdateHoursPopup, ViewHoursPopup } from '@/app/components/facilitators/WorkHoursPopups'
-import { config } from "/config";
-import { useParams } from "next/navigation";
-const SingleFacilitatorPage = ({onClose}) => {
-    const [facilitator, setFacilitator] = useState(null);
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [currentFacilitatorId, setCurrentFacilitatorId] = useState(null);
-    const [popupType, setPopupType] = useState(null);
+import { useParams, useRouter } from "next/navigation";
+import api from '@/app/lib/utils/axios';
+import FormModal from '@/app/components/Form/FormModal';
 
+const SingleFacilitatorPage = ({ onClose }) => {
+  const [facilitator, setFacilitator] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const params = useParams();
+  const router = useRouter();
+  const { id } = params;
 
-
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        idNo:'',
-        phoneNo: '',
-        gender: '',
-    });
-    const params = useParams();
-    const { id } = params;
-
-    useEffect(() => {
-        const fetchFacilitator = async () => {
-            try {
-                const response = await fetch(`${config.baseURL}/facilitators/${id}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                // console.log("Fetched facilitator data:", data);
-                setFacilitator(data);
-                setFormData({
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.email,
-                    idNo: data.idNo,
-                    phoneNo: data.phoneNo,
-                    gender: data.gender,
-
-                });
-            } catch (error) {
-                console.error('Error fetching facilitator:', error);
-            }
-        };
-
-        fetchFacilitator();
-    }, [id]);
-
-
-    const [showAddUpdateHours, setShowAddUpdateHours] = useState(false);
-    const [showViewHours, setShowViewHours] = useState(false);
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            console.log(formData)
-            const response = await fetch(`${config.baseURL}/facilitators/${id}/update`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            if (!response.ok) {
-
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-
-            setSuccessMessage(data.message); // Set the success message
-
-            setTimeout(() => {
-                setSuccessMessage('');
-            }, 2000);
-
-            setErrorMessage(data.message); // Set the success message
-
-            setTimeout(() => {
-                setErrorMessage('');
-            }, 404);
-
-
-            // console.log("Update response:", data);
-
-            const updatedFacilitator = await fetch(`${config.baseURL}/facilitators/${id}`);
-            const updatedData = await updatedFacilitator.json();
-            setFacilitator(updatedData);
-
-
-            // Clear the success message after 5 seconds
-
-        } catch (error) {
-            // console.error('Error updating facilitator:', error);
-            alert('Failed to update facilitator. Please try again.');
-        }
-    };
-
-    const handleAddUpdateHours = async (entries) => {
-        // console.log(entries)
-        try {
-            const response = await fetch(`${config.baseURL}/facilitators/${id}/hours`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ entries }),
-            });
-            if (!response.ok) {
-                setErrorMessage('Failed to add Hours');
-                setTimeout(()=> setErrorMessage (''), 404);
-                // throw new Error('Failed to add hours');
-            }
-            setSuccessMessage('Hours updated successfully');
-            setTimeout(() => setSuccessMessage(''), 2000);
-        } catch (error) {
-            setErrorMessage('Error updating hours:');
-            setTimeout(()=> setErrorMessage (''), 404);
-            // console.error('Error updating hours:', error);
-            setErrorMessage('Failed to update hours. Please try again.');
-            setTimeout(()=> setErrorMessage (''), 404);
-            // alert('Failed to update hours. Please try again.');
-        }
-    };
-
-
-    if (!facilitator) {
-        return <div>Loading...</div>;
+  const fetchFacilitator = async () => {
+    try {
+      const response = await api.get(`/facilitators/${id}`);
+      setFacilitator(response.data);
+    } catch (error) {
+      console.error("Error fetching facilitator:", error);
+      alert("Failed to load facilitator data");
     }
-    // console.log(formData)
-    return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-                <div className={styles.container}>
-                    <div className={styles.modalHeader}>
-                        <button type="button" className={styles.closeButton} onClick={onClose}>
-                            ✖
-                        </button>
-                        {/*<h1>{facilitator.firstName} {facilitator.lastName}</h1>*/}
-                    </div>
+  };
 
-                    {successMessage && (
-                        <div className={styles.successMessage}>
-                            {successMessage}
-                        </div>
-                    )}
+  useEffect(() => {
+    fetchFacilitator();
+  }, [id]);
 
-                    <form className={styles.formGrid} onSubmit={handleSubmit}>
-                        <div className={styles.formGroup}>
-                            <label>First Name</label>
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={formData.firstName}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Last Name</label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>ID Number</label>
-                            <input
-                                type="text"
-                                name="idNo"
-                                value={formData.idNo}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Phone</label>
-                            <input
-                                type="text"
-                                name="phoneNo"
-                                value={formData.phoneNo}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Gender</label>
-                            <input
-                                name="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                            />
-                        </div>
+  const handleSubmit = async (values) => {
+    const updated = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      idNo: values.idNo,
+      phoneNo: values.phoneNo,
+      gender: values.gender,
+    };
 
-                    </form>
-                    <div >
+    try {
+      const response = await api.patch(`/facilitators/${id}/update`, updated);
+      if (response.status === 200) {
+        setSuccessMessage("Facilitator updated successfully");
+        setTimeout(() => {
+          router.push(`/pages/student/dashboard/facilitators/${id}`);
+        }, 0);
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      if (error.response) {
+        alert(error.response.data?.error?.join('\n') || "Update failed.");
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    }
+  };
 
-                        <button type="submit" className={styles.submitButton}>Update</button>
-                    </div>
+  const fields = [
+    { name: 'firstName', label: 'First Name', type: 'text', placeholder: 'First Name' },
+    { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name' },
+    { name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
+    { name: 'idNo', label: 'ID Number', type: 'text', placeholder: 'ID Number' },
+    { name: 'phoneNo', label: 'Phone Number', type: 'text', placeholder: 'Phone Number' },
+    {
+      name: "gender", label: "Gender", type: "select", options: [
+        { value: "Male", label: "Male" },
+        { value: "Female", label: "Female" },
+        { value: "Other", label: "Other" },
+      ]
+    }
+  ];
 
-                    {/*<div className={styles.hoursButtons}>*/}
-                    {/*    <button className={styles.button} onClick={() => {*/}
-                    {/*        setCurrentFacilitatorId(facilitator.uuid);*/}
-                    {/*        setPopupType('addUpdate');*/}
-                    {/*    }}>Add Hours*/}
-                    {/*    </button>*/}
-                    {/*    <button className={styles.button} onClick={() => {*/}
-                    {/*        setCurrentFacilitatorId(facilitator.uuid);*/}
-                    {/*        setPopupType('view');*/}
-                    {/*    }}>View Hours*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
+  if (!facilitator) {
+    return <div>Loading...</div>;
+  }
 
-                    {/*{popupType === 'addUpdate' && (*/}
-                    {/*    <AddUpdateHoursPopup*/}
-                    {/*        facilitatorId={currentFacilitatorId}*/}
-                    {/*        onClose={() => setPopupType(null)}*/}
-                    {/*        onSubmit={(entries) => handleAddUpdateHours(currentFacilitatorId, entries)}*/}
-                    {/*    />*/}
-                    {/*)}*/}
-
-                    {/*{popupType === 'view' && (*/}
-                    {/*    <ViewHoursPopup*/}
-                    {/*        facilitatorId={currentFacilitatorId}*/}
-                    {/*        onClose={() => setPopupType(null)}*/}
-                    {/*    />*/}
-                    {/*)}*/}
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <FormModal
+      title="Update Facilitator"
+      fields={fields}
+      initialValues={facilitator}
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      successMessage={successMessage}
+      setSuccessMessage={setSuccessMessage}
+    />
+  );
 };
 
 export default SingleFacilitatorPage;

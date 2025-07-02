@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;     
+  /* gap: 20px; */
+ justify-content: space-between;
+}
+
+.cardContainer {
+  width: 300px; 
+  flex: 0 0 auto;         
+  box-sizing: border-box;
+  border: 1px solid #fcfbfb;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #eeeff0;
+  transition: box-shadow 0.2s ease;
+  flex-direction: row;
+  box-shadow: #acacac;
+  /* justify-content: space-between; */
+  /* color: #fff; */
+}
+
+
+
+.cardContainer:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menuButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  z-index: 10;
+}
+
+.dropdownItem {
+  background-color: transparent;
+  border: none;
+  padding: 6px 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cardDetails {
+  margin-top: 10px;
+  color: #212529;
+}

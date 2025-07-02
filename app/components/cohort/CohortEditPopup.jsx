@@ -1,81 +1,64 @@
-import React, { useState } from 'react';
+'use client';
 
-import styles from '@/app/styles/cohorts/viewCohort/Editcohort.module.css'
+import React, { useState } from 'react';
+import FormModal from '@/app/components/Form/FormModal';
 
 const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
-  const formatDate = (dateString) => {
-    return dateString ? new Date(dateString).toISOString().split('T')[0] : '';
-  };
+  const formatDate = (dateString) =>
+    dateString ? new Date(dateString).toISOString().split('T')[0] : '';
 
-  const [formData, setFormData] = useState({
-    cohortName: cohortData.cohortName,
+  const [formValues, setFormValues] = useState({
+    cohortName: cohortData.cohortName || '',
     startDate: formatDate(cohortData.startDate),
     endDate: formatDate(cohortData.endDate),
-    // Add any additional cohort-specific fields here
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const fields = [
+    {
+      name: 'cohortName',
+      label: 'Cohort Name',
+      type: 'text',
+      placeholder: 'Enter cohort name',
+    },
+    {
+      name: 'startDate',
+      label: 'Start Date',
+      type: 'date',
+    },
+    {
+      name: 'endDate',
+      label: 'End Date',
+      type: 'date',
+    },
+  ];
+
+  // ✅ Update handler that works with reusable FormModal
+  const handleFieldChange = (name, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formattedData = {
-      ...formData,
-      startDate: formatDate(formData.startDate),
-      endDate: formatDate(formData.endDate),
+  const handleSubmit = (values) => {
+    const updated = {
+      ...values,
+      startDate: formatDate(values.startDate),
+      endDate: formatDate(values.endDate),
     };
-    onUpdate(formattedData);
+    onUpdate(updated);
+    onClose();
   };
 
   return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modal}>
-          <div className={styles.popup}>
-            <div className={styles.popupContent}>
-              <h2>Edit Cohort Details</h2>
-              <form onSubmit={handleSubmit}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="cohortName">Name:</label>
-                  <input
-                      type="text"
-                      id="cohortName"
-                      name="cohortName"
-                      value={formData.cohortName}
-                      onChange={handleChange}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label htmlFor="startDate">Start Date:</label>
-                  <input
-                      type="date"
-                      id="startDate"
-                      name="startDate"
-                      value={formData.startDate}
-                      onChange={handleChange}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label htmlFor="endDate">End Date:</label>
-                  <input
-                      type="date"
-                      id="endDate"
-                      name="endDate"
-                      value={formData.endDate}
-                      onChange={handleChange}
-                  />
-                </div>
-                {/* Add any additional fields as needed */}
-                <div className={styles.popupActions}>
-                  <button type="submit">Update</button>
-
-                </div>
-              </form>
-              <button type="button" onClick={onClose} className={styles.closeButton}>x</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <FormModal
+      title="Edit Cohort Details"
+      fields={fields}
+      initialValues={formValues}
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      onChange={handleFieldChange} // ✅ important fix
+    />
   );
 };
 

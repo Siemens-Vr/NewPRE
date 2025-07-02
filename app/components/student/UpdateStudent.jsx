@@ -1,144 +1,149 @@
 "use client";
-import styles from '@/app/styles/students/singleStudent/updateStudent.module.css';
 import { useState, useEffect } from "react";
-import { config } from "../../../config";
 import { useParams } from "next/navigation";
 import api from '@/app/lib/utils/axios';
+import FormModal from '@/app/components/Form/FormModal';
+import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
-const SinstudentPage = ({onClose}) => {
+
+
+const SinstudentPage = ({onClose, uuid}) => {
   const [student, setStudent] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const params = useParams();
-  const { id } = params;
+  // const { uuid } = params;
+  const router = useRouter();
+
+   
+ const fetchStudent = async () => {
+  try {
+    const response = await api.get(`/students/${uuid}`);
+    setStudent(response.data); 
+    console.log("Fetched student:", response.data);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    Swal.fire('Error', 'Failed to fetch student details', 'error');
+  }
+    };
 
   useEffect(() => {
-    const fetchStudent = async () => {
-      try {
-        const response = await api.get(`/students/${id}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log("Fetched student data:", data);
-        setStudent(data);
-      } catch (error) {
-        console.error("Error fetching student:", error);
-      }
-    };
-    fetchStudent();
-  }, [id]);
+  fetchStudent(); // Now accessible here and inside handleSubmit
+}, [uuid]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const updatedStudent = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      regNo: formData.get("regNo"),
-      kcseNo: formData.get("kcseNo"),
-      gender: formData.get("gender"),
-      feePayment: formData.get("feePayment"),
-      examResults: formData.get("examResults"),
-    };
+const handleSubmit = async (values) => {
+  const updatedStudent = {
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.email,
+    phone: values.phone,
+    regNo: values.regNo,
+    kcseNo: values.kcseNo,
+    gender: values.gender,
+    level: values.Level,
+    feePayment: values.feePayment,
+    examResults: values.examResults,
+  };
 
-    try {
-      const response = await api.get(`/students/${id}/update`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedStudent),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+  try {
+    const response = await api.patch(`/students/${uuid}/update`, updatedStudent);
+    if (response.status === 200) {
+      setSuccessMessage("Student updated successfully");
+
+      // ✅ Refetch latest student data
+      await fetchStudent();
+
+      // ✅ Close modal if available
+      if (typeof onClose === 'function') {
+        onClose();
       }
-      const result = await response.json();
-      setSuccessMessage(result.message);
-      setTimeout(() => setSuccessMessage(""), 5000);
-    } catch (error) {
-      console.error("Error updating student:", error);
+
+      // ✅ Optional redirect (delay slightly to ensure fetch completes)
+      setTimeout(() => {
+        router.push(`/pages/student/dashboard/students/${uuid}`);
+      }, 200);
+    }
+  } catch (error) {
+    console.error("Error updating student:", error);
+    if (error.response) {
+      alert(error.response.data?.error?.join('\n') || "Update failed.");
+    } else {
       alert("Failed to update student. Please try again.");
     }
+  }
+};
+
+
+const [Levels, setLevels] = useState([]);
+
+useEffect(() => {
+  const fetchLevels = async () => {
+    try {
+      const res = await api.get('/levels');
+      setLevels(res.data);
+    } catch (err) {
+      console.error('Failed to fetch levels:', err);
+    }
   };
+
+  fetchLevels();
+}, []);
+
+
+  const fields = [
+    { name: "firstName", label: "First Name", type: "text", placeholder: "First Name" },
+    { name: "lastName", label: "Last Name", type: "text", placeholder: "Last Name" },
+    { name: "email", label: "Email", type: "email", placeholder: "Email" },
+    { name: "phone", label: "Phone", type: "text", placeholder: "Phone Number" },
+    { name: "regNo", label: "Registration No", type: "text", placeholder: "Registration Number" },
+    { name: "kcseNo", label: "KCSE No", type: "text", placeholder: "KCSE Number" },
+    {
+  name: "Level",
+  label: "Select Level",
+  type: "select",
+  options: Levels.map(Level => ({
+    value: Level.uuid, // or level.uuid depending on your DB
+    label: Level.levelName
+  }))
+},
+    {
+      name: "gender", label: "Gender", type: "select", options: [
+        { value: "Male", label: "Male" },
+        { value: "Female", label: "Female" },
+        { value: "Other", label: "Other" },
+      ]
+    },
+    {
+      name: "feePayment", label: "Fee Payment Status", type: "select", options: [
+        { value: "paid", label: "Paid" },
+        { value: "unpaid", label: "Unpaid" },
+      ]
+    },
+    {
+      name: "examResults", label: "Exam Result Status", type: "select", options: [
+        { value: "pass", label: "Pass" },
+        { value: "fail", label: "Fail" },
+        { value: "no-show", label: "No Show" },
+      ]
+    }
+  ];
 
   if (!student) {
     return <div>Loading...</div>;
   }
 
   return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
-
-          <div className={styles.modalHeader}>
-            <h2 className={styles.title}>Update Student Details</h2>
-            <button type="button" className={styles.closeButton} onClick={onClose}>
-              ✖
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label>First Name</label>
-              <input type="text" name="firstName" defaultValue={student.firstName}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Last Name</label>
-              <input type="text" name="lastName" defaultValue={student.lastName}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Email</label>
-              <input type="email" name="email" defaultValue={student.email}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Phone</label>
-              <input type="text" name="phone" defaultValue={student.phone}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Registration Number</label>
-              <input type="text" name="regNo" defaultValue={student.regNo}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>KCSE Number</label>
-              <input type="text" name="kcseNo" defaultValue={student.kcseNo}/>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Gender</label>
-              <select name="gender" defaultValue={student.gender}>
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Fee Payment Status</label>
-              <select name="feePayment" defaultValue={student.feePayment}>
-                <option value="">Fee Payment Status</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Unpaid</option>
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Exam Result Status</label>
-              <select name="examResults" defaultValue={student.examResults}>
-                <option value="">Exam Result Status</option>
-                <option value="pass">Pass</option>
-                <option value="fail">Fail</option>
-                <option value="no-show">No Show</option>
-              </select>
-            </div>
-
-
-          </form>
-          <div className={styles.buttonContainer}>
-
-            <button type="submit" className={styles.submitButton}>Update</button>
-          </div>
-        </div>
-      </div>
+    <>
+    <FormModal
+            title="Update Student"
+            fields={fields}
+            initialValues={student}
+            onSubmit={handleSubmit}
+            onClose={onClose}
+            successMessage={successMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
+    </>
   );
 };
 

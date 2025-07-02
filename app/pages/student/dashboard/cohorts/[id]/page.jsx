@@ -3,20 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from "next/link";
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import styles from '@/app/styles/cohorts/viewCohort/viewCohort.module.css'
-import LevelAddPopUp from '@/app/components/cohort/LevelAddPopUp';
+import styles from '@/app/styles/cohorts/viewCohort/viewCohort.module.css';
+import CardComponent from "@/app/components/card/CardComponents"; 
+import LevelAddPopUp from '@/app/components/cohort/AddLevel';
 import LZString from 'lz-string';
 import { useRouter } from 'next/navigation';
 import api from "@/app/lib/utils/axios";
 
-
-import { config } from '/config';
 
 
 const ViewCohort = () => {
   const router = useRouter();
   const [cohortsData, setCohortsData] = useState(null);
   const [levelsData, setLevelsData] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+const [levelToEdit, setLevelToEdit] = useState(null);
   
   const { id } = useParams();
   const [showPopup, setShowPopup] = useState(false);
@@ -26,39 +27,43 @@ const ViewCohort = () => {
     fetchCohortData();
   }, [id]);
 
-  const handleLevelAdd = async (newLevelData) => {
-    try {
-      const response = await fetch(`${config.baseURL}/levels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newLevelData),
-      });
-  
-      if (response.ok) {
-        await fetchCohortData(); // Refetch the cohort data after adding the new level
+  const handleLevelAdd = async (levelData) => {
+  try {
+    if (editMode && levelToEdit) {
+      // Update existing level
+      const response = await api.patch(`/levels/${levelToEdit.uuid}/update`, levelData);
+      if (response.status === 200) {
+        await fetchCohortData();
+        setEditMode(false);
+        setShowPopup(false);
+        setLevelToEdit(null);
+      } else {
+        console.error("Failed to update level:", response.data);
+      }
+    } else {
+      // Create new level
+      const response = await api.post(`/levels`, levelData);
+      if (response.status === 201 || response.status === 200) {
+        await fetchCohortData();
         setShowPopup(false);
       } else {
-        const errorData = await response.json();
-        console.error('Failed to add new level:', errorData);
+        console.error("Failed to add new level:", response.data);
       }
-    } catch (error) {
-      console.error('Error adding new level:', error);
     }
-  };
+  } catch (error) {
+    console.error('Error adding/updating level:', error);
+  }
+};
+
   
   // Separate function to refetch cohort data
   const fetchCohortData = async () => {
     
     try {
-      if (id) { 
-        const response = await fetch(`${config.baseURL}cohorts/${id}`);
-        const data = await response.json();
-        
-        setCohortsData(data.cohort);
-        setLevelsData(data.levels || [])
-// console.log("data fetch:",data)
+      if (id) {
+        const response = await api.get(`/cohorts/${id}`);
+        setCohortsData(response.data.cohort);
+        setLevelsData(response.data.levels || []);
       }
     } catch (error) {
       console.error("Error fetching cohort data:", error);
@@ -66,7 +71,43 @@ const ViewCohort = () => {
   };
 
   // console.log(cohortsData)
+  const handleEditLevel = (level) => {
+  setLevelToEdit(level);
+  setEditMode(true);
+  setShowPopup(true);
+};
 
+const handleUpdateLevel = async (updatedData) => {
+  try {
+    const response = await api.patch(`/levels/${levelToEdit.uuid}/update`, updatedData);
+    if (response.status === 200) {
+      await fetchCohortData();
+      setEditMode(false);
+      setShowPopup(false);
+    } else {
+      console.error("Failed to update level:", response.data);
+    }
+  } catch (error) {
+    console.error("Error updating level:", error);
+  }
+};
+
+const handleDeleteLevel = async (levelUuid) => {
+  const confirm = window.confirm("Are you sure you want to delete this level?");
+  if (!confirm) return;
+
+  try {
+    const response = await api.delete(`/levels/${levelUuid}`);
+    if (response.status === 200) {
+      setLevelsData(levelsData.filter(level => level.uuid !== levelUuid));
+      console.log('Level deleted successfully');
+    } else {
+      console.error('Failed to delete level:', response.data);
+    }
+  } catch (error) {
+    console.error('Error deleting level:', error);
+  }
+};
 
   const handleDownloadPDF = async () => {
     if (cohortsData) {
@@ -110,29 +151,44 @@ const ViewCohort = () => {
       </div>
       <div className={styles.levelsContainer}>
         {levelsData.length > 0 ? (
-          levelsData.map((level) => (
-            <div className={styles.card} key={level.uuid}>
-              <h2 className={styles.levelName}>{level.levelName}</h2>
-              <p className={styles.levelDetails}>Number of Students: {level.students ? level.students.length : 0}</p>
-              <p className={styles.levelDetails}>Number of Facilitators: {level.facilitators ? level.facilitators.length : 0}</p>
-              <div className={styles.cardFooter}>
-                <Link className={`${styles.button} ${styles.view}`} href={`/pages/student/dashboard/cohorts/${cohortsData.uuid}/levels/${level.uuid}`}>
-                  View More
-                </Link>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className='text-center text-lg'>No levels available for this cohort.</p> // Message when no levels are available
-        )}
+  <div className="card-grid">
+    {levelsData.map((level) => (
+     <CardComponent
+  key={level.uuid}
+  title={level.levelName}
+  details={{
+    "Number of Students": level.students?.length || 0,
+    "Number of Facilitators": level.facilitators?.length || 0,
+  }}
+  href={`/pages/student/dashboard/cohorts/${cohortsData.uuid}/levels/${level.uuid}`}
+  onUpdate={() => handleEditLevel(level)}
+  onDelete={() => handleDeleteLevel(level.uuid)}
+  showDropdown={true}
+/>
+
+    ))}
+  </div>
+) : (
+  <p className='text-center text-lg'>No levels available for this cohort.</p>
+)}
+
       </div>
-      {showPopup && (
-        <LevelAddPopUp
-          cohortId={cohortsData.uuid}
-          onClose={() => setShowPopup(false)}
-          onAdd={handleLevelAdd}
-        />
-      )}
+  {showPopup && (
+  <LevelAddPopUp
+    onClose={() => {
+      setShowPopup(false);
+      setEditMode(false);
+      setLevelToEdit(null);
+    }}
+    onSave={handleLevelAdd}
+    cohortStartDate={cohortsData.startDate}
+    cohortEndDate={cohortsData.endDate}
+    // Optionally pass initialValues if editing
+    initialValues={editMode ? levelToEdit : null}
+  />
+)}
+
+
     </div>
   );
 };

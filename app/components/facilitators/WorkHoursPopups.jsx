@@ -1,131 +1,146 @@
-// WorkHoursPopups.js
-"use client"
+"use client";
 
-import { useState } from 'react';
-import styles from '@/app/styles/students/singleStudent/singleStudent.module.css'
-import { config } from "/config";
+import { useState, useEffect } from 'react';
+import FormModal from '@/app/components/Form/FormModal';
 
-
+// Add or Update Hours Popup
 export const AddUpdateHoursPopup = ({ facilitatorId, onClose, onSubmit }) => {
-  const [entries, setEntries] = useState([{ day: '', hours: '' }]);
+  const [entries, setEntries] = useState([
+    { date: '', hours: '' }
+  ]);
 
-  const handleEntryChange = (index, field, value) => {
-    const newEntries = entries.map((entry, i) => {
-      if (i === index) {
-        return { ...entry, [field]: value };
-      }
-      return entry;
-    });
-    setEntries(newEntries);
+  const handleFieldChange = (idx, field, value) => {
+    setEntries(prev =>
+      prev.map((row, i) =>
+        i === idx ? { ...row, [field]: value } : row
+      )
+    );
   };
 
-  const addEntry = () => {
-    setEntries([...entries, { date: '', hours: '' }]);
-  };
+  const addRow = () =>
+    setEntries(prev => [...prev, { date: '', hours: '' }]);
 
-  const removeEntry = (index) => {
-    setEntries(entries.filter((_, i) => i !== index));
-  };
+  const removeRow = idx =>
+    setEntries(prev => prev.filter((_, i) => i !== idx));
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // Optionally validate here (e.g. all dates filled, hours ≥ 0)
     onSubmit(entries);
     onClose();
   };
 
-  return (
-    <div className={styles.popup}>
-      <div className={styles.popupContent}>
-        <h2>Add/Update Hours</h2>
-        <form onSubmit={handleSubmit}>
-          {entries.map((entry, index) => (
-              <div key={index} className={styles.entryRow}>
-                <input
-                    type="date"
-                    value={entry.day}
-                    onChange={(e) => handleEntryChange(index, 'day', e.target.value)}
-                    required
-                />
-                <input
-                    type="number"
-                    value={entry.hours}
-                    onChange={(e) => handleEntryChange(index, 'hours', e.target.value)}
-                    required
-                    min="0"
-                    step="0.5"
-                    placeholder="Hours"
-                />
-                {entries.length > 1 && (
-                    <button type="button" onClick={() => removeEntry(index)} className={styles.removeEntryBtn}>
-                      Remove
-                    </button>
-                )}
-              </div>
-          ))}
-          <button type="button" onClick={addEntry} className={styles.addEntryBtn}>
-            Add Another Day
+  // Build the fields array for FormModal
+  const fields = entries.flatMap((row, idx) => [
+    {
+      name: `date-${idx}`,
+      label: 'Work Date',
+      type: 'date',
+      value: row.date,
+      onChange: v => handleFieldChange(idx, 'date', v),
+    },
+    {
+      name: `hours-${idx}`,
+      label: 'Hours Worked',
+      type: 'number',
+      value: row.hours,
+      min: 0,
+      step: 0.5,
+      placeholder: 'e.g. 7.5',
+      onChange: v => handleFieldChange(idx, 'hours', v),
+    },
+    {
+      name: `remove-${idx}`,
+      type: 'custom',
+      render: () =>
+        entries.length > 1 && (
+          <button
+            type="button"
+            onClick={() => removeRow(idx)}
+            className="text-sm text-red-600 underline mt-1"
+          >
+            Remove
           </button>
-          <div className={styles.popupButtons}>
-            <button type="submit">Submit</button>
+        )
+    }
+  ]);
 
-          </div>
-          <button type="button" onClick={onClose} className={styles.closeButtons}>x</button>
-        </form>
-      </div>
-    </div>
+  return (
+    <FormModal
+      title="Add / Update Work Hours"
+      fields={[
+        ...fields,
+        {
+          name: 'add-more',
+          type: 'custom',
+          render: () => (
+            <button
+              type="button"
+              onClick={addRow}
+              className="text-sm text-blue-600 underline mb-4"
+            >
+              + Add Another Day
+            </button>
+          )
+        }
+      ]}
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      initialValues={{}}  // we're controlling via local state
+    />
   );
 };
 
 
-export const ViewHoursPopup = ({facilitatorId, onClose }) => {
+// View Hours Popup (readonly)
+export const ViewHoursPopup = ({ facilitatorId, onClose }) => {
   const [hoursData, setHoursData] = useState([]);
 
-  useState(() => {
-    // Fetch hours data for the facilitator
-    const fetchHoursData = async () => {
-      try {
-        const response = await fetch(`${config.baseURL}/levels/${facilitatorId}/hours`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch hours data');
-        }
-        const data = await response.json();
-        setHoursData(data);
-      } catch (error) {
-        console.error('Error fetching hours data:', error);
-      }
-    };
+// inside ViewHoursPopup…
+useEffect(() => {
+  const load = async () => {
+    try {
+      const { data } = await api.get(`/levels/${facilitatorId}/hours`);
+      setHoursData(data);
+    } catch (err) {
+      console.error("Failed to load hours:", err);
+    }
+  };
+  load();
+}, [facilitatorId]);
 
-    fetchHoursData();
-  }, [facilitatorId]);
   return (
-    <div className={styles.popup}>
-      <div className={styles.popupContent}>
-        <h2>Hours Worked</h2>
-        {hoursData.length > 0 ? (
-            <table className={styles.hoursTable}>
-              <thead>
-              <tr>
-                <th>Date</th>
-                <th>Hours</th>
-              </tr>
-              </thead>
-              <tbody>
-              {hoursData.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.day}</td>
-                    <td>{entry.hours}</td>
+    <FormModal
+      title="Hours Worked"
+      onClose={onClose}
+      fields={[
+        {
+          name: "readonlyTable",
+          type: "custom",
+          render: () => (
+            hoursData.length > 0 ? (
+              <table className="w-full border text-sm mt-2">
+                <thead>
+                  <tr className="bg-gray-100 text-left">
+                    <th className="p-2 border">Date</th>
+                    <th className="p-2 border">Hours</th>
                   </tr>
-              ))}
-              </tbody>
-            </table>
-        ) : (
-            <p>No hours data available.</p>
-        )}
-        <button type="button" onClick={onClose} className={styles.closeButtons}>x</button>
-        {/*<div className={styles.popupButtons}>*/}
-
-        {/*</div>*/}
-      </div>
-    </div>
+                </thead>
+                <tbody>
+                  {hoursData.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="p-2 border">{entry.day}</td>
+                      <td className="p-2 border">{entry.hours}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-gray-500 mt-2">No hours data available.</p>
+            )
+          )
+        }
+      ]}
+      onSubmit={() => onClose()}
+    />
   );
 };

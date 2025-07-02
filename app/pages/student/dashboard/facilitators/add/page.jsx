@@ -1,181 +1,153 @@
 "use client";
-import { useState } from "react";
-import styles from '@/app/styles/students/addStudent/addStudent.module.css';
- // import styles from`@/app/styles/students/addStudent/facilitators.module.css`;
-import { config } from "/config";
-import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import '@/app/styles/customToast/customToast.module.css'
 
-const AddFacilitatorPage = ({onClose}) => {
-  const [successMessage, setSuccessMessage] = useState("");
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    gender: "",
-    idNo: "",
-    phoneNo: "",
-    specification: ""
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import api from '@/app/lib/utils/axios';
+import FormModal from "@/app/components/Form/FormModal";
+
+const AddFacilitatorPage = ({ onClose }) => {
+  const router = useRouter();
+  const [staffList, setStaffList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState({
+    staffUuid: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNo :'',
+    idNo: '',
+    gender: '',
   });
 
-  const router = useRouter();
+  // Fetch staff list on mount
+ useEffect(() => {
+  const fetchStaff = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get('/staffs');
+      console.log("Full /staffs response:", res);
+      // Sometimes data is nested, for example:
+      // setStaffList(res.data.staffs || []);
+      // or
+      // setStaffList(res.data || []);
+      setStaffList(res.data || []);
+    } catch (err) {
+      toast.error("Failed to load staff list");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchStaff();
+}, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // Map staff for dropdown select
+  const staffOptions = staffList.map(user => ({
+    value: user.uuid || user._id,
+    label: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username,
+  }));
+
+  // When staff selected, autofill rest of the form fields
+  const handleFormChange = (updatedValues) => {
+    setFormValues(prev => {
+      // If staffUuid changed, update autofill fields
+      if (updatedValues.staffUuid && updatedValues.staffUuid !== prev.staffUuid) {
+        const selectedStaff = staffList.find(s => s.uuid === updatedValues.staffUuid || s._id === updatedValues.staffUuid);
+        if (selectedStaff) {
+          return {
+            ...prev,
+            ...updatedValues,
+            firstName: selectedStaff.firstName || '',
+            lastName: selectedStaff.lastName || '',
+            email: selectedStaff.email || '',
+            phoneNo: selectedStaff.phoneNumber || '',
+            idNo: selectedStaff.idNumber || '',
+            gender: selectedStaff.gender || '',
+          };
+        }
+      }
+      return { ...prev, ...updatedValues };
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const fields = [
+    {
+      name: 'staffUuid',
+      label: 'Select Staff Member',
+      type: 'select',
+      options: staffOptions,
+    },
+    { name: 'firstName', label: 'First Name', type: 'text', placeholder: 'First Name', disabled: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name', disabled: true },
+    { name: 'email', label: 'Email', type: 'email', placeholder: 'Email', disabled: true },
+    { name: 'phoneNo', label: 'Phone Number', type: 'text', placeholder: 'Phone Number', disabled: true },
+    { name: 'idNo', label: 'ID Number', type: 'text', placeholder: 'ID Number', disabled: true },
+    { name: 'gender', label: 'Gender', type: 'text', placeholder: 'Gender', disabled: true },
+  ];
+
+  const handleSubmit = async (values) => {
+    if (!values.staffUuid) {
+      toast.error("Please select a staff member");
+      return;
+    }
+
+    // Prepare facilitator payload without staffUuid (backend might not need it)
+    const payload = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      phoneNo: values.phoneNo,
+      idNo: values.idNo,
+      gender: values.gender,
+    };
+
     try {
-      const response = await fetch(`${config.baseURL}/facilitators`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await api.post('/facilitators', payload, {
+        headers: { "Content-Type": "application/json" },
       });
-  
-      if (response.ok) {
-        console.log("Facilitator added successfully");
-        setSuccessMessage("Facilitator added successfully!");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          gender: "",
-          idNo: "",
-          phoneNo: "",
-          specification: ""
-        });
-  
-        if (router) {
-          router.push(`/pages/student/dashboard/facilitators`);
-        } else {
-          console.error("Router is not available");
-        }
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Facilitator added successfully!");
+        setTimeout(() => {
+          router.push('/pages/student/dashboard/facilitators');
+        }, 1500);
       } else {
-        const data = await response.json();
-        // Only display error toasts
-        if (data.error && Array.isArray(data.error)) {
-          data.error.forEach(err => toast.error(err)); // Display each error as a toast
-        } else {
-          toast.error("Failed to add Facilitator");
-        }
-        console.error("Failed to add Facilitator");
+        toast.error("Failed to add Facilitator.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error adding facilitator:", error);
       toast.error("An unexpected error occurred.");
     }
   };
-  
 
   return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <div className={styles.container}>
-            {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <div className={styles.divInput}>
-                <label htmlFor="firstName" className={styles.label}>First Name</label>
-                <input
-                    type="text"
-                    placeholder="First Name"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="lastName" className={styles.label}>Last Name</label>
-                <input
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="email" className={styles.label}>Email</label>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="gender" className={styles.label}>Gender</label>
-                <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="phoneNo" className={styles.label}>Phone Number</label>
-                <input
-                    type="text"
-                    placeholder="Phone Number"
-                    name="phoneNo"
-                    value={formData.phoneNo}
-                    onChange={handleChange}
-                />
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="specification" className={styles.label}>Specification</label>
-                <input
-                    type="text"
-                    placeholder="Specification"
-                    name="specification"
-                    value={formData.specification}
-                    onChange={handleChange}
-                />
-              </div>
-              <div className={styles.divInput}>
-                <label htmlFor="idNo" className={styles.label}>ID Number</label>
-                <input
-                    type="text"
-                    placeholder="ID Number"
-                    name="idNo"
-                    value={formData.idNo}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
+    <>
+      <FormModal
+        title="Add Facilitator from Staff"
+        fields={fields}
+        initialValues={formValues}
+        onSubmit={handleSubmit}
+        onChange={handleFormChange}
+       
+        onClose={onClose}
+      />
 
-              <button type="button" className={styles.closeButton} onClick={onClose}>
-                ✖
-              </button>
-              <ToastContainer
-                  position="top-center"
-                  autoClose={3000}
-                  hideProgressBar
-                  closeOnClick
-                  pauseOnHover
-                  draggable
-                  // transition={Slide}
-                  toastClassName="custom-toast" // Apply custom styling
-                  bodyClassName="custom-toast-body"
-              />
-              <button type="submit" className={styles.submitButtons}>Submit</button>
-            </form>
+      {loading && <p>Loading staff members...</p>}
 
-          </div>
-        </div>
-      </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable
+        toastClassName="custom-toast"
+        bodyClassName="custom-toast-body"
+      />
+    </>
   );
 };
 

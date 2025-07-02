@@ -14,13 +14,20 @@ export default function FormModal({
 }) {
   const [values, setValues] = useState(initialValues || {});
 
-const handleChange = (name, val) => {
+  const handleChange = (name, val) => {
     const updated = { ...values, [name]: val };
     setValues(updated);
-    if (onChange) onChange(updated); // ✅ Propagate changes to parent
+    if (onChange) onChange(updated);
   };
 
+  // Add one row
+  const handleAdd = () => {
+    onAdd(values);
+    setValues(initialValues);      // clear the form
+    if (onChange) onChange(initialValues);
+  };
 
+  // Final “Done”
   const handleSubmit = e => {
     e.preventDefault();
     onSubmit();
@@ -29,7 +36,7 @@ const handleChange = (name, val) => {
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.container}>
+      <div className={styles.container1}>
         <div className={styles.header}>
           <h3 className={styles.title}>{title}</h3>
           <button className={styles.closeBtn} onClick={onClose}>×</button>
@@ -122,10 +129,6 @@ FormModal.propTypes = {
   onAdd: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  extraActions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    className: PropTypes.string
-  })),
+  onChange: PropTypes.func,
   tableContent: PropTypes.node
 };

@@ -35,6 +35,7 @@ const AddCohortPage = ({ onClose, onSave }) => {
     updated.splice(index, 1);
     setLevels(updated);
   };
+  console.log(cohortFormValues)
 
   const validateDates = (startDate, endDate) => {
     if (new Date(startDate) >= new Date(endDate)) {
@@ -43,7 +44,8 @@ const AddCohortPage = ({ onClose, onSave }) => {
     return '';
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values=cohortFormValues) => {
+    console.log(values);
     const error = validateDates(values.startDate, values.endDate);
     if (error) {
       setCohortDateError(error);
@@ -62,6 +64,7 @@ const AddCohortPage = ({ onClose, onSave }) => {
     } catch (error) {
       console.error("Failed to create cohort:", error);
     }
+  
   };
 
   const fields = [

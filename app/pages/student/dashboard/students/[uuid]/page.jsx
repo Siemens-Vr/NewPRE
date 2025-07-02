@@ -117,13 +117,13 @@ const columns = [
 
   return (
       <div className={styles.container}>
-        <div className={styles.header}>
+        {/* <div className={styles.header}>
           <h1>Welcome {student.firstName} </h1>
           <div className={styles.headerButtons}>
            <h2>Total fee paid : {student.levels?.reduce((sum, level) => sum + (level?.StudentLevels?.fee || 0), 0)}</h2>
            <h2>Course level : {student.levels?.[0]?.levelName || "N/A"}</h2>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.profileSection}>
           {/* <div className={styles.profileCard}>
@@ -197,9 +197,9 @@ const columns = [
 
         )}  
          </div>
-         <div className={styles.courseCard}>
+         {/* <div className={styles.courseCard}>
   <div className={styles.cardHeader}>
-    {/* statusDot */}
+   
     <span
       className={`${styles.statusDot} ${
         student.isActive ? styles.active : styles.inactive
@@ -219,7 +219,7 @@ const columns = [
       {student.levels?.[0]?.levelName ?? "N/A"}
     </p>
   </div>
-</div>
+</div> */}
       </div>
   );
 };

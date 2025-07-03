@@ -9,7 +9,7 @@ const Layout = ({children}) => {
       
       <div className={styles.allContents}>
 
-        <DropDown/>
+        {/* <DropDown/> */}
         
         {children}
       

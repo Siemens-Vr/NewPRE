@@ -48,7 +48,7 @@ const AddCohortPage = ({ onClose, onSave }) => {
   };
 
   const handleSubmit = (values) => {
-    if (!values.levelUuid) {
+    if (!values.levelName) {
       alert("Please select a level.");
       return;
     }
@@ -56,11 +56,14 @@ const AddCohortPage = ({ onClose, onSave }) => {
     const cohortName = cohorts.find(c => c.uuid === values.cohortUuid)?.cohortName;
     const levelName = levels.find(l => l.uuid === values.levelUuid)?.levelName;
 
-    const newEntry = {
-      ...values,
-      cohortName,
-      levelName
-    };
+     const newEntry = {     
+    cohortUuid: values.cohortUuid,
+     levelUuid: values.levelName,
+     cohortName,
+     levelName,
+     fee: values.fee,
+    examResults: values.examResults,
+   };
 
     setCohortLevelList(prev => [...prev, newEntry]);
 
@@ -98,7 +101,7 @@ const AddCohortPage = ({ onClose, onSave }) => {
       required: true
     },
     {
-  name: "levelUuid",
+  name: "levelName",
   label: "Level",
   type: "select",
   required: true,
@@ -134,7 +137,8 @@ const AddCohortPage = ({ onClose, onSave }) => {
         title="Add Cohort Level"
         fields={fields}
         initialValues={formState}
-        onSubmit={handleSubmit}
+        onAdd={handleSubmit}
+        onSubmit={handleSave}
         onClose={onClose}
         onChange={setFormState}
         extraActions={[

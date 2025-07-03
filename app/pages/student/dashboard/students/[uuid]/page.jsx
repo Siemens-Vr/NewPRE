@@ -13,7 +13,7 @@ import Table from '@/app/components/table/Table';
 import Pagination from '@/app/components/pagination/pagination';
 
 const ROWS_PER_PAGE = 10;
-const SinstudentPage = ({ params }) => {
+const SinstudentPage = ({ params}) => {
   const [student, setStudent] = useState(null);
   const { uuid } = params;
   const [showUpdate, setShowUpdate] = useState(false);
@@ -94,7 +94,8 @@ const columns = [
     {
       key: 'cohorts',
       label: 'Cohorts',
-      render: row => row.cohorts?.map(cohort => cohort.cohortName).join(", ") || "N/A"
+      render: row => row.levels?.map(lvl => lvl.Cohort?.cohortName ?? "N/A")
+          .filter(Boolean).join(", ")|| "N/A"
     },
     {
       key: 'levels',
@@ -107,10 +108,19 @@ const columns = [
       render: row => `KES ${row.levels?.reduce((sum, level) => sum + (level?.StudentLevels?.fee || 0), 0) || 0}`
     },
     {
-      key: 'status',
-      label: 'Status',
-      render: row => row.isActive ? "Active" : "Inactive"
-    }
+  key: 'status',
+  label: 'Status',
+  render: row => {
+    // sum up all the level‐fees
+    const total = row.levels?.reduce(
+      (sum, lvl) => sum + (lvl?.StudentLevels?.fee || 0),
+      0
+    ) || 0;
+
+    return total > 0 ? "Paid" : "Unpaid";
+  }
+}
+
   ]
 
   if (!student) return <Loading />;
@@ -169,7 +179,7 @@ const columns = [
             </>
           </div>
 
-          {showUpdate && <UpdateStudent onClose={handleshow} />}
+         {showUpdate && <UpdateStudent uuid={uuid} onClose={handleshow} />}
       </div>
         <div>
              {loading ? (
@@ -197,29 +207,7 @@ const columns = [
 
         )}  
          </div>
-         {/* <div className={styles.courseCard}>
-  <div className={styles.cardHeader}>
-   
-    <span
-      className={`${styles.statusDot} ${
-        student.isActive ? styles.active : styles.inactive
-      }`}
-    />
-    <h2 className={styles.cardTitle}>
-      {student.firstName} {student.lastName}
-    </h2>
-  </div>
-  <div className={styles.cardBody}>
-    <p>
-      <strong>Cohort:</strong>{" "}
-      {student.cohort?.name ?? "Not assigned"}
-    </p>
-    <p>
-      <strong>Level:</strong>{" "}
-      {student.levels?.[0]?.levelName ?? "N/A"}
-    </p>
-  </div>
-</div> */}
+      
       </div>
   );
 };

@@ -30,6 +30,7 @@ const AddStudentPage = ({onClose}) => {
     kcseNo: "",
     gender: "",
     idNo: "",
+    cohortLevels: [],
   });
 
   const handleChange = (e) => {

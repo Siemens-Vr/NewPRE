@@ -1,122 +1,364 @@
-"use client"
-import { useEffect, useState } from 'react';
-import styles from '@/app/styles/project/project/project.module.css';
-import { useParams, useRouter } from 'next/navigation';
-import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-import api from '@/app/lib/utils/axios';
-import { config } from "/config";
+"use client";
 
-const Details = () => {
-  const params = useParams();
-  const {uuid} = params
+import React, { useEffect, useState, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
+import api from "@/app/lib/utils/axios";
+import Table from "@/app/components/table/Table";
+import AddPhaseModal from "@/app/components/project/phases/addPhase";
 
+import EditProjectModal from "@/app/components/project/update/update";
+
+export default function ProjectDetails() {
+  const { uuid, phaseuuid } = useParams();
   const router = useRouter();
-  console.log(uuid)
-  const [projectDetails, setProjectDetails] = useState({
-    projectName: "",
-    status: "",
-    description: "",
-    budget: 0,
-    funding: 0,
-  });
+  const [showPhaseModal, setShowPhaseModal] = useState(false);
+  const [project, setProject] = useState(null);
+  const [items, setItems] = useState([]); // holds milestones, workPackages, or durationYears depending on type
+  const [itemsExpanded, setItemsExpanded] = useState(false);
+  const [sortKey, setSortKey] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  // Modal states
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editProjectData, setEditProjectData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const closeTimeoutRef = useRef(null);
+  const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
+const [phaseEditData, setPhaseEditData] = useState(null);
+
+
+
+
+  const appendActionsColumn = (columns) => [
+  ...columns,
+  {
+    key: "actions",
+    label: "Actions",
+    sortable: false,
+ render: (row) => (
+  <div style={{ display: "flex", gap: "0.5rem" }}>
+    {/* Pass the row.uuid to handleView instead of phaseuuid */}
+    <button onClick={() => handleView(row.uuid)} className={styles.updateBtn}>View</button>
+    <button onClick={() => handleEditPhase(row)} className={styles.actionBtn}>Edit</button>
+    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Delete</button>
+  </div>
+),
+
+
+  },
+];
+
+  // Configuration per project type
+  const typeConfig = {
+  "Milestones": {
+    title: "Project Milestones",
+    columns: appendActionsColumn([
+      { key: "no", label: "No.", sortable: true },
+      { key: "title", label: "Milestone Name", sortable: true },
+      { key: "implementation_startDate", label: "Start Date", sortable: true, render: r => new Date(r.implementation_startDate).toLocaleDateString() },
+      { key: "status", label: "Status", sortable: true },
+      { key: "description", label: "Description", sortable: false },
+    ]),
+    dataKey: "milestones",
+  },
+  "Work Package": {
+    title: "Project Work Packages",
+    columns: appendActionsColumn([
+      { key: "no", label: "No.", sortable: true },
+      { key: "title", label: "Work Package Name", sortable: true },
+      { key: "startDate", label: "Start Date", sortable: true, render: r => new Date(r.startDate).toLocaleDateString() },
+      { key: "endDate", label: "End Date", sortable: true, render: r => new Date(r.endDate).toLocaleDateString() },
+      { key: "status", label: "Status", sortable: true },
+      { key: "description", label: "Description", sortable: false },
+    ]),
+    dataKey: "workPackages",
+  },
+  "Duration Years": {
+    title: "Project Duration",
+    columns: appendActionsColumn([
+      { key: "no", label: "No.", sortable: true },
+      { key: "year", label: "Year", sortable: true },
+      { key: "description", label: "Description", sortable: false },
+    ]),
+    dataKey: "durationYears",
+  },
+};
+
+  // Fetch project and all related data at once
   const fetchProjectData = async () => {
-     if (!uuid) return;
+    if (!uuid) return;
+    try {
+      const res = await api.get(`projects/${uuid}`);
+      if (res.status === 200) {
+        const data = res.data;
+        console.log("Project data fetched successfully:", data);
+        setProject(data);
 
-     try {
-       const projectRes = await api.get(`/projects/${uuid}`);
-      //  console.log(projectRes)
-       if (projectRes.statusText === 'OK') {
-        const projectData = projectRes.data;
-        setProjectDetails({
-          projectName: projectData.name,
-          status: projectData.status,
-          description: projectData.description,
-          budget: projectData.budget,
-          funding: projectData.funding,
-        });
-       }
-     } catch (error) {
-      throw new Error("Error fetching project data");
-     }
-   };
- 
-   // Fetch current project details
-   useEffect(() => {
-     fetchProjectData();
-   }, [uuid]);
-    const budgetData = [
-        { month: 'Jan', Budget: 4000, Funding: 2400 },
-        { month: 'Feb', Budget: 3000, Funding: 1398 },
-        { month: 'Mar', Budget: 2000, Funding: 9800 },
-        { month: 'Apr', Budget: 2780, Funding: 3908 },
-        { month: 'May', Budget: 1890, Funding: 4800 },
-        { month: 'Jun', Budget: 2390, Funding: 3800 },
-        { month: 'Jul', Budget: 3490, Funding: 4300 },
-    ];
-    // console.log(projectDetails)
+        // Set items for table based on project.type and data keys
+        const type = data.type;
+        const config = typeConfig[type];
+        if (config && Array.isArray(data[config.dataKey])) {
+          setItems(data[config.dataKey]);
+        } else {
+          setItems([]);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching project data", err);
+      setProject(null);
+      setItems([]);
+    }
+  };
 
-    return (
-        <div className={styles.projectDetails}>
-           <div className={`${styles.project} ${styles.projectName}`}>
-                <h1>Dashboard</h1>
-          <div className={styles.milestoneButton}>
-            <button
-                onClick={() => router.push(`/pages/project/dashboard/${uuid}/dashboard/phases`)}
-                className={styles.button}
-            >
-              Milestones
+  // Sorting handler for current items
+  const handleSort = (key) => {
+    const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc";
+    setSortKey(key);
+    setSortOrder(order);
+
+    const sorted = [...items].sort((a, b) => {
+      const aVal = a[key] ?? "";
+      const bVal = b[key] ?? "";
+
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        return order === "asc"
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      }
+
+      if (aVal < bVal) return order === "asc" ? -1 : 1;
+      if (aVal > bVal) return order === "asc" ? 1 : -1;
+      return 0;
+    });
+    setItems(sorted);
+  };
+
+  // Duration calculation helper
+  const getDuration = (start, end) => {
+    if (!start || !end) return "N/A";
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    if (endDate < startDate) return "Invalid dates";
+    const yearsDiff = endDate.getFullYear() - startDate.getFullYear();
+    const monthsDiff = endDate.getMonth() - startDate.getMonth();
+    let totalMonths = yearsDiff * 12 + monthsDiff;
+    if (endDate.getDate() >= startDate.getDate()) totalMonths += 1;
+    if (totalMonths <= 0) return "Less than a month";
+    return `${totalMonths} month${totalMonths !== 1 ? "s" : ""}`;
+  };
+
+  // Edit modal handlers
+  const handleEdit = () => {
+    setEditProjectData(project);
+    setEditModalOpen(true);
+    clearTimeout(closeTimeoutRef.current);
+  };
+  const updateProject = async () => {
+    if (!editProjectData) return;
+    setIsSaving(true);
+    const cleanedData = {
+      name: editProjectData.name,
+      description: editProjectData.description,
+      status: editProjectData.status,
+      budget: editProjectData.budget,
+      funding: editProjectData.funding,
+      startDate: editProjectData.startDate,
+      endDate: editProjectData.endDate,
+    };
+    try {
+      const response = await api.post(
+        `/projects/update/${editProjectData.uuid}`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (response.status === 200) {
+        closeEditModal();
+      } else {
+        console.error("Failed to update the project");
+      }
+    } catch (error) {
+      console.error("Error while updating project:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+    setEditProjectData(null);
+    fetchProjectData();
+  };
+
+  // Fetch data when uuid changes
+  useEffect(() => {
+    fetchProjectData();
+  }, [uuid]);
+
+  if (!project) return <div className={styles.loading}>Loading project data...</div>;
+
+  // Get current config for rendering
+  const currentConfig = typeConfig[project.type] || {};
+  const { title: tableTitle = "Project Details", columns: tableColumns = [] } = currentConfig;
+
+  // Defensive slice of items
+  const displayedItems = itemsExpanded
+    ? items
+    : Array.isArray(items)
+    ? items.slice(0, 3)
+    : [];
+
+
+    // View simply shows details alert or you can customize it
+
+ const handleView = (phaseuuid) => {
+  if (!phaseuuid) {
+    console.error("Phase UUID is undefined");
+    console.log("phaseuuid not found")
+    return;
+  }
+
+
+  const baseUrl = `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard`;
+
+  router.push(baseUrl);
+};
+
+
+
+const handleEditPhase = (row) => {
+  setPhaseEditData(row);
+  setPhaseEditModalOpen(true);
+};
+
+// Delete with confirmation
+const handleDeletePhase = async (row) => {
+  if (!confirm(`Are you sure you want to delete "${row.title || row.year || 'this item'}"?`)) return;
+
+  try {
+    // Adjust API delete endpoint accordingly, assuming /milestones/{uuid}/{phaseUuid}
+    const response = await api.delete(`/milestones/${uuid}/${row.uuid}`);
+
+    if (response.status === 200) {
+      alert("Deleted successfully");
+      fetchProjectData(); // Refresh list
+    } else {
+      alert("Failed to delete item");
+    }
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    alert("Error occurred while deleting");
+  }
+};
+
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.sectionTitle}>Project Dashboard</h1>
+
+      {/* Project Information and Timeline Cards */}
+      <div className={styles.card}>
+        <div className={styles.cardColumn}>
+          <h2 className={styles.cardTitle}>Project Information</h2>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoLabel}>Project ID</div>
+            <div className={styles.infoValue}>{project.project_id || "N/A"}</div>
+
+            <div className={styles.infoLabel}>Title</div>
+            <div className={styles.infoValue}>{project.title || "N/A"}</div>
+
+            <div className={styles.infoLabel}>Description</div>
+            <div className={styles.infoValue}>{project.description || "No description"}</div>
+
+            <div className={styles.infoLabel}>Developer</div>
+            <div className={styles.infoValue}>{project.developer || "N/A"}</div>
+
+            <div className={styles.infoLabel}>Budget</div>
+            <div className={styles.infoValue}>
+              {project.budget ? `$${project.budget.toLocaleString()}` : "N/A"}
+            </div>
+          </div>
+          <div className={styles.btn}>
+            <button className={styles.updateBtn} onClick={handleEdit}>
+              Update Project Info
             </button>
-
-            </div>
-            </div>
-            <div className={styles.projectDetail}>
-    <div className={styles.card}>
-        <div className={styles.cardContent}>
-
-        <img src="/60111.jpg" 
-               alt="Your image description" 
-                  className={styles.img}/> 
-
-       <div>
-          <div>          
-             <h2>{projectDetails.projectName}</h2>
-            </div>
-
-            <div style={{ }}>
-
-                {/* <h2>Status</h2> */}
-                <h3> Status : <span> {projectDetails.status}</span></h3>
-                <h3> Startdate :<span>{} </span></h3>
-                <h3> Enddate :<span>{} </span></h3>
-            </div>
-
-    </div>
-
+          </div>
         </div>
-    </div>
-    <div className={styles.card}>
-        <h2>Description</h2>
-        <p>{projectDetails.description}</p>
-    </div>
+
+        <div className={styles.cardColumn}>
+          <h2 className={styles.cardTitle}>Project Timeline</h2>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoLabel}>Start Date</div>
+            <div className={styles.infoValue}>
+              {project.implementation_startDate
+                ? new Date(project.implementation_startDate).toLocaleDateString()
+                : "N/A"}
+            </div>
+
+            <div className={styles.infoLabel}>End Date</div>
+            <div className={styles.infoValue}>
+              {project.implementation_endDate
+                ? new Date(project.implementation_endDate).toLocaleDateString()
+                : "N/A"}
+            </div>
+
+            <div className={styles.infoLabel}>Duration</div>
+            <div className={styles.infoValue}>
+              {getDuration(project.implementation_startDate, project.implementation_endDate)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dynamic Table Section */}
+      <div className={styles.milestonesSection}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+  <h2 className={styles.sectionTitle}>{tableTitle}</h2>
+  <button
+    className={styles.updateBtn}
+    onClick={() => setShowPhaseModal(true)}
+  >
+    + Add {project.type}
+  </button>
 </div>
 
-          
-            <div>
-            <div className={styles.card}>
-                <h2>Budget Allocation</h2>
-                {/* <ResponsiveContainer width="100%" height={200}>
-                    <LineChart data={budgetData}>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="month"/>
-                        <YAxis/>
-                        <Tooltip/>
-                        <Line type="monotone" dataKey="Budget" stroke="#1e90ff"/>
-                        <Line type="monotone" dataKey="Funding" stroke="#ff4081"/>
-                    </LineChart>
-                </ResponsiveContainer> */}
-            </div>
-            </div>
-        </div>)
-}
 
-export default Details;
+        <Table
+          columns={tableColumns}
+          data={displayedItems}
+          sortKey={sortKey}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+        />
+
+        {items.length > 3 && (
+          <button
+            className={styles.accordionBtn}
+            onClick={() => setItemsExpanded(!itemsExpanded)}
+          >
+            {itemsExpanded
+              ? `Hide ${tableTitle.toLowerCase()} ↑`
+              : `View all ${tableTitle.toLowerCase()} →`}
+          </button>
+        )}
+      </div>
+
+      {/* Edit Modal */}
+      {editModalOpen && (
+        <EditProjectModal
+          editProjectData={editProjectData}
+          setEditProjectData={setEditProjectData}
+          updateProject={updateProject}
+          closeEditModal={closeEditModal}
+          isSaving={isSaving}
+        />
+      )}
+    <AddPhaseModal
+  isOpen={showPhaseModal}
+  onClose={() => setShowPhaseModal(false)}
+  onAdded={fetchProjectData} // reload project and phases after adding
+  projectUuid={uuid}
+  phaseType={project.type}
+/>
+    </div>
+  );
+}

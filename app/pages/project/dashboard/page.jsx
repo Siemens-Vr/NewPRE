@@ -1,482 +1,184 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import ProjectCard from '@/app/components/project/projectCard';
-import styles from '@/app/styles/dashboards/project/dashboard.module.css';
-import style from "@/app/styles/project/project/project.module.css";
+import React, { useState, useEffect, useRef } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import ProjectCard from "@/app/components/project/projectCard";
+import styles from "@/app/styles/dashboards/project/dashboard.module.css";
 import Spinner from "@/app/components/spinner/spinner";
+import api from "@/app/lib/utils/axios";
 import { config } from "/config";
-import api from '@/app/lib/utils/axios';
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+
+import AddProjectModal from "@/app/components/project/add/AddProjectModal"; // <-- import Add modal
 
 const Dashboard = () => {
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
-    const router = useRouter();
-    const [editModalOpen, setEditModalOpen] = useState(false); // Edit modal visibility
-    const [editProjectData, setEditProjectData] = useState(null); // Project being edited
-    const [isAdding, setIsAdding] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedProject, setSelectedProject] = useState(null); // To store the selected project for actions
-    const [isSaving, setIsSaving] = useState(false); // To handle the saving state
-    const [newProject, setNewProject] = useState({
-        name: "",
-        startDate: "",
-        endDate: "",
-        status: "",
-        description: "",
-    });
-    const [showProjectInput, setShowProjectInput] =useState(false) ; 
-    const [addProjectError, setAddProjectError] = useState([]);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [deleting, setDeleting] = useState(null); 
-    const menuRef = useRef(null);
-    const closeTimeoutRef = useRef(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("query") || "");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-    // Fetch projects from backend
-    const fetchProjects = async () => {
-        setLoading(true); // Start loading state
-        try {
-            const response = await api.get(`/projects`);
-            if (response.status == 200) {
-                const data = response.data;
-                setProjects(data);
-            }  
-        } catch (err) {
-            throw new Error(`Error: ${response.statusText}`);
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const menuRef = useRef(null);
+  const closeTimeoutRef = useRef(null);
 
-    useEffect(() => {
-        fetchProjects(); // Fetch projects on mount
-    }, []);
-
-    function handleSearch(term) {
-        const params = new URLSearchParams(searchParams);
-        if (term) {
-            params.set("query", term);
-        } else {
-            params.delete("query");
-        }
-        router.replace(`${pathname}?${params.toString()}`);
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get(`projects`);
+      if (response.status === 200) {
+        setProjects(response.data);
+        console.log("Projects fetched successfully:", response.data);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
-    const handleCardClick = (project) => {
-        console.log(project.uuid)
-        router.push(`/pages/project/dashboard/${project.uuid}/dashboard`);
-        clearTimeout(closeTimeoutRef.current); 
-    };
+  const handleSearch = (term) => {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set("query", term);
+    } else {
+      params.delete("query");
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
+  const handleCardClick = (project) => {
+    router.push(`/pages/project/dashboard/${project.uuid}/dashboard`);
+    clearTimeout(closeTimeoutRef.current);
+  };
 
-    const handleOutsideClick = (event) => {
-        if (
-            menuRef.current &&
-            !menuRef.current.contains(event.target)
-        ) {
-            closeTimeoutRef.current = setTimeout(() => {
-                setSelectedProject(null);
-            }, 3000); 
-        }
-    };
+  const handleMenuClick = (project) => {
+    setSelectedProject(project);
+  };
 
-    useEffect(() => {
-        document.addEventListener("mousedown", handleOutsideClick);
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-            clearTimeout(closeTimeoutRef.current); // Clean up on unmount
-        };
-    }, []);
-    
-    const handleDelete = async (uuid, name) => {
-        // Call the delete API endpoint
-const result = await Swal.fire({
-      title: 'Are you sure?',
+  const handleDelete = async (uuid, name) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
       text: `You are about to delete ${name}`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
     });
-    
+
     if (result.isConfirmed) {
-      setDeleting(uuid);
-        const response = await fetch(`${config.baseURL}/projects/delete/${uuid}`);
+      try {
+        const response = await fetch(`projects/delete/${uuid}`, { method: "DELETE" });
         if (response.ok) {
-            setProjects((prevProjects) => prevProjects.filter((project) => project.uuid !== uuid));
-              Swal.fire({
-                        title: 'Deleted!',
-                        text: `${name} has been successfully deleted.`,
-                        icon: 'success',
-                        confirmButtonColor: '#3085d6',
-                      });
+          setProjects((prev) => prev.filter((p) => p.uuid !== uuid));
+          Swal.fire({
+            title: "Deleted!",
+            text: `${name} has been successfully deleted.`,
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+          });
         } else {
-            console.error('Failed to delete the project');
+          throw new Error("Failed to delete the project");
         }
-        setSelectedProject(null); // Reset selected project
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
+      }
+      setSelectedProject(null);
     }
-};
+  };
 
-    const openModal = () => setIsModalOpen(true);
+  const handleOutsideClick = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      closeTimeoutRef.current = setTimeout(() => {
+        setSelectedProject(null);
+      }, 3000);
+    }
+  };
 
-    // Update closeModal to fetch projects
-    const closeModal = () => {
-        setIsModalOpen(false);
-        fetchProjects(); // Refresh project list when modal closes
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      clearTimeout(closeTimeoutRef.current);
     };
+  }, []);
 
+  if (loading) return <Spinner />;
+  if (error) return <p>Error: {error}</p>;
 
-    const addProject = async (e) => {
-        e.preventDefault();
-    
-        if (!newProject.name.trim()) {
-            alert("Project name is required!");
-            return;
-        }
-    
-        if (!newProject.startDate || !newProject.endDate) {
-            alert("Both Start Date and End Date are required.");
-            return;
-        }
-    
-        const startDate = new Date(newProject.startDate);
-        const endDate = new Date(newProject.endDate);
-    
-        // Check if End Date is before Start Date
-        if (endDate < startDate) {
-            alert("End Date cannot be before Start Date.");
-            return;
-        }
-    
-        try {
-            const response = await api.post(`${config.baseURL}/projects/create`,newProject, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-               
-            });
-    
-            // console.log("New project data:", newProject);
-    
-            if (response.statusText === 'OK') {
-                fetchProjects();
-                setShowProjectInput(false);
-                setSuccessMessage("Project added successfully");
-                setTimeout(() => setSuccessMessage(""), 3000);
-                setNewProject({
-                    name: "",
-                    startDate: "",
-                    endDate: "",
-                    status: "",
-                    description: "",
-                });
-            } else {
-                const errorText = response.message;
-                console.error("Failed to add project:", errorText);
-                setAddProjectError("Failed to add project.");
-                setErrorMessage("Failed to add project");
-                setTimeout(() => setErrorMessage(""), 3000);
-                setShowProjectInput(false);
-            }
-        } catch (error) {
-            console.error("Error in addProject function:", error);
-            setAddProjectError("Error occurred while adding project.");
-        }
-    };
-    
+  return (
+    <div className={styles.dashboardContainer}>
+      <div className={styles.mainContent}>
+        <header className={styles.header}>
+          <h1>Project Management Dashboard</h1>
+          <div className={styles.controls}>
+            <input
+              type="text"
+              placeholder="Search projects..."
+              className={styles.searchInput}
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                handleSearch(e.target.value);
+              }}
+            />
+            <button className={styles.addProjectBtn} onClick={() => setIsAddModalOpen(true)}>
+  Add Project
+</button>
+          </div>
+        </header>
 
-    const handleMenuClick = (project) => {
-        setSelectedProject(project); // Set the selected project for actions
-    };
-
-    if (loading) return <Spinner />;
-    if (error) return <p>Error: {error}</p>;
-
-    // Open edit modal with project data
-    const handleEdit = (project) => {
-        console.log(project)
-        setEditProjectData(project);
-        setEditModalOpen(true);
-        clearTimeout(closeTimeoutRef.current); 
-    };
-
-// Close edit modal
-    const closeEditModal = () => {
-        setEditModalOpen(false);
-        setEditProjectData(null);
-        fetchProjects(); // Refresh projects after editing
-    };
-
-
-
-    const updateProject = async () => {
-        if (editProjectData) {
-            setIsSaving(true); // Start saving state
-
-            // Clean the payload to only include valid fields
-            const cleanedProjectData = {
-                name: editProjectData.name,
-                description: editProjectData.description,
-                status: editProjectData.status,
-                budget: editProjectData.budget,
-                funding: editProjectData.funding,
-                startDate: editProjectData.startDate,
-                endDate: editProjectData.endDate,
-
-            };
-
-            try {
-                const response = await api.post(
-                    `/projects/update/${editProjectData.uuid}`,cleanedProjectData,
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
-
-                if (response.statusText === 'OK') {
-                    closeEditModal(); // Close the modal on success
-                } else {
-                    const errorData = await response.json();
-                    console.error('Failed to update the project:', errorData);
-                }
-            } catch (error) {
-                console.error('Error while updating project:', error);
-            } finally {
-                setIsSaving(false); // End saving state
-            }
-        }
-    };
-
-
-
-
-    return (
-        <div className={styles.dashboardContainer}>
-            <div className={styles.mainContent}>
-                <header className={styles.header}>
-                    <h1>Project Management Dashboard</h1>
-                     {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
-                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>} 
-                    <div className={styles.controls}>
-                        <input
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            value={searchTerm}
-                            type="text"
-                            placeholder="Search projects..."
-                            className={styles.searchInput}
-                        />
-                  
-                        <button className={styles.addProjectBtn}  onClick={() => setShowProjectInput(true)}>
-                            Add Project
-                        </button>
+        <section className={styles.boardView}>
+          <div className={styles.cardContainer}>
+            {projects.length > 0 ? (
+              projects.map((project) => (
+                <div key={project.uuid} className={styles.projectCard} ref={menuRef}>
+                  <div className={styles.cardContent} onClick={() => handleCardClick(project)}>
+                    <ProjectCard title={project.title} />
+                    <div
+                      className={styles.menuButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMenuClick(project);
+                      }}
+                    >
+                      &#x022EE; {/* Three dots icon */}
                     </div>
-                </header>
-
-                <section className={styles.boardView}>
-                    <div className={styles.cardContainer}>
-                        {projects.length > 0 ? (
-                            projects.map((project) => (
-                                <div key={project.uuid} className={styles.projectCard} ref={menuRef}>
-                                    <div className={styles.cardContent} onClick={() => handleCardClick(project)}>
-                                        <ProjectCard
-                                            title={project.name}
-                                            
-                                        />
-                                        <div className={styles.menuButton} onClick={(e) => {
-                                            e.stopPropagation(); // Prevent card click
-                                            handleMenuClick(project);
-                                        }}>
-                                            &#x022EE; {/* Three dots icon */}
-                                        </div>
-                                    </div>
-                                    {selectedProject === project && (
-                                        <div className={styles.menuOptions}>
-                                            <button onClick={() => handleCardClick(project)}>View</button>
-                                            <button onClick={() => handleEdit(project)}>Edit</button>
-                                            <button onClick={() => handleDelete(project.uuid, project.name)}>Delete</button>
-                                        </div>
-                                    )}
-                                </div>
-                            ))
-                        ) : (
-                            <p>No  projects available.</p>
-                        )}
+                  </div>
+                  {selectedProject === project && (
+                    <div className={styles.menuOptions}>
+                      <button onClick={() => handleCardClick(project)}>View</button>
+                      {/* Add your edit modal button here if needed */}
+                      <button onClick={() => handleDelete(project.uuid, project.name)}>Delete</button>
                     </div>
-                </section>
-            </div>
-            {editModalOpen && editProjectData && (
-                <div className={styles.editModalOverlay}>
-                    <div className={styles.editModalContent}>
-                        <h3>Edit Project</h3>
-                        <label htmlFor="">Project Name</label>
-                        <input
-                            type="text"
-                            value={editProjectData.name}
-                            onChange={(e) =>
-                                setEditProjectData({ ...editProjectData, name: e.target.value })
-                            }
-                            placeholder="Project Name"
-                            className={styles.editInputField}
-                        />
-                        <label htmlFor=""> Description</label>
-                           <input
-                            type="text"
-                            value={editProjectData.description || ''}
-                            onChange={(e) =>
-                                setEditProjectData({ ...editProjectData, description: e.target.value })
-                            }
-                            className={styles.editInputField}
-                        />
-                        <label htmlFor="Status">Status</label>
-                        <select
-                            value={editProjectData.status}
-                            onChange={(e) =>
-                                setEditProjectData({ ...editProjectData, status: e.target.value })
-                            }
-                            className={styles.editInputField}
-                        >
-                            <option value="todo">Todo</option>
-                            <option value="progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                        <label htmlFor="">Start Date</label>
-                        <input
-                            type="date"
-                            value={editProjectData.startDate ? editProjectData.startDate.split('T')[0] : ''}
-                            onChange={(e) =>
-                                setEditProjectData({ ...editProjectData, startDate: e.target.value })
-                            }
-                            className={styles.editInputField}
-                        />
-                        <label htmlFor="">End Date</label>
-                        <input
-                            type="date"
-                            value={editProjectData.endDate ? editProjectData.endDate.split('T')[0] : ''}
-                            onChange={(e) =>
-                                setEditProjectData({ ...editProjectData, endDate: e.target.value })
-                            }
-                            className={styles.editInputField}
-                        />
-                        <div className={styles.editModalActions}>
-                        <button onClick={closeEditModal} className={styles.editCancelButton}>
-                                X
-                            </button>
-                            <button
-                                onClick={updateProject}
-                                disabled={isSaving} // Disable the button while saving
-                                className={`${styles.editSaveButton} ${isSaving ? styles.saving : ''}`}
-                            >
-                                {isSaving ? (
-                                    <>
-                                        <span className={styles.loadingDots}>Saving Changes</span>
-                                    </>
-                                ) : (
-                                    'Save Changes'
-                                )}
-                            </button>
-                            
-                        </div>
-                    </div>
+                  )}
                 </div>
+              ))
+            ) : (
+              <p>No projects available.</p>
             )}
-   {/* Add Project Modal */}
-   {showProjectInput && (
-                <div className={style.modalOverlay}>
-                    <div className={style.modalContent}>
-                        <h3>Add Project</h3>
-                        <div className={style.divInput}>
-                            <label htmlFor="Name">Name</label>
-                            <input
-                                type="text"
-                                value={newProject.name}
-                                onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                                placeholder="Project Name"
-                                required
-                                className={style.inputField}
-                            />
-                        </div>
-                        <div className={style.divInput}>
-                            <label htmlFor="Start Date">Start Date</label>
-                            <input
-                                type="date"
-                                value={newProject.startDate}
-                                onChange={(e) =>
-                                    setNewProject({ ...newProject, startDate: e.target.value })
-                                }
-                                required
-                                className={style.inputField}
-                            />
-                        </div>
-                        <div className={style.divInput}>
-                            <label htmlFor="End Date">End Date</label>
-                            <input
-                                type="date"
-                                value={newProject.endDate}
-                                onChange={(e) =>
-                                    setNewProject({ ...newProject, endDate: e.target.value })
-                                }
-                                required
-                                className={style.inputField}
-                            />
-                        </div>
-                        <div className={style.divInput}>
-                        <label htmlFor="Status">Status</label>
-                        <select
-                            value={newProject.status}
-                            onChange={(e) =>
-                                setNewProject({ ...newProject, status: e.target.value })
-                            }
-                            className={style.inputField}
-                        >
-                            <option value="">Select Status</option>
-                            <option value="todo">To Do</option>
-                            <option value="progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                        </div>
-                        <div className={style.divInput}>
-                            <label htmlFor="description">Description</label>
-                            <input
-                                type="text"
-                                value={newProject.description}
-                                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                                className={style.inputField}
-                                required
-                            />
-                        </div>
-                        <div className={style.modalActions}>
+          </div>
+        </section>
+      </div>
 
-                        <button onClick={addProject} disabled={isAdding} className={style.addButton1}>
-                                {isAdding ? "Adding..." : "Add"}
-                            </button>
-                            
-                        <button
-                                onClick={() => setShowProjectInput(false)}
-                                className={style.closeButton1}
-                            >
-                                X
-
-                            </button>
-                         
-                            
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+      {/* Add Project Modal */}
+     <AddProjectModal
+  isOpen={isAddModalOpen}
+  onClose={() => setIsAddModalOpen(false)}
+  onAdded={fetchProjects}
+/>
+    </div>
+  );
 };
 
 export default Dashboard;

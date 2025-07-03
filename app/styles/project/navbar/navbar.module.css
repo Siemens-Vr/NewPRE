@@ -1,116 +1,59 @@
 
-/* .navbarPage{
-  color: rgb(143, 0, 0);
-  padding: 10px;
-} */
-
-.navbarPage h1{
-  color: rgb(255, 255, 255);
-  font-size: 18px;
-  font-weight: 700; 
-   text-transform:capitalize;
+.navbar { 
+  display: flex; 
+  background: #f5f5f5; 
+  width: 100%;
 }
-/* .navbar {
+.navList { 
+  list-style: none; 
+  margin: 0; 
+  padding: 0; 
+  display: flex; 
+  gap: 1rem; 
+  width: 100%;
+}
+.navItem { }
+.link { 
+  color: #333; 
+  text-decoration: none; 
+}
+.activeLink { 
+  color: #0070f3; 
+  font-weight: bold; 
+}
+
+
+/* Container for the navbar */
+.navbar {
   display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    margin-bottom: 10px;
-    font-size: 24px;
-    color: #1e90ff
+  width: 100%;
+  background-color: #f8f8f8; /* or your preferred bg color */
+  border-bottom: 1px solid #ddd; /* optional bottom border */
+}
 
-   
-   
-  } */
-  .brand h1{
-    font-size: 18px;
-    color: #1e90ff;
-    margin-left: auto;
-   
-  }
-  .brand1 h1{
-    font-size: 18px;
-    color: #1e90ff;
-    margin-right: auto;
-   
-  }
-  
-  /* .navLinks {
-    display: flex;
-    gap: 1rem;
-    margin-right: auto;
+/* Each nav item */
+.navItem {
+  flex: 1; /* fill equally */
+  text-align: center;
+  padding: 12px 0;
+  cursor: pointer;
+  position: relative;
+}
 
+/* Vertical line between nav items, except after the last one */
+.navItem:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 25%;
+  right: 0;
+  width: 1px;
+  height: 50%;
+  background-color: #ccc; /* color of vertical line */
+}
 
-  } */
-  
-  .navLinks button {
-    background:#ff7211;
-    border: none;
-    color: #000000;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    margin-top: auto;
-  }
-  
-  .navLinks button:hover {
-    background-color: #1b9392;
-  }
-  
-  .navLinks .active {
-    background-color: #c6e7e7;
-  }
-
-  .active {
-    background-color: blue;
-    color: white;
-    border-radius: 5px;
-    padding: 8px 16px;
-  }
-  
-  /* .backButton {
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #007bff;
-    margin-right: 20px;
-    margin-left: auto;
-  }
-  
-  .backButton:hover {
-    text-decoration: underline;
-  } */
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between; /* Ensures left and right alignment */
-    align-items: center;
-    padding: 0 20px;
-    margin-bottom: 10px;
-    font-size: 24px;
-    color: #1e90ff;
-  }
-  
-  .backButton {
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #1b9392;
-
-    margin-right: auto;
-  }
-  
-  .backButton:hover {
-    text-decoration: underline;
-  }
-  
-  .navLinks {
-    display: flex;
-    gap: 1rem;
-    margin-left: auto; /* Pushes navigation links to the right */
-  }
-  
+/* Optional: style active item */
+.navItem.active {
+  font-weight: bold;
+  color: #0070f3;
+  border-bottom: 3px solid #0070f3;
+}

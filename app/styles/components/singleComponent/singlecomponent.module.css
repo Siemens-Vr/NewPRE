@@ -26,7 +26,7 @@
 .cardColumn {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 /* Optional: underline the section headers for extra separation */

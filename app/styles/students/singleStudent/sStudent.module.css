@@ -58,7 +58,7 @@
 }
 
 .updateButton {
-  background: #4503fa;
+  background: #2bb3d2;
   color: white;
   padding: 8px 12px;
   border: none;
@@ -68,7 +68,7 @@
 }
 
 .updateButton:hover {
-   background: #4e0efd;
+   background: #22a0c1;
 }
 .profileImage {
   width: 80px;

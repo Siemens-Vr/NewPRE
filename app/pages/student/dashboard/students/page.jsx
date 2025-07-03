@@ -15,6 +15,7 @@ import Table from '@/app/components/table/Table';
 import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete, MdDownload  } from 'react-icons/md';
 import Loading from '@/app/components/Loading/Loading';
 import { useParams } from 'next/navigation';
+import EmptyState from '@/app/components/EmptyState/EmptyState';
 
 
 
@@ -161,99 +162,56 @@ const handleUpdateStudent = (student) => {
   fontSize: '0.9rem',
 };
 
-  
-  const columns = [
-     {
-      key: 'no',
-      label: 'No',
-      render: (_row, idx) => idx + 1 + page * ROWS_PER_PAGE
-    },
-    { key: 'regNo',    label: 'Registration No',  sortable: true  },
-    {
-      key: 'name',
-      label: ' Full Name',
-      sortable: true,
-      render: row => {
-        const first = row.firstName?.trim();
-        const last  = row.lastName?.trim();
-        if (!first && !last) return '—';
-        return [first, last].filter(Boolean).join(' ');
-      }
-    },
-
-    { key: 'phone', label: 'Phone' },
-{
-  key: 'actions',
-  label: 'Actions',
-  render: row => (
-    <div style={{ position: 'relative' }}>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          const menu = document.getElementById(`dropdown-${row.uuid}`);
-          if (menu) {
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-          }
-        }}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '1.5rem',
-        }}
-        title="More"
-      >
-        ⋮
-      </button>
-
-      <div
-        id={`dropdown-${row.uuid}`}
-        style={{
-          display: 'none',
-          position: 'absolute',
-          top: '100%',
-          right: 0,
-          backgroundColor: '#fff',
-          border: '1px solid #ccc',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-          zIndex: 10,
-          minWidth: '120px',
-        }}
-      >
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-          <li>
-            <button
-              style={dropdownItemStyle}
-              onClick={() => window.location.href = `/pages/student/dashboard/students/${row.uuid}/`}
-            >
-              View
-            </button>
-          </li>
-          <li>
-            <button
-              style={dropdownItemStyle}
-              onClick={() => {handleUpdateStudent(row);
-        }}
-            >   
-              Update
-            </button>
-          </li>
-          <li>
-            <button
-              style={{ ...dropdownItemStyle, color: 'red' }}
-              onClick={() => handleDeleteStudent(row.uuid, row.fullName, row)}
-            >
-              Delete
-            </button>
-          </li>
-        </ul>
+const columns = [
+  {
+    key: 'no',
+    label: 'No',
+    render: (_row, idx) => idx + 1 + page * ROWS_PER_PAGE
+  },
+  { key: 'regNo', label: 'Registration No', sortable: true },
+  {
+    key: 'name',
+    label: ' Full Name',
+    sortable: true,
+    render: row => {
+      const first = row.firstName?.trim();
+      const last = row.lastName?.trim();
+      if (!first && !last) return '—';
+      return [first, last].filter(Boolean).join(' ');
+    }
+  },
+  { key: 'phone', label: 'Phone' },
+  {
+    key: 'actions',
+    label: 'Actions',
+    render: row => (
+      <div className={styles.buttons}>
+        <button
+          className={`${styles.button} ${styles.view}`}
+          onClick={() => window.location.href = `/pages/student/dashboard/students/${row.uuid}/`}
+          title="View"
+        >
+          View
+        </button>
+        <button
+          className={`${styles.button} ${styles.addlevel}`}
+          onClick={() => handleUpdateStudent(row)}
+          title="Update"
+        >
+        Update
+        </button>
+        <button
+          className={`${styles.button} ${styles.delete}`}
+          onClick={() => handleDeleteStudent(row.uuid, `${row.firstName} ${row.lastName}`, row)}
+          title="Delete"
+        >
+          Delete
+        </button>
       </div>
-    </div>
-  )
-}
+    )
+  }
+];
 
-
-  ];
   return (
     <div className={styles.container}>
       <Toolbar
@@ -281,27 +239,35 @@ const handleUpdateStudent = (student) => {
       />
 
       {loading ? (
-        <Loading />
+        <Loading text='Loading Students...' />
       ) : (
-        <>
-          {paginatedStudents.length > 0 ? (
-             <Table
-              columns={columns}
-              data={paginatedStudents}
-              onSort={handleSort}
-              sortKey={sortKey}
-              sortOrder={sortOrder}
-            />
-          ) : (
-            <p className={styles.noData}>No students found.</p>
-          )}
+          <>
+       {filteredStudents.length > 0 ? (
+         <Table
+           columns={columns}
+           data={paginatedStudents}
+           onSort={handleSort}
+          sortKey={sortKey}
+           sortOrder={sortOrder}
+         />
+       ) : (
+         <EmptyState
+           illustration="/undraw_no-data_ig65.svg"
+           message="No students found"
+           details="You haven’t added any students yet. Start by adding a student now."
+           actionLabel="Add Student"
+           onAction={() => setAdding(true)}
+        />
+       )}
 
-          <Pagination
-            count={sortedStudents.length}
-            itemsPerPage={ROWS_PER_PAGE}
-            onPageChange={(p) => setPage(p)}
-          />
-        </>
+       {!!filteredStudents.length && (
+         <Pagination
+           count={filteredStudents.length}
+           itemsPerPage={ROWS_PER_PAGE}
+           onPageChange={(p) => setPage(p)}
+       />
+     )}
+    </>
       )}
 
       {adding && <AddStudentPage onClose={() => setAdding(false)} />}

@@ -1,304 +1,154 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { config } from "/config";
-import styles from "@/app/styles/supplier/supplier.module.css";
-import style from "@/app/styles/project/project/project.module.css";
-import Search from "@/app/components/search/search"
-// import Search from "@/app/components/search/searchFilter";
-import AddOutputModal from '@/app/components/project/output/AddOutput';
-import Link from "next/link";
-import UpdateOutputPopup from '@/app/components/project/output/update';
-import ActionButton from "@/app/components/project/output/actionButton";
-import Pagination from "@/app/components/pagination/pagination";
-import Swal from 'sweetalert2';
+
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import api from "@/app/lib/utils/axios";
+import AddCardModal from "@/app/components/card/addCard";
+import CardComponent from "@/app/components/card/cardComponents";
+import styles from "@/app/styles/project/phases/cardCategory.module.css";
 
-const OutputsList = () => {
-    const { uuid, phaseuuid } = useParams();
-    const router = useRouter();
-    const [count, setCount] = useState(0);
-    const [outputs, setOutputs] = useState([]);
-    const [output, setOutput] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedOutput, setSelectedOutput] = useState(null);
-    const [showPopup, setShowPopup] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [isAdding, setIsAdding] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-    const [newOutput, setNewOutput] = useState({
-        name: "",
-        completionDate: "",
-        status: "",
-        description: "",
-    });
-    const [showOutputInput, setShowOutputInput] =useState(false) ; 
+export default function PhaseDetailPage({ projectType }) {
+  const { phaseuuid, uuid, costCategoryId } = useParams();
 
-    
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-    // Fetch outputs function
-    const fetchOutputs = async () => {
-        setLoading(true);
-        try {
-            const response = await api.get(`/outputs/${phaseuuid}`);
-            console.log(response)
-            if (response.status === 200) {
-                const data =  response.data;
-                setOutputs(data);
-            } else {
-                console.error("Failed to fetch outputs");
-            }
-        } catch (error) {
-            console.error("Error fetching outputs:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  // For editing card
+  const [editCard, setEditCard] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
-    useEffect(() => {
-        fetchOutputs();
-    }, [uuid]);
+  const getTypeLabel = () => {
+    switch (projectType) {
+      case "Milestones":
+        return "Milestone Detail";
+      case "Work Package":
+        return "Work Package Detail";
+      case "Duration Years":
+        return "Duration Year Detail";
+      default:
+        return "Phase Detail";
+    }
+  };
 
-    const openModal = () => setIsModalOpen(true);
-    
-    const closeModal = () => {
-        setIsModalOpen(false);
-        fetchOutputs(); // Now fetchOutputs is defined
-    };
+  // Fetch cards
+  const fetchCards = async () => {
+    if (!phaseuuid) return;
+    setLoading(true);
+    try {
+      const res = await api.get(`/cost_categories/${phaseuuid}`);
+      if (res.status === 200) {
+        setCards(res.data);
+        setError(null);
+      } else {
+        setError("Failed to fetch cards");
+      }
+    } catch (err) {
+      setError("Error fetching cards");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const addOutput = async () => {
-        try {
-            const response = await api.post(`/outputs/${phaseuuid}`,newOutput, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            console.log(response)
-    
-            if (response.status === 201) {
-                fetchOutputs();
-                setShowOutputInput(false);
-                setSuccessMessage("Output added successfully");
-                setTimeout(() => setSuccessMessage(""), 3000);
-                setNewOutput({
-                    name: "",
-                    description: "",
-                    completionDate: "",
-                    status: "",
-                });
-            } else {
-                console.error("Failed to add output");
-            }
-        } catch (error) {
-            console.error("Error adding output:", error);
-        } finally {
-            closeModal();
-        }
-    };
-    const handleView = (outputuuid) => {
+  useEffect(() => {
+    fetchCards();
+  }, [phaseuuid]);
+
+  // Delete card handler
+  const handleDeleteCard = async (card) => {
+    if (!confirm(`Are you sure you want to delete "${card.name}"?`)) return;
+
+    try {
+      const res = await api.delete(`/phases/${phaseuuid}/cards/${card.uuid}`);
+      if (res.status === 200) {
+        fetchCards();
+      } else {
+        alert("Failed to delete card");
+      }
+    } catch (err) {
+      alert("Error deleting card");
+      console.error(err);
+    }
+  };
+
+  // Update card handler (opens modal)
+  const handleUpdateCard = (card) => {
+    setEditCard(card);
+    setShowEditModal(true);
+  };
+
+  return (
+    <div className={styles.container}>
+      <h1>{getTypeLabel()}: {phaseuuid}</h1>
+
+      {/* Add Card Button Top Right */}
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className={styles.addButton1}
+        >
+          + Add Card
+        </button>
+      </div>
+
+      {/* Add Card Modal */}
+      <AddCardModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdded={() => {
+          fetchCards();
+          setShowAddModal(false);
+        }}
+        phaseUuid={phaseuuid}
+      />
+
+      {/* Edit Card Modal (reuse AddCardModal with editData prop if you have it) */}
+      {showEditModal && (
+        <AddCardModal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditCard(null);
+          }}
+          onAdded={() => {
+            fetchCards();
+            setShowEditModal(false);
+            setEditCard(null);
+          }}
+          phaseUuid={phaseuuid}
+          editData={editCard}
+        />
+      )}
+
+      {error && <p className={styles.errorMessage}>{error}</p>}
+
+      {/* Cards List */}
+      {loading ? (
+        <p>Loading cards...</p>
+      ) : cards.length === 0 ? (
+        <p>No cards added yet.</p>
+      ) : (
+        <div className="card-grid">
+          {cards.map((card, index) => {
+            console.log(card.uuid, "Card UUID");
+            const costCategoryUrl = `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/costCategory/${card.uuid}`;
  
-        console.log("View Output UUID:", outputuuid);
-        
-        if (!outputuuid) {
-          console.error("Output UUID is missing");
-          return;
-        }
-    
-       
-        router.push(`/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/${outputuuid}`);
-      };
-      const handleDelete = async (outputuuid, name) => {
-        if (!outputuuid) {
-            console.error("Output UUID is missing");
-            return;
-        }
-    
-        const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: `You are about to delete ${name}`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete',
-            cancelButtonText: 'Cancel'
-        });
-    
-        if (result.isConfirmed) {
-            setDeleting(outputuuid);
-    
-            try {
-                const response = await api.delete(`${config.baseURL}/outputs/${phaseuuid}/${outputuuid}/`, {
-                    headers: { "Content-Type": "application/json" },
-                });
-    
-                if (response.ok) {
-                    Swal.fire({
-                        title: 'Deleted!',
-                        text: `${name} has been successfully deleted.`,
-                        icon: 'success',
-                        confirmButtonColor: '#3085d6',
-                    });
-    
-                    // ✅ Remove deleted output from state instead of reloading
-                    setOutputs((prevOutputs) => prevOutputs.filter(output => output.uuid !== outputuuid));
-    
-                } else {
-                    throw new Error("Failed to delete output");
-                }
-            } catch (error) {
-                console.error("Error deleting output:", error);
-                alert("Failed to delete output. Please try again.");
-            } finally {
-                setDeleting(null);
-            }
-        }
-    };
-    
-    const formatDate = (dateString) => {
-        if (!dateString) return "N/A";
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-    
+            return (
+                 <CardComponent
+      key={card.uuid}
+      title={card.title}
+      details={{}}
+      href={costCategoryUrl}
+      onUpdate={() => handleUpdateCard(card)}
+      onDelete={() => handleDeleteCard(card)}
+    />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
-      const handleUpdateClick = (output) => {
-        setSelectedOutput(output);
-        setShowPopup(true);
-      };
-    
-      const handleClosePopup = () => {
-        setShowPopup(false);
-        setSelectedOutput(null);
-      };
-      const handleSavePopup = async () => {
-        handleClosePopup();
-        await fetchOutputs();
-     
-    };
-    if (loading) return <p>Loading outputs...</p>;
-
-    return (
-
-                <div className={styles.container}>
-                    {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
-                    <div className={styles.top}>
-                        <Search placeholder="Search for an output..."/>
-                        <button onClick={() => setShowOutputInput(true)} disabled={isAdding}
-                                className={style.addButton}>Add
-                        </button>
-                    </div>
-                    {Array.isArray(outputs) && outputs.length > 0 ? (
-                        <table className={styles.table}>
-                            <thead>
-                            <tr>
-                                <td className={styles.th}>Output Name</td>
-                                <td className={styles.th}>Description</td>
-                                <td className={styles.th}>Status</td>
-                                <td className={styles.th}>Completion Date</td>
-                                <td className={styles.th}>Action</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {outputs.map((output) => (
-                                <tr key={output.id}>
-                                    <td>{output.name}</td>
-                                    <td>{output.description}</td>
-                                    <td>{output.status}</td>
-                                    <td>{formatDate(output.completionDate)}</td>
-                                    <td>
-                                        <ActionButton
-                                            onEdit={() => handleUpdateClick(output)}
-                                            onDelete={() => handleDelete(output.uuid, output.name)}
-                                            onView={() => handleView(output.uuid)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p className={styles.noItem}>No output available</p>
-                    )}
-                    <Pagination count={count}/>
-                    <AddOutputModal isModalOpen={isModalOpen} closeModal={closeModal} addOutput={addOutput}/>
-                    {showOutputInput && (
-                        <div className={style.modalOverlay}>
-                            <div className={style.modalContent}>
-                                <h3>Add Output</h3>
-                                <div className={style.divInput}>
-                                    <label htmlFor="Name">Name</label>
-                                    <input
-                                        type="text"
-                                        value={newOutput.name}
-                                        onChange={(e) => setNewOutput({...newOutput, name: e.target.value})}
-                                        placeholder="Output Name"
-                                        required
-                                        className={style.inputField}
-                                    />
-                                </div>
-                                <div className={style.divInput}>
-                                    <label htmlFor="Completion Date">Completion Date</label>
-                                    <input
-                                        type="date"
-                                        value={newOutput.completionDate}
-                                        onChange={(e) =>
-                                            setNewOutput({...newOutput, completionDate: e.target.value})
-                                        }
-                                        required
-                                        className={style.inputField}
-                                    />
-                                </div>
-                                <div className={style.divInput}>
-                                    <label htmlFor="Status">Status</label>
-                                    <select
-                                        value={newOutput.status}
-                                        onChange={(e) =>
-                                            setNewOutput({...newOutput, status: e.target.value})
-                                        }
-                                        className={style.inputField}
-                                    >
-                                        <option value="">Select Status</option>
-                                        <option value="todo">To Do</option>
-                                        <option value="progress">In Progress</option>
-                                        <option value="completed">Completed</option>
-                                    </select>
-                                </div>
-                                <div className={style.divInput}>
-                                    <label htmlFor="description">Description</label>
-                                    <input
-                                        type="text"
-                                        value={newOutput.description}
-                                        onChange={(e) => setNewOutput({...newOutput, description: e.target.value})}
-                                        className={style.inputField}
-                                        required
-                                    />
-                                </div>
-                                <div className={style.modalActions}>
-                                    <button
-                                        onClick={() => setShowOutputInput(false)}
-                                        className={style.closeButton1}
-                                    >
-                                      X
-                                    </button>
-                                    <button onClick={addOutput} disabled={isAdding} className={style.addButton1}>
-                                        {isAdding ? "Adding..." : "Add"}
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {showPopup && (
-                        <UpdateOutputPopup
-                            output={selectedOutput}
-                            onClose={handleClosePopup}
-                            onSave={handleSavePopup}
-                        />
-                    )}
-                </div>
-
-                );
-                };
-
-                export default OutputsList;

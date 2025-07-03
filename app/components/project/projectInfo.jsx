@@ -13,8 +13,8 @@ const ProjectInfo = ({ newProject, setNewProject }) => {
                 Project Name:
                 <input
                     type="text"
-                    name="name"
-                    value={newProject.name}
+                    name="title"
+                    value={newProject.title}
                     onChange={handleChange}
                     required
                 />

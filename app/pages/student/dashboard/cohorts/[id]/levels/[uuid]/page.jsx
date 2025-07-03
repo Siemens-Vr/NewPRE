@@ -13,6 +13,7 @@ import React, { useState, useEffect } from 'react';
 import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
 import api from '@/app/lib/utils/axios';
 import Table from '@/app/components/table/Table';
+import Loading from '@/app/components/Loading/Loading';
 
 import Link from 'next/link';
 
@@ -31,6 +32,7 @@ const LevelDetails = ({ searchParams }) => {
   const [showMenu, setShowMenu] = useState(false);
     const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
+    const [loading, setLoading] = useState(false);
 
   const params = useParams();
 
@@ -39,12 +41,16 @@ const LevelDetails = ({ searchParams }) => {
   }, []);
 
   const fetchData = async () => {
+       setLoading(true);
     try {
       const response = await api.get(`/levels/${params.id}/levels/${params.uuid}`);
       const data = response.data;
       setLevelData(data);
     } catch (error) {
       console.error("Error fetching level data:", error);
+  
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -69,10 +75,14 @@ const LevelDetails = ({ searchParams }) => {
       setSortOrder('asc');
     }
   };
+ if (loading) {
+    return <Loading text="Loading level details..." />;
+  }
 
   if (!levelData) {
-    return <p>Loading...</p>;
+    return <p className="text-center">No level data available.</p>;
   }
+ 
 
   const studentsPerPage = 10;
   const filteredStudents = levelData.students.filter(student =>
@@ -217,15 +227,30 @@ const LevelDetails = ({ searchParams }) => {
       </div>
 
       <div className={styles.instructorsTable}>
+        <div className={styles.tableTop}>
+    <h3>Instructors</h3>
+    <button onClick={handleAddNewClick} className={styles.addButton}>
+      Add New Instructor
+    </button>
+    { showAddNewPopup && (
+  <AddFacilitatorPage
+    levelUuid={levelData.uuid}
+    onSave={handleAddFacilitator}
+    onClose={handleClosePopup}
+  />
+)}
+
+  </div>
+
         {levelData.facilitators.length > 0 ? (
           <>
-            <div className={styles.tableTop}>
+            {/* <div className={styles.tableTop}>
               <h3>Instructors</h3>
               <button onClick={handleAddNewClick} className={styles.addButton}>Add New Instructor</button>
               {showAddNewPopup && (
                 <AddFacilitatorPage onClose={handleClosePopup} />
               )}
-            </div>
+            </div> */}
 
             <Table
             columns={[

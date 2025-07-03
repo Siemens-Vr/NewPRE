@@ -5,6 +5,7 @@ import api from '@/app/lib/utils/axios';
 import FormModal from '@/app/components/Form/FormModal';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
+import Loading from '@/app/components/loading/Loading';
 
 
 
@@ -20,7 +21,7 @@ const SinstudentPage = ({onClose, uuid}) => {
   try {
     const response = await api.get(`/students/${uuid}`);
     setStudent(response.data); 
-    console.log("Fetched student:", response.data);
+    // console.log("Fetched student:", response.data);
   } catch (error) {
     console.error("Error fetching student:", error);
     Swal.fire('Error', 'Failed to fetch student details', 'error');
@@ -129,7 +130,7 @@ useEffect(() => {
   ];
 
   if (!student) {
-    return <div>Loading...</div>;
+    return <Loading text="Loading student..." />;
   }
 
   return (

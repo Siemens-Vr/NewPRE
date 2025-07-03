@@ -18,44 +18,44 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 const menuItems = [
   {
     title: "Dashboard",
-    path: "/pages/admin/dashboard",
+    path: "/admins",
     icon: <MdDashboard className={styles.whiteIcon} />,
   },
   {
     title: "Staff",
-    path: "/pages/admin/dashboard/staff",
+    path: "/admin/staffs",
     icon: <MdPeople className={styles.whiteIcon} />,
   },
   {
     title: "Student",
-    path: "/pages/student/dashboard",
+    // path: "/student/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      { title: "Dashboard", path: "/pages/student/dashboard", icon: <MdDashboard className={styles.whiteIcon} /> },
-      { title: "Students", path: "/pages/student/dashboard/students", icon: <MdPeople className={styles.whiteIcon} /> },
-      { title: "Cohorts", path: "/pages/student/dashboard/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
-      { title: "Instructors", path: "/pages/student/dashboard/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
+      { title: "Dashboard", path: "/students", icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Students", path: "/students/students", icon: <MdPeople className={styles.whiteIcon} /> },
+      { title: "Cohorts", path: "/students/cohorts", icon: <MdAnalytics className={styles.whiteIcon} /> },
+      { title: "Instructors", path: "/students/facilitators", icon: <MdAnalytics className={styles.whiteIcon} /> },
     ],
   },
   {
     title: "Equipment",
-    path: "/pages/equipment/dashboard",
+    // path: "/equipment/dashboard",
     icon: <MdAnalytics className={styles.whiteIcon} />,
     subpages: [
-      { title: "Dashboard", path: "/pages/equipment/dashboard", icon: <MdDashboard className={styles.whiteIcon} /> },
-      { title: "Products", path: "/pages/equipment/dashboard/components", icon: <MdDashboard className={styles.whiteIcon} /> },
-      { title: "Borrow", path: "/pages/equipment/dashboard/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
-      { title: "Notifications", path: "/pages/equipment/dashboard/notifications", icon: <MdPeople className={styles.whiteIcon} /> },
+      { title: "Dashboard", path: "/equipments", icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Products", path: "/equipments/components", icon: <MdDashboard className={styles.whiteIcon} /> },
+      { title: "Borrow", path: "/equipments/borrow", icon: <MdPeople className={styles.whiteIcon} /> },
+      { title: "Notifications", path: "/equipments/notifications", icon: <MdPeople className={styles.whiteIcon} /> },
     ],
   },
   {
     title: "Projects",
-    path: "/pages/project/dashboard",
+    path: "/projects",
     icon: <MdAnalytics className={styles.whiteIcon} />,
   },
   {
     title: "Users",
-    path: "/pages/admin/dashboard/users",
+    path: "/admin/users",
     icon: <MdAnalytics className={styles.whiteIcon} />,
   },
 ];

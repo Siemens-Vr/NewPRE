@@ -218,7 +218,7 @@ const [phaseEditData, setPhaseEditData] = useState(null);
   }
 
 
-  const baseUrl = `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard`;
+  const baseUrl = `/projects/${uuid}/${phaseuuid}`;
 
   router.push(baseUrl);
 };

@@ -4,11 +4,6 @@
   
  }
 
-.menu {
-  /* flex: 1; */
-  /* background-color: #000000; */
-   min-height: 100vh;
-}
 
  .contents{
     /* flex: 4; */
@@ -19,7 +14,7 @@
 .content {
 
   flex: 4;
-  padding: 20px;
+  padding: 10px;
   /* margin-left: -30px; */
   margin-top: 1px;
 

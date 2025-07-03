@@ -5,10 +5,10 @@
   background-color: #1c1c3c ;
   width: 270px;
   /*height: 850px;*/
-  height: 100vh;
+  /* height: 100vh; */
   padding: 20px;
   /*margin: 4px;*/
-  overflow-y: auto;
+  /* overflow-y: auto; */
   transition: width 0.3s ease-in-out;
 }
 
@@ -22,7 +22,7 @@
   .containers {
     width: 270px;
     padding: 20px;
-    height: 100vh;
+    /* height: 100vh; */
   }
 }
 

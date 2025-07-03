@@ -5,7 +5,6 @@ import { config } from "/config";
 import styles from "@/app/styles/supplier/supplier.module.css";
 import style from "@/app/styles/project/project/project.module.css";
 import Search from "@/app/components/search/search"
-// import Search from "@/app/components/search/searchFilter";
 import AddOutputModal from '@/app/components/project/output/AddOutput';
 import Link from "next/link";
 import UpdateOutputPopup from '@/app/components/project/output/update';
@@ -15,7 +14,7 @@ import Swal from 'sweetalert2';
 import api from "@/app/lib/utils/axios";
 
 const OutputsList = () => {
-    const { uuid, phaseuuid } = useParams();
+    const { uuid, phaseuuid, costCategoryId } = useParams();
     const router = useRouter();
     const [count, setCount] = useState(0);
     const [outputs, setOutputs] = useState([]);

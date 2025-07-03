@@ -56,7 +56,7 @@ const Dashboard = () => {
   };
 
   const handleCardClick = (project) => {
-    router.push(`/pages/project/dashboard/${project.uuid}/dashboard`);
+    router.push(`/projects/${project.uuid}`);
     clearTimeout(closeTimeoutRef.current);
   };
 

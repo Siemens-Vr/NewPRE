@@ -132,8 +132,8 @@ export default function PhaseDetailPage({ projectType }) {
       ) : (
         <div className="card-grid">
           {cards.map((card, index) => {
-            console.log(card.uuid, "Card UUID");
-            const costCategoryUrl = `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}/dashboard/costCategory/${card.uuid}`;
+            // console.log(card, "Card UUID");
+            const costCategoryUrl = `/projects/${uuid}/${phaseuuid}/${card.id}`;
  
             return (
                  <CardComponent

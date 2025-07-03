@@ -102,9 +102,9 @@ const Navbar = () => {
       </nav>
 
       {/* Page Title */}
-      <div className={styles.titleContainer}>
+      {/* <div className={styles.titleContainer}>
         <h1 className={styles.pageTitle}>{currentTitle}</h1>
-      </div>
+      </div> */}
     </div>
   );
 };

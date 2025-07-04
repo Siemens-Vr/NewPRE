@@ -5,7 +5,7 @@ import FormModal from "@/app/components/Form/FormModal";
 import api from "@/app/lib/utils/axios";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 
-export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, phaseType }) {
+export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, phaseType  }) {
   const initialValues = {
     no:0,
     title: "",
@@ -76,15 +76,16 @@ export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, p
     }
 
     const payload = {
-        no: values.no, // include number field in payload
+      no: values.no, // include number field in payload
       title: values.title,
       description: values.description,
       implementation_startDate: values.implementation_startDate,
       implementation_endDate: values.implementation_endDate,
       status: values.status,
       projectId: projectUuid,
-      type: phaseType, // send phase type for backend logic
+      // type: phaseType, // send phase type for backend logic
     };
+    console.log("Submitting payload:", payload);  
 
     try {
       const response = await api.post(`/milestones/${projectUuid}`, payload, {

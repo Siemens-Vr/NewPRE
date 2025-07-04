@@ -4,34 +4,35 @@ import styles from '@/app/styles/users/users.module.css';
 import Search from '@/app/components/search/search';
 import Link from "next/link";
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+
 
 const UsersPage =  () => {
-    const [users, setUsers] =useState([])
-    const [loading, setLoading] =useState(              )
-    const searchParams = useSearchParams();
-    const q = searchParams.get('q') || '';
+const router = useRouter();
+const [loading, setLoading] = useState(false);
+const [q, setQ]             = useState('');
+const [users, setUsers]     = useState([]);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-          setLoading(true);
-          try {
-            const response = await api.get(`/staffs${q ? `?q=${q}` : ''}`);
-            console.log("Running")
-            console.log(response.data)
-        
-            if (response.status < 200 || response.status >= 300) throw new Error("Failed to fetch staff data");
-    
-            setUsers(response.data);
-          } catch (error) {
-            console.error('Error fetching staff:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchUsers();
-      }, [q]);
+// 2. on mount, read ?q= from the URL
+useEffect(() => {
+ const p = new URLSearchParams(window.location.search);
+ setQ(p.get('q') || '');
+}, []);
+
+// 3. whenever q changes, push it into the URL and re-fetch
+useEffect(() => {
+ // update the URL
+ const url = new URL(window.location.href);
+ if (q)    url.searchParams.set('q', q);
+ else      url.searchParams.delete('q');
+ router.replace(url.toString());
+
+ // fetch data
+ setLoading(true);
+ api.get(`/staffs${q ? `?q=${q}` : ''}`)
+   .then(res => setUsers(res.data))
+   .catch(console.error)
+   .finally(() => setLoading(false));
+}, [q]);
 
     return (
         <div className={styles.container}>

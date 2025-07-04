@@ -3,11 +3,11 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Toolbar from '@/app/components/toolbar/Toolbar';
+import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
 import Pagination from '@/app/components/pagination/pagination';
-import AddBorrow from '@/app/components/Borrow/borrow';
-import Loading from '@/app/components/loading/Loading';
+import AddBorrow from '@/app/components/Borrow/Borrow';
+import Loading from '@/app/components/Loading/Loading';
 import api from '@/app/lib/utils/axios';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
 import { MdSearch, MdAdd } from 'react-icons/md';

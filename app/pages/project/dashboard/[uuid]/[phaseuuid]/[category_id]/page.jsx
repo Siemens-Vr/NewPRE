@@ -7,7 +7,7 @@ import Table from "@/app/components/table/Table";
 import AddCostCategoryModal from "@/app/components/project/output/addOutput";
 import styles from "@/app/styles/project/phases/cardCategory.module.css";
 import Swal from "sweetalert2";
-import Toolbar from "@/app/components/toolBar/toolBar";
+import Toolbar from "@/app/components/ToolBar/ToolBar";
 import { MdAdd, MdFilterList } from "react-icons/md";
 import Loading from "@/app/components/Loading/Loading";
 

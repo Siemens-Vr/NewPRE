@@ -231,10 +231,11 @@ export default function ComponentDetail() {
           componentData={component}
           showConditionDetails={showConditionDetails}
           onClose={() => setShowPopup(false)}
-          onUpdate={async upd => {
-            await handleComponentUpdate(upd);
-            setShowPopup(false);
-          }}
+          updaet ={''}
+          // onUpdate={async upd => {
+          //   await handleComponentUpdate(upd);
+          //   setShowPopup(false);
+          // }}
         />
       )}
     </div>

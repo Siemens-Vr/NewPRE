@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Pagination from '@/app/components/pagination/pagination';
-import Toolbar from '@/app/components/toolbar/Toolbar';
+import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
 import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
 import { MdAdd, MdFilterList } from 'react-icons/md';

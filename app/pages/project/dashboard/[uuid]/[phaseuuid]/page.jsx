@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import api from "@/app/lib/utils/axios";
-import CardComponent from "@/app/components/card/cardComponents";
+import CardComponent from "@/app/components/card/CardComponent";
 import AddCardModal from "@/app/components/card/addCard";
 import styles from "@/app/styles/project/phases/cardCategory.module.css";
 

@@ -21,7 +21,7 @@ const ROLE_DASHBOARDS = {
 };
 
 export default function useAuth(allowedRoles = []) {
-  const { Staff, loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {

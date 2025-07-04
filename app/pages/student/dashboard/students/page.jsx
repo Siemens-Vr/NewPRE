@@ -10,7 +10,7 @@ import { useEffect, useState, useMemo } from 'react';
 import Swal from 'sweetalert2';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
-import Toolbar from '@/app/components/toolbar/Toolbar';
+import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
 import { MdAdd, MdFilterList, MdDownload  } from 'react-icons/md';
 import Loading from '@/app/components/Loading/Loading';

@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import styles from '@/app/styles/cohorts/viewCohort/viewCohort.module.css';
-import CardComponent from '@/app/components/card/CardComponents';
+import CardComponent from '@/app/components/card/CardComponent';
 import LevelAddPopUp from '@/app/components/cohort/AddLevel';
 import { useRouter } from 'next/navigation';
 import api from '@/app/lib/utils/axios';

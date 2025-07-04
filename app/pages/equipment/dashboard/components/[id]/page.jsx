@@ -283,10 +283,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useSearchParams }   from 'next/navigation';
 import Link from 'next/link';
-import Toolbar from '@/app/components/toolbar/Toolbar';
+import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
-import Pagination from '@/app/components/pagination/Pagination';
-import AddBorrow from '@/app/components/borrow/Borrow';
+import Pagination from '@/app/components/pagination/pagination';
+import AddBorrow from '@/app/components/Borrow/Borrow';
 import api  from '@/app/lib/utils/axios';
 import { MdFilterList, MdAdd }   from 'react-icons/md';
 import styles  from '@/app/styles/components/singleComponent/singlecomponent.module.css';

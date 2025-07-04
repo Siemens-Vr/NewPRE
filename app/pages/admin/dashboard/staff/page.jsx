@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams }                from 'next/navigation';
-import Toolbar                            from '@/app/components/toolbar/Toolbar';
+import Toolbar                            from '@/app/components/ToolBar/ToolBar';
 import Table                              from '@/app/components/table/Table';
-import Pagination                         from '@/app/components/pagination/Pagination';
+import Pagination                         from '@/app/components/pagination/pagination';
 import AddStaffPage                       from '@/app/components/staff/addStaff';
 import api                                from '@/app/lib/utils/axios';
 import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete } from 'react-icons/md';

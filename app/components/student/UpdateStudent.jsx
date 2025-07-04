@@ -5,7 +5,7 @@ import api from '@/app/lib/utils/axios';
 import FormModal from '@/app/components/Form/FormModal';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
-import Loading from '@/app/components/loading/Loading';
+import Loading from '@/app/components/Loading/Loading';
 
 
 

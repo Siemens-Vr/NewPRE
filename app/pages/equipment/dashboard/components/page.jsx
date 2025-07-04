@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link   from 'next/link';
-import Toolbar   from '@/app/components/toolbar/Toolbar';
+import Toolbar   from '@/app/components/ToolBar/ToolBar';
 import Table   from '@/app/components/table/Table';
 import Pagination  from '@/app/components/pagination/pagination';
 import CategoriesPopUp from "@/app/components/categories/categories";

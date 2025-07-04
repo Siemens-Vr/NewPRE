@@ -14,7 +14,7 @@ import {
   MdSearch,
 } from "react-icons/md";
 
-const componentNavbar = () => {
+const ComponentNavbar = () => {
   const pathname = usePathname();
   const user = {
     "username": "cheldean",
@@ -66,4 +66,4 @@ const componentNavbar = () => {
   );
 };
 
-export default componentNavbar;
+export default ComponentNavbar;

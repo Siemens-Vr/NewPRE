@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { MdFilterList, MdAdd } from 'react-icons/md';
 import api from "@/app/lib/utils/axios";
-import CardComponent from "@/app/components/card/CardComponents"; // Import the CardComponent
+import CardComponent from "@/app/components/card/CardComponent"; // Import the CardComponent
 import CohortForm from "@/app/pages/student/dashboard/cohorts/add/page";
 import CohortEditPopup from "@/app/components/cohort/CohortEditPopup";
-import Toolbar from "@/app/components/toolBar/toolBar";
+import Toolbar from "@/app/components/ToolBar/ToolBar";
 import Loading from '@/app/components/Loading/Loading';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
 

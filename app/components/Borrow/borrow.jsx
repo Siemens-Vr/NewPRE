@@ -21,6 +21,7 @@ export default function BorrowForm({onClose, initialData, onSaved}) {
   // master data
   const [componentTypes, setComponentTypes] = useState([]);
   const [components,     setComponents]     = useState([]);
+  const [show, setShow] =useState(false)
 
 
 

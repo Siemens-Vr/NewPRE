@@ -22,16 +22,16 @@ export default function ProjectLayout({ children }) {
 
   // Decide tab label and href for the third tab dynamically
   const thirdTab = projectType === "Milestones"
-    ? { key: 'milestones', label: 'Milestones', href: `/pages/project/dashboard/${uuid}/dashboard/phases/${phaseuuid}` }
+    ? { key: 'milestones', label: 'Milestones', href: `/projects/${uuid}/${phaseuuid}` }
     : projectType === "Work Package"
-    ? { key: 'workpackage', label: 'Work Package', href: `/pages/project/dashboard/${uuid}/dashboard/workpackage` }
-    : { key: 'durationyears', label: 'Duration Years', href: `/pages/project/dashboard/${uuid}/dashboard/duration` };
+    ? { key: 'workpackage', label: 'Work Package',  href: `/projects/${uuid}/${phaseuuid}` }
+    : { key: 'durationyears', label: 'Duration Years',  href: `/projects/${uuid}/${phaseuuid}` };
 
   const tabs = [
-    { key: 'info',       label: 'Project Info', href: `/pages/project/dashboard/${uuid}/dashboard` },
-    { key: 'monitoring', label: 'Monitoring',   href: `/project/${uuid}/monitoring` },
+    { key: 'info',       label: 'Project Info', href: `/projects/${uuid}/` },
+    { key: 'monitoring', label: 'Monitoring',   href: `/projects/${uuid}/monitoring` },
     thirdTab,
-    { key: 'report',     label: 'Report',       href: `/project/${uuid}/report` },
+    { key: 'report',     label: 'Report',       href: `/projects/${uuid}/report` },
   ];
 
   return (

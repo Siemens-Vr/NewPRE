@@ -8,7 +8,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");     // all | unread | read
   const [searchTerm, setSearchTerm] = useState("");
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState([]);     // now an array of IDs
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -16,46 +16,53 @@ export default function NotificationsPage() {
     (async () => {
       try {
         const res = await api.get(`${config.baseURL}/notifications`);
-        console.log(res)
-        if (res.statusText === "OK") setNotifications(res.data.rows);
+        if (res.statusText === "OK") {
+          setNotifications(res.data.rows);
+        }
       } catch (e) {
         console.error("Failed to fetch notifications", e);
       }
     })();
   }, []);
 
-  // Compute filtered + searched
-  const filtered = notifications?.filter(n => {
+  // Apply filter + search
+  const filtered = notifications.filter(n => {
     if (filter === "unread" && n.read) return false;
     if (filter === "read"   && !n.read) return false;
     return n.message.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const pageCount = Math.ceil(filtered.length / pageSize) || 1;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
+  // Toggle all on current page
   const toggleSelectAll = () => {
-    const newSel = new Set(selected);
     const allIds = pageItems.map(n => n.id);
-    const allSelected = allIds.every(id => newSel.has(id));
+    const allSelected = allIds.every(id => selected.includes(id));
+
     if (allSelected) {
-      allIds.forEach(id => newSel.delete(id));
+      // remove this page's IDs from selection
+      setSelected(prev => prev.filter(id => !allIds.includes(id)));
     } else {
-      allIds.forEach(id => newSel.add(id));
+      // add any missing IDs
+      setSelected(prev => {
+        const merged = [...prev, ...allIds];
+        // dedupe
+        return Array.from(new Set(merged));
+      });
     }
-    setSelected(newSel);
   };
 
-  const toggleSelectOne = (id) => {
+  // Toggle one checkbox
+  const toggleSelectOne = id => {
     setSelected(prev =>
-      prev.includes(id)
-        ? prev.filter(i => i !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
 
+  // Mark all read & clear selection
   const markAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
+    setNotifications(ns => ns.map(n => ({ ...n, read: true })));
     setSelected([]);
   };
 
@@ -97,11 +104,14 @@ export default function NotificationsPage() {
       </div>
 
       <ul className={styles.notificationList}>
-        {/* Header row with select-all checkbox */}
-        <li className={styles.notificationItem + " " + styles.headerRow}>
+        {/* Header row with select-all */}
+        <li className={`${styles.notificationItem} ${styles.headerRow}`}>
           <input
             type="checkbox"
-            checked={pageItems.length > 0 && pageItems.every(n => selected.has(n.id))}
+            checked={
+              pageItems.length > 0 &&
+              pageItems.every(n => selected.includes(n.id))
+            }
             onChange={toggleSelectAll}
           />
           <span className={styles.colMessage}>Message</span>
@@ -115,14 +125,13 @@ export default function NotificationsPage() {
           >
             <input
               type="checkbox"
-              checked={selected.has(n.id)}
+              checked={selected.includes(n.id)}
               onChange={() => toggleSelectOne(n.id)}
             />
             <div className={styles.colMessage}>{n.message}</div>
             <time className={styles.colTime}>
               {new Date(n.createdAt).toLocaleString()}
             </time>
-            
           </li>
         ))}
 
@@ -147,5 +156,5 @@ export default function NotificationsPage() {
         </button>
       </div>
     </div>
-);
+  );
 }

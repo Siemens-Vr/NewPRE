@@ -5,7 +5,7 @@ import { User } from "./models";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
-import { signIn } from "../auth";
+import { signIn } from "../lib/utils/auth";
 
 export const addUser = async (formData) => {
   const { username, email, password, phone, role, isAdmin, isActive } =

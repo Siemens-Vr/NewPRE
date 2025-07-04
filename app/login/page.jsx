@@ -80,12 +80,12 @@ export default function Login() {
             Reset here
           </Link>
         </p>
-        <p className={styles.textCenter}>
-          Don't have an account?{" "}
-          <Link href="/signup" className={styles.link}>
-            Sign up
-          </Link>
-        </p>
+       <p className={styles.textCenter}>
+         Don&apos;t have an account?{" "}
+         <Link href="/signup" className={styles.link}>
+           Sign up
+         </Link>
+       </p>
       </form>
     </div>
   );

@@ -34,13 +34,13 @@ const CardComponent = ({
         <div className={styles.cardHeader}>
           <h3>{title}</h3>
 
-          {showDropdown && (
+          {/* {showDropdown && ( */}
             <div style={{ position: 'relative' }}>
               <button onClick={toggleDropdown} className={styles.menuButton}>
                 <FaEllipsisV />
               </button>
 
-              {isDropdownOpen && (
+              {/* {isDropdownOpen && ( */}
                 <div className={styles.dropdownMenu}>
                   {onUpdate && (
                     <button
@@ -67,9 +67,9 @@ const CardComponent = ({
                     </button>
                   )}
                 </div>
-              )}
+              {/* )} */}
             </div>
-          )}
+          {/* )} */}
         </div>
 
         {/* Always-visible details */}

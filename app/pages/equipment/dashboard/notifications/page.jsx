@@ -8,7 +8,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");     // all | unread | read
   const [searchTerm, setSearchTerm] = useState("");
-  const [selected, setSelected] = useState(new Set());
+  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -47,14 +47,16 @@ export default function NotificationsPage() {
   };
 
   const toggleSelectOne = (id) => {
-    const newSel = new Set(selected);
-    newSel.has(id) ? newSel.delete(id) : newSel.add(id);
-    setSelected(newSel);
+    setSelected(prev =>
+      prev.includes(id)
+        ? prev.filter(i => i !== id)
+        : [...prev, id]
+    );
   };
 
   const markAllRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
-    setSelected(new Set());
+    setSelected([]);
   };
 
   return (

@@ -1,40 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import api from "@/app/lib/utils/axios";
-import AddCardModal from "@/app/components/card/addCard";
 import CardComponent from "@/app/components/card/cardComponents";
+import AddCardModal from "@/app/components/card/addCard";
 import styles from "@/app/styles/project/phases/cardCategory.module.css";
 
 export default function PhaseDetailPage({ projectType }) {
-  const { phaseuuid, uuid, costCategoryId } = useParams();
+  const { uuid, phaseuuid } = useParams();
+  const router = useRouter();
 
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
 
-  // For editing card
+  // Add/Edit Card modals
+  const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [editCard, setEditCard] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditCardModal, setShowEditCardModal] = useState(false);
 
-  const getTypeLabel = () => {
-    switch (projectType) {
-      case "Milestones":
-        return "Milestone Detail";
-      case "Work Package":
-        return "Work Package Detail";
-      case "Duration Years":
-        return "Duration Year Detail";
-      default:
-        return "Phase Detail";
-    }
-  };
-
-  // Fetch cards
+  // Fetch cards for this phase
   const fetchCards = async () => {
-    if (!phaseuuid) return;
     setLoading(true);
     try {
       const res = await api.get(`/cost_categories/${phaseuuid}`);
@@ -45,8 +32,8 @@ export default function PhaseDetailPage({ projectType }) {
         setError("Failed to fetch cards");
       }
     } catch (err) {
-      setError("Error fetching cards");
       console.error(err);
+      setError("Error fetching cards");
     } finally {
       setLoading(false);
     }
@@ -56,99 +43,92 @@ export default function PhaseDetailPage({ projectType }) {
     fetchCards();
   }, [phaseuuid]);
 
-  // Delete card handler
-  const handleDeleteCard = async (card) => {
-    if (!confirm(`Are you sure you want to delete "${card.name}"?`)) return;
-
-    try {
-      const res = await api.delete(`/phases/${phaseuuid}/cards/${card.uuid}`);
-      if (res.status === 200) {
-        fetchCards();
-      } else {
-        alert("Failed to delete card");
-      }
-    } catch (err) {
-      alert("Error deleting card");
-      console.error(err);
-    }
+  // Navigate to this card's costCategory page
+  const handleView = (costCategoryId ) => {
+    router.push(
+      `/projects/${uuid}/${phaseuuid}/${costCategoryId}`
+    );
   };
 
-  // Update card handler (opens modal)
-  const handleUpdateCard = (card) => {
+  // Card actions
+  const handleDeleteCard = async (card) => {
+    if (!confirm(`Delete "${card.title}"?`)) return;
+    await api.delete(`/phases/${phaseuuid}/cards/${card.uuid}`);
+    fetchCards();
+  };
+  const handleEditCard = (card) => {
     setEditCard(card);
-    setShowEditModal(true);
+    setShowEditCardModal(true);
+  };
+
+  const getTypeLabel = () => {
+    switch (projectType) {
+      case "Milestones": return "Milestone Detail";
+      case "Work Package": return "Work Package Detail";
+      case "Duration Years": return "Duration Year Detail";
+      default: return "Phase Detail";
+    }
   };
 
   return (
     <div className={styles.container}>
-      <h1>{getTypeLabel()}: {phaseuuid}</h1>
+      <h1>{getTypeLabel()}</h1>
 
-      {/* Add Card Button Top Right */}
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className={styles.addButton1}
-        >
+      <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
+        <button className={styles.addButton1} onClick={() => setShowAddCardModal(true)}>
           + Add Card
         </button>
       </div>
 
+      {loading ? (
+        <p>Loading cards…</p>
+      ) : error ? (
+        <p className={styles.errorMessage}>{error}</p>
+      ) : cards.length === 0 ? (
+        <p>No cards available.</p>
+      ) : (
+        <div className="card-grid" style={{ display: "grid", gap: "1rem" }}>
+          {cards.map((card) => (
+            <CardComponent
+              key={card.uuid}
+              title={card.title}
+              details={{}}
+              onCardClick={() => handleView(card.uuid)}
+              onUpdate={() => handleEditCard(card)}
+              onDelete={() => handleDeleteCard(card)}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Add Card Modal */}
       <AddCardModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
+        isOpen={showAddCardModal}
+        onClose={() => setShowAddCardModal(false)}
         onAdded={() => {
           fetchCards();
-          setShowAddModal(false);
+          setShowAddCardModal(false);
         }}
         phaseUuid={phaseuuid}
       />
 
-      {/* Edit Card Modal (reuse AddCardModal with editData prop if you have it) */}
-      {showEditModal && (
+      {/* Edit Card Modal */}
+      {showEditCardModal && (
         <AddCardModal
-          isOpen={showEditModal}
+          isOpen={showEditCardModal}
           onClose={() => {
-            setShowEditModal(false);
+            setShowEditCardModal(false);
             setEditCard(null);
           }}
           onAdded={() => {
             fetchCards();
-            setShowEditModal(false);
+            setShowEditCardModal(false);
             setEditCard(null);
           }}
           phaseUuid={phaseuuid}
           editData={editCard}
         />
       )}
-
-      {error && <p className={styles.errorMessage}>{error}</p>}
-
-      {/* Cards List */}
-      {loading ? (
-        <p>Loading cards...</p>
-      ) : cards.length === 0 ? (
-        <p>No cards added yet.</p>
-      ) : (
-        <div className="card-grid">
-          {cards.map((card, index) => {
-            // console.log(card, "Card UUID");
-            const costCategoryUrl = `/projects/${uuid}/${phaseuuid}/${card.id}`;
- 
-            return (
-                 <CardComponent
-      key={card.uuid}
-      title={card.title}
-      details={{}}
-      href={costCategoryUrl}
-      onUpdate={() => handleUpdateCard(card)}
-      onDelete={() => handleDeleteCard(card)}
-    />
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }
-

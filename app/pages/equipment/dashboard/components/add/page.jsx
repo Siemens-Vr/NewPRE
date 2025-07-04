@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from '@/app/styles/components/add/addComponent.module.css'; // Adjust the import to your CSS file
 import ConditionPopUp from '@/app/components/condition/condition';
 import UploadForm from '@/app/components/uploadForm/uploadForm' // Adjust the import to the correct path
-
+import api from '@/app/lib/utils/axios'; // Adjust the import to your axios instance
 
 const AddComponent = () => {
   const router = useRouter();

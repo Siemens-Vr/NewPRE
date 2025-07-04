@@ -1,99 +1,128 @@
 "use client";
 
-import React, { useState } from "react";
-import styles from "@/app/styles/project/project/output/output.module.css";
+import React, { useState, useEffect } from "react";
+import FormModal from "@/app/components/Form/FormModal";
+import api from "@/app/lib/utils/axios";
+import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 
-const AddOutputModal = ({ isModalOpen, closeModal, addOutput }) => {
-    const [newOutput, setNewOutput] = useState({
-        name: "",
-        status: "",
-        completionDate: "",
-        description: "",
-    });
+export default function AddCostCategoryModal({
+  isOpen,
+  onClose,
+  onAdded,
+  costCategoryId,
+  editData = null,
+}) {
+  const initialValues = { no: "", title: "", total_amount: "", description: "" };
+  const [values, setValues] = useState(initialValues);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState(null);
 
-    const [errors, setErrors] = useState({});
 
-    const validateOutputInfo = () => {
-        const newErrors = {};
-        if (!newOutput.name) newErrors.name = "Output name is required";
-        if (!newOutput.completionDate) newErrors.completionDate = "Completion date is required";
-        if (!newOutput.status) newErrors.status = "Status is required";
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+  useEffect(() => {
+    // console.log( costCategoryId);
+  }, [costCategoryId]);
+  useEffect(() => {
+    if (editData) {
+      setValues({
+        ...editData,
+        total_amount: editData.total_amount?.toString(),
+      });
+    } else {
+      setValues(initialValues);
+    }
+  }, [editData]);
 
-    const handleChange = (e) => {
-        setNewOutput({ ...newOutput, [e.target.name]: e.target.value });
-    };
+  const fields = [
+    { name: "no", label: "No", type: "number", placeholder: "Number", required: true },
+    { name: "title", label: "Title", type: "text", placeholder: "Title", required: true },
+    { name: "total_amount", label: "Total Amount", type: "number", placeholder: "Amount", required: true },
+    { name: "description", label: "Description", type: "textarea", placeholder: "Description" },
+  ];
 
-    const handleSubmit = async () => {
-        if (!validateOutputInfo()) return;
+  // Create new cost item
+  const handleAdd = async () => {
+    if (!costCategoryId) {
+      setError("Card ID missing.");
+      return;
+    }
+    setIsSaving(true);
+    setError(null);
 
-        try {
-            await addOutput(newOutput);
-            closeModal(); // Close modal after submission
-        } catch (error) {
-            console.error("Error adding output:", error);
-        }
-    };
+    try {
+      const res = await api.post(`/cost_categories_tables/${costCategoryId}`, {
+        no:         values.no,
+        title:      values.title,
+        total_amount: Number(values.total_amount),
+        description:  values.description,
+}, {
+  headers: { "Content-Type": "application/json" }
+});
+      if (res.status === 201) {
+        onAdded();
+        onClose();
+        console.log("Cost item added successfully:", res.data);
+      } else {
+        setError("Save failed.");
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Error saving.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    if (!isModalOpen) return null;
+  // Update existing cost item
+  const handleEdit = async () => {
+    if (!costCategoryId || !editData?.uuid) {
+      setError("Missing identifiers for edit.");
+      return;
+    }
+    setIsSaving(true);
+    setError(null);
 
-    return (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <h2>Add New Output</h2>
+    try {
+      const res = await api.put(
+        `/cost_categories_tables/${costCategoryId}/${editData.uuid}`,
+        {
+          no: values.no,
+          title: values.title,
+          total_amount: Number(values.total_amount),
+          description: values.description,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (res.status >= 200 && res.status < 300) {
+        onAdded();
+        onClose();
+      } else {
+        setError("Update failed.");
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Error updating.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-                <div className={styles.inputGroup}>
-                    <label>Output Name:</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={newOutput.name}
-                        onChange={handleChange}
-                        placeholder="name"
-                    />
-                    {errors.name && <p className={styles.error}>{errors.name}</p>}
-                </div>
+  const handleSubmit = () => {
+    editData ? handleEdit() : handleAdd();
+  };
 
-                <div className={styles.inputGroup}>
-                    <label>Description:</label>
-                    <textarea
-                        name="description"
-                        value={newOutput.description}
-                        onChange={handleChange}
-                        placeholder="Enter output description"
-                    />
-                </div>
+  if (!isOpen) return null;
 
-                <div className={styles.inputGroup}>
-                    <label>Status:</label>
-                    <select name="status" value={newOutput.status} onChange={handleChange}>
-                        <option value="">Select status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>Completion Date:</label>
-                    <input
-                        type="date"
-                        name="completionDate"
-                        value={newOutput.completionDate}
-                        onChange={handleChange}
-                    />
-                    {errors.completionDate && <p className={styles.error}>{errors.completionDate}</p>}
-                </div>
-
-                <div className={styles.modalButtons}>
-                    <button className={styles.cancelButton} onClick={closeModal}>Cancel</button>
-                    <button className={styles.submitButton} onClick={handleSubmit}>Submit</button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export default AddOutputModal;
+  return (
+    <div className={styles.modalWrapper}>
+      <FormModal
+        title={editData ? "Edit Cost Item" : "Add Cost Item"}
+        fields={fields}
+        initialValues={values}
+        onSubmit={handleSubmit}
+        onClose={onClose}
+        isSaving={isSaving}
+      />
+      {error && <p className={styles.errorMessage}>{error}</p>}
+    </div>
+  );
+}

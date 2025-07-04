@@ -12,7 +12,7 @@ import { pdf, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer
 import AddStudentPage from "@/app/pages/student/dashboard/students/add/page";
 import Toolbar from '@/app/components/toolbar/Toolbar';
 import Table from '@/app/components/table/Table';
-import { MdAdd, MdFilterList, MdVisibility, MdEdit, MdDelete, MdDownload  } from 'react-icons/md';
+import { MdAdd, MdFilterList, MdDownload  } from 'react-icons/md';
 import Loading from '@/app/components/Loading/Loading';
 import { useParams } from 'next/navigation';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
@@ -30,6 +30,9 @@ const StudentsPage = () => {
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(0);
   const [editingStudent, setEditingStudent] = useState(null);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showAddNewPopup, setShowAddNewPopup] = useState(false);
+  
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();

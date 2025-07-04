@@ -11,6 +11,7 @@ import api from "@/app/lib/utils/axios";
 import Loading from '@/app/components/Loading/Loading';
 import Table from '@/app/components/table/Table';
 import Pagination from '@/app/components/pagination/pagination';
+import Swal from 'sweetalert2';
 
 const ROWS_PER_PAGE = 10;
 const SinstudentPage = ({ params}) => {
@@ -42,7 +43,7 @@ const SinstudentPage = ({ params}) => {
     // console.log("Fetched student:", response.data);
   } catch (error) {
     console.error("Error fetching student:", error);
-    Swal.fire('Error', 'Failed to fetch student details', 'error');
+       console.error('Error', 'Failed to fetch student details', 'error');
   }
   
 };

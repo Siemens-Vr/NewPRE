@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '@/app/lib/utils/axios';
 import FormModal from "@/app/components/Form/FormModal";
 
-// Destructure levelUuid and onSave from props
 export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,6 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
     gender: '',
   });
 
-  // Fetch staff list on mount
   useEffect(() => {
     const fetchStaff = async () => {
       setLoading(true);
@@ -45,7 +43,7 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
   const handleFormChange = updatedValues => {
     setFormValues(prev => {
       if (updatedValues.staffUuid && updatedValues.staffUuid !== prev.staffUuid) {
-        const sel = staffList.find(s => s.uuid === updatedValues.staffUuid || s._id === updatedValues.staffUuid);
+        const sel = staffList.find(s => (s.uuid || s._id) === updatedValues.staffUuid);
         if (sel) {
           return {
             ...prev,
@@ -64,9 +62,7 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
   };
 
   const fields = [
-    {
-      name: 'staffUuid', label: 'Select Staff Member', type: 'select', options: staffOptions
-    },
+    { name: 'staffUuid', label: 'Select Staff Member', type: 'select', options: staffOptions },
     { name: 'firstName', label: 'First Name', type: 'text', disabled: true },
     { name: 'lastName', label: 'Last Name', type: 'text', disabled: true },
     { name: 'email', label: 'Email', type: 'email', disabled: true },
@@ -90,27 +86,23 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
       gender: values.gender,
     };
 
-   try {
-    // attach to the current level, not the global /facilitators
-    const response = await api.post(
-      `/levels/${level.uuid}/facilitators`,
-      payload,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    try {
+      // use the levelUuid prop here
+      const response = await api.post(
+        `/levels/${levelUuid}/facilitators`,
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-    const newFacilitator = response.data;
-    toast.success("Facilitator added successfully!");
-
-    // call the parent page's handler to update local state:
-    onSave(newFacilitator);
-
-    // close the modal
-    onClose();
-  } catch (error) {
-    console.error("Error adding facilitator:", error.response?.data || error);
-    toast.error("An unexpected error occurred.");
-  }
-};
+      const newFacilitator = response.data;
+      toast.success("Facilitator added successfully!");
+      onSave(newFacilitator);
+      onClose();
+    } catch (error) {
+      console.error("Error adding facilitator:", error.response?.data || error);
+      toast.error("An unexpected error occurred.");
+    }
+  };
 
   return (
     <>
@@ -134,11 +126,3 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
     </>
   );
 }
-
-
-
-
-
-
-
-

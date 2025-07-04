@@ -290,7 +290,7 @@ import AddBorrow from '@/app/components/borrow/Borrow';
 import api  from '@/app/lib/utils/axios';
 import { MdFilterList, MdAdd }   from 'react-icons/md';
 import styles  from '@/app/styles/components/singleComponent/singlecomponent.module.css';
-
+import QuantityModal from '@/app/components/EmptyState/EmptyState';
 const ROWS_PER_PAGE = 10;
 
 export default function SingleComponentPage() {
@@ -422,7 +422,7 @@ export default function SingleComponentPage() {
   return (
     <div className={styles.pageContainer}>
 
-      {/* global search + optional filter/add in toolbar */}
+     
       <Toolbar
         placeholder="Search components…"
         buttons={[

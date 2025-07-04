@@ -1,0 +1,92 @@
+.container {
+  /* max-width: 900px; */
+  margin: 0 auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.actions {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.createFolder,
+.uploadFile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.createFolder input,
+.uploadFile input[type="file"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.createFolder button,
+.uploadFile button {
+  padding: 8px 16px;
+  background-color: #0070f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.createFolder button:hover,
+.uploadFile button:hover {
+  background-color: #005bb5;
+}
+
+.list {
+  margin-top: 16px;
+}
+
+.list h3 {
+  margin: 16px 0 8px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.list li:hover {
+  background-color: #f9f9f9;
+}
+
+.list li:last-of-type {
+  border-bottom: none;
+}
+
+.list a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.list a:hover {
+  text-decoration: underline;
+}

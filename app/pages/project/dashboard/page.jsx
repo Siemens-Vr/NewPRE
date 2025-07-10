@@ -31,8 +31,8 @@ const Dashboard = () => {
     try {
       const response = await api.get(`projects`);
       if (response.status === 200) {
-        setProjects(response.data);
-        console.log("Projects fetched successfully:", response.data);
+        setProjects(response.data.projects);
+        console.log("Projects fetched successfully:", response.data.projects);
       }
     } catch (err) {
       setError(err.message);

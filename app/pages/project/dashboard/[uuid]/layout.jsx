@@ -39,7 +39,7 @@ export default function ProjectLayout({ children }) {
        ? [{ key: "monitoring", label: "Monitoring", href: `/projects/${uuid}/${phaseuuid}/monitoring` }]
        : []
       ),
-    ...(thirdTab ? [thirdTab] : []),
+    ...(thirdTab ? [thirdTab] : []), 
     { key: "report",     label: "Report",       href: `/projects/${uuid}/report` },
   ];
 

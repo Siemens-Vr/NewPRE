@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: #333;
+  width: 4.5rem;
+  text-align: center;
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  background-color: #26c6da;
+  margin: 0 0.5rem;
+  border-radius: 2px;
+}
+
+/* wrapper to position each dot (and its label) */
+.dotWrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+/* the circle */
+.dot {
+  width: 14px;
+  height: 14px;
+  background-color: #ffffff;
+  border: 2px solid #26c6da;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.1s;
+}
+
+.dot:hover {
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* filled circle when selected */
+.selected {
+  background-color: #26c6da;
+}
+
+/* the label under the selected dot */
+.selectedLabel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: #333;
+  white-space: nowrap;
+}

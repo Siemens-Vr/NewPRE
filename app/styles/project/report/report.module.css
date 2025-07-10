@@ -113,3 +113,34 @@
   border: 1px solid #e0e0e0;
   border-radius: 4px;
 }
+
+.progressContainer {
+  width: 100%;
+  background-color: #E8F5E9;  
+  border-radius: 4px;
+  overflow: hidden;
+  height: 28px;                
+  display: flex;
+  align-items: center;
+}
+
+.progressInner {
+  background-color: #A5D6A7;   
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;           
+  font-size: 0.9rem;
+  color: #2E7D32;               
+  white-space: nowrap;
+  transition: width 0.3s ease;
+}
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+.section{
+  margin-bottom: 20px;
+}

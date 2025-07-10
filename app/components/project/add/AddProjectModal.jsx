@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+
 import FormModal from "@/app/components/Form/FormModal";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 import api from "@/app/lib/utils/axios";
-import { config } from "/config";
 import Swal from "sweetalert2";
 
 export default function AddProjectModal({ isOpen, onClose, onAdded }) {
-  if (!isOpen) return null;
-  const router = useRouter();
-  const [isSaving, setIsSaving] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+  
+  if (!isOpen) return null;
+
+
 
   // Align initial values with model fields
   const initialValues = {

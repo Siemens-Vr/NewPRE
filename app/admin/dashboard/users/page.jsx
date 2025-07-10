@@ -4,6 +4,7 @@ import styles from '@/app/styles/users/users.module.css';
 import Search from '@/app/components/search/search';
 import Link from "next/link";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'
 
 
 const UsersPage =  () => {

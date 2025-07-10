@@ -1,5 +1,5 @@
-// app/pages/equipment/dashboard/borrow/page.jsx
 'use client';
+export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';

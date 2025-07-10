@@ -72,7 +72,7 @@ const [phaseEditData, setPhaseEditData] = useState(null);
       { key: "status", label: "Status", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
-    dataKey: "workPackages",
+    dataKey: "milestones",
   },
   "Duration Years": {
     title: "Project Duration",
@@ -81,7 +81,7 @@ const [phaseEditData, setPhaseEditData] = useState(null);
       { key: "year", label: "Year", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
-    dataKey: "durationYears",
+    dataKey: "milestones",
   },
 };
 
@@ -330,7 +330,7 @@ const handleDeletePhase = async (row) => {
           onSort={handleSort}
         />
 
-        {items.length > 3 && (
+        {items.length > 1 && (
           <button
             className={styles.accordionBtn}
             onClick={() => setItemsExpanded(!itemsExpanded)}
@@ -355,7 +355,7 @@ const handleDeletePhase = async (row) => {
     <AddPhaseModal
   isOpen={showPhaseModal}
   onClose={() => setShowPhaseModal(false)}
-  onAdded={fetchProjectData} // reload project and phases after adding
+  onAdded={fetchProjectData} 
   projectUuid={uuid}
   phaseType={project.type}
 />

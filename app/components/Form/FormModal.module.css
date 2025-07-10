@@ -1,39 +1,31 @@
-
-/* app/components/FormModal/FormModal.module.css */
+/* app/components/Form/FormModal.module.css */
 
 /* 1) Full-screen backdrop */
 .overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.6);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 }
 
 /* 2) Centered modal container */
-.container {
+.modal {
   position: fixed;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 670px;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
   padding: 24px;
   z-index: 1000;
-}
-.container1 {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 640px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-  padding: 24px;
-  z-index: 1000;
+  width: auto;              /* size to content */
+  max-width: 800px;         /* cap overly wide form */
+  height: auto;             /* let height grow with content */
+  overflow: visible;        /* show all fields */
 }
 
 /* 3) Header with title & close */
@@ -91,41 +83,19 @@
   border-color: #2bb3d2; /* VML Sky-Blue */
   outline: none;
 }
-/* textarea spans full width */
 .field textarea {
   grid-column: span 2;
   resize: vertical;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 /* 5) Action buttons row */
 .actions {
   grid-column: span 2;
   display: flex;
- justify-content: space-between;  
+  justify-content: space-between;
   align-items: center;
-  /* gap: 12px; */
   margin-top: 16px;
-}
-.actions1 {
-  grid-column: span 2;
-  display: flex;
- justify-content: flex-end;  
-  align-items: center;
-  /* gap: 12px; */
-  margin-top: 16px;
-}
-.footerButtons{
-  display:flex;
-  gap:10px
-}
-.footerAddButton{
-  grid-column: span 2;
-  display: flex;
-  justify-content:flex-end;  /* <— distribute left & right */
-  align-items: center;
-  margin-top: -30px;
-
 }
 .cancel {
   padding: 8px 16px;
@@ -160,53 +130,4 @@
   .field textarea {
     grid-column: span 1;
   }
-}
-
-
-.tableWrapper {
-   overflow-x: hidden;
-  overflow-y: auto;
-  padding-bottom: 8px;  
-  border:none !important;         
-}
-
-
-
-/* Table itself */
-.tableWrapper table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-/* Header row */
-.tableWrapper th {
-  background-color: #f6f8fa;
-  color: #333;
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-weight: 600;
-}
-.tableWrapper tr:nth-child(even) {
-  background: #f9fafb;           
-}
-.tableWrapper tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Action buttons inside table */
-.deleteButton {
-  background-color: #ff4d4f;
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.deleteButton:hover {
-  background-color: #d9363e;
 }

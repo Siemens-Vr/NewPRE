@@ -9,6 +9,9 @@ import { useParams } from 'next/navigation';
 // import Navbar from "@/app/components/project/output/navbar/navbar";
 import Swal from "sweetalert2";
 import api from '@/app/lib/utils/axios';
+import CardComponent from '@/app/components/card/CardComponent';
+import FormModal from '@/app/components/Form/FormModal';
+
 
 // Action Types
 const ACTION_TYPES = {
@@ -43,17 +46,16 @@ function folderReducer(state, action) {
     switch (action.type) {
         case ACTION_TYPES.SET_INITIAL_FOLDERS:
   return {
-    ...state,
-    folders: action.payload.folders,
-    documents: action.payload.documents,
-    currentFolder: {
-      id: 'root',
-      name: 'Root Folder',
-      subfolders: action.payload.folders,
-      files: action.payload.documents
-    },
-    loading: false
-  };
+       ...state,
+       folders: action.payload.folders,      // your “master” list
+       files: action.payload.documents,      // if you ever need a top-level file list
+       currentFolder: {         id: 'root',
+         name: 'Root Folder',
+         subfolders: action.payload.folders, // now a real array
+         files: action.payload.documents     // also a real array
+      },
+       loading: false
+     };
 
 
         case ACTION_TYPES.OPEN_FOLDER:
@@ -339,22 +341,17 @@ useEffect(() => {
     // Fetch initial folders
     const fetchInitialFolders = async () => {
   try {
-    const { status, data } = await api.get(`/cost_cat/${id}`);
-    
-    // guard against any non-200/201
-    if (status !== 200 && status !== 201) {
-      throw new Error(`Failed to fetch folders (status ${status})`);
-    }
-    
-    console.log('Fetched folders:', data);
-    
-    dispatch({
-      type: ACTION_TYPES.SET_INITIAL_FOLDERS,
-      payload: {
-        folders: data,     
-        documents: [],      
-      },
-    });
+   const response = await api.get(`/cost_cat/${id}`);
+const { success, data, count } = response.data;
+console.log('API response:', response.data);
+if (!success) throw new Error('API returned failure');
+
+const { folders, documents } = data;    // 👈 unwrap the real arrays
+
+dispatch({
+  type: ACTION_TYPES.SET_INITIAL_FOLDERS,
+  payload: { folders, documents }
+});
   } catch (error) {
     console.error('Folder fetch error:', error);
   }
@@ -378,6 +375,7 @@ useEffect(() => {
         }
         console.log("URL",apiUrl)
         const response = await api.get(apiUrl);
+        console.log('API response:', response);
         if (response.status !== 200 && response.status !== 201) throw new Error('Failed to fetch folder contents');
         
         const result =  response.data;
@@ -469,59 +467,70 @@ useEffect(() => {
 
 
    
-    const handleFileUpload = async (file, options = {}) => {
-        if (!selectedFile) {
-            alert('Please select a file to upload.');
-            return;
-        }
+const handleFileUpload = async () => {
+    console.log("🗂️ selectedFile is:", selectedFile);
+  if (!selectedFile) {
+    alert("Please select a file to upload.");
+    return;
+  }
 
-        try {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
+  try {
+    // 1) Build FormData with the exact field name your controller reads:
+    const formData = new FormData();
+    formData.append("cost_category", selectedFile, selectedFile.name);
 
-            // Construct the appropriate URL based on folder hierarchy
-            let uploadUrl = `/cost_cat/${id}`;
+    // 2) (Optional) Debug: log each entry
+    for (const [key, value] of formData.entries()) {
+      console.log("FormData:", key, value);
+    }
 
-            if (state.currentFolder?.id) {
-                if (state.currentFolder.parentFolderId) {
-                    // For subfolders (nested folders)
-                 uploadUrl = `/cost_cat/${id}/${state.currentFolder.parentFolderId}/${state.currentFolder.id}`;
-                } else {
-                    // For root-level folders
-                    uploadUrl = `/cost_cat/${id}/${state.currentFolder.id}`;
-                }
-            }
-            console.log(uploadUrl)
-            const response = await api.post(uploadUrl,formData);
+    // 3) Construct your upload URL exactly as before
+    let uploadUrl = `/cost_cat/file/${id}`;
+    const folderId = state.currentFolder?.id;
+    const parentId = state.currentFolder?.parentFolderId;
+    if (folderId && folderId !== "root") {
+      uploadUrl += parentId ? `/${parentId}/${folderId}` : `/${folderId}`;
+    }
+    console.log("Uploading to:", uploadUrl);
 
-            if (response.status !== 200 && response.status !== 201) {
-                const errorMessage = response.message;
-                console.error('Error response:', errorMessage);
-                throw new Error('Failed to upload file.');
-            }
+    // 4) Send the request—do NOT override Content-Type
+    const response = await api.post(uploadUrl, formData);
 
-            if (response.status === 200 && response.status === 201) {
-                dispatch({
-                    type: ACTION_TYPES.UPLOAD_FILE,
-                    payload: {
-                        file: response.data,
-                        parentFolderId: state.currentFolder?.parentFolderId || state.currentFolder?.uuid || null
-                    }
-                });
-            }
+    // 5) Treat any 2xx as success
+    if (response.status >= 200 && response.status < 300) {
+      dispatch({
+        type: ACTION_TYPES.UPLOAD_FILE,
+        payload: {
+          file: response.data.newFile,
+          parentFolderId: parentId || folderId || null,
+        },
+      });
+      alert("File uploaded successfully!");
+      setSelectedFile(null);
+      setModalStates((prev) => ({ ...prev, fileModal: false }));
+      window.location.reload();
+      return response.data;
+    } else {
+      console.error("Unexpected status:", response.status);
+      alert(`Upload failed with status ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error uploading file:", error);
 
-            alert('File uploaded successfully!');
-            setSelectedFile(null);
-            setModalStates((prev) => ({ ...prev, fileModal: false }));
-            window.location.reload();
+    // Pick the best message available
+    const errMsg =
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      error.message ||
+      "Unknown upload error";
+
+    alert(errMsg);
+  }
+};
 
 
-            return response.data;
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            throw error;
-        }
-    };
+
+
         
 
 
@@ -894,156 +903,61 @@ const fetchUpdatedFolderList = async () => {
         fetchInitialFolders();
     }, [id]);
 
-    // Render Methods
-    const renderFolders = () => {
-        const foldersToRender = state.currentFolder?.subfolders || [];
-        
-        return (
-          <div className="flex flex-wrap gap-4">
-            {foldersToRender.map((folder) => (
-              <div
-                key={folder.uuid}
-                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
-                onClick={() => handleOpenFolder(folder, state.currentFolder)}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <MdFolder className="text-yellow-500 rounded p-1 w-8 h-8" />
-                  <h3 className="text-gray-700 font-medium truncate">
-                    {folder.folderName || 'Unnamed Folder'}
-                  </h3>
-                </div>
-                 {/* Toggle button */}
-          <div className="relative" ref={folderRef}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFolderMenu(folder.uuid);
-                
-              }}
-              className="text-gray-500 hover:text-gray-700"
-            
-            >
-              <FaEllipsisV size={16} />
-            </button>
+const renderFolders = () => {
+  const foldersToRender = Array.isArray(state.currentFolder?.subfolders)
+    ? state.currentFolder.subfolders
+    : [];
 
-            {/* Dropdown menu */}
-            {folderMenuOpen[folder.uuid] && (
-              <div
-                id={`dropdown-${folder.uuid}`}
-                className="absolute right-0 top-full mt-1 w-32 bg-white shadow-lg rounded-lg z-50"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUpdateFolder(folder);
-                    setMenuOpen(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteFolder(folder);
-                  }}
-                  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-              </div>
-            ))}
-          </div>
-        );
-      };
-      
+  return (
+    <div className="flex flex-wrap gap-4">
+      {foldersToRender.map(folder => (
+        <CardComponent
+          key={folder.uuid}
+          title={folder.folderName}
+          details={{}}
+          onCardClick={() => handleOpenFolder(folder)}
+          onUpdate={() => handleUpdateFolder(folder)}
+          onDelete={() => handleDeleteFolder(folder)}
+        />
+      ))}
+    </div>
+  );
+};
+
   
  
       
-      const renderFiles = () => { 
-        const filesToRender = state.currentFolder?.files || [];
-      
+      const renderFiles = () => {
+  const filesToRender = Array.isArray(state.currentFolder?.files)
+    ? state.currentFolder.files
+    : [];
+
+  return (
+    <div className="flex flex-wrap gap-4 overflow-visible">
+      {filesToRender.map((file) => {
+        // Use the API's "name" field
+        const rawName = file.name || file.documentName || 'Unnamed Document';
+
         return (
-            <div className="flex flex-wrap gap-4 overflow-visible">
-  {filesToRender.map((file) => {
-    const nameParts = file?.documentName?.split('-');
-    const fileName =
-      nameParts && nameParts.length > 2
-        ? nameParts.slice(2).join('-')
-        : file?.documentName || 'Unnamed Document';
-      
-              return (
-                <div
-                  key={file?.uuid || file?.documentName}
-                  className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
-                  onClick={() => handleView(file)}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <FaRegFileAlt className="text-yellow-500 rounded p-1 w-10 h-10" />
-                    <span className="text-gray-700 text-sm truncate">
-                      {fileName}
-                    </span>
-                  </div>
-                  <div className="relative"  ref={(el) => (menuRefs.current[file.uuid] = el)}>
-                    {/* Three dots button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation(); 
-                        toggleMenu(file.uuid);
-                        console.log("Menu toggled for:", file.uuid);
-                      }}
-                      className="text-gray-500 hover:text-gray-700"
-                     
-                    >
-                      <FaEllipsisV size={16} />
-                    </button>
-      
-                    {menuOpen[file.uuid] && (
-                      <div 
-                        className="absolute right-0 top-full mt-1 w-32 bg-white shadow-lg rounded-lg z-50"
-                        onClick={(e) => e.stopPropagation()} // Prevents closing on click inside menu
-                      >
-                        {/* Download Button */}
-                        <button
-  type="button"
-  onClick={(e) => {
-    e.stopPropagation();
-    console.log("Download button clicked!");
-    handleDownload(file);
-    setTimeout(() => toggleMenu(file.uuid), 200);
-  }}
-  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
->
-  Download
-</button>
-
-<button
-  type="button"
-  onClick={(e) => {
-    e.stopPropagation();
-    console.log("Delete button clicked!");
-    handleDeleteFile(file);
-    setTimeout(() => toggleMenu(file.uuid), 200);
-  }}
-  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
->
-  Delete
-</button>
-
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div
+            key={file.uuid}
+            className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
+            onClick={() => handleView(file)}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <FaRegFileAlt className="text-yellow-500 rounded p-1 w-10 h-10" />
+              <span className="text-gray-700 text-sm truncate">
+                {rawName}
+              </span>
+            </div>
+            {/* …rest of your menu code */}
           </div>
         );
-      };
+      })}
+    </div>
+  );
+};
+
           return (
         <div className={styles.projectDetails}>
         <div className={styles.inputDocumentSection}>
@@ -1108,125 +1022,93 @@ const fetchUpdatedFolderList = async () => {
             )}
 
             {/* Create Folder modal */}
-            {modalStates.folderModal && (
-                <div className={styles.inputDocumentModal}>
-                    <div className={styles.inputDocumentModalContent}>
-                    <form
-                            onSubmit={(e) => {
-                                e.preventDefault(); // Prevent the default form submission
-                                handleCreateFolder(); // Call the folder creation function
-                            }}
-                        >
-                    <h2>Create Folder</h2>
-                    
-                    <input
-                        type="text"
-                        placeholder="Folder Name"
-                        value={folderName}
-                        onChange={(e) => setFolderName(e.target.value)}
-                    />
-                     <div className={styles.inputDocumentModalButtons}>
-                        <button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Creating...' : 'Create Folder'}
-                        </button>
+             {modalStates.folderModal && (
+<FormModal
+        isOpen={modalStates.folderModal}
+        title="Create Folder"
+        fields={[{
+          name: 'folderName',
+          label: 'Folder Name',
+          type: 'text',
+          placeholder: 'Enter folder name',
+          value: folderName,
+          onChange: e => setFolderName(e.target.value),
+        }]}
+        onClose={() => setModalStates(m => ({ ...m, folderModal: false }))}
+        onSubmit={handleCreateFolder}
+        submitLabel="Create"
+        disableSubmit={!folderName.trim()}
+      />
+      )}
 
-                        {/* <button onClick={handleCreateFolder}>Create</button> */}
-                        <button onClick={() => setModalStates({ ...modalStates, folderModal: false })}>Cancel</button>
-                    </div>
-                    </form>
-                    </div>
-                </div>
-            )}
+      {/* 2) Upload Folder */}
+      {modalStates.folderUploadModal && (
+      <FormModal
+        isOpen={modalStates.folderUploadModal}
+        title="Upload Folder"
+        fields={[{
+          name: 'folderFiles',
+          label: 'Select Folder',
+          type: 'file',
+          directory: true,
+          multiple: true,
+          onChange: e => setSelectedFiles(Array.from(e.target.files)),
+        }]}
+        onClose={() => setModalStates(m => ({ ...m, folderUploadModal: false }))}
+        onSubmit={handleFolderUpload}
+        submitLabel="Upload"
+        disableSubmit={!selectedFiles?.length}
+      />
+      )}
 
-             {/* update Folder modal */}
-             {modalStates.folderUpdateModal && (
-      <div className={styles.inputDocumentModal}>
-        <div className={styles.inputDocumentModalContent}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              submitFolderUpdate();
-            }}
-          >
-            <h2>Update Folder</h2>
-            
-            <input
-              type="text"
-              placeholder="Folder Name"
-              value={folderName}
-              onChange={(e) => setFolderName(e.target.value)}
-            />
-            <div className={styles.inputDocumentModalButtons}>
-              <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Updating...' : 'Update Folder'}
-              </button>
-              <button 
-                type="button"
-                onClick={() => {
-                  setModalStates({ ...modalStates, folderUpdateModal: false });
-                  setFolderName('');
-                  setSelectedFolder(null);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      {/* 3) Upload File */}
+      {modalStates.fileModal && (
+  <FormModal
+    isOpen
+    title="Upload File"
+    onClose={() => setModalStates(m => ({ ...m, fileModal: false }))}
+    onSubmit={handleFileUpload}
+    submitLabel="Upload"
+    disableSubmit={!selectedFile}
+  >
+    <input
+      type="file"
+      accept="*/*"
+      onChange={e => {
+        const file = e.target.files?.[0] ?? null
+        console.log("📂 chosen file (child):", file)
+        setSelectedFile(file)
+      }}
+    //   style={{ width: '100%', marginBottom: 12 }}
+    />
+    {!selectedFile && (
+      <p style={{ color: 'red', fontSize: '0.9rem' }}>
+        Please choose a file before uploading.
+      </p>
     )}
-  
+  </FormModal>
+)}
 
+      {/* 4) Update Folder */}
+      {modalStates.folderUpdateModal && (
+      <FormModal
+        isOpen={modalStates.folderUpdateModal}
+        title="Update Folder"
+        fields={[{
+          name: 'folderName',
+          label: 'New Name',
+          type: 'text',
+          placeholder: 'Enter new name',
+          value: folderName,
+          onChange: e => setFolderName(e.target.value),
+        }]}
+        onClose={() => setModalStates(m => ({ ...m, folderUpdateModal: false }))}
+        onSubmit={submitFolderUpdate}
+        submitLabel="Update"
+        disableSubmit={!folderName.trim()}
+      /> 
+      )}
 
-            {/* Upload File modal */}
-
-            {modalStates.fileModal && (
-                <div className={styles.inputDocumentModal}>
-                    <div className={styles.inputDocumentModalContent}>
-                        <h3>Upload File</h3>
-                        <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
-
-                        <div className={styles.inputDocumentModalButtons}>
-                            <button onClick={handleFileUpload} disabled={!selectedFile}> Upload</button>
-                            <button onClick={() => setModalStates({ ...modalStates, fileModal: false })}>Cancel</button>
-                        </div>
-                    </div>
-                </div>
-                
-            )}
-
-            {/* upload folder modal */}
-            {modalStates.folderUploadModal && (
-                <div className={styles.inputDocumentModal}>
-                    <div className={styles.inputDocumentModalContent}>
-                        <h3>Upload Folder</h3>
-                        <input
-                            type="file"
-                            webkitdirectory=""
-                            directory=""
-                            multiple
-                            onChange={handleFolderSelect}
-                        />
-                        {selectedFiles?.length > 0 && (
-                            <div className={styles.fileList}>
-                                <p>Selected files: {selectedFiles.length}</p>
-                                <p>Folder name: {selectedFiles[0]?.webkitRelativePath.split('/')[0]}</p>
-                            </div>
-                        )}
-
-
-                    <div className={styles.inputDocumentModalButtons}>
-                        <button onClick={handleFolderUpload} disabled={!selectedFiles?.length}> Upload</button>
-                        <button onClick={() => {
-                            setSelectedFiles(null);
-                            setFolderName('')
-                            setModalStates({ ...modalStates, folderUploadModal: false })
-                            }}>Cancel</button>
-                      </div>
-                    </div>
-                </div>
-            
-        )}
 </div>
 
             </div>

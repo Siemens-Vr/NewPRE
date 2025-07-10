@@ -1,22 +1,12 @@
-import DropDown from '@/app/components/project/phases/dropdown';
-import styles from   '@/app/styles/dashboards/project/dashboard.module.css'
+import React from 'react';
+import styles from '@/app/styles/dashboards/project/dashboard.module.css';
 
-
-
-const Layout = ({children}) => {
+export default function PhaseLayout({ children }) {
+  // This sits under /projects/:uuid/:phaseuuid/*
+  // The actual ProjectNavbar is already rendered by the [uuid] layout.
   return (
-    <div className={styles.container}>
-      
-      <div className={styles.allContents}>
-
-        {/* <DropDown/> */}
-        
-        {children}
-      
-     
-      </div>
+    <div className={styles.allContents}>
+      {children}
     </div>
-  )
+  );
 }
-
-export default Layout

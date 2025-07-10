@@ -72,7 +72,7 @@ const [phaseEditData, setPhaseEditData] = useState(null);
       { key: "status", label: "Status", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
-    dataKey: "workPackages",
+    dataKey: "milestones",
   },
   "Duration Years": {
     title: "Project Duration",
@@ -81,7 +81,7 @@ const [phaseEditData, setPhaseEditData] = useState(null);
       { key: "year", label: "Year", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
-    dataKey: "durationYears",
+    dataKey: "milestones",
   },
 };
 

@@ -1,64 +1,60 @@
+/* cardComponent.module.css */
+
 .container {
   display: flex;
-  flex-wrap: wrap;     
-  /* gap: 20px; */
- justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .cardContainer {
-  width: 300px; 
-  flex: 0 0 auto;         
+  position: relative;
+  width: 350px;
   box-sizing: border-box;
   border: 1px solid #fcfbfb;
-  padding: 10px;
   border-radius: 8px;
   background-color: #eeeff0;
+  padding: 16px 16px 64px; /* extra bottom padding */
   transition: box-shadow 0.2s ease;
-  flex-direction: row;
-  box-shadow: #acacac;
-  /* justify-content: space-between; */
-  /* color: #fff; */
 }
-
-
 
 .cardContainer:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-
-.cardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menuButton {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.dropdownMenu {
-  position: absolute;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-  z-index: 10;
-}
-
-.dropdownItem {
-  background-color: transparent;
-  border: none;
-  padding: 6px 10px;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
+.cardTitle {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
 }
 
 .cardDetails {
-  margin-top: 10px;
   color: #212529;
+  margin-bottom: 8px;
+}
+
+/* action buttons container */
+.cardActions {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+/* base button styling */
+.actionButton {
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* specific colors */
+.editButton {
+  background-color: #28a745; /* green */
+}
+
+.deleteButton {
+  background-color: #dc3545; /* red */
 }

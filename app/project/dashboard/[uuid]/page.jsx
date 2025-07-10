@@ -25,7 +25,7 @@ export default function ProjectDetails() {
   const [isSaving, setIsSaving] = useState(false);
   const closeTimeoutRef = useRef(null);
   const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
-const [phaseEditData, setPhaseEditData] = useState(null);
+ const [phaseEditData, setPhaseEditData] = useState(null);
 
 
 
@@ -353,12 +353,12 @@ const handleDeletePhase = async (row) => {
         />
       )}
     <AddPhaseModal
-  isOpen={showPhaseModal}
-  onClose={() => setShowPhaseModal(false)}
-  onAdded={fetchProjectData} 
-  projectUuid={uuid}
-  phaseType={project.type}
-/>
+    isOpen={showPhaseModal}
+    onClose={() => setShowPhaseModal(false)}
+    onAdded={fetchProjectData} 
+    projectUuid={uuid}
+    phaseType={project.type}
+    />
     </div>
   );
 }

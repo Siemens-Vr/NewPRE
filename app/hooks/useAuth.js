@@ -14,7 +14,7 @@ export const ROLES = {
 
 // Define dashboard routes for each role
 const ROLE_DASHBOARDS = {
-  [ROLES.ADMIN]: '../pages/admin/dashboard',
+  [ROLES.ADMIN]: '/admin/dashboard',
   [ROLES.EQUIPMENT]: '/equipment/dashboard',
   [ROLES.EMPLOYEE]: '/employee/dashboard',
   [ROLES.STAFF]: '../pages/staff/dashboard'

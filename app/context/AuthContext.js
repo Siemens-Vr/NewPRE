@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter(); // Move router inside the component
 
   const ROLE_DASHBOARDS = {
-    Admin: "/pages/admin/dashboard",
+    Admin: "/admin/dashboard",
     equipment: "/equipment/dashboard",
     employee: "/employee/dashboard",
     user: "/user/dashboard"

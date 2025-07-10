@@ -20,23 +20,23 @@ const nextConfig = {
     return [
       {
         source: '/students/:path*',
-        destination: '/pages/student/dashboard/:path*',
+        destination: '/student/dashboard/:path*',
       },
       {
         source: '/projects/:path*',
-        destination: '/pages/project/dashboard/:path*',
+        destination: '/project/dashboard/:path*',
       },
       {
         source: '/equipments/:path*',
-        destination: '/pages/equipment/dashboard/:path*',
+        destination: '/equipment/dashboard/:path*',
       },
       {
         source: '/admins/:path*',
-        destination: '/pages/admin/dashboard/:path*',
+        destination: '/admin/dashboard/:path*',
       },
       {
         source: '/staff/:path*',
-        destination: '/pages/staff/:path*',
+        destination: '/staff/:path*',
       },
     ];
   },

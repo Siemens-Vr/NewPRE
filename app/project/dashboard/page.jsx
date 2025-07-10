@@ -6,7 +6,6 @@ import ProjectCard from "@/app/components/project/projectCard";
 import styles from "@/app/styles/dashboards/project/dashboard.module.css";
 import Spinner from "@/app/components/spinner/spinner";
 import api from "@/app/lib/utils/axios";
-import { config } from "/config";
 import Swal from "sweetalert2";
 
 import AddProjectModal from "@/app/components/project/add/AddProjectModal"; // <-- import Add modal

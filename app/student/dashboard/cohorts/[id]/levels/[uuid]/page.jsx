@@ -10,7 +10,7 @@ import { pdf } from '@react-pdf/renderer';
 import LevelDetailsPDF from '@/app/components/cohort/LevelDetailsPDF'
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import AddFacilitatorPage from "@/app/pages/student/dashboard/facilitators/add/page";
+import AddFacilitatorPage from "@/app/student/dashboard/facilitators/add/page";
 import api from '@/app/lib/utils/axios';
 import Table from '@/app/components/table/Table';
 import Loading from '@/app/components/Loading/Loading';

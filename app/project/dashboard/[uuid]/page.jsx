@@ -6,11 +6,10 @@ import styles from "@/app/styles/components/singleComponent/singlecomponent.modu
 import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
 import AddPhaseModal from "@/app/components/project/phases/addPhase";
-
 import EditProjectModal from "@/app/components/project/update/update";
 
 export default function ProjectDetails() {
-  const { uuid, phaseuuid } = useParams();
+  const { uuid } = useParams();
   const router = useRouter();
   const [showPhaseModal, setShowPhaseModal] = useState(false);
   const [project, setProject] = useState(null);
@@ -25,7 +24,10 @@ export default function ProjectDetails() {
   const [isSaving, setIsSaving] = useState(false);
   const closeTimeoutRef = useRef(null);
   const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
- const [phaseEditData, setPhaseEditData] = useState(null);
+  const [phaseEditData, setPhaseEditData] = useState(null);
+
+
+  const [isEditingPhase, setIsEditingPhase] = useState(false);
 
 
 
@@ -41,7 +43,7 @@ export default function ProjectDetails() {
     {/* Pass the row.uuid to handleView instead of phaseuuid */}
     <button onClick={() => handleView(row.uuid)} className={styles.updateBtn}>View</button>
     <button onClick={() => handleEditPhase(row)} className={styles.actionBtn}>Edit</button>
-    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Delete</button>
+    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Archive</button>
   </div>
 ),
 
@@ -151,7 +153,6 @@ export default function ProjectDetails() {
 
  // Open edit modal and seed with project data
 const handleEdit = () => {
-  console.log("Opening edit modal for project:", project);
     setEditProjectData({
       uuid:                     project.uuid,
       title:                    project.title,
@@ -212,10 +213,7 @@ const handleEdit = () => {
     console.log("phaseuuid not found")
     return;
   }
-
-
   const baseUrl = `/projects/${uuid}/${phaseuuid}`;
-
   router.push(baseUrl);
 };
 
@@ -223,7 +221,8 @@ const handleEdit = () => {
 
 const handleEditPhase = (row) => {
   setPhaseEditData(row);
-  setPhaseEditModalOpen(true);
+  setIsEditingPhase(true);
+  setShowPhaseModal(true);
 };
 
 // Delete with confirmation
@@ -311,7 +310,11 @@ const handleDeletePhase = async (row) => {
   <h2 className={styles.sectionTitle}>{tableTitle}</h2>
   <button
     className={styles.updateBtn}
-    onClick={() => setShowPhaseModal(true)}
+    onClick={() => {
+      setPhaseEditData(null);
+      setIsEditingPhase(false);
+      setShowPhaseModal(true)
+    }}
   >
     + Add {project.type}
   </button>
@@ -348,12 +351,15 @@ const handleDeletePhase = async (row) => {
           isSaving={isSaving}
         />
       )}
+      
     <AddPhaseModal
     isOpen={showPhaseModal}
     onClose={() => setShowPhaseModal(false)}
     onAdded={fetchProjectData} 
     projectUuid={uuid}
     phaseType={project.type}
+    editData={phaseEditData}        
+    isEditing={isEditingPhase} 
     />
     </div>
   );

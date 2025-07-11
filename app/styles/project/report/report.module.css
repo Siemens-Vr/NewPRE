@@ -136,10 +136,11 @@
   transition: width 0.3s ease;
 }
 .sectionTitle {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
+  padding: 20px;
 }
 .section{
   margin-bottom: 20px;

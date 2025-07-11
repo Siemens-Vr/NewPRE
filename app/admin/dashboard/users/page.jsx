@@ -1,45 +1,51 @@
-"use client"
+'use client'
 import api from '@/app/lib/utils/axios';
 import styles from '@/app/styles/users/users.module.css';
 import Search from '@/app/components/search/search';
 import Link from "next/link";
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react';
 
+const UsersPageContent = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [loading, setLoading] = useState(false);
+    const [q, setQ] = useState('');
+    const [users, setUsers] = useState([]);
 
-const UsersPage =  () => {
-const router = useRouter();
-const [loading, setLoading] = useState(false);
-const [q, setQ]             = useState('');
-const [users, setUsers]     = useState([]);
+    // 2. on mount, read ?q= from the URL
+    useEffect(() => {
+        const queryParam = searchParams.get('q') || '';
+        setQ(queryParam);
+    }, [searchParams]);
 
-// 2. on mount, read ?q= from the URL
-useEffect(() => {
- const p = new URLSearchParams(window.location.search);
- setQ(p.get('q') || '');
-}, []);
+    // 3. whenever q changes, push it into the URL and re-fetch
+    useEffect(() => {
+        // update the URL
+        const params = new URLSearchParams(searchParams);
+        if (q) {
+            params.set('q', q);
+        } else {
+            params.delete('q');
+        }
+        
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        router.replace(newUrl);
 
-// 3. whenever q changes, push it into the URL and re-fetch
-useEffect(() => {
- // update the URL
- const url = new URL(window.location.href);
- if (q)    url.searchParams.set('q', q);
- else      url.searchParams.delete('q');
- router.replace(url.toString());
-
- // fetch data
- setLoading(true);
- api.get(`/staffs${q ? `?q=${q}` : ''}`)
-   .then(res => setUsers(res.data))
-   .catch(console.error)
-   .finally(() => setLoading(false));
-}, [q]);
+        // fetch data
+        setLoading(true);
+        api.get(`/staffs${q ? `?q=${q}` : ''}`)
+            .then(res => setUsers(res.data))
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, [q, router, searchParams]);
 
     return (
         <div className={styles.container}>
             <div className={styles.top}>
                 <Search placeholder="Search for the user ..." />
-                <Link href="/pages/admin/dashboard/users/add">
+                <Link href="/admin/dashboard/users/add">
                     <button className={styles.addButton}>Add New</button>
                 </Link>
             </div>
@@ -77,6 +83,14 @@ useEffect(() => {
                 </tbody>
             </table>
         </div>
+    );
+};
+
+const UsersPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UsersPageContent />
+        </Suspense>
     );
 };
 

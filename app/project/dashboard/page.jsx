@@ -55,6 +55,7 @@ const Dashboard = () => {
   };
 
   const handleCardClick = (project) => {
+    console.log("Navigating to project:", project.uuid);
     router.push(`/projects/${project.uuid}`);
     clearTimeout(closeTimeoutRef.current);
   };

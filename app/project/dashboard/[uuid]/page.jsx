@@ -87,6 +87,7 @@ export default function ProjectDetails() {
 
   // Fetch project and all related data at once
   const fetchProjectData = async () => {
+    console.log("Fetching project data for UUID:", uuid);
     if (!uuid) return;
     try {
       const res = await api.get(`projects/${uuid}`);
@@ -148,41 +149,36 @@ export default function ProjectDetails() {
     return `${totalMonths} month${totalMonths !== 1 ? "s" : ""}`;
   };
 
-  // Edit modal handlers
-  const handleEdit = () => {
-    setEditProjectData(project);
+ // Open edit modal and seed with project data
+const handleEdit = () => {
+  console.log("Opening edit modal for project:", project);
+    setEditProjectData({
+      uuid:                     project.uuid,
+      title:                    project.title,
+      description:              project.description,
+      approved_funding:         project.approved_funding,
+      total_value:              project.total_value,
+      implementation_startDate: project.implementation_startDate,
+      implementation_endDate:   project.implementation_endDate,
+    });
     setEditModalOpen(true);
-    clearTimeout(closeTimeoutRef.current);
   };
+
   const updateProject = async () => {
     if (!editProjectData) return;
     setIsSaving(true);
-    const cleanedData = {
-      name: editProjectData.name,
-      description: editProjectData.description,
-      status: editProjectData.status,
-      budget: editProjectData.budget,
-      funding: editProjectData.funding,
-      startDate: editProjectData.startDate,
-      endDate: editProjectData.endDate,
-    };
+    const payload = { ...editProjectData };
+    console.log("Updating project with payload:", payload);
     try {
-      const response = await api.post(
-        `/projects/update/${editProjectData.uuid}`,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      if (response.status === 200) {
-        closeEditModal();
-      } else {
-        console.error("Failed to update the project");
-      }
-    } catch (error) {
-      console.error("Error while updating project:", error);
+      const res = await api.post(`/projects/update/${editProjectData.uuid}`, payload, { headers: { "Content-Type": "application/json" } });
+      if (res.status === 200) closeEditModal();
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsSaving(false);
     }
   };
+
   const closeEditModal = () => {
     setEditModalOpen(false);
     setEditProjectData(null);
@@ -272,9 +268,9 @@ const handleDeletePhase = async (row) => {
             <div className={styles.infoLabel}>Developer</div>
             <div className={styles.infoValue}>{project.developer || "N/A"}</div>
 
-            <div className={styles.infoLabel}>Budget</div>
+            <div className={styles.infoLabel}>Total Value</div>
             <div className={styles.infoValue}>
-              {project.budget ? `$${project.budget.toLocaleString()}` : "N/A"}
+              {project.total_value ? `$${project.total_value.toLocaleString()}` : "N/A"}
             </div>
           </div>
           <div className={styles.btn}>
@@ -345,7 +341,7 @@ const handleDeletePhase = async (row) => {
       {/* Edit Modal */}
       {editModalOpen && (
         <EditProjectModal
-          editProjectData={editProjectData}
+          editProjectData={project}
           setEditProjectData={setEditProjectData}
           updateProject={updateProject}
           closeEditModal={closeEditModal}

@@ -113,8 +113,9 @@ export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, p
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalWrapper}>
+    <div>
       <FormModal
+      isOpen={isOpen}
         title={`Add ${phaseType}`}
         fields={fields}
         initialValues={initialValues}

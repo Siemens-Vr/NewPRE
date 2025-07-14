@@ -1,3 +1,4 @@
+// File: app/components/project/phases/addPhase.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -5,62 +6,25 @@ import FormModal from "@/app/components/Form/FormModal";
 import api from "@/app/lib/utils/axios";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 
-export default function AddPhaseModal({ 
-  isOpen, 
-  onClose, 
-  onAdded, 
-  projectUuid, 
+export default function AddPhaseModal({
+  isOpen,
+  onClose,
+  onAdded,
+  projectUuid,
   phaseType,
-  editData = null,      // NEW: data to edit
-  isEditing = false     // NEW: edit mode flag
+  editData = null,
+  isEditing = false,
 }) {
-  // Default initial values
-  const defaultInitialValues = {
-    no: 0,
-    title: "",
-    description: "",
-    implementation_startDate: "",
-    implementation_endDate: "",
-    status: "",
-    projectId: projectUuid || "",
-  };
-
-  // NEW: Function to get initial values based on mode
-  const getInitialValues = () => {
-    if (isEditing && editData) {
-      // Format dates for date inputs (YYYY-MM-DD format)
-      const formatDateForInput = (dateString) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
-      };
-
-      return {
-        no: editData.no || 0,
-        title: editData.title || "",
-        description: editData.description || "",
-        implementation_startDate: formatDateForInput(editData.implementation_startDate),
-        implementation_endDate: formatDateForInput(editData.implementation_endDate),
-        status: editData.status || "",
-        projectId: projectUuid || "",
-        uuid: editData.uuid // Keep the UUID for updates
-      };
-    }
-    return defaultInitialValues;
-  };
-
-  // NEW: Dynamic initial values that update when editData changes
-  const [initialValues, setInitialValues] = useState(getInitialValues());
-
+  // common fields
   const fields = [
-    { name: "no", label: "Number", type: "number", placeholder: `Enter ${phaseType} number` },
-    { name: "title", label: `${phaseType} Title`, type: "text", placeholder: `Enter ${phaseType} title` },
-    { name: "implementation_startDate", label: "Start Date", type: "date" },
-    { name: "implementation_endDate", label: "End Date", type: "date" },
+    { name: "no", type: "number", label: "Number", placeholder: `Enter ${phaseType} number` },
+    { name: "title", type: "text", label: `${phaseType} Title`, placeholder: `Enter ${phaseType} title` },
+    { name: "implementation_startDate", type: "date", label: "Start Date" },
+    { name: "implementation_endDate", type: "date", label: "End Date" },
     {
       name: "status",
-      label: "Status",
       type: "select",
+      label: "Status",
       options: [
         { value: "", label: "Select Status" },
         { value: "todo", label: "To Do" },
@@ -68,52 +32,67 @@ export default function AddPhaseModal({
         { value: "completed", label: "Completed" },
       ],
     },
-    { name: "description", label: `${phaseType} Description`, type: "textarea", placeholder: `Enter ${phaseType} description` },
+    {
+      name: "description",
+      type: "textarea",
+      label: `${phaseType} Description`,
+      placeholder: `Enter ${phaseType} description`,
+    },
   ];
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState(null);
+  const formatDateForInput = (d) => d ? new Date(d).toISOString().split("T")[0] : "";
 
-  // NEW: Update initial values when editData changes
+  const getInitialValues = () => {
+    if (isEditing && editData) {
+      return {
+        no: editData.no || 0,
+        title: editData.title || "",
+        implementation_startDate: formatDateForInput(editData.implementation_startDate),
+        implementation_endDate: formatDateForInput(editData.implementation_endDate),
+        status: editData.status || "",
+        description: editData.description || "",
+        uuid: editData.uuid,
+      };
+    }
+    return {
+      no: 0,
+      title: "",
+      implementation_startDate: "",
+      implementation_endDate: "",
+      status: "",
+      description: "",
+    };
+  };
+
+  const [initialValues, setInitialValues] = useState(getInitialValues());
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     setInitialValues(getInitialValues());
-  }, [editData, isEditing, projectUuid]);
+    if (!isOpen) setError("");
+  }, [editData, isEditing, isOpen]);
 
-  useEffect(() => {
-    // Reset error when modal opens/closes
-    if (!isOpen) setError(null);
-  }, [isOpen]);
+  const validate = (vals) => {
+    if (!vals.title.trim()) return "Title is required.";
+    if (!vals.description.trim()) return "Description is required.";
+    if (!vals.implementation_startDate || !vals.implementation_endDate)
+      return "Start and End dates are required.";
+    if (new Date(vals.implementation_endDate) < new Date(vals.implementation_startDate))
+      return "End Date cannot be before Start Date.";
+    if (!vals.status) return "Status is required.";
+    return "";
+  };
 
   const handleSubmit = async (values) => {
-    setIsSaving(true);
-    setError(null);
+    setError("");
+    const validationError = validate(values);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
-    // Validation
-    if (!values.title.trim()) {
-      setError("Title is required.");
-      setIsSaving(false);
-      return;
-    }
-    if (!values.description.trim()) {
-      setError("Description is required.");
-      setIsSaving(false);
-      return;
-    }
-    if (!values.implementation_startDate || !values.implementation_endDate) {
-      setError("Start and End dates are required.");
-      setIsSaving(false);
-      return;
-    }
-    if (new Date(values.implementation_endDate) < new Date(values.implementation_startDate)) {
-      setError("End Date cannot be before Start Date.");
-      setIsSaving(false);
-      return;
-    }
-    if (!values.status) {
-      setError("Status is required.");
-      setIsSaving(false);
-      return;
-    }
+    setIsSaving(true);
 
     const payload = {
       no: values.no,
@@ -125,39 +104,50 @@ export default function AddPhaseModal({
       projectId: projectUuid,
     };
 
-    // NEW: Different API calls for add vs edit
     try {
-      let response;
-      
-      if (isEditing && editData?.uuid) {
-        // UPDATE existing phase
-        console.log("Updating phase with payload:", payload);
-        response = await api.put(`/milestones/update/${editData.uuid}`, payload, {
-          headers: { "Content-Type": "application/json" },
-        });
-        console.log("Update response:", response);
+      let res;
+      if (isEditing && values.uuid) {
+        // UPDATE
+        res = await api.put(
+          `/milestones/update/${values.uuid}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          }
+        );
       } else {
-        // CREATE new phase
-        console.log("Creating new phase with payload:", payload);
-        response = await api.post(`/milestones/${projectUuid}`, payload, {
-          headers: { "Content-Type": "application/json" },
-        });
-        console.log("Create response:", response);
+        // CREATE
+        res = await api.post(
+          `/milestones/${projectUuid}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          }
+        );
       }
 
-      // Check for success status codes
-      if (response.status === 201 || response.status === 200) {
-        onAdded();  // refresh parent
+      if (res.status === 200 || res.status === 201) {
+        onAdded();
         onClose();
-        console.log(`${phaseType} ${isEditing ? 'updated' : 'added'} successfully:`, response.data);
       } else {
-        setError(`Failed to ${isEditing ? 'update' : 'add'} ${phaseType.toLowerCase()}.`);
+        setError(`Failed to ${isEditing ? "update" : "add"} ${phaseType.toLowerCase()}.`);
       }
     } catch (err) {
-      console.error(`Error ${isEditing ? 'updating' : 'adding'} phase:`, err);
-      setError(`An error occurred while ${isEditing ? 'updating' : 'adding'} the ${phaseType.toLowerCase()}.`);
+      // Extract a useful message
+      const errMsg = err.response?.data?.error
+        || err.response?.data?.message
+        || err.message
+        || "Unknown server error";
+      console.error("Phase creation/updating failed:", err);
+      setError(errMsg);
     } finally {
-      setIsSaving(false); // FIX: This was incorrectly set to true
+      setIsSaving(false);
     }
   };
 
@@ -167,9 +157,9 @@ export default function AddPhaseModal({
     <div>
       <FormModal
         isOpen={isOpen}
-        title={`${isEditing ? 'Edit' : 'Add'} ${phaseType}`} 
+        title={`${isEditing ? "Edit" : "Add"} ${phaseType}`}
         fields={fields}
-        initialValues={initialValues} 
+        initialValues={initialValues}
         onSubmit={handleSubmit}
         onClose={onClose}
         extraActions={[]}

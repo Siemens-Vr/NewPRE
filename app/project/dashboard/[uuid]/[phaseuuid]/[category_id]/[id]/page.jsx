@@ -437,6 +437,7 @@ dispatch({
         try {
             const response = await api.post(folderUrl,newFolder, {
                 headers: { 'Content-Type': 'application/json' ,
+                    "Accept": "application/json"
                 }
             });
     
@@ -458,8 +459,14 @@ dispatch({
                 setModalStates((prev) => ({ ...prev, folderModal: false }));
             }
             return createdFolder;
-        } catch (error) {
-            console.error('Error creating folder:', error.message);
+        } catch (err) {
+//   console.error("=== CREATE FOLDER ERROR ===\n", err.response?.data);
+  const msg =
+    err.response?.data?.error ||
+    err.response?.data?.message ||
+    err.message ||
+    "Unknown server error";
+  alert(`Error creating folder: ${msg}`);
         } finally {
             setIsLoading(false);
         }

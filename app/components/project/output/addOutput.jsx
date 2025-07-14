@@ -58,6 +58,7 @@ export default function AddCostCategoryModal({
   ];
 
   const handleAdd = async (formValues) => {
+    console.log("Adding cost category with values:", formValues);
     if (!costCategoryId) {
       setError("Card ID missing.");
       return;
@@ -71,6 +72,7 @@ export default function AddCostCategoryModal({
         description: formValues.description,
         total_amount: Number(formValues.total_amount),
       };
+      console.log("Payload for adding cost category:", payload);
       const res = await api.post(
         `/cost_categories_tables/${costCategoryId}`,
         payload

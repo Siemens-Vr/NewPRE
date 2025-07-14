@@ -64,7 +64,7 @@ export default function ProjectLayout({ children }) {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <ProjectNavbar items={tabs} activeKey={activeKey} />
       {children}
     </>

@@ -1,4 +1,3 @@
-// app/projects/[uuid]/[phaseuuid]/page.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,64 +9,58 @@ export default function EditReportPage() {
   const { uuid } = useParams();
   const router = useRouter();
 
-  // project metadata
-  const [project, setProject] = useState(null);
-  // all phases (milestones / workpackages / durationyears)
-  const [phases, setPhases]   = useState([]);
-  // per-phase form state
-  const [dates,  setDates]    = useState({}); // { [phaseId]: "YYYY-MM-DD" }
-  const [rows,   setRows]     = useState({}); // { [phaseId]: [ { id?, name, description, value } ] }
+  const [project,    setProject]    = useState(null);
+  const [phases,     setPhases]     = useState([]);
+  const [dates,      setDates]      = useState({});
+  const [rows,       setRows]       = useState({});
+  const [loading,    setLoading]    = useState(true);
+  const [error,      setError]      = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [loading,   setLoading]   = useState(true);
-  const [error,     setError]     = useState(null);
-  const [submitting,setSubmitting]= useState(false);
-
-  // helper: map project.type → key in project object
   const phaseKey = type => {
     switch (type) {
       case "Milestones":     return "milestones";
-      case "Work Package":   return "workpackages";
-      case "Duration Years": return "durationyears";
+      case "Work Package":   return "milestones";
+      case "Duration Years": return "milestones";
       default:               return null;
     }
   };
 
-  // load project + all phases + existing outputs per phase
   useEffect(() => {
     async function load() {
       try {
-        // 1) project metadata
         const { data: proj } = await api.get(`/projects/${uuid}`);
         setProject(proj);
 
-        // 2) pick the right phases array
         const key = phaseKey(proj.type);
         if (!key || !Array.isArray(proj[key])) {
           throw new Error(`No phases for type ${proj.type}`);
         }
         setPhases(proj[key]);
 
-        // 3) for each phase, fetch its outputs
         const initialDates = {};
         const initialRows  = {};
+
         await Promise.all(
           proj[key].map(async phase => {
             const { data: existing } = await api.get(`/outputs/${phase.uuid}`);
             if (existing.length) {
-              // they all share the same date field
               initialDates[phase.uuid] = existing[0].date;
-              initialRows[phase.uuid] = existing.map(o => ({
-                id: o.id,
-                name: o.name,
+              initialRows[phase.uuid]  = existing.map(o => ({
+                id:          o.id,
+                no:          o.no,
+                name:        o.name,
                 description: o.description,
-                value: o.value,
+                value:       o.value,
+                // if you need files, capture them here
               }));
             } else {
               initialDates[phase.uuid] = "";
-              initialRows[phase.uuid] = [{ name:"", description:"", value:"" }];
+              initialRows[phase.uuid]  = [{ name: "", description: "", value: "" }];
             }
           })
         );
+
         setDates(initialDates);
         setRows(initialRows);
       } catch (err) {
@@ -80,7 +73,6 @@ export default function EditReportPage() {
     load();
   }, [uuid]);
 
-  // form handlers
   const handleDateChange = (phaseId, newDate) =>
     setDates(d => ({ ...d, [phaseId]: newDate }));
 
@@ -104,34 +96,29 @@ export default function EditReportPage() {
       [phaseId]: r[phaseId].filter((_,i) => i!==idx)
     }));
 
-  // on submit: for each phase, for each row → either PUT or POST
+  // ←—— **THIS is the only changed handler** ——
   const handleSubmit = async e => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
-      await Promise.all(
-        phases.flatMap(phase => {
-          return rows[phase.uuid].map(row => {
-            const form = new FormData();
-            form.append("date", dates[phase.uuid]);
-            form.append("name", row.name);
-            form.append("description", row.description);
-            form.append("value", row.value);
+      // flatten into one big array
+      const payload = phases.flatMap(phase =>
+        rows[phase.uuid].map(row => ({
+          id:          row.id,
+          phaseId:     phase.uuid,
+          no:          row.no,
+          name:        row.name,
+          description: row.description,
+          value:       row.value,
+        }))
+      );
 
-            if (row.id) {
-              // update
-              return api.put(`/outputs/update/${row.id}`, form, {
-                headers: { "Content-Type": "multipart/form-data" }
-              });
-            } else {
-              // create
-              return api.post(`/outputs/${phase.uuid}`, form, {
-                headers: { "Content-Type": "multipart/form-data" }
-              });
-            }
-          });
-        })
+      // send JSON bulk update
+      await api.put(
+        '/outputs/bulk-edit',
+        { outputs: payload },
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       router.push(`/projects/${uuid}`);
@@ -143,13 +130,14 @@ export default function EditReportPage() {
     }
   };
 
+
   if (loading) return <p>Loading…</p>;
   if (error)   return <p className={styles.error}>{error}</p>;
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>
-        Edit {project.type} Outputs — {project.title}
+        Editing {project.type} Outputs for {project.title}
       </h1>
       <p className={styles.description}>{project.description}</p>
 
@@ -159,17 +147,6 @@ export default function EditReportPage() {
             <h2 className={styles.sectionTitle}>
               {String.fromCharCode(65 + pIndex)}. {phase.title || phase.name}
             </h2>
-
-            <div className={styles.fieldGroup}>
-              <label>Date (dd/mm/yyyy)</label>
-              <input
-                type="date"
-                value={dates[phase.uuid]}
-                onChange={e => handleDateChange(phase.uuid, e.target.value)}
-                className={styles.dateInput}
-                required
-              />
-            </div>
 
             {rows[phase.uuid].map((row, idx) => (
               <div key={idx} className={styles.row}>
@@ -208,7 +185,7 @@ export default function EditReportPage() {
                     type="file"
                     multiple
                     onChange={e => {
-                      /* handle file uploads if you want */
+                      /* optionally stash files in row.files */
                     }}
                     className={styles.input}
                   />
@@ -228,7 +205,7 @@ export default function EditReportPage() {
                   className={styles.remove}
                   onClick={() => removeRow(phase.uuid, idx)}
                 >
-                  ×
+                  &times;
                 </button>
               </div>
             ))}

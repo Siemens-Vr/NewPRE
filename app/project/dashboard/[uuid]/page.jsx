@@ -69,8 +69,7 @@ export default function ProjectDetails() {
     columns: appendActionsColumn([
       { key: "no", label: "No.", sortable: true },
       { key: "title", label: "Work Package Name", sortable: true },
-      { key: "startDate", label: "Start Date", sortable: true, render: r => new Date(r.startDate).toLocaleDateString() },
-      { key: "endDate", label: "End Date", sortable: true, render: r => new Date(r.endDate).toLocaleDateString() },
+      { key: "implementation_startDate", label: "Start Date", sortable: true, render: r => new Date(r.startDate).toLocaleDateString() },
       { key: "status", label: "Status", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
@@ -80,7 +79,9 @@ export default function ProjectDetails() {
     title: "Project Duration",
     columns: appendActionsColumn([
       { key: "no", label: "No.", sortable: true },
-      { key: "year", label: "Year", sortable: true },
+      { key: "title", label: "Year", sortable: true },
+      { key: "implementation_startDate", label: "Start Date", sortable: true, render: r => new Date(r.startDate).toLocaleDateString() },
+      { key: "status", label: "Status", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
     dataKey: "milestones",
@@ -248,7 +249,7 @@ const handleDeletePhase = async (row) => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.sectionTitle}>Project Dashboard</h1>
+      <h1 className={styles.sectionTitle}></h1>
 
       {/* Project Information and Timeline Cards */}
       <div className={styles.card}>
@@ -263,9 +264,6 @@ const handleDeletePhase = async (row) => {
 
             <div className={styles.infoLabel}>Description</div>
             <div className={styles.infoValue}>{project.description || "No description"}</div>
-
-            <div className={styles.infoLabel}>Developer</div>
-            <div className={styles.infoValue}>{project.developer || "N/A"}</div>
 
             <div className={styles.infoLabel}>Total Value</div>
             <div className={styles.infoValue}>

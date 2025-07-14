@@ -9,6 +9,7 @@ import Table from "@/app/components/table/Table";
 import Toolbar from "@/app/components/ToolBar/ToolBar";
 import { MdAdd, MdFilterList, MdDownload } from "react-icons/md";
 import AddOutputModal from "@/app/components/project/output/sinadd/add";
+import EditOutputModal from "@/app/components/project/output/sinadd/edit";
 import FormModal from "@/app/components/Form/FormModal";
 
 export default function OutputDetails() {
@@ -97,7 +98,7 @@ export default function OutputDetails() {
             className={styles.actionBtnDelete}
             onClick={() => { setDeleteTarget(r); setShowDeleteModal(true); }}
           >
-            Delete
+            Archive
           </button>
         </>
       )
@@ -115,6 +116,7 @@ export default function OutputDetails() {
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
+    console.log("Confirming delete for:", deleteTarget);
     try {
       // Archive instead of delete
       await api.post(`/outputs/${deleteTarget.uuid}/archive`, { reason: deleteReason });
@@ -142,7 +144,7 @@ export default function OutputDetails() {
       )}
 
       {editingData && (
-        <AddOutputModal
+        <EditOutputModal
           open={Boolean(editingData)}
           onClose={() => setEditingData(null)}
           onEdited={() => { fetchOutputs(); setEditingData(null); }}
@@ -154,16 +156,16 @@ export default function OutputDetails() {
       {showDeleteModal && (
         <FormModal
         isOpen={showDeleteModal}
-        title="Delete Output"
+        title="Archive Output"
         fields={fields}
         onSubmit={confirmDelete}
         onClose={() => setShowDeleteModal(false)}
         disableSubmit={!deleteReason}
         submitLabel="Submit"
       >
-        <p>Are you sure you want to delete <strong>{deleteTarget?.name}</strong>?</p>
+        <p>Are you sure you want to archive <strong>{deleteTarget?.name}</strong>?</p>
         <div className={formStyles.field}>
-          <label htmlFor="deleteReason">Reason for deletion</label>
+          <label htmlFor="deleteReason">Reason for archiving</label>
           <select
             id="deleteReason"
             name="deleteReason"

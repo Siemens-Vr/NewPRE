@@ -12,7 +12,7 @@ import styles from './FormModal.module.css';
  * - fields: array of {
  *     name: string,
  *     label: string,
- *     type: 'text'|'number'|'date'|'textarea'|'select'|'button',
+ *     type: 'text'|'number'|'date'|'textarea'|'select'|'button'|'file',
  *     options?: array of { value, label } for select,
  *     placeholder?: string,
  *     onClick?: fn for button,
@@ -36,7 +36,7 @@ export default function FormModal({
   const [values, setValues] = useState(initialValues || {});
 
   // Keep local state in sync if initialValues change
-   useEffect(() => {
+  useEffect(() => {
     setValues(initialValues || {});
   }, [initialValues]);
 
@@ -60,7 +60,7 @@ export default function FormModal({
           <button className={styles.closeBtn} onClick={onClose}>×</button>
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} encType="multipart/form-data">
           {fields.map(f => (
             <div className={styles.field} key={f.name}>
               <label htmlFor={f.name}>{f.label}</label>
@@ -96,9 +96,18 @@ export default function FormModal({
                     </option>
                   ))}
                 </select>
+              ) : f.type === 'file' ? (
+                <input
+                  id={f.name}
+                  name={f.name}
+                  type="file"
+                  onChange={e => handleChange(f.name, e.target.files[0] || null)}
+                  disabled={f.disabled}
+                />
               ) : (
                 <input
                   id={f.name}
+                  name={f.name}
                   type={f.type}
                   placeholder={f.placeholder}
                   value={values[f.name] || ''}
@@ -144,7 +153,7 @@ FormModal.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['text','number','date','textarea','select','button']).isRequired,
+      type: PropTypes.oneOf(['text','number','date','textarea','select','button','file']).isRequired,
       options: PropTypes.array,
       placeholder: PropTypes.string,
       onClick: PropTypes.func,
@@ -152,7 +161,7 @@ FormModal.propTypes = {
     })
   ).isRequired,
   initialValues: PropTypes.object,
-  onChange: PropTypes.func,           // new prop
+  onChange: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   extraActions: PropTypes.arrayOf(

@@ -9,6 +9,7 @@ import styles from "@/app/styles/project/phases/cardCategory.module.css";
 
 export default function PhaseDetailPage({ projectType }) {
   const { uuid, phaseuuid } = useParams();
+  // console.log("PhaseDetailPage params:", { uuid, phaseuuid });
   const router = useRouter();
 
   const [cards, setCards] = useState([]);

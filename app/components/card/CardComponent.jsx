@@ -1,4 +1,3 @@
-// CardComponent.jsx
 'use client';
 
 import React from 'react';
@@ -26,25 +25,27 @@ const CardComponent = ({
 
   return (
     <div className={styles.container}>
-      <div className={styles.cardContainer} onClick={handleCardClick}>
+      <div
+        className={`${styles.cardContainer} ${(href || onCardClick) ? styles.clickable : ''}`}
+        onClick={(href || onCardClick) ? handleCardClick : undefined}
+      >
         <h3 className={styles.cardTitle}>{title}</h3>
 
         <div className={styles.cardDetails}>
-          {Object.entries(details).map(([key, value]) => (
-            <p key={key}>
-              <strong>{key.replace(/([A-Z])/g, ' $1')}: </strong>
-              {value}
-            </p>
-          ))}
+          <dl>
+            {Object.entries(details).map(([key, value]) => (
+              <React.Fragment key={key}>
+                <dt>{key.replace(/([A-Z])/g, ' $1')}</dt>
+                <dd>{value}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
         </div>
 
         <div className={styles.cardActions}>
           {onUpdate && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onUpdate();
-              }}
+              onClick={(e) => { e.stopPropagation(); onUpdate(); }}
               className={`${styles.actionButton} ${styles.editButton}`}
             >
               Edit
@@ -52,10 +53,7 @@ const CardComponent = ({
           )}
           {onDelete && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
+              onClick={(e) => { e.stopPropagation(); onDelete(); }}
               className={`${styles.actionButton} ${styles.deleteButton}`}
             >
               Delete

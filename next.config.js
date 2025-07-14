@@ -16,6 +16,9 @@ const nextConfig = {
     });
     return config;
   },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   async rewrites() {
     return [
       {

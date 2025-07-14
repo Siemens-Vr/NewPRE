@@ -5,9 +5,18 @@ import FormModal from "@/app/components/Form/FormModal";
 import api from "@/app/lib/utils/axios";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 
-export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, phaseType  }) {
-  const initialValues = {
-    no:0,
+export default function AddPhaseModal({ 
+  isOpen, 
+  onClose, 
+  onAdded, 
+  projectUuid, 
+  phaseType,
+  editData = null,      // NEW: data to edit
+  isEditing = false     // NEW: edit mode flag
+}) {
+  // Default initial values
+  const defaultInitialValues = {
+    no: 0,
     title: "",
     description: "",
     implementation_startDate: "",
@@ -16,8 +25,35 @@ export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, p
     projectId: projectUuid || "",
   };
 
+  // NEW: Function to get initial values based on mode
+  const getInitialValues = () => {
+    if (isEditing && editData) {
+      // Format dates for date inputs (YYYY-MM-DD format)
+      const formatDateForInput = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+      };
+
+      return {
+        no: editData.no || 0,
+        title: editData.title || "",
+        description: editData.description || "",
+        implementation_startDate: formatDateForInput(editData.implementation_startDate),
+        implementation_endDate: formatDateForInput(editData.implementation_endDate),
+        status: editData.status || "",
+        projectId: projectUuid || "",
+        uuid: editData.uuid // Keep the UUID for updates
+      };
+    }
+    return defaultInitialValues;
+  };
+
+  // NEW: Dynamic initial values that update when editData changes
+  const [initialValues, setInitialValues] = useState(getInitialValues());
+
   const fields = [
-    {name:"no", label: " Number", type: "number", placeholder: `Enter ${phaseType} number` },
+    { name: "no", label: "Number", type: "number", placeholder: `Enter ${phaseType} number` },
     { name: "title", label: `${phaseType} Title`, type: "text", placeholder: `Enter ${phaseType} title` },
     { name: "implementation_startDate", label: "Start Date", type: "date" },
     { name: "implementation_endDate", label: "End Date", type: "date" },
@@ -32,12 +68,16 @@ export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, p
         { value: "completed", label: "Completed" },
       ],
     },
-     { name: "description", label: `${phaseType} Description`, type: "textarea", placeholder: `Enter ${phaseType} description` },
-    // projectId is hidden or read-only field, no input needed from user
+    { name: "description", label: `${phaseType} Description`, type: "textarea", placeholder: `Enter ${phaseType} description` },
   ];
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+
+  // NEW: Update initial values when editData changes
+  useEffect(() => {
+    setInitialValues(getInitialValues());
+  }, [editData, isEditing, projectUuid]);
 
   useEffect(() => {
     // Reset error when modal opens/closes
@@ -76,48 +116,60 @@ export default function AddPhaseModal({ isOpen, onClose, onAdded, projectUuid, p
     }
 
     const payload = {
-      no: values.no, // include number field in payload
+      no: values.no,
       title: values.title,
       description: values.description,
       implementation_startDate: values.implementation_startDate,
       implementation_endDate: values.implementation_endDate,
       status: values.status,
       projectId: projectUuid,
-      // type: phaseType, // send phase type for backend logic
     };
-    console.log("Submitting payload:", payload);  
 
+    // NEW: Different API calls for add vs edit
     try {
-      const response = await api.post(`/milestones/${projectUuid}`, payload, {
-        
-        headers: { "Content-Type": "application/json" },
-    
-      });
-      console.log("Response:", response);
+      let response;
+      
+      if (isEditing && editData?.uuid) {
+        // UPDATE existing phase
+        console.log("Updating phase with payload:", payload);
+        response = await api.put(`/milestones/update/${editData.uuid}`, payload, {
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log("Update response:", response);
+      } else {
+        // CREATE new phase
+        console.log("Creating new phase with payload:", payload);
+        response = await api.post(`/milestones/${projectUuid}`, payload, {
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log("Create response:", response);
+      }
 
-      if (response.status === 201) {
+      // Check for success status codes
+      if (response.status === 201 || response.status === 200) {
         onAdded();  // refresh parent
         onClose();
-        console.log(" added successfully:", response.data);
+        console.log(`${phaseType} ${isEditing ? 'updated' : 'added'} successfully:`, response.data);
       } else {
-        setError("Failed to add phase.");
+        setError(`Failed to ${isEditing ? 'update' : 'add'} ${phaseType.toLowerCase()}.`);
       }
     } catch (err) {
-      console.error("Error adding phase:", err);
-      setError("An error occurred while adding the phase.");
+      console.error(`Error ${isEditing ? 'updating' : 'adding'} phase:`, err);
+      setError(`An error occurred while ${isEditing ? 'updating' : 'adding'} the ${phaseType.toLowerCase()}.`);
     } finally {
-      setIsSaving(true);
+      setIsSaving(false); // FIX: This was incorrectly set to true
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalWrapper}>
+    <div>
       <FormModal
-        title={`Add ${phaseType}`}
+        isOpen={isOpen}
+        title={`${isEditing ? 'Edit' : 'Add'} ${phaseType}`} 
         fields={fields}
-        initialValues={initialValues}
+        initialValues={initialValues} 
         onSubmit={handleSubmit}
         onClose={onClose}
         extraActions={[]}

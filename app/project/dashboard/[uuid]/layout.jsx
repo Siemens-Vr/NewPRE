@@ -9,13 +9,12 @@ import ProjectNavbar from "@/app/components/project/navbar/navbar";
 export default function ProjectLayout({ children }) {
   const { uuid } = useParams();
   const pathname = usePathname() || "";
-  // split "/projects/:uuid/:phaseuuid/whatever" → ["projects","uuid","phaseuuid",...]
   const segments = pathname.split("/").filter(Boolean);
   const phaseuuid = segments[2] || "";
 
   const [projectType, setProjectType] = useState(null);
 
-  // grab projectType so we can choose the right tab labels/hrefs
+  // Fetch the project type once we have the uuid
   useEffect(() => {
     if (!uuid) return;
     api.get(`/projects/${uuid}`)
@@ -23,31 +22,45 @@ export default function ProjectLayout({ children }) {
        .catch(console.error);
   }, [uuid]);
 
-  // build the “third” tab (Milestones / Work Package / Duration Years)
-  const thirdTab = projectType === "Milestones"
-    ? { key: "milestones",    label: "Milestones",    href: `/projects/${uuid}/${phaseuuid}` }
-    : projectType === "Work Package"
-    ? { key: "workpackage",   label: "Work Package",  href: `/projects/${uuid}/${phaseuuid}` }
-    : projectType === "Duration Years"
-    ? { key: "durationyears", label: "Duration Years", href: `/projects/${uuid}/${phaseuuid}` }
+  // Build the conditional “type” tab (Milestones / Work Package / Duration Years)
+  const typeTab = phaseuuid && projectType
+    ? {
+        key: projectType.replace(/\s+/g, "").toLowerCase(),
+        label: projectType,
+        href: `/projects/${uuid}/${phaseuuid}`,
+      }
     : null;
 
-  // only show monitoring/thirdTab if we have a phaseuuid
+  // Always show Info, Monitoring, Report
   const tabs = [
-    { key: "info",       label: "Project Info", href: `/projects/${uuid}` },
-    ...(phaseuuid
-       ? [{ key: "monitoring", label: "Monitoring", href: `/projects/${uuid}/${phaseuuid}/monitoring` }]
-       : []
-      ),
-    ...(thirdTab ? [thirdTab] : []), 
-    { key: "report",     label: "Report",       href: `/projects/${uuid}/report` },
+    {
+      key: "info",
+      label: "Project Info",
+      href: `/projects/${uuid}`,
+    },
+    {
+      key: "monitoring",
+      label: "Monitoring",
+      href: `/projects/${uuid}/monitoring`,
+    },
+    // Inject the type‐based tab only when we have a phaseuuid
+    ...(typeTab ? [typeTab] : []),
+    {
+      key: "report",
+      label: "Report",
+      href: `/projects/${uuid}/report`,
+    },
   ];
 
-  // determine which tab is active
+  // Determine which tab is active
   let activeKey = "info";
-  if (pathname.includes("/monitoring"))   activeKey = "monitoring";
-  else if (pathname.includes(`/${thirdTab?.key}`)) activeKey = thirdTab.key;
-  else if (pathname.includes("/report")) activeKey = "report";
+  if (pathname.includes("/monitoring")) {
+    activeKey = "monitoring";
+  } else if (typeTab && pathname.includes(`/${typeTab.key}`)) {
+    activeKey = typeTab.key;
+  } else if (pathname.includes("/report")) {
+    activeKey = "report";
+  }
 
   return (
     <>

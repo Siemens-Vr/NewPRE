@@ -9,7 +9,7 @@ import AddPhaseModal from "@/app/components/project/phases/addPhase";
 import EditProjectModal from "@/app/components/project/update/update";
 
 export default function ProjectDetails() {
-  const { uuid, phaseuuid } = useParams();
+  const { uuid } = useParams();
   const router = useRouter();
   const [showPhaseModal, setShowPhaseModal] = useState(false);
   const [project, setProject] = useState(null);
@@ -24,7 +24,10 @@ export default function ProjectDetails() {
   const [isSaving, setIsSaving] = useState(false);
   const closeTimeoutRef = useRef(null);
   const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
- const [phaseEditData, setPhaseEditData] = useState(null);
+  const [phaseEditData, setPhaseEditData] = useState(null);
+
+
+  const [isEditingPhase, setIsEditingPhase] = useState(false);
 
 
 
@@ -40,7 +43,7 @@ export default function ProjectDetails() {
     {/* Pass the row.uuid to handleView instead of phaseuuid */}
     <button onClick={() => handleView(row.uuid)} className={styles.updateBtn}>View</button>
     <button onClick={() => handleEditPhase(row)} className={styles.actionBtn}>Edit</button>
-    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Delete</button>
+    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Archive</button>
   </div>
 ),
 
@@ -86,6 +89,7 @@ export default function ProjectDetails() {
 
   // Fetch project and all related data at once
   const fetchProjectData = async () => {
+    console.log("Fetching project data for UUID:", uuid);
     if (!uuid) return;
     try {
       const res = await api.get(`projects/${uuid}`);
@@ -147,41 +151,35 @@ export default function ProjectDetails() {
     return `${totalMonths} month${totalMonths !== 1 ? "s" : ""}`;
   };
 
-  // Edit modal handlers
-  const handleEdit = () => {
-    setEditProjectData(project);
+ // Open edit modal and seed with project data
+const handleEdit = () => {
+    setEditProjectData({
+      uuid:                     project.uuid,
+      title:                    project.title,
+      description:              project.description,
+      approved_funding:         project.approved_funding,
+      total_value:              project.total_value,
+      implementation_startDate: project.implementation_startDate,
+      implementation_endDate:   project.implementation_endDate,
+    });
     setEditModalOpen(true);
-    clearTimeout(closeTimeoutRef.current);
   };
+
   const updateProject = async () => {
     if (!editProjectData) return;
     setIsSaving(true);
-    const cleanedData = {
-      name: editProjectData.name,
-      description: editProjectData.description,
-      status: editProjectData.status,
-      budget: editProjectData.budget,
-      funding: editProjectData.funding,
-      startDate: editProjectData.startDate,
-      endDate: editProjectData.endDate,
-    };
+    const payload = { ...editProjectData };
+    console.log("Updating project with payload:", payload);
     try {
-      const response = await api.post(
-        `/projects/update/${editProjectData.uuid}`,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      if (response.status === 200) {
-        closeEditModal();
-      } else {
-        console.error("Failed to update the project");
-      }
-    } catch (error) {
-      console.error("Error while updating project:", error);
+      const res = await api.post(`/projects/update/${editProjectData.uuid}`, payload, { headers: { "Content-Type": "application/json" } });
+      if (res.status === 200) closeEditModal();
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsSaving(false);
     }
   };
+
   const closeEditModal = () => {
     setEditModalOpen(false);
     setEditProjectData(null);
@@ -215,10 +213,7 @@ export default function ProjectDetails() {
     console.log("phaseuuid not found")
     return;
   }
-
-
   const baseUrl = `/projects/${uuid}/${phaseuuid}`;
-
   router.push(baseUrl);
 };
 
@@ -226,7 +221,8 @@ export default function ProjectDetails() {
 
 const handleEditPhase = (row) => {
   setPhaseEditData(row);
-  setPhaseEditModalOpen(true);
+  setIsEditingPhase(true);
+  setShowPhaseModal(true);
 };
 
 // Delete with confirmation
@@ -271,9 +267,9 @@ const handleDeletePhase = async (row) => {
             <div className={styles.infoLabel}>Developer</div>
             <div className={styles.infoValue}>{project.developer || "N/A"}</div>
 
-            <div className={styles.infoLabel}>Budget</div>
+            <div className={styles.infoLabel}>Total Value</div>
             <div className={styles.infoValue}>
-              {project.budget ? `$${project.budget.toLocaleString()}` : "N/A"}
+              {project.total_value ? `$${project.total_value.toLocaleString()}` : "N/A"}
             </div>
           </div>
           <div className={styles.btn}>
@@ -314,7 +310,11 @@ const handleDeletePhase = async (row) => {
   <h2 className={styles.sectionTitle}>{tableTitle}</h2>
   <button
     className={styles.updateBtn}
-    onClick={() => setShowPhaseModal(true)}
+    onClick={() => {
+      setPhaseEditData(null);
+      setIsEditingPhase(false);
+      setShowPhaseModal(true)
+    }}
   >
     + Add {project.type}
   </button>
@@ -344,19 +344,22 @@ const handleDeletePhase = async (row) => {
       {/* Edit Modal */}
       {editModalOpen && (
         <EditProjectModal
-          editProjectData={editProjectData}
+          editProjectData={project}
           setEditProjectData={setEditProjectData}
           updateProject={updateProject}
           closeEditModal={closeEditModal}
           isSaving={isSaving}
         />
       )}
+      
     <AddPhaseModal
     isOpen={showPhaseModal}
     onClose={() => setShowPhaseModal(false)}
     onAdded={fetchProjectData} 
     projectUuid={uuid}
     phaseType={project.type}
+    editData={phaseEditData}        
+    isEditing={isEditingPhase} 
     />
     </div>
   );

@@ -1,60 +1,109 @@
-/* cardComponent.module.css */
-
+/* 1. Responsive grid wrapper */
 .container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 16px;
 }
 
+/* 2. Card base + accent stripe */
 .cardContainer {
   position: relative;
-  width: 350px;
-  box-sizing: border-box;
-  border: 1px solid #fcfbfb;
-  border-radius: 8px;
-  background-color: #eeeff0;
-  padding: 16px 16px 64px; /* extra bottom padding */
-  transition: box-shadow 0.2s ease;
-}
-
-.cardContainer:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.cardTitle {
-  margin: 0 0 8px;
-  font-size: 1.25rem;
-}
-
-.cardDetails {
-  color: #212529;
-  margin-bottom: 8px;
-}
-
-/* action buttons container */
-.cardActions {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  background: #f1f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+  cursor: default;
 }
-
-/* base button styling */
-.actionButton {
-  border: none;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
+.cardContainer.clickable {
   cursor: pointer;
-  font-size: 0.9rem;
+}
+.cardContainer:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+/* top accent stripe */
+/* .cardContainer::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(to right, #28a745, #218838);
+} */
+
+/* 3. Title */
+.cardTitle {
+  margin: 0;
+  padding: 16px;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #eee;
+  color: #212529;
 }
 
-/* specific colors */
+/* 4. Details as definition list */
+.cardDetails {
+  padding: 16px;
+}
+.cardDetails dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 8px;
+  column-gap: 12px;
+}
+.cardDetails dt {
+  margin: 0;
+  font-weight: 600;
+  color: #555;
+}
+.cardDetails dd {
+  margin: 0;
+  color: #333;
+}
+
+/* 5. Action buttons container */
+.cardActions {
+  margin-top: auto;
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #eee;
+}
+
+/* 6. Button styles */
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.actionButton:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+/* Edit */
 .editButton {
-  background-color: #28a745; /* green */
+  color: #28a745;
+  border-color: #28a745;
+}
+.editButton:hover {
+  background: #28a745;
+  color: #fff;
 }
 
+/* Delete */
 .deleteButton {
-  background-color: #dc3545; /* red */
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.deleteButton:hover {
+  background: #dc3545;
+  color: #fff;
 }

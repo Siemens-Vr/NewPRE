@@ -903,37 +903,84 @@ const fetchUpdatedFolderList = async () => {
         fetchInitialFolders();
     }, [id]);
 
-const renderFolders = () => {
-  const foldersToRender = Array.isArray(state.currentFolder?.subfolders)
-    ? state.currentFolder.subfolders
-    : [];
+ const renderFolders = () => {
+        const foldersToRender = state.currentFolder?.subfolders || [];
+        
+        return (
+            <div>
+              <h2 className="text-xl font-semibold text-black ">Folders</h2>
+              <br />
+              <div className="flex flex-wrap gap-4">
+                {foldersToRender.map((folder) => (
+              <div
+                key={folder.uuid}
+                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
+                onClick={() => handleOpenFolder(folder, state.currentFolder)}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <MdFolder className="text-yellow-500 rounded p-1 w-8 h-8" />
+                  <h3 className="text-gray-700 font-medium truncate">
+                    {folder.folderName || 'Unnamed Folder'}
+                  </h3>
+                </div>
+                 {/* Toggle button */}
+             <div className="relative" ref={folderRef}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFolderMenu(folder.uuid);
+                
+              }}
+              className="text-gray-500 hover:text-gray-700"
+            
+            >
+              <FaEllipsisV size={16} />
+            </button>
 
-  return (
-    <div className="flex flex-wrap gap-4">
-      {foldersToRender.map(folder => (
-        <CardComponent
-          key={folder.uuid}
-          title={folder.folderName}
-          details={{}}
-          onCardClick={() => handleOpenFolder(folder)}
-          onUpdate={() => handleUpdateFolder(folder)}
-          onDelete={() => handleDeleteFolder(folder)}
-        />
-      ))}
-    </div>
-  );
-};
+            {/* Dropdown menu */}
+            {folderMenuOpen[folder.uuid] && (
+              <div
+                id={`dropdown-${folder.uuid}`}
+                className="absolute right-0 top-full mt-1 w-32 bg-white shadow-lg rounded-lg z-50"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdateFolder(folder);
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Update
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteFolder(folder);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+              </div>
+            ))}
+          </div>
+          </div>
+        );
+      };
 
-  
- 
-      
-      const renderFiles = () => {
+const renderFiles = () => {
   const filesToRender = Array.isArray(state.currentFolder?.files)
     ? state.currentFolder.files
     : [];
 
   return (
-    <div className="flex flex-wrap gap-4 overflow-visible">
+    <div>
+      <h2 className="text-xl font-semibold text-black mb-2">Files</h2>
       {filesToRender.map((file) => {
         // Use the API's "name" field
         const rawName = file.name || file.documentName || 'Unnamed Document';
@@ -1062,10 +1109,12 @@ const renderFolders = () => {
       )}
 
       {/* 3) Upload File */}
-      {modalStates.fileModal && (
+{modalStates.fileModal && (
   <FormModal
     isOpen
     title="Upload File"
+    fields={[]}                             // ← avoids fields.map(undefined)
+    initialValues={{}}                      // ← keeps FormModal in sync
     onClose={() => setModalStates(m => ({ ...m, fileModal: false }))}
     onSubmit={handleFileUpload}
     submitLabel="Upload"
@@ -1075,11 +1124,11 @@ const renderFolders = () => {
       type="file"
       accept="*/*"
       onChange={e => {
-        const file = e.target.files?.[0] ?? null
-        console.log("📂 chosen file (child):", file)
-        setSelectedFile(file)
+        const file = e.target.files?.[0] ?? null;
+        console.log("📂 chosen file:", file, file instanceof File);
+        setSelectedFile(file);
       }}
-    //   style={{ width: '100%', marginBottom: 12 }}
+      style={{ width: '100%', marginBottom: 12 }}
     />
     {!selectedFile && (
       <p style={{ color: 'red', fontSize: '0.9rem' }}>
@@ -1088,6 +1137,9 @@ const renderFolders = () => {
     )}
   </FormModal>
 )}
+
+
+
 
       {/* 4) Update Folder */}
       {modalStates.folderUpdateModal && (

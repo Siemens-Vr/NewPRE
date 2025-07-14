@@ -26,12 +26,6 @@ export default function OutputDetails() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteReason, setDeleteReason] = useState("");
-  const deleteReasons = [
-    "No longer relevant",
-    "Duplicate entry",
-    "Incorrect data",
-    "Other",
-  ];
 
   // Fetch outputs for this phase
   const fetchOutputs = async () => {
@@ -109,14 +103,21 @@ export default function OutputDetails() {
       )
     }
   ];
-
+ const fields = [
+   {name: "Reason", label: "Reason for Deletion", type: "select", options:
+    [ { value: "No longer relevant", label: "No longer relevant" },
+      { value: "Duplicate entry", label: "Duplicate entry" },
+      { value: "Incorrect data", label: "Incorrect data" },
+      { value: "Other", label: "Other" },
+    ], placeholder: "Select reason for deletion"}
+ ];
   const displayed = expanded ? outputs : outputs.slice(0, 3);
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
       // Archive instead of delete
-      await api.put(`/outputs/archive/${deleteTarget.id}`, { reason: deleteReason });
+      await api.post(`/outputs/${deleteTarget.uuid}/archive`, { reason: deleteReason });
       fetchOutputs();
     } catch (err) {
       console.error("Error archiving output", err);
@@ -154,6 +155,7 @@ export default function OutputDetails() {
         <FormModal
         isOpen={showDeleteModal}
         title="Delete Output"
+        fields={fields}
         onSubmit={confirmDelete}
         onClose={() => setShowDeleteModal(false)}
         disableSubmit={!deleteReason}
@@ -172,7 +174,7 @@ export default function OutputDetails() {
             <option value="" disabled>
               Select reason
             </option>
-            {deleteReasons.map((r) => (
+            {fields[0].options.map((r) => (
               <option key={r} value={r}>
                 {r}
               </option>

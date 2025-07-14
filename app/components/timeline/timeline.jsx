@@ -6,8 +6,9 @@ import styles from "./Timeline.module.css";
 export default function Timeline({ dates, selectedDate, onDateClick }) {
   if (!dates.length) return null;
 
-  // sort & get range
-  const sorted = dates
+  // Remove duplicates and sort dates
+  const uniqueDates = [...new Set(dates)]; // Remove duplicates
+  const sorted = uniqueDates
     .map((d) => new Date(d))
     .sort((a, b) => a - b);
   const min = sorted[0].getTime();
@@ -16,10 +17,6 @@ export default function Timeline({ dates, selectedDate, onDateClick }) {
 
   return (
     <div className={styles.container}>
-      <span className={styles.label}>
-        {new Date(min).toLocaleDateString()}
-      </span>
-
       <div className={styles.bar}>
         {sorted.map((dt, i) => {
           const time = dt.getTime();
@@ -40,17 +37,16 @@ export default function Timeline({ dates, selectedDate, onDateClick }) {
                 title={dateStr}
                 onClick={() => onDateClick && onDateClick(dateStr)}
               />
-              {isSelected && (
-                <div className={styles.selectedLabel}>{dateStr}</div>
+              {/* Show date label only for first and last dots */}
+              {(i === 0 || i === sorted.length - 1) && (
+                <div className={`${styles.dateLabel} ${isSelected ? styles.selectedDateLabel : ''}`}>
+                  {dateStr}
+                </div>
               )}
             </div>
           );
         })}
       </div>
-
-      <span className={styles.label}>
-        {new Date(max).toLocaleDateString()}
-      </span>
     </div>
   );
 }

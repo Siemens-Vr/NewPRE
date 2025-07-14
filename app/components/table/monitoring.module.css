@@ -19,9 +19,9 @@
 .table th,
 .table td {
   /* existing rules… */
-  padding: 16px;
+  padding: 8px;
   text-align: left;
-   font-size: 0.95rem;
+  font-size: 0.95rem;
   color: #212529;
   transition: background-color 0.2s ease;
   /* new: light grey line on the right edge of every cell */
@@ -47,12 +47,12 @@
 
 
 .table thead th {
-  background: #ffffff;           /* sky-blue */
+  background: #ffffff;           
   color: #000;
   position: sticky;
   top: 0;
   z-index: 2;
-  font-weight: 800;
+  font-weight: 600;
 }
 .table tr:nth-child(even) {
   background: #f9fafb;           /* pale stripe */

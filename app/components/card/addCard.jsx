@@ -1,4 +1,3 @@
-// app/components/card/AddCardModal.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -11,9 +10,9 @@ export default function AddCardModal({
   onClose,
   onAdded,
   phaseUuid,
-  editData = null,   // if provided, we switch to edit mode
+  editData = null, // if provided, we switch to edit mode
 }) {
-  // Local state for form values
+  // Local state for form values (syncs with FormModal)
   const [values, setValues] = useState({ title: "" });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -25,26 +24,27 @@ export default function AddCardModal({
     } else {
       setValues({ title: "" });
     }
-  }, [editData]);
+  }, [editData, open]); // Reset also when opening
 
-  // Define the fields for FormModal
+  // Fields for FormModal (no value/onChange here)
   const fields = [
     {
       name: "title",
       label: "Card Title",
       type: "text",
       placeholder: "Enter card title",
-      value: values.title,
-      onChange: (e) => setValues(prev => ({ ...prev, title: e.target.value })),
+      disabled: isSaving,
     },
   ];
 
-  // Handle both add and edit
-  const handleSubmit = async () => {
+  // Handle add or edit
+  const handleSubmit = async (submittedValues) => {
     setIsSaving(true);
     setError(null);
 
-    if (!values.title.trim()) {
+    const { title = "" } = submittedValues || {};
+
+    if (!title.trim()) {
       setError("Card title is required.");
       setIsSaving(false);
       return;
@@ -56,19 +56,17 @@ export default function AddCardModal({
         // Edit existing card
         response = await api.put(
           `/phases/${phaseUuid}/cards/${editData.uuid}`,
-          { title: values.title.trim() },
+          { title: title.trim() },
           { headers: { "Content-Type": "application/json" } }
         );
       } else {
         // Add new card
         response = await api.post(
           `/cost_categories/${phaseUuid}`,
-          { title: values.title.trim() },
+          { title: title.trim() },
           { headers: { "Content-Type": "application/json" } }
         );
       }
-      console.log("Response:", response);
-
       if (response.status >= 200 && response.status < 300) {
         onAdded();
         setValues({ title: "" });
@@ -77,7 +75,6 @@ export default function AddCardModal({
         setError(editData ? "Failed to update card." : "Failed to add card.");
       }
     } catch (err) {
-      console.error(err);
       setError(
         err.response?.data?.message ||
           (editData
@@ -95,21 +92,13 @@ export default function AddCardModal({
   return (
     <div>
       <FormModal
-        isOpen={open}
         title={editData ? "Edit Card" : "Add Card"}
         fields={fields}
+        initialValues={values}
+        onChange={setValues}
         onSubmit={handleSubmit}
         onClose={onClose}
-        disableSubmit={isSaving}
-        submitLabel={
-          isSaving
-            ? editData
-              ? "Updating..."
-              : "Saving..."
-            : editData
-            ? "Update Card"
-            : "Add Card"
-        }
+        extraActions={[]} // or any extra actions you want to show
       />
       {error && <p className={styles.errorMessage}>{error}</p>}
     </div>

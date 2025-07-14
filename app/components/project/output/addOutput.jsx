@@ -1,4 +1,3 @@
-// app/components/project/output/AddCostCategoryModal.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -18,7 +17,6 @@ export default function AddCostCategoryModal({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  // When we switch into “edit” mode, preload the form
   useEffect(() => {
     if (editData) {
       setValues({
@@ -30,48 +28,36 @@ export default function AddCostCategoryModal({
     } else {
       setValues(empty);
     }
-  }, [editData]);
+  }, [editData, isOpen]);
 
-  // Define your fields, wiring up value + onChange
   const fields = [
     {
       name: "no",
       label: "No",
       type: "number",
-      placeholder: "Number",
-      value: values.no,
-      onChange: (e) => setValues((v) => ({ ...v, no: e.target.value })),
+      placeholder: "Number"
     },
     {
       name: "title",
       label: "Title",
       type: "text",
-      placeholder: "Title",
-      value: values.title,
-      onChange: (e) => setValues((v) => ({ ...v, title: e.target.value })),
+      placeholder: "Title"
     },
     {
       name: "total_amount",
       label: "Total Amount",
       type: "number",
-      placeholder: "Amount",
-      value: values.total_amount,
-      onChange: (e) =>
-        setValues((v) => ({ ...v, total_amount: e.target.value })),
+      placeholder: "Amount"
     },
     {
       name: "description",
       label: "Description",
       type: "text",
-      placeholder: "Description",
-      value: values.description,
-      onChange: (e) =>
-        setValues((v) => ({ ...v, description: e.target.value })),
-    },
+      placeholder: "Description"
+    }
   ];
 
-  // Add vs. Edit handlers
-  const handleAdd = async () => {
+  const handleAdd = async (formValues) => {
     if (!costCategoryId) {
       setError("Card ID missing.");
       return;
@@ -80,10 +66,10 @@ export default function AddCostCategoryModal({
     setError(null);
     try {
       const payload = {
-        no: Number(values.no),
-        title: values.title,
-        description: values.description,
-        total_amount: Number(values.total_amount),
+        no: Number(formValues.no),
+        title: formValues.title,
+        description: formValues.description,
+        total_amount: Number(formValues.total_amount),
       };
       const res = await api.post(
         `/cost_categories_tables/${costCategoryId}`,
@@ -96,14 +82,13 @@ export default function AddCostCategoryModal({
         setError("Save failed.");
       }
     } catch (e) {
-      console.error(e);
       setError(e.response?.data?.message || "Error saving.");
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleEdit = async () => {
+  const handleEdit = async (formValues) => {
     if (!costCategoryId || !editData?.uuid) {
       setError("Missing identifiers for edit.");
       return;
@@ -112,10 +97,10 @@ export default function AddCostCategoryModal({
     setError(null);
     try {
       const payload = {
-        no: Number(values.no),
-        title: values.title,
-        description: values.description,
-        total_amount: Number(values.total_amount),
+        no: Number(formValues.no),
+        title: formValues.title,
+        description: formValues.description,
+        total_amount: Number(formValues.total_amount),
       };
       const res = await api.put(
         `/cost_categories_tables/${costCategoryId}/${editData.uuid}`,
@@ -128,19 +113,16 @@ export default function AddCostCategoryModal({
         setError("Update failed.");
       }
     } catch (e) {
-      console.error(e);
       setError(e.response?.data?.message || "Error updating.");
     } finally {
       setIsSaving(false);
     }
   };
 
-  // This is called by FormModal
-  const handleSubmit = () => {
-    editData ? handleEdit() : handleAdd();
+  const handleSubmit = (formValues) => {
+    editData ? handleEdit(formValues) : handleAdd(formValues);
   };
 
-  // Don’t render anything if closed
   if (!isOpen) return null;
 
   return (
@@ -149,6 +131,8 @@ export default function AddCostCategoryModal({
         isOpen={isOpen}
         title={editData ? "Edit Cost Item" : "Add Cost Item"}
         fields={fields}
+        initialValues={values}
+        onChange={setValues}
         onSubmit={handleSubmit}
         onClose={onClose}
         disableSubmit={isSaving}

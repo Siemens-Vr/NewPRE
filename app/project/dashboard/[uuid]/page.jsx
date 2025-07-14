@@ -6,7 +6,6 @@ import styles from "@/app/styles/components/singleComponent/singlecomponent.modu
 import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
 import AddPhaseModal from "@/app/components/project/phases/addPhase";
-
 import EditProjectModal from "@/app/components/project/update/update";
 
 export default function ProjectDetails() {

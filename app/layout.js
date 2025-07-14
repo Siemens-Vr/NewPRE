@@ -1,22 +1,23 @@
+
 import { Inter } from 'next/font/google'
+import { AuthProvider } from '@/app/context/AuthContext'
 import './globals.css'
-import ClientProvider from "@/app/context/ClientProvider";
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Siemens ERP',
-  description: 'Siemens ERP',
+  title: 'SIEMENS ERP',
+  description: 'Virtual Mechatronics Lab ERP System',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-      <ClientProvider >
+        <AuthProvider>
           {children}
-        </ClientProvider >
-        </body>
+        </AuthProvider>
+      </body>
     </html>
   )
 }

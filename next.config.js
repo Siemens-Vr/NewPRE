@@ -38,7 +38,7 @@ const nextConfig = {
         destination: '/admin/dashboard/:path*',
       },
       {
-        source: '/staff/:path*',
+        source: '/staffs/:path*',
         destination: '/staff/:path*',
       },
     ];

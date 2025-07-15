@@ -126,7 +126,7 @@ export default function ComponentsPage() {
                   illustration="/undraw_no-data_ig65.svg"
                   message="No equipments records found"
                   details="You haven’t added any equipments yet. Start by creating an equipment now."
-                  actionLabel="Start a Borrow Request"
+                  actionLabel="Add Equipments"
                   onAction={() => setShowAdd(true)}
             />
       )}

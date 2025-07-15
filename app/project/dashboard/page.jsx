@@ -74,7 +74,7 @@ export default function Dashboard() {
   const handleMenuClick = (project) => {
     setSelectedProject(project);
   };
-
+// added something
   const handleOutsideClick = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       closeTimeoutRef.current = setTimeout(() => {

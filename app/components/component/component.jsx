@@ -6,7 +6,7 @@ import ConditionPopUp from '@/app/components/condition/condition';
 import api from '@/app/lib/utils/axios';
 import styles from '@/app/styles/components/add/addComponent.module.css';
 
-export default function AddComponent({ onClose }) {
+export default function AddComponent({ onClose , onSuccess}) {
   const router = useRouter();
   const [componentTypes, setComponentTypes] = useState([]);
   const [disablePartNumber, setDisablePartNumber] = useState(false);
@@ -23,7 +23,7 @@ export default function AddComponent({ onClose }) {
     status: false,
   });
 
-  console.log("conditions",conditions);
+  // console.log("conditions",conditions);
 
   // Fetch component types on mount
   useEffect(() => {
@@ -48,8 +48,9 @@ export default function AddComponent({ onClose }) {
       const response = await api.post(`/components`, dataToSubmit);
       if (response.status === 200) {
         alert("Component created successfully");
-         onClose();
-        router.push('/pages/equipment/dashboard/components');
+        onClose();
+        onSuccess();
+      
       } else {
         alert("Submission failed.");
       }

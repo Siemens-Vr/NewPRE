@@ -141,7 +141,7 @@ const CohortsPage = () => {
                 EndDate: cohort.endDate,
                 Status: cohort.status,
               }}
-              href={`/pages/student/dashboard/cohorts/${cohort.uuid}`}
+              href={`/student/dashboard/cohorts/${cohort.uuid}`}
               onUpdate={() => handleEditCohort(cohort)}
               onDelete={() => handleDelete(cohort.uuid)}
             />

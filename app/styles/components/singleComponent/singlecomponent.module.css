@@ -222,3 +222,43 @@
 .bulkBtn:hover {
   background-color: #e5e7eb;
 }
+.actionBtn {
+  background-color: #0cb47c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+} 
+.actionBtnDelete {
+  background-color: #ef4444; /* red */
+  color: #fff;
+   border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+/* singlecomponent.module.css */
+
+.successMsg {
+  background-color: #e6ffed;    /* light green background */
+  color: #2c662d;               /* dark green text */
+  border: 1px solid #2c662d;    /* matching border */
+  padding: 0.75rem 1rem;
+  border-radius: 8px;      /* rounded corners */
+  margin-bottom: 1rem;
+  font-weight: 500;
+  max-width: 400px;
+}
+
+.errorMsg {
+  background-color: #ffe6e6;    /* light red background */
+  color: #992626;               /* dark red text */
+  border: 1px solid #992626;    /* matching border */
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}

@@ -14,7 +14,7 @@ export default function ProjectCard({
     <div>
       <h3>{title}</h3>
 
-      {/* hide these by default */}
+     
       <div className={styles.details}>
         <p>Start Date: {start}</p>
         <p>End Date: {end}</p>

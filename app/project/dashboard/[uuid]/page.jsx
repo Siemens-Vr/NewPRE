@@ -7,6 +7,7 @@ import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
 import AddPhaseModal from "@/app/components/project/phases/addPhase";
 import EditProjectModal from "@/app/components/project/update/update";
+import FormModal from "@/app/components/Form/FormModal";
 
 export default function ProjectDetails() {
   const { uuid } = useParams();
@@ -25,9 +26,17 @@ export default function ProjectDetails() {
   const closeTimeoutRef = useRef(null);
   const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
   const [phaseEditData, setPhaseEditData] = useState(null);
+  const [allPhases, setAllPhases] = useState([]);
+  const [phases, setPhases] = useState([]);
+  const [archivedPhases, setArchivedPhases] = useState([]);
+
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
 
 
   const [isEditingPhase, setIsEditingPhase] = useState(false);
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [archiveTarget, setArchiveTarget] = useState(null);
 
 
 
@@ -41,16 +50,29 @@ export default function ProjectDetails() {
  render: (row) => (
   <div style={{ display: "flex", gap: "0.5rem" }}>
     {/* Pass the row.uuid to handleView instead of phaseuuid */}
-    <button onClick={() => handleView(row.uuid)} className={styles.updateBtn}>View</button>
-    <button onClick={() => handleEditPhase(row)} className={styles.actionBtn}>Edit</button>
-    <button onClick={() => handleDeletePhase(row)} className={styles.actionBtnDelete}>Archive</button>
+    <button onClick={() => handleView(row.uuid)} className={styles.actionBtn}>View</button>
+    <button onClick={() => handleEditPhase(row)} className={styles.updateBtn}>Edit</button>
+    <button  onClick={() => {setArchiveTarget(row); setShowArchiveModal(true);}} className={styles.actionBtnDelete}>Archive</button>
   </div>
 ),
 
 
   },
 ];
-
+  // The single "reason" field passed into FormModal
+  const archiveFields = [
+    {
+      name: "reason",
+      label: "Reason for archiving",
+      type: "select",
+      options: [
+        { value: "No longer relevant", label: "No longer relevant" },
+        { value: "Duplicate entry", label: "Duplicate entry" },
+        { value: "Incorrect data", label: "Incorrect data" },
+        { value: "Other", label: "Other" }
+      ]
+    }
+  ];
   // Configuration per project type
   const typeConfig = {
   "Milestones": {
@@ -226,25 +248,30 @@ const handleEditPhase = (row) => {
   setShowPhaseModal(true);
 };
 
-// Delete with confirmation
-const handleDeletePhase = async (row) => {
-  if (!confirm(`Are you sure you want to delete "${row.title || row.year || 'this item'}"?`)) return;
-
-  try {
-    // Adjust API delete endpoint accordingly, assuming /milestones/{uuid}/{phaseUuid}
-    const response = await api.delete(`/milestones/${uuid}/${row.uuid}`);
-
-    if (response.status === 200) {
-      alert("Deleted successfully");
-      fetchProjectData(); // Refresh list
+  const handleArchievePhase = async (uuid, reason) => {
+    console.log("Archiving Output:", uuid, reason)
+    setMessage(null);
+    setError(null);
+    try {
+      await api.post(`/milestones/${uuid}/archive`, { reason });
+      const updatedAll = allPhases.map(m =>
+        m.uuid === uuid ? { ...m, is_archived: true } : m
+      );
+      setAllPhases(updatedAll);
+      setPhases(updatedAll.filter(o => !o.is_archived));
+      setArchivedPhases(updatedAll.filter(o => o.is_archived));
+      const name = allPhases.find(o => o.uuid === uuid)?.name;
+      setMessage(`“${name}” archived.`);
+    } catch (err) {
+    if (err.response) {
+      console.error("Archive API error payload:", err.response.data);
+      setError(err.response.data.error || err.response.data.message || "Archive failed");
     } else {
-      alert("Failed to delete item");
+      console.error("Network or CORS error:", err);
+      setError("Unable to reach server");
     }
-  } catch (error) {
-    console.error("Error deleting item:", error);
-    alert("Error occurred while deleting");
   }
-};
+}
 
 
   return (
@@ -349,6 +376,23 @@ const handleDeletePhase = async (row) => {
           isSaving={isSaving}
         />
       )}
+      {showArchiveModal && (
+              <FormModal
+                title={`Archive "${archiveTarget.name}"`}
+                fields={archiveFields}
+                initialValues={{ reason: "" }}
+                onChange={vals => {
+                  /* FormModal will call this with { reason: '...' } */
+                  /* we don't need to store locally here */
+                }}
+                onSubmit={vals => {
+                  handleArchievePhase(archiveTarget.uuid, vals.reason);
+                  setShowArchiveModal(false);
+                }}
+                onClose={() => setShowArchiveModal(false)}
+                extraActions={[]}
+              />
+            )}
       
     <AddPhaseModal
     isOpen={showPhaseModal}
@@ -360,5 +404,6 @@ const handleDeletePhase = async (row) => {
     isEditing={isEditingPhase} 
     />
     </div>
+    
   );
 }

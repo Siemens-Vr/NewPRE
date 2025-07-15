@@ -36,7 +36,7 @@ export default function ProjectDetails() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             onClick={() => handleView(row.uuid)}
-            className={styles.updateBtn}
+            className={styles.actionBtn}
           >
             View
           </button>

@@ -48,7 +48,7 @@ export default function CostCategoryDetailPage() {
             View
           </button>
           <button
-            className={styles.actionBtn}
+            className={styles.updateBtn}
             onClick={() => {
               setEditItem(row);
               setShowEditModal(true);
@@ -73,7 +73,7 @@ export default function CostCategoryDetailPage() {
               }
             }}
           >
-            Delete
+            Archieve
           </button>
         </div>
       ),

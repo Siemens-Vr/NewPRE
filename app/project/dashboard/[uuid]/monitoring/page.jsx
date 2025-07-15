@@ -112,15 +112,28 @@ export default function MonitoringPage() {
                     key: "progress",
                     label: "Progress",
                     render: (o) => {
-                      const pct = o.value * 100;
-                      const units = o.value === 1 ? 1 : 0;
+                      const pct = Math.round(o.value * 100);
+                      // decide color
+                       let bgColor;
+                      if (pct === 0) {
+                        bgColor = "#2196f3";     // red
+                      } else if (pct === 100) {
+                        bgColor = "#4caf50";      // green
+                      } else {
+                        bgColor = "#2196f3";      // blue
+                      }
+                      // you can keep text white for contrast
                       return (
                         <div className={styles.progressContainer}>
                           <div
                             className={styles.progressInner}
-                            style={{ width: `${pct}%` }}
+                            style={{
+                              width: `${pct}%`,
+                              backgroundColor: bgColor,
+                              color: "#000",
+                            }}
                           >
-                            {`${units} units (${pct}%)`}
+                            {`${pct}%`}
                           </div>
                         </div>
                       );

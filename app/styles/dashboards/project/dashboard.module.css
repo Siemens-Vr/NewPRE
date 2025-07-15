@@ -156,14 +156,12 @@
    gap: 10px;
 }
 
-/* 1) Base card: light yellow background */
 .projectCard {
   display: flex;
   align-items: center;
-  background-color: #f3f3f1;      /* light yellow */
+  background-color: #f6f6fa;   
   border-radius: 16px;
   padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   cursor: pointer;
   transition: background 0.4s ease, color 0.4s ease, transform 0.2s ease;
   position: relative;
@@ -173,7 +171,7 @@
   margin: 0.5rem;
 }
 
-/* 2) Big faint number on the left */
+
 .cardNumber {
   font-size: 3.5rem;
   font-weight: bold;
@@ -182,7 +180,7 @@
   flex-shrink: 0;
 }
 
-/* 3) Hide details by default */
+
 .details {
   opacity: 0;
   transform: translateY(10px);
@@ -190,23 +188,23 @@
   pointer-events: none;
 }
 
-/* 4) Hover state: gradient + white text + lift */
+
 .projectCard:hover {
-  background: linear-gradient(135deg, #262262 0%, #6d6dd4 100%);
+  background: linear-gradient(135deg, #262262 0%, #8484f8 100%);
   color: #ffffff;
   transform: translateY(-4px);
 }
 
-/* 5) Fade in details on hover */
+
 .projectCard:hover .details {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-/* 6) Make sure all text inside cardInner turns white on hover */
+
 .projectCard:hover .cardNumber {
-  color: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .projectWrapper {
@@ -214,6 +212,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  
 }
 
 .projectCard {
@@ -228,41 +227,46 @@
   cursor: pointer; 
 }
 
-/* container for the little index row */
+
 .projectIndex {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 2rem;
-  justify-content: center; /* or flex-start */
+  justify-content: flex-start; 
 }
 
-/* each number+name pair */
+
 .cardIndexItem {
   display: flex;
   align-items: baseline;
   margin-top: 0.5rem;
   cursor: pointer;
+  justify-content: flex-start;
+  align-self: start;
+  margin-left: 25px;
 }
 
-/* the number */
+
 .indexNumber {
   font-size: 1.25rem;
   font-weight: bold;
   margin-right: 0.25rem;
   transition: transform 0.2s ease;
+  justify-content: flex-start;
 }
 
-/* the name */
+
 .indexName {
   font-size: 1rem;
   transition: opacity 0.2s ease;
+  justify-content: flex-start;
 }
 
-/* on hover: grow number, fade out name */
+
 .cardIndexItem:hover .indexNumber {
   transform: scale(1.8);
-  font-size: larger;
+
 }
 
 .cardIndexItem:hover .indexName {
@@ -272,19 +276,27 @@
   background: linear-gradient(135deg, #262262 0%, #7777da 100%);
   color: #fff;
   transform: translateY(-4px);
+  justify-content: flex-start;
 }
 
-/* show details on hover */
+
 .projectWrapper:hover .details {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-/* blow up number & hide name on hover */
+
 .projectWrapper:hover .indexNumber {
   transform: scale(1.8);
-  font-size: larger;
+  transition: transform 0.2s ease-in-out;
+  font-size: 2.5rem;
+  color: white;
+  -webkit-text-stroke: 1px black; 
+   text-stroke: 1px black;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+    top: 100px;
+
 }
 
 .projectWrapper:hover .indexName {

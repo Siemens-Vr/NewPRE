@@ -61,7 +61,7 @@ export default function OutputDetails() {
 
   // Archive function
   const archiveOutput = async (uuid, reason) => {
-    console.log("Archiving Output:", uuid, reason)
+    // console.log("Archiving Output:", uuid, reason)
     setMessage(null);
     setError(null);
     try {
@@ -135,7 +135,8 @@ export default function OutputDetails() {
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               className={` ${styles.actionButton} ${styles.actionBtn}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 const w = window.open("_blank", "noopener");
                 if (!w) return alert("Allow pop-ups");
                 w.location.href = `${api.defaults.baseURL}/uploads/outputs/${r.document_name}`;
@@ -145,13 +146,17 @@ export default function OutputDetails() {
             </button>
             <button
               className={`${styles.actionButton} ${styles.editBtn}`}
-              onClick={() => setEditingData(r)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingData(r);
+              }}
             >
               Edit
             </button>
             <button
               className={`${styles.actionButton} ${styles.actionBtnDelete}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setArchiveTarget(r);
                 setShowArchiveModal(true);
               }}

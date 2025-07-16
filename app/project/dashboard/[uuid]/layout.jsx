@@ -17,7 +17,7 @@ export default function ProjectLayout({ children }) {
   const phaseuuid =
     rawSegment && !rawSegment.includes('monitoring') && !rawSegment.includes('report')
       ? rawSegment
-      : '';;
+      : '';
 
   const [projectType, setProjectType] = useState(null);
 

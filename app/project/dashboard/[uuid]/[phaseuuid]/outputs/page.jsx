@@ -63,6 +63,8 @@ export default function OutputDetails() {
     fetchOutputs();
   }, [phaseuuid]);
 
+  console.log(outputs)
+
   // Archive function
   const archiveOutput = async (uuid, reason) => {
     // console.log("Archiving Output:", uuid, reason)
@@ -106,6 +108,34 @@ export default function OutputDetails() {
       return order === "asc" ? (aVal < bVal ? -1 : 1) : (aVal > bVal ? -1 : 1);
     });
     setter(sorted);
+  };
+  // Add this function to your component
+  const handleApprove = async (output) => {
+
+    console.log(output)
+    try {
+      setMessage(null);
+      setError(null);
+      
+      await api.post(`/outputs/approve/${output.uuid}`);
+      
+      // Update the local state to reflect the approval
+      const updatedAll = allOutputs.map(o =>
+        o.uuid === output.uuid ? { ...o, is_approved: true } : o
+      );
+      setAllOutputs(updatedAll);
+      setOutputs(updatedAll.filter(o => !o.is_archived));
+      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
+      
+      setMessage(`"${output.name}" approved successfully.`);
+    } catch (err) {
+      console.error('Error approving output:', err);
+      if (err.response) {
+        setError(err.response.data.error || err.response.data.message || "Approval failed");
+      } else {
+        setError("Unable to reach server");
+      }
+    }
   };
 
   // Table columns
@@ -167,6 +197,17 @@ export default function OutputDetails() {
             >
               Archive
             </button>
+           {hasRole('admin') && !r.is_approved && (
+            <button
+              className={`${styles.actionButton} ${styles.editBtn}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleApprove(r);
+              }}
+            >
+              Approve
+            </button>
+          )}
           </div>
         )
     }

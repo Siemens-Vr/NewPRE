@@ -8,11 +8,12 @@ let accessToken = null;
 
 export const setAccessToken = (token) => {
     // console.log("✅ Access token set:", token); 
+
   accessToken = token;
 };
 
 const api = axios.create({
-  baseURL: process.env.BASE_URL || "http://localhost:10600",
+  baseURL: process.env.BASE_URL || "https://vml-erp-api.dkut.ac.ke",
   withCredentials: true, 
   
 });

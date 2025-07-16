@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { useParams, useRouter } from "next/navigation";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 import api from "@/app/lib/utils/axios";
@@ -23,8 +23,6 @@ export default function ProjectDetails() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editProjectData, setEditProjectData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const closeTimeoutRef = useRef(null);
-  const [phaseEditModalOpen, setPhaseEditModalOpen] = useState(false);
   const [phaseEditData, setPhaseEditData] = useState(null);
   const [allPhases, setAllPhases] = useState([]);
   const [phases, setPhases] = useState([]);
@@ -41,23 +39,48 @@ export default function ProjectDetails() {
 
 
 
-  const appendActionsColumn = (columns) => [
+ const appendActionsColumn = (columns) => [
   ...columns,
   {
     key: "actions",
     label: "Actions",
     sortable: false,
- render: (row) => (
-  <div style={{ display: "flex", gap: "0.5rem" }}>
-    {/* Pass the row.uuid to handleView instead of phaseuuid */}
-    <button onClick={() => handleView(row.uuid)} className={` ${styles.actionButton} ${styles.actionBtn}`}>View</button>
-    <button onClick={() => handleEditPhase(row)} className={`${styles.actionButton} ${styles.editBtn}`}>Edit</button>
-    <button  onClick={() => {setArchiveTarget(row); setShowArchiveModal(true);}} className={`${styles.actionButton} ${styles.actionBtnDelete}`}>Archive</button>
-  </div>
-),
-
+    render: (row) => (
+      <div style={{ display: "flex", gap: "0.5rem" }}>
+        {/* View still navigates on row click, but these buttons stop propagation */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleView(row.uuid);
+          }}
+          className={`${styles.actionButton} ${styles.actionBtn}`}
+        >
+          View
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditPhase(row);
+          }}
+          className={`${styles.actionButton} ${styles.editBtn}`}
+        >
+          Edit
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setArchiveTarget(row);
+            setShowArchiveModal(true);
+          }}
+          className={`${styles.actionButton} ${styles.actionBtnDelete}`}
+        >
+          Archive
+        </button>
+      </div>
+    ),
   },
-  ] ;
+];
+
    // The single "reason" field passed into FormModal
   const archiveFields = [
     {
@@ -117,7 +140,7 @@ export default function ProjectDetails() {
       const res = await api.get(`projects/${uuid}`);
       if (res.status === 200) {
         const data = res.data;
-        console.log("Project data fetched successfully:", data);
+        // console.log("Project data fetched successfully:", data);
         setProject(data);
 
         // Set items for table based on project.type and data keys
@@ -223,7 +246,7 @@ const handleEdit = () => {
   const displayedItems = itemsExpanded
     ? items
     : Array.isArray(items)
-    ? items.slice(0, 3)
+    ? items.slice(0, 5)
     : [];
 
 
@@ -261,6 +284,8 @@ const handleEditPhase = (row) => {
       setArchivedPhases(updatedAll.filter(o => o.is_archived));
       const name = allPhases.find(o => o.uuid === uuid)?.name;
       setMessage(`“${name}” archived.`);
+      await fetchProjectData();
+   setMessage(`Milestone archived and list refreshed.`);
     } catch (err) {
     if (err.response) {
       console.error("Archive API error payload:", err.response.data);
@@ -271,6 +296,11 @@ const handleEditPhase = (row) => {
     }
   }
 }
+const closeModal = () => {
+    setShowArchiveModal(false);
+  setArchiveTarget(null);
+    fetchProjectData();
+  };
 
 
   return (
@@ -351,9 +381,12 @@ const handleEditPhase = (row) => {
           sortKey={sortKey}
           sortOrder={sortOrder}
           onSort={handleSort}
+             onRowClick={(row, phaseuuid) => {
+    handleView(phaseuuid);
+  }}
         />
 
-        {items.length > 1 && (
+        {items.length > 3 && (
           <button
             className={styles.accordionBtn}
             onClick={() => setItemsExpanded(!itemsExpanded)}
@@ -377,6 +410,7 @@ const handleEditPhase = (row) => {
       )}
       {showArchiveModal && (
               <FormModal
+               isOpen={showArchiveModal}
                 title={`Archive "${archiveTarget.name}"`}
                 fields={archiveFields}
                 initialValues={{ reason: "" }}
@@ -388,7 +422,8 @@ const handleEditPhase = (row) => {
                   handleArchievePhase(archiveTarget.uuid, vals.reason);
                   setShowArchiveModal(false);
                 }}
-                onClose={() => setShowArchiveModal(false)}
+                
+                onClose={closeModal}
                 extraActions={[]}
               />
             )}

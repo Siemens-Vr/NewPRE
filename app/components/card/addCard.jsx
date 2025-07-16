@@ -55,8 +55,8 @@ export default function AddCardModal({
       if (editData) {
         // Edit existing card
         response = await api.put(
-          `/phases/${phaseUuid}/cards/${editData.uuid}`,
-          { title: title.trim() },
+          `/cost_categories/${editData.uuid}`,
+          { uuid: editData.uuid, title: title.trim() },
           { headers: { "Content-Type": "application/json" } }
         );
       } else {

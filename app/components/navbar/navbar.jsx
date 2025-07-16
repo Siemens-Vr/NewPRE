@@ -1,24 +1,19 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { usePathname } from "next/navigation";
+import React, { useState, useEffect, useRef, useContext } from 'react';  // ← add useContext
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from '@/app/styles/navbar/navbar.module.css';
 import Image from "next/image";
-import {
-  MdNotifications,
-  MdOutlineChat,
-} from "react-icons/md";
+import { MdNotifications, MdOutlineChat } from "react-icons/md";
+import { AuthContext } from "@/app/context/AuthContext";             // ← import your context
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useContext(AuthContext);                         // ← now works
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  console.log(pathname)
-
-  const user = {
-    username: "cheldean",
-    role: "Admin"
-  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -53,7 +48,12 @@ const Navbar = () => {
     <div className={styles.container}>
     <div className={styles.container1}>
       <div className={styles.left}>
-        <span className={styles.welcome}>Welcome, <strong>{user.username}</strong> 👋</span>
+        <span className={styles.username}>
+                {user?.username?.toUpperCase() || ""}
+              </span>
+              <span className={styles.userTitle}>
+                {user?.role?.toUpperCase() || ""}
+             </span>
       </div>
 
       <div className={styles.right}>
@@ -69,8 +69,12 @@ const Navbar = () => {
               height="40"
             />
             <div className={styles.userDetail}>
-              <span className={styles.username}>{user.username.toUpperCase()}</span>
-              <span className={styles.userTitle}>{user.role.toUpperCase()}</span>
+               <span className={styles.username}>
+                {user?.username?.toUpperCase() || ""}
+              </span>
+              <span className={styles.userTitle}>
+                {user?.role?.toUpperCase() || ""}
+              </span>
             </div>
           </div>
           {dropdownOpen && (
@@ -79,6 +83,15 @@ const Navbar = () => {
                 <li>My Profile</li>
                 <li>Settings</li>
                 <li>Logout</li>
+                  <li
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      router.push("/archive");
+                    }}
+                  >
+                    Archive
+           </li>
               </ul>
             </div>
           )}

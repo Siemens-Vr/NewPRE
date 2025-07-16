@@ -48,7 +48,7 @@ export default function MonitoringPage() {
     }, 300);
   };
 
-  // 👉 New: open documents for this output
+
   const handleRowClick = (output) => {
     const url = `${api.defaults.baseURL}/uploads/outputs/${output.document_name}`;
     window.open(url, "_blank");
@@ -131,7 +131,7 @@ export default function MonitoringPage() {
                   }
                 ]}
                 data={rows}
-                onRowClick={handleRowClick}          // ← wire it up
+                onRowClick={handleRowClick}         
                 sortKey={null}
                 sortOrder={null}
               />

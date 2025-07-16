@@ -192,6 +192,11 @@ console.log("Fetched project data:", data);
           sortKey={sortKey}
           sortOrder={sortOrder}
           onSort={handleSort}
+      onRowClick={(row, id) => {
+    console.log('Row:', row);
+    console.log('ID:', phaseuuid);
+    handleView(row.uuid);
+  }}
         />
 
         {items.length > 3 && (

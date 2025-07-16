@@ -58,6 +58,7 @@ export default function AddCostCategoryModal({
   ];
 
   const handleAdd = async (formValues) => {
+    // console.log("Foem Values:", formValues)
     if (!costCategoryId) {
       setError("Card ID missing.");
       return;
@@ -71,6 +72,7 @@ export default function AddCostCategoryModal({
         description: formValues.description,
         total_amount: Number(formValues.total_amount),
       };
+      // console.log("Pay Load:", payload)
       const res = await api.post(
         `/cost_categories_tables/${costCategoryId}`,
         payload

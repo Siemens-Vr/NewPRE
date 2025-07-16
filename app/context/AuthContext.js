@@ -55,90 +55,86 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(null);
   };
 
-  // Enhanced user profile fetching with retry logic
-  const fetchUserProfile = async (token) => {
-    if (!token) return null;
-    
-    try {
-      const { data } = await api.get(`/api/auth/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return data;
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      
-      // If 401, token might be expired - don't clear yet, let refresh handle it
-      if (error.response?.status === 401) {
+
+
+
+  useEffect(() => {
+    // 1. Define fetchUserProfile *inside* the effect
+    const fetchUserProfile = async (token) => {
+      if (!token) return null;
+      try {
+        const { data } = await api.get('/api/auth/profile', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return data;
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        // If 401, token expired: bail out
+        if (error.response?.status === 401) {
+          return null;
+        }
+        // Other errors: clear tokens
+        clearStoredTokens();
         return null;
       }
-      
-      // For other errors, clear invalid token
-      clearStoredTokens();
-      return null;
-    }
-  };
-
-  // Check if user is authenticated on initial load
-  useEffect(() => {
+    };
+  
+    // 2. Run your initializer exactly once
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        
-        // Only run on client-side
+  
+        // Client-only
         if (typeof window === 'undefined') {
           setLoading(false);
+          setIsInitialized(true);
           return;
         }
-
+  
         const token = getStoredToken();
-        
         if (!token) {
           setLoading(false);
           setIsInitialized(true);
           return;
         }
-
-        // Validate token format and expiry
+  
+        // Validate JWT expiry
         try {
-          const decodedToken = jwtDecode(token);
-          const currentTime = Date.now() / 1000;
-          
-          // If token is expired, don't fetch profile
-          if (decodedToken.exp < currentTime) {
-            console.log("Token expired, clearing storage");
+          const decoded = jwtDecode(token);
+          const now = Date.now() / 1000;
+          if (decoded.exp < now) {
             clearStoredTokens();
             setLoading(false);
             setIsInitialized(true);
             return;
           }
-          
-          // Token is valid, set it in axios and fetch profile
-          setAccessToken(token);
-          const userData = await fetchUserProfile(token);
-          
-          if (userData) {
-            setUser(userData);
-          } else {
-            // Failed to fetch profile, clear tokens
-            clearStoredTokens();
-          }
-          
-        } catch (jwtError) {
-          console.error("Invalid token format:", jwtError);
+        } catch {
+          clearStoredTokens();
+          setLoading(false);
+          setIsInitialized(true);
+          return;
+        }
+  
+        // Token ok → set axios header & fetch profile
+        setAccessToken(token);
+        const userData = await fetchUserProfile(token);
+        if (userData) {
+          setUser(userData);
+        } else {
           clearStoredTokens();
         }
-        
-      } catch (error) {
-        console.error("Error initializing auth:", error);
+      } catch (err) {
+        console.error("Error initializing auth:", err);
         clearStoredTokens();
       } finally {
         setLoading(false);
         setIsInitialized(true);
       }
     };
-
+  
     initializeAuth();
-  }, []);
+  }, []);  // <- no missing deps anymore
+  
 
   // Enhanced login function based on your current implementation
   const login = async (email, password) => {

@@ -36,7 +36,7 @@ export default function ProjectDetails() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             onClick={() => handleView(row.uuid)}
-            className={styles.actionBtn}
+            className={`${styles.actionButton} ${styles.actionBtn}`}
           >
             View
           </button>
@@ -69,16 +69,10 @@ export default function ProjectDetails() {
         { key: "no", label: "No.", sortable: true },
         { key: "title", label: "Work Package Name", sortable: true },
         {
-          key: "startDate",
+          key: "implementation_startDate",
           label: "Start Date",
           sortable: true,
-          render: (r) => new Date(r.startDate).toLocaleDateString(),
-        },
-        {
-          key: "endDate",
-          label: "End Date",
-          sortable: true,
-          render: (r) => new Date(r.endDate).toLocaleDateString(),
+          render: (r) => new Date(r.implementation_startDate).toLocaleDateString(),
         },
         { key: "status", label: "Status", sortable: true },
         { key: "description", label: "Description", sortable: false },
@@ -89,7 +83,13 @@ export default function ProjectDetails() {
       title: "Project Duration",
       columns: appendActionsColumn([
         { key: "no", label: "No.", sortable: true },
-        { key: "year", label: "Year", sortable: true },
+        { key: "title", label: "Year", sortable: true },
+       {
+          key: "implementation_startDate",
+          label: "Start Date",
+          sortable: true,
+          render: (r) => new Date(r.implementation_startDate).toLocaleDateString(),
+        },
         { key: "description", label: "Description", sortable: false },
       ]),
         dataKey: "milestones",
@@ -174,11 +174,11 @@ export default function ProjectDetails() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h2 className={styles.sectionTitle}>{tableTitle}</h2>
-            <div className={styles.buttonGroup}>
-              <button onClick={handleEdit} className={styles.editBtn}>
+            <div>
+              <button onClick={handleEdit} className={`${styles.actionButton} ${styles.editBtn}`}>
                 Edit
               </button>
-              <button onClick={handleBulkAdd} className={styles.bulkBtn}>
+              <button onClick={handleBulkAdd} className={`${styles.actionButton} ${styles.bulkBtn}`}>
                 Add in Bulk
               </button>
             </div>

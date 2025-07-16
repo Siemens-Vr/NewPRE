@@ -6,17 +6,22 @@ import PropTypes from 'prop-types';
 import styles from './monitoring.module.css';
 
 /**
- * Generic Table component with sorting, missing data handling, and custom cell rendering.
+ * Generic Table component with sorting, missing data handling, custom cell rendering, and row click support.
  * Props:
  * - columns: [{ key, label, sortable, render? }]
  * - data: array of objects
  * - onSort: (key) => void
  * - sortKey: current sort column
  * - sortOrder: 'asc' | 'desc'
+ * - onRowClick: (row) => void (optional)
  */
-export default function Table({ columns, data, onSort, sortKey, sortOrder }) {
+export default function Table({ columns, data, onSort, sortKey, sortOrder, onRowClick }) {
   const handleSort = (key) => {
     if (onSort) onSort(key);
+  };
+
+  const handleClick = (row) => {
+    if (onRowClick) onRowClick(row);
   };
 
   return (
@@ -42,7 +47,11 @@ export default function Table({ columns, data, onSort, sortKey, sortOrder }) {
         </thead>
         <tbody>
           {data.map((row, idx) => (
-            <tr key={idx} className={idx % 2 === 0 ? styles.evenRow : ''}>
+            <tr
+              key={idx}
+              className={`${idx % 2 === 0 ? styles.evenRow : ''} ${onRowClick ? styles.clickableRow : ''}`}
+              onClick={() => handleClick(row)}
+            >
               {columns.map(col => (
                 <td
                   key={col.key}
@@ -72,10 +81,12 @@ Table.propTypes = {
   onSort: PropTypes.func,
   sortKey: PropTypes.string,
   sortOrder: PropTypes.oneOf(['asc', 'desc']),
+  onRowClick: PropTypes.func,
 };
 
 Table.defaultProps = {
   onSort: null,
   sortKey: null,
   sortOrder: 'asc',
+  onRowClick: null,
 };

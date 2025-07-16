@@ -23,6 +23,7 @@ export default function SingleComponentPage() {
   const [showQty,     setShowQty]   = useState(false);
   const [showBorrow,  setShowBorrow]= useState(false);
   const [selected,    setSelected]  = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(null)
 
  
 

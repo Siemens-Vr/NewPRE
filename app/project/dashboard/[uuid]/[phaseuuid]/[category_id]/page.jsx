@@ -42,14 +42,18 @@ export default function CostCategoryDetailPage() {
       render: (row) => (
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
-            className={styles.actionBtn}
-            onClick={() => handleView(row)}
+            className={` ${styles.actionButton} ${styles.actionBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleView(row);
+            }}
           >
             View
           </button>
           <button
-            className={styles.updateBtn}
-            onClick={() => {
+            className={`${styles.actionButton} ${styles.editBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
               setEditItem(row);
               setShowEditModal(true);
             }}
@@ -57,8 +61,9 @@ export default function CostCategoryDetailPage() {
             Edit
           </button>
           <button
-            className={styles.actionBtnDelete}
-            onClick={async () => {
+            className={`${styles.actionButton} ${styles.actionBtnDelete}`}
+            onClick={async (e) => {
+              e.stopPropagation();
               const res = await Swal.fire({
                 title: "Delete?",
                 text: row.title,
@@ -73,7 +78,7 @@ export default function CostCategoryDetailPage() {
               }
             }}
           >
-            Archieve
+            Archive
           </button>
         </div>
       ),
@@ -91,7 +96,7 @@ export default function CostCategoryDetailPage() {
       const res = await api.get(
         `/cost_categories_tables/${category_id}`
       );
-      console.log(res.data);
+      // console.log(res.data);
 
       if (res.status === 200) {
         setCostItems(res.data);
@@ -141,6 +146,7 @@ export default function CostCategoryDetailPage() {
           sortKey={null}
           sortOrder={null}
           onSort={() => {}}
+          onRowClick={row => handleView(row)}
         />
       )}
 

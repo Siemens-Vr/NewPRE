@@ -117,11 +117,19 @@ export default function OutputDetails() {
     {
       key: "document_name",
       label: "Document",
-      render: r => (
-        <a href={r.document_path} target="_blank" rel="noreferrer">
-          {r.document_name}
+        render: (r) => {
+      // 1) Strip leading numbers + dash
+      const raw = (r.document_name || "").replace(/^[0-9]+-/, "");
+      // 2) Truncate to 50 chars
+      const MAX = 50;
+      const display =
+        raw.length > MAX ? raw.slice(0, MAX).trimEnd() + "…" : raw;
+      return (
+        <a href={r.document_path} target="_blank" rel="noreferrer" title={raw}>
+          {display}
         </a>
-      )
+      );
+    }
     },
     {
       key: "actions",
@@ -130,8 +138,9 @@ export default function OutputDetails() {
         isArchiveView ? null : (
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
-              className={styles.actionBtn}
-              onClick={() => {
+              className={` ${styles.actionButton} ${styles.actionBtn}`}
+              onClick={(e) => {
+                e.stopPropagation();
                 const w = window.open("_blank", "noopener");
                 if (!w) return alert("Allow pop-ups");
                 w.location.href = `${api.defaults.baseURL}/uploads/outputs/${r.document_name}`;
@@ -140,14 +149,18 @@ export default function OutputDetails() {
               View
             </button>
             <button
-              className={styles.updateBtn}
-              onClick={() => setEditingData(r)}
+              className={`${styles.actionButton} ${styles.editBtn}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingData(r);
+              }}
             >
               Edit
             </button>
             <button
-              className={styles.actionBtnDelete}
-              onClick={() => {
+              className={`${styles.actionButton} ${styles.actionBtnDelete}`}
+              onClick={(e) => {
+                e.stopPropagation();
                 setArchiveTarget(r);
                 setShowArchiveModal(true);
               }}
@@ -180,6 +193,10 @@ export default function OutputDetails() {
     return () => clearTimeout(id);
   }, [message]);
 
+   const handleRowClick = (output) => {
+    const url = `${api.defaults.baseURL}/uploads/outputs/${output.document_name}`;
+    window.open(url, "_blank");
+  };
   // auto-dismiss error after 6s
   useEffect(() => {
     if (!error) return;
@@ -242,11 +259,11 @@ export default function OutputDetails() {
 
         <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
           <Toolbar
-            placeholder={`Search ${showArchived ? "archived" : "active"}...`}
+            placeholder={`Search outputs...`}
             buttons={[
               {
-                label: showArchived ? "Show Active" : "Show Archived",
-                onClick: () => setShowArchived(!showArchived),
+                label: "Filter",
+
                 variant: "secondary",
                 icon: MdFilterList
               },
@@ -272,6 +289,7 @@ export default function OutputDetails() {
               showArchived ? setArchivedOutputs : setOutputs
             )
           }
+             onRowClick={handleRowClick}  
         />
       </div>
     </>

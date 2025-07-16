@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import FormModal from "@/app/components/Form/FormModal";
 import api from "@/app/lib/utils/axios";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
+import Swal from "sweetalert2";
 
 export default function AddCostCategoryModal({
   isOpen,
@@ -17,6 +18,7 @@ export default function AddCostCategoryModal({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
 
+  // preload values when editing or opening
   useEffect(() => {
     if (editData) {
       setValues({
@@ -28,43 +30,36 @@ export default function AddCostCategoryModal({
     } else {
       setValues(empty);
     }
+    setError(null);
   }, [editData, isOpen]);
 
   const fields = [
-    {
-      name: "no",
-      label: "No",
-      type: "number",
-      placeholder: "Number"
-    },
-    {
-      name: "title",
-      label: "Title",
-      type: "text",
-      placeholder: "Title"
-    },
-    {
-      name: "total_amount",
-      label: "Total Amount",
-      type: "number",
-      placeholder: "Amount"
-    },
-    {
-      name: "description",
-      label: "Description",
-      type: "text",
-      placeholder: "Description"
-    }
+    { name: "no", label: "No", type: "number", placeholder: "Number" },
+    { name: "title", label: "Title", type: "text", placeholder: "Title" },
+    { name: "total_amount", label: "Total Amount", type: "number", placeholder: "Amount" },
+    { name: "description", label: "Description", type: "text", placeholder: "Description" },
   ];
 
+  const toast = (icon, title) => {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon,
+      title,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  };
+
   const handleAdd = async (formValues) => {
-    console.log("Adding cost category with values:", formValues);
     if (!costCategoryId) {
-      setError("Card ID missing.");
+      setError("Cost category ID missing.");
       return;
     }
+
     setIsSaving(true);
     setError(null);
+
     try {
       const payload = {
         no: Number(formValues.no),
@@ -72,19 +67,23 @@ export default function AddCostCategoryModal({
         description: formValues.description,
         total_amount: Number(formValues.total_amount),
       };
-      console.log("Payload for adding cost category:", payload);
+
       const res = await api.post(
         `/cost_categories_tables/${costCategoryId}`,
         payload
       );
+
       if (res.status === 201) {
+        toast("success", "Item added!");
         onAdded();
         onClose();
       } else {
-        setError("Save failed.");
+        throw new Error("Unexpected response status");
       }
     } catch (e) {
-      setError(e.response?.data?.message || "Error saving.");
+      const msg = e.response?.data?.message || "Error saving item.";
+      setError(msg);
+      toast("error", msg);
     } finally {
       setIsSaving(false);
     }
@@ -95,8 +94,10 @@ export default function AddCostCategoryModal({
       setError("Missing identifiers for edit.");
       return;
     }
+
     setIsSaving(true);
     setError(null);
+
     try {
       const payload = {
         no: Number(formValues.no),
@@ -104,18 +105,23 @@ export default function AddCostCategoryModal({
         description: formValues.description,
         total_amount: Number(formValues.total_amount),
       };
+
       const res = await api.put(
-        `/cost_categories_tables/${costCategoryId}/${editData.uuid}`,
+        `/cost_categories_tables/${editData.uuid}`,
         payload
       );
+
       if (res.status >= 200 && res.status < 300) {
+        toast("success", "Item updated!");
         onAdded();
         onClose();
       } else {
-        setError("Update failed.");
+        throw new Error("Unexpected response status");
       }
     } catch (e) {
-      setError(e.response?.data?.message || "Error updating.");
+      const msg = e.response?.data?.message || "Error updating item.";
+      setError(msg);
+      toast("error", msg);
     } finally {
       setIsSaving(false);
     }

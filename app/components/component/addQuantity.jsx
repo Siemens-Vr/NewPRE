@@ -7,6 +7,7 @@ import api from '@/app/lib/utils/axios';
 import styles from '@/app/styles/components/add/addComponent.module.css';
 
 export default function AddComponentQuantity({component, onClose , onSuccess}) {
+  const router = useRouter()
    const [loading, setLoading] = useState(false);
   const [error, setError]     = useState(null);
 

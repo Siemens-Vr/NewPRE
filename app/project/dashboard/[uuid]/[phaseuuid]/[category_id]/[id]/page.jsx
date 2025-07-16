@@ -9,8 +9,9 @@ import styles from "@/app/styles/project/project/project.module.css";
 import UploadDropdown from "@/app/components/uploadDropdown/uploadDropdown";
 import FormModal from "@/app/components/Form/FormModal";
 
-import { FaRegFileAlt } from "react-icons/fa";
 import { MdFolder } from "react-icons/md";
+import { FaRegFileAlt, FaDownload, FaArchive } from "react-icons/fa";
+// import Tippy from '@tippyjs/react'; // for nice tooltips
 
 
 // ─── REDUCER & ACTIONS ─────────────────────────────────────────────────────────
@@ -52,7 +53,7 @@ function reducer(state, { type, payload }) {
         ]
       };
 
-    case ACTIONS.BACK:
+   case ACTIONS.BACK: {
       const bc = [...state.breadcrumbs];
       bc.pop();
       return {
@@ -60,6 +61,7 @@ function reducer(state, { type, payload }) {
         breadcrumbs: bc,
         currentId:   bc[bc.length - 1]?.id ?? state.currentId,
       };
+    }
 
     case ACTIONS.ADD_FOLDER:
       return {
@@ -209,9 +211,9 @@ const handleCreateFolder = async (folderName) => {
   const filename = file.name;
   const viewUrl = `${api.defaults.baseURL}/uploads/cost_category/${filename}`;
   const w = window.open(viewUrl, "_blank", "noopener");
-  if (!w) {
-    alert("Pop-up blocked! Please allow pop-ups.");
-  }
+  // if (!w) {
+  //   alert("Pop-up blocked! Please allow pop-ups.");
+  // }
 };
 
 //const filePath = `/download/${file.documentPath}`;
@@ -228,6 +230,16 @@ const handleCreateFolder = async (folderName) => {
   document.body.removeChild(a);
 };
 
+const handleArchive = async (file) => {
+  const filename = file.name;
+  const archiveUrl = `${api.defaults.baseURL}/uploads/cost_category/${filename}/archive`;
+  try {
+    const res = await api.post(archiveUrl);
+    Swal.fire("Success", "File archived successfully", "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.error || err.message, "error");
+  } 
+};
 
 
   const currentName =
@@ -275,36 +287,58 @@ const handleCreateFolder = async (folderName) => {
 
 
       {/* FILES */}
-    <section>
-  <h2 className="text-xl font-semibold text-black p-2">Files</h2>
+  <section>
+  <h2 className="text-xl font-semibold p-2">Files</h2>
   <div className="flex flex-wrap gap-4">
     {state.files.map(file => {
-      const rawName = file.name || "Unnamed Document";
-      return (
-        <div
-          key={file.uuid}
-          className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[220px] md:w-[250px] lg:w-[300px] shadow-sm hover:shadow-md cursor-pointer relative"
-          onClick={() => handleView(file)}
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            <FaRegFileAlt className="text-yellow-500 rounded p-1 w-10 h-10" />
-            <span className="text-gray-700 text-sm truncate">
-              {rawName}
-            </span>
-          </div>
-          {/* <button
-  onClick={() => handleDownload(file)}
-  className="px-2 py-1 text-sm bg-blue-500 text-white rounded"
->
-  Download
-</button> */}
+  // 1. Strip any leading digits + dash
+  const rawName = (file.name || "Unnamed Document").replace(/^[0-9]+-/, "");
 
-        </div>
-      );
-    })}
+  // 2. Truncate if longer than, say, 30 characters
+  const MAX = 30;
+  const displayName =
+    rawName.length > MAX
+      ? rawName.slice(0, MAX).trimEnd() + "..."
+      : rawName;
+
+  return (
+    <div
+      key={file.uuid}
+      className="flex items-center justify-between bg-gray-100 rounded-lg p-3 w-full sm:w-[300px] shadow-sm hover:shadow-md"
+    >
+      {/* File icon + name */}
+      <div
+        onClick={() => handleView(file)}
+        className="flex items-center gap-3 min-w-0 cursor-pointer"
+      >
+        <FaRegFileAlt className="text-yellow-500 w-8 h-8 p-1" />
+        <span className="text-gray-700 text-sm truncate">
+          {displayName}
+        </span>
+      </div>
+
+      {/* Download + Archive */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleDownload(file)}
+          title="Download"
+          className="p-2 rounded hover:bg-gray-200 text-blue-600"
+        >
+          <FaDownload />
+        </button>
+        <button
+          onClick={() => handleArchive(file)}
+          title="Archive"
+          className="p-2 rounded hover:bg-gray-200 text-red-600"
+        >
+          <FaArchive />
+        </button>
+      </div>
+    </div>
+  );
+})}
   </div>
 </section>
-
 
 
 

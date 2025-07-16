@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import api from "@/app/lib/utils/axios";
-import Table from "@/app/components/table/monitoringTable";
+import MonitoringTable from "@/app/components/table/monitoringTable";
 import Timeline from "@/app/components/Timeline/Timeline";
 import Loading from "@/app/components/Loading/Loading";
 import styles from "@/app/styles/project/report/report.module.css";
@@ -16,7 +16,7 @@ export default function MonitoringPage() {
   const [filtering, setFiltering] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
-  // Fetch project with nested outputs
+  // Fetch project
   useEffect(() => {
     async function fetchData() {
       try {
@@ -31,21 +31,27 @@ export default function MonitoringPage() {
     if (uuid) fetchData();
   }, [uuid]);
 
-  // Collect all output dates across milestones
+  // Gather all dates
   const allDates = useMemo(() => {
     if (!project?.milestones) return [];
     return project.milestones
-      .flatMap((milestone) => milestone.outputs || [])
-      .map((o) => o.createdAt)
+      .flatMap(m => m.outputs || [])
+      .map(o => new Date(o.createdAt).toLocaleDateString())
       .filter(Boolean);
   }, [project]);
 
   const handleDateClick = (dateStr) => {
     setFiltering(true);
     setTimeout(() => {
-      setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
+      setSelectedDate(prev => (prev === dateStr ? null : dateStr));
       setFiltering(false);
     }, 300);
+  };
+
+
+  const handleRowClick = (output) => {
+    const url = `${api.defaults.baseURL}/uploads/outputs/${output.document_name}`;
+    window.open(url, "_blank");
   };
 
   if (loading) {
@@ -55,7 +61,6 @@ export default function MonitoringPage() {
       </div>
     );
   }
-
   if (!project) {
     return (
       <div className={styles.loading}>
@@ -68,7 +73,6 @@ export default function MonitoringPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>{project.title} Monitoring</h1>
 
-      {/* Timeline */}
       <Timeline
         dates={allDates}
         selectedDate={selectedDate}
@@ -81,67 +85,53 @@ export default function MonitoringPage() {
         </div>
       )}
 
-      {/* Render table for each milestone */}
       {!filtering &&
-        project.milestones.map((item, idx) => {
-          // Filter outputs by selected date
-          const rows = (item.outputs || []).filter((o) => {
+        project.milestones.map((ms, idx) => {
+          const rows = (ms.outputs || []).filter(o => {
             if (!selectedDate) return true;
             return new Date(o.createdAt).toLocaleDateString() === selectedDate;
           });
 
           return (
-            <section key={item.uuid} className={styles.section}>
+            <section key={ms.uuid} className={styles.section}>
               <h2 className={styles.sectionTitle}>
-                {String.fromCharCode(65 + idx)}. {item.title}
+                {String.fromCharCode(65 + idx)}. {ms.title}
               </h2>
 
-              <Table
+              <MonitoringTable
                 columns={[
                   {
                     key: "name",
                     label: "Output Name",
-                    render: (o) => `${o.no}. ${o.name}`,
+                    render: o => `${o.no}. ${o.name}`
                   },
                   {
                     key: "latest",
                     label: "Latest Update",
-                    render: (o) => new Date(o.createdAt).toLocaleDateString(),
+                    render: o => new Date(o.createdAt).toLocaleDateString()
                   },
                   {
                     key: "progress",
                     label: "Progress",
-                    render: (o) => {
+                    render: o => {
                       const pct = Math.round(o.value * 100);
-                      // decide color
-                       let bgColor;
-                      if (pct === 0) {
-                        bgColor = "#2196f3";     // red
-                      } else if (pct === 100) {
-                        bgColor = "#4caf50";      // green
-                      } else {
-                        bgColor = "#2196f3";      // blue
-                      }
-                      // you can keep text white for contrast
+                      const bgColor =
+                        pct === 100 ? "#4caf50" : pct === 0 ? "#f44336" : "#2196f3";
                       return (
                         <div className={styles.progressContainer}>
                           <div
                             className={styles.progressInner}
-                            style={{
-                              width: `${pct}%`,
-                              backgroundColor: bgColor,
-                              color: "#000",
-                            }}
+                            style={{ width: `${pct}%`, backgroundColor: bgColor }}
                           >
-                            {`${pct}%`}
+                            {pct}%
                           </div>
                         </div>
                       );
-                    },
-                  },
+                    }
+                  }
                 ]}
                 data={rows}
-                onSort={null}
+                onRowClick={handleRowClick}         
                 sortKey={null}
                 sortOrder={null}
               />

@@ -42,13 +42,13 @@ export default function CostCategoryDetailPage() {
       render: (row) => (
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
-            className={styles.actionBtn}
+            className={` ${styles.actionButton} ${styles.actionBtn}`}
             onClick={() => handleView(row)}
           >
             View
           </button>
           <button
-            className={styles.updateBtn}
+            className={`${styles.actionButton} ${styles.editBtn}`}
             onClick={() => {
               setEditItem(row);
               setShowEditModal(true);
@@ -57,7 +57,7 @@ export default function CostCategoryDetailPage() {
             Edit
           </button>
           <button
-            className={styles.actionBtnDelete}
+            className={`${styles.actionButton} ${styles.actionBtnDelete}`}
             onClick={async () => {
               const res = await Swal.fire({
                 title: "Delete?",
@@ -91,7 +91,7 @@ export default function CostCategoryDetailPage() {
       const res = await api.get(
         `/cost_categories_tables/${category_id}`
       );
-      console.log(res.data);
+      // console.log(res.data);
 
       if (res.status === 200) {
         setCostItems(res.data);

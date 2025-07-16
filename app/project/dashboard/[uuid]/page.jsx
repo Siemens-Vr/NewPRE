@@ -50,16 +50,15 @@ export default function ProjectDetails() {
  render: (row) => (
   <div style={{ display: "flex", gap: "0.5rem" }}>
     {/* Pass the row.uuid to handleView instead of phaseuuid */}
-    <button onClick={() => handleView(row.uuid)} className={styles.actionBtn}>View</button>
-    <button onClick={() => handleEditPhase(row)} className={styles.updateBtn}>Edit</button>
-    <button  onClick={() => {setArchiveTarget(row); setShowArchiveModal(true);}} className={styles.actionBtnDelete}>Archive</button>
+    <button onClick={() => handleView(row.uuid)} className={` ${styles.actionButton} ${styles.actionBtn}`}>View</button>
+    <button onClick={() => handleEditPhase(row)} className={`${styles.actionButton} ${styles.editBtn}`}>Edit</button>
+    <button  onClick={() => {setArchiveTarget(row); setShowArchiveModal(true);}} className={`${styles.actionButton} ${styles.actionBtnDelete}`}>Archive</button>
   </div>
 ),
 
-
   },
-];
-  // The single "reason" field passed into FormModal
+  ] ;
+   // The single "reason" field passed into FormModal
   const archiveFields = [
     {
       name: "reason",
@@ -73,7 +72,7 @@ export default function ProjectDetails() {
       ]
     }
   ];
-  // Configuration per project type
+   // Configuration per project type
   const typeConfig = {
   "Milestones": {
     title: "Project Milestones",
@@ -91,7 +90,7 @@ export default function ProjectDetails() {
     columns: appendActionsColumn([
       { key: "no", label: "No.", sortable: true },
       { key: "title", label: "Work Package Name", sortable: true },
-      { key: "implementation_startDate", label: "Start Date", sortable: true, render: r => new Date(r.startDate).toLocaleDateString() },
+      { key: "implementation_startDate", label: "Start Date", sortable: true, render: r => new Date(r.implementation_startDate).toLocaleDateString() },
       { key: "status", label: "Status", sortable: true },
       { key: "description", label: "Description", sortable: false },
     ]),
@@ -112,7 +111,7 @@ export default function ProjectDetails() {
 
   // Fetch project and all related data at once
   const fetchProjectData = async () => {
-    console.log("Fetching project data for UUID:", uuid);
+    // console.log("Fetching project data for UUID:", uuid);
     if (!uuid) return;
     try {
       const res = await api.get(`projects/${uuid}`);
@@ -192,7 +191,7 @@ const handleEdit = () => {
     if (!editProjectData) return;
     setIsSaving(true);
     const payload = { ...editProjectData };
-    console.log("Updating project with payload:", payload);
+    // console.log("Updating project with payload:", payload);
     try {
       const res = await api.post(`/projects/update/${editProjectData.uuid}`, payload, { headers: { "Content-Type": "application/json" } });
       if (res.status === 200) closeEditModal();
@@ -249,7 +248,7 @@ const handleEditPhase = (row) => {
 };
 
   const handleArchievePhase = async (uuid, reason) => {
-    console.log("Archiving Output:", uuid, reason)
+    // console.log("Archiving Output:", uuid, reason)
     setMessage(null);
     setError(null);
     try {

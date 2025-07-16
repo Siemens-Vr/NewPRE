@@ -126,7 +126,7 @@ export default function OutputDetails() {
         isArchiveView ? null : (
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
-              className={styles.actionBtn}
+              className={` ${styles.actionButton} ${styles.actionBtn}`}
               onClick={() => {
                 const w = window.open("_blank", "noopener");
                 if (!w) return alert("Allow pop-ups");
@@ -136,13 +136,13 @@ export default function OutputDetails() {
               View
             </button>
             <button
-              className={styles.updateBtn}
+              className={`${styles.actionButton} ${styles.editBtn}`}
               onClick={() => setEditingData(r)}
             >
               Edit
             </button>
             <button
-              className={styles.actionBtnDelete}
+              className={`${styles.actionButton} ${styles.actionBtnDelete}`}
               onClick={() => {
                 setArchiveTarget(r);
                 setShowArchiveModal(true);

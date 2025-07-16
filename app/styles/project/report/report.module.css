@@ -142,3 +142,26 @@
   color: #333;
   padding-top: 30px;
 }
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.actionButton:hover {
+  background: rgba(0,0,0,0.05);
+}
+.actionBtn {
+  border-color: #2bb3d2;
+  color: #2bb3d2;
+} 
+.actionBtn:hover {
+  background: #2bb3d2;
+  color: #fff;
+}

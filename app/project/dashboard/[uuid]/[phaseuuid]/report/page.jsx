@@ -36,7 +36,7 @@ export default function ProjectDetails() {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             onClick={() => handleView(row.uuid)}
-            className={styles.actionBtn}
+            className={`${styles.actionButton} ${styles.actionBtn}`}
           >
             View
           </button>
@@ -174,11 +174,11 @@ export default function ProjectDetails() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h2 className={styles.sectionTitle}>{tableTitle}</h2>
-            <div className={styles.buttonGroup}>
-              <button onClick={handleEdit} className={styles.editBtn}>
+            <div>
+              <button onClick={handleEdit} className={`${styles.actionButton} ${styles.editBtn}`}>
                 Edit
               </button>
-              <button onClick={handleBulkAdd} className={styles.bulkBtn}>
+              <button onClick={handleBulkAdd} className={`${styles.actionButton} ${styles.bulkBtn}`}>
                 Add in Bulk
               </button>
             </div>

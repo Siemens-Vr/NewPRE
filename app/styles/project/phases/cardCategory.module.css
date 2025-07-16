@@ -85,34 +85,44 @@
   padding: 0.5rem 0;
   border-bottom: 1px solid #ddd;
 }
-.updateBtn {
-  padding: 8px 16px;
-  background-color: #2bb3d2;
-  color: #ffffff;
-  border: none;
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
   border-radius: 4px;
-  font-weight: 500;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
-.updateBtn:hover {
-  background-color: #1fa4b6;
+.actionButton:hover {
+  background: rgba(0,0,0,0.05);
+}
+.editBtn {
+ color: #28a745;
+  border-color: #28a745;
+}
+
+.editBtn:hover {
+   background: #28a745;
+  color: #fff;
 }
 .actionBtn {
-  background-color: #0cb47c;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  cursor: pointer;
+  border-color: #2bb3d2;
+  color: #2bb3d2;
 } 
-.actionBtnDelete {
-  background-color: #ef4444; /* red */
+.actionBtn:hover {
+  background: #2bb3d2;
   color: #fff;
-   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  cursor: pointer;
+}
+.actionBtnDelete {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.actionBtnDelete:hover {
+  background: #dc3545;
+  color: #fff;
 }

@@ -73,7 +73,7 @@ const Sidebar = () => {
           },
           {
             title: "Users",
-            path: "/admin/users",
+            path: "/admins/users",
             icon: <MdAnalytics className={styles.whiteIcon} />,
           },
         ];

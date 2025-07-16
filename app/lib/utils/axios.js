@@ -7,25 +7,23 @@ require('dotenv').config();
 let accessToken = null;
 
 export const setAccessToken = (token) => {
-    console.log("✅ Access token set:", token); 
-
+    // console.log("✅ Access token set:", token); 
   accessToken = token;
 };
 
 const api = axios.create({
-  baseURL: process.env.BASE_URL || "https://vml-erp-api.dkut.ac.ke",
+  baseURL: process.env.BASE_URL || "http://localhost:10600",
   withCredentials: true, 
   
 });
 
 
 api.interceptors.request.use(async (config) => {
-    // Check for a custom skipAuth flag
+   
     if (config.skipAuth) return config;
-    
     if (!accessToken || isTokenExpired(accessToken)) {
     console.log("⚠️ No access token set in interceptor - getting a new one first");
-    // Try to get a new token before proceeding
+
     const newToken = await refreshAccessToken();
     if (newToken) {
       accessToken = newToken;

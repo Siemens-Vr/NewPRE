@@ -10,9 +10,13 @@ import { MdAdd, MdFilterList } from "react-icons/md";
 import AddOutputModal from "@/app/components/project/output/sinadd/add";
 import EditOutputModal from "@/app/components/project/output/sinadd/edit";
 import FormModal from "@/app/components/Form/FormModal";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function OutputDetails() {
   const { phaseuuid } = useParams();
+
+    const { user, hasRole, isAuthenticated } = useAuth();
+
 
   // all outputs and split lists
   const [allOutputs, setAllOutputs] = useState([]);
@@ -61,7 +65,7 @@ export default function OutputDetails() {
 
   // Archive function
   const archiveOutput = async (uuid, reason) => {
-    console.log("Archiving Output:", uuid, reason)
+    // console.log("Archiving Output:", uuid, reason)
     setMessage(null);
     setError(null);
     try {

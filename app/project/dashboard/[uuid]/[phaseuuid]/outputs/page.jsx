@@ -1,41 +1,55 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
-import formStyles from "@/app/components/Form/FormModal.module.css";
 import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
 import Toolbar from "@/app/components/ToolBar/ToolBar";
-import { MdAdd, MdFilterList, MdDownload } from "react-icons/md";
+import { MdAdd, MdFilterList } from "react-icons/md";
 import AddOutputModal from "@/app/components/project/output/sinadd/add";
+import EditOutputModal from "@/app/components/project/output/sinadd/edit";
 import FormModal from "@/app/components/Form/FormModal";
 
 export default function OutputDetails() {
-  const { uuid, phaseuuid } = useParams();
-  const router = useRouter();
+  const { phaseuuid } = useParams();
+
+  // all outputs and split lists
+  const [allOutputs, setAllOutputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
+  const [archivedOutputs, setArchivedOutputs] = useState([]);
+  const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
+
+  // sorting
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  // add / edit
   const [adding, setAdding] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
-  // Delete modal state
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [deleteReason, setDeleteReason] = useState("");
+  // archive modal controls
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [archiveTarget, setArchiveTarget] = useState(null);
 
-  // Fetch outputs for this phase
+  // feedback
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  // Fetch outputs and split by is_archived
   const fetchOutputs = async () => {
     if (!phaseuuid) return;
     setLoading(true);
     try {
       const res = await api.get(`/outputs/${phaseuuid}`);
-      setOutputs(res.data || []);
+      const all = res.data || [];
+      setAllOutputs(all);
+      setOutputs(all.filter(o => !o.is_archived));
+      setArchivedOutputs(all.filter(o => o.is_archived));
     } catch (err) {
-      console.error("Error fetching outputs", err);
+      console.error(err);
+      setError("Failed to load outputs");
     } finally {
       setLoading(false);
     }
@@ -45,171 +59,216 @@ export default function OutputDetails() {
     fetchOutputs();
   }, [phaseuuid]);
 
-  // Sorting handler
-  const handleSort = (key) => {
+  // Archive function
+  const archiveOutput = async (uuid, reason) => {
+    console.log("Archiving Output:", uuid, reason)
+    setMessage(null);
+    setError(null);
+    try {
+      await api.post(`/outputs/${uuid}/archive`, { reason });
+      const updatedAll = allOutputs.map(o =>
+        o.uuid === uuid ? { ...o, is_archived: true } : o
+      );
+      setAllOutputs(updatedAll);
+      setOutputs(updatedAll.filter(o => !o.is_archived));
+      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
+      const name = allOutputs.find(o => o.uuid === uuid)?.name;
+      setMessage(`“${name}” archived.`);
+    } catch (err) {
+    if (err.response) {
+      console.error("Archive API error payload:", err.response.data);
+      setError(err.response.data.error || err.response.data.message || "Archive failed");
+    } else {
+      console.error("Network or CORS error:", err);
+      setError("Unable to reach server");
+    }
+  }
+}
+ 
+
+  // Sorting helper
+  const handleSort = (key, data, setter) => {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc";
     setSortKey(key);
     setSortOrder(order);
-    const sorted = [...outputs].sort((a, b) => {
+    const sorted = [...data].sort((a, b) => {
       const aVal = a[key] ?? "";
       const bVal = b[key] ?? "";
-      if (typeof aVal === "string" && typeof bVal === "string") {
+      if (typeof aVal === "string") {
         return order === "asc"
           ? aVal.localeCompare(bVal)
           : bVal.localeCompare(aVal);
       }
       return order === "asc" ? (aVal < bVal ? -1 : 1) : (aVal > bVal ? -1 : 1);
     });
-    setOutputs(sorted);
+    setter(sorted);
   };
 
-  const tableColumns = [
+  // Table columns
+  const tableColumns = (isArchiveView = false) => [
     { key: "no", label: "No.", sortable: true },
     { key: "name", label: "Name", sortable: true },
-    { key: "description", label: "Description", sortable: false },
-    { key: "value", label: "Δ Value", sortable: true },
+    { key: "description", label: "Description" },
+    { key: "value", label: "Value", sortable: true },
     {
       key: "document_name",
       label: "Document",
-      render: (r) => (
-        <a href={r.document_path} target="_blank" rel="noopener noreferrer" className={styles.link}>
+      render: r => (
+        <a href={r.document_path} target="_blank" rel="noreferrer">
           {r.document_name}
         </a>
       )
     },
-    { key: "createdAt", label: "Created At", render: (r) => new Date(r.createdAt).toLocaleString(), sortable: true },
     {
       key: "actions",
       label: "Actions",
-      render: (r) => (
-        <>
-          <button className={styles.updateBtn} style={{ marginRight: '0.5rem' }} onClick={() => window.open(r.document_path)}>
-            View
-          </button>
-          <button
-            className={styles.updateBtn}
-            style={{ marginRight: '0.5rem' }}
-            onClick={() => setEditingData(r)}
-          >
-            Edit
-          </button>
-          <button
-            className={styles.actionBtnDelete}
-            onClick={() => { setDeleteTarget(r); setShowDeleteModal(true); }}
-          >
-            Delete
-          </button>
-        </>
-      )
+      render: r =>
+        isArchiveView ? null : (
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                const w = window.open("_blank", "noopener");
+                if (!w) return alert("Allow pop-ups");
+                w.location.href = `${api.defaults.baseURL}/uploads/outputs/${r.document_name}`;
+              }}
+            >
+              View
+            </button>
+            <button
+              className={styles.updateBtn}
+              onClick={() => setEditingData(r)}
+            >
+              Edit
+            </button>
+            <button
+              className={styles.actionBtnDelete}
+              onClick={() => {
+                setArchiveTarget(r);
+                setShowArchiveModal(true);
+              }}
+            >
+              Archive
+            </button>
+          </div>
+        )
     }
   ];
- const fields = [
-   {name: "Reason", label: "Reason for Deletion", type: "select", options:
-    [ { value: "No longer relevant", label: "No longer relevant" },
-      { value: "Duplicate entry", label: "Duplicate entry" },
-      { value: "Incorrect data", label: "Incorrect data" },
-      { value: "Other", label: "Other" },
-    ], placeholder: "Select reason for deletion"}
- ];
-  const displayed = expanded ? outputs : outputs.slice(0, 3);
 
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      // Archive instead of delete
-      await api.post(`/outputs/${deleteTarget.uuid}/archive`, { reason: deleteReason });
-      fetchOutputs();
-    } catch (err) {
-      console.error("Error archiving output", err);
-    } finally {
-      setShowDeleteModal(false);
-      setDeleteTarget(null);
-      setDeleteReason("");
+  // The single "reason" field passed into FormModal
+  const archiveFields = [
+    {
+      name: "reason",
+      label: "Reason for archiving",
+      type: "select",
+      options: [
+        { value: "No longer relevant", label: "No longer relevant" },
+        { value: "Duplicate entry", label: "Duplicate entry" },
+        { value: "Incorrect data", label: "Incorrect data" },
+        { value: "Other", label: "Other" }
+      ]
     }
-  };
+  ];
 
-  if (loading) return <div className={styles.loading}>Loading outputs…</div>;
+    useEffect(() => {
+    if (!message) return;
+    const id = setTimeout(() => setMessage(null), 6000);
+    return () => clearTimeout(id);
+  }, [message]);
+
+  // auto-dismiss error after 6s
+  useEffect(() => {
+    if (!error) return;
+    const id = setTimeout(() => setError(null), 6000);
+    return () => clearTimeout(id);
+  }, [error]);
+
+  if (loading) return <div className={styles.loading}>Loading…</div>;
 
   return (
     <>
+      {message && <div className={styles.successMsg}>{message}</div>}
+      {error && <div className={styles.errorMsg}>{error}</div>}
+
       {adding && (
         <AddOutputModal
           open
           onClose={() => setAdding(false)}
-          onAdded={() => { fetchOutputs(); setAdding(false); }}
+          onAdded={() => {
+            fetchOutputs();
+            setAdding(false);
+          }}
           phaseuuid={phaseuuid}
         />
       )}
 
       {editingData && (
-        <AddOutputModal
-          open={Boolean(editingData)}
+        <EditOutputModal
+          open
           onClose={() => setEditingData(null)}
-          onEdited={() => { fetchOutputs(); setEditingData(null); }}
+          onEdited={() => {
+            fetchOutputs();
+            setEditingData(null);
+          }}
           phaseuuid={phaseuuid}
           editData={editingData}
         />
       )}
 
-      {showDeleteModal && (
+      {showArchiveModal && (
         <FormModal
-        isOpen={showDeleteModal}
-        title="Delete Output"
-        fields={fields}
-        onSubmit={confirmDelete}
-        onClose={() => setShowDeleteModal(false)}
-        disableSubmit={!deleteReason}
-        submitLabel="Submit"
-      >
-        <p>Are you sure you want to delete <strong>{deleteTarget?.name}</strong>?</p>
-        <div className={formStyles.field}>
-          <label htmlFor="deleteReason">Reason for deletion</label>
-          <select
-            id="deleteReason"
-            name="deleteReason"
-            value={deleteReason}
-            onChange={(e) => setDeleteReason(e.target.value)}
-            className={formStyles.input}
-          >
-            <option value="" disabled>
-              Select reason
-            </option>
-            {fields[0].options.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </div>
-      </FormModal>
+          title={`Archive "${archiveTarget.name}"`}
+          fields={archiveFields}
+          initialValues={{ reason: "" }}
+          onChange={vals => {
+            /* FormModal will call this with { reason: '...' } */
+            /* we don't need to store locally here */
+          }}
+          onSubmit={vals => {
+            archiveOutput(archiveTarget.uuid, vals.reason);
+            setShowArchiveModal(false);
+          }}
+          onClose={() => setShowArchiveModal(false)}
+          extraActions={[]}
+        />
       )}
 
       <div className={styles.milestonesSection}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <h2 className={styles.sectionTitle}>Outputs</h2>
+        <h2>Outputs</h2>
+
+        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
           <Toolbar
-            placeholder="Search outputs..."
+            placeholder={`Search ${showArchived ? "archived" : "active"}...`}
             buttons={[
-              { label: 'Filter', onClick: () => {}, variant: 'secondary', icon: MdFilterList },
-              { label: 'Download PDF', onClick: () => {}, variant: 'primary', icon: MdDownload },
-              { label: 'Add New', onClick: () => setAdding(true), variant: 'primary', icon: MdAdd }
-            ]}
+              {
+                label: showArchived ? "Show Active" : "Show Archived",
+                onClick: () => setShowArchived(!showArchived),
+                variant: "secondary",
+                icon: MdFilterList
+              },
+              !showArchived && {
+                label: "Add New",
+                onClick: () => setAdding(true),
+                variant: "primary",
+                icon: MdAdd
+              }
+            ].filter(Boolean)}
           />
         </div>
 
         <Table
-          columns={tableColumns}
-          data={displayed}
+          columns={tableColumns(showArchived)}
+          data={showArchived ? archivedOutputs : outputs}
           sortKey={sortKey}
           sortOrder={sortOrder}
-          onSort={handleSort}
+          onSort={key =>
+            handleSort(
+              key,
+              showArchived ? archivedOutputs : outputs,
+              showArchived ? setArchivedOutputs : setOutputs
+            )
+          }
         />
-
-        {outputs.length > 3 && (
-          <button className={styles.accordionBtn} onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Hide outputs ↑' : 'View all outputs →'}
-          </button>
-        )}
       </div>
     </>
   );

@@ -89,7 +89,7 @@ export default function ProjectDetails() {
       title: "Project Duration",
       columns: appendActionsColumn([
         { key: "no", label: "No.", sortable: true },
-        { key: "year", label: "Year", sortable: true },
+        { key: "title", label: "Year", sortable: true },
         { key: "description", label: "Description", sortable: false },
       ]),
         dataKey: "milestones",
@@ -104,7 +104,8 @@ export default function ProjectDetails() {
       if (res.status === 200) {
         const data = res.data;
         setProject(data);
-
+console.log("Fetched project data:", data);
+        // Use typeConfig to determine which items to set
         const config = typeConfig[data.type];
         if (config && Array.isArray(data[config.dataKey])) {
           setItems(data[config.dataKey]);

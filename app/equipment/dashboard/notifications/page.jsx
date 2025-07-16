@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import api from "@/app/lib/utils/axios";
 import { config } from "/config";
 import styles from "@/app/styles/notifications/notifications.module.css";
+import EmptyState from "@/app/components/EmptyState/EmptyState";
+import Loading from "@/app/components/Loading/Loading";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
@@ -10,19 +12,28 @@ export default function NotificationsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selected, setSelected] = useState([]);     // now an array of IDs
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
-    (async () => {
+    const fetchNotifications = async () => {
+      setLoading(true);
       try {
         const res = await api.get(`${config.baseURL}/notifications`);
         if (res.statusText === "OK") {
-          setNotifications(res.data.rows);
+          setNotifications(res.data.rows || []);
         }
       } catch (e) {
         console.error("Failed to fetch notifications", e);
+        setNotifications([]);
+      } finally {
+        setLoading(false);
+        setHasFetched(true);
       }
-    })();
+    };
+
+    fetchNotifications();
   }, []);
 
   // Apply filter + search
@@ -66,6 +77,51 @@ export default function NotificationsPage() {
     setSelected([]);
   };
 
+  // Get empty state configuration based on current state
+  const getEmptyStateConfig = () => {
+    if (searchTerm && filtered.length === 0) {
+      return {
+        illustration: "/undraw_no-data_ig65.svg",
+        message: `No notifications found for "${searchTerm}"`,
+        details: "Try adjusting your search terms or clearing filters.",
+        actionLabel: "Clear Search",
+        onAction: () => {
+          setSearchTerm("");
+          setPage(1);
+        }
+      };
+    }
+
+    if (filter === "unread" && filtered.length === 0) {
+      return {
+        illustration: "/undraw_no-data_ig65.svg",
+        message: "No unread notifications",
+        details: "You're all caught up! All your notifications have been read.",
+        actionLabel: "View All",
+        onAction: () => setFilter("all")
+      };
+    }
+
+    if (filter === "read" && filtered.length === 0) {
+      return {
+        illustration: "/undraw_no-data_ig65.svg",
+        message: "No read notifications",
+        details: "You haven't read any notifications yet.",
+        actionLabel: "View All",
+        onAction: () => setFilter("all")
+      };
+    }
+
+    // Default empty state (no notifications at all)
+    return {
+      illustration: "/undraw_no-data_ig65.svg",
+      message: "No notifications yet",
+      details: "You'll see notifications here when there are updates or important information to share.",
+      actionLabel: "Refresh",
+      onAction: () => window.location.reload()
+    };
+  };
+
   return (
     <div className={styles.notificationsCard}>
       <div className={styles.notificationsHeader}>
@@ -97,64 +153,87 @@ export default function NotificationsPage() {
             value={searchTerm}
             onChange={e => { setSearchTerm(e.target.value); setPage(1); }}
           />
-          <button className={styles.markAllBtn} onClick={markAllRead}>
+          <button 
+            className={styles.markAllBtn} 
+            onClick={markAllRead}
+            disabled={notifications.length === 0}
+          >
             Mark all read
           </button>
         </div>
       </div>
 
-      <ul className={styles.notificationList}>
-        {/* Header row with select-all */}
-        <li className={`${styles.notificationItem} ${styles.headerRow}`}>
-          <input
-            type="checkbox"
-            checked={
-              pageItems.length > 0 &&
-              pageItems.every(n => selected.includes(n.id))
-            }
-            onChange={toggleSelectAll}
-          />
-          <span className={styles.colMessage}>Message</span>
-          <span className={styles.colTime}>Time</span>
-        </li>
+      {/* Loading State */}
+      {loading && <Loading />}
 
-        {pageItems.map(n => (
-          <li
-            key={n.id}
-            className={`${styles.notificationItem} ${!n.read ? styles.unread : ""}`}
-          >
-            <input
-              type="checkbox"
-              checked={selected.includes(n.id)}
-              onChange={() => toggleSelectOne(n.id)}
-            />
-            <div className={styles.colMessage}>{n.message}</div>
-            <time className={styles.colTime}>
-              {new Date(n.createdAt).toLocaleString()}
-            </time>
-          </li>
-        ))}
+      {/* Main Content */}
+      {!loading && (
+        <>
+          {filtered.length > 0 ? (
+            <>
+              <ul className={styles.notificationList}>
+                {/* Header row with select-all */}
+                <li className={`${styles.notificationItem} ${styles.headerRow}`}>
+                  <input
+                    type="checkbox"
+                    checked={
+                      pageItems.length > 0 &&
+                      pageItems.every(n => selected.includes(n.id))
+                    }
+                    onChange={toggleSelectAll}
+                  />
+                  <span className={styles.colMessage}>Message</span>
+                  <span className={styles.colTime}>Time</span>
+                </li>
 
-        {filtered.length === 0 && (
-          <li className={styles.noResults}>No notifications found.</li>
-        )}
-      </ul>
+                {pageItems.map(n => (
+                  <li
+                    key={n.id}
+                    className={`${styles.notificationItem} ${!n.read ? styles.unread : ""}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(n.id)}
+                      onChange={() => toggleSelectOne(n.id)}
+                    />
+                    <div className={styles.colMessage}>{n.message}</div>
+                    <time className={styles.colTime}>
+                      {new Date(n.createdAt).toLocaleString()}
+                    </time>
+                  </li>
+                ))}
+              </ul>
 
-      <div className={styles.pagination}>
-        <button
-          onClick={() => setPage(p => Math.max(1, p - 1))}
-          disabled={page === 1}
-        >
-          ← Prev
-        </button>
-        <span>{page} / {pageCount}</span>
-        <button
-          onClick={() => setPage(p => Math.min(pageCount, p + 1))}
-          disabled={page === pageCount}
-        >
-          Next →
-        </button>
-      </div>
+              {/* Pagination */}
+              <div className={styles.pagination}>
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  ← Prev
+                </button>
+                <span>{page} / {pageCount}</span>
+                <button
+                  onClick={() => setPage(p => Math.min(pageCount, p + 1))}
+                  disabled={page === pageCount}
+                >
+                  Next →
+                </button>
+              </div>
+            </>
+          ) : (
+            hasFetched && (
+              <EmptyState
+                illustration={getEmptyStateConfig().illustration}
+                message={getEmptyStateConfig().message}
+                details={getEmptyStateConfig().details}
+                actionLabel={getEmptyStateConfig().actionLabel}
+                onAction={getEmptyStateConfig().onAction}
+              />
+            )
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -191,7 +191,7 @@ const columns = [
       <div className={styles.buttons}>
         <button
           className={`${styles.button} ${styles.view}`}
-          onClick={() => window.location.href = `/pages/student/dashboard/students/${row.uuid}/`}
+          onClick={() => window.location.href = `/student/dashboard/students/${row.uuid}/`}
           title="View"
         >
           View

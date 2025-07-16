@@ -79,15 +79,15 @@ export default function BorrowedComponentPage(onClose) {
         <button
           className={styles.button}
           onClick={() => {
-            console.log("I have been clicked")
-            console.log(row)
+            // console.log("I have been clicked")
+            // console.log(row)
             setSelected(row);
             setShowAdd(true);
           }}
         >
           Update
         </button>
-          <Link href={`/pages/equipment/dashboard/borrow/${row.uuid}`}>
+          <Link href={`/equipments/borrow/${row.uuid}`}>
         <button
           className={styles.button}
           
@@ -148,16 +148,15 @@ export default function BorrowedComponentPage(onClose) {
       )}
 
       {showAdd && (
-        <AddBorrow
-          initialData={selected}
-          onClose={() => setShowAdd(false)}
-          onSaved={() => {
-            setShowAdd(false);
-            // refresh
-            router.replace(router.asPath);
-          }}
-        />
-      )}
+            <AddBorrow
+        initialData={selected}
+        onClose={() => {
+          setShowAdd(false);
+          setSelected(null); // Clear the selected data on close
+        }}
+        // ...
+      />
+            )}
     </div>
   );
 }

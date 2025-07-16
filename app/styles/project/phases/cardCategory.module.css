@@ -85,3 +85,34 @@
   padding: 0.5rem 0;
   border-bottom: 1px solid #ddd;
 }
+.updateBtn {
+  padding: 8px 16px;
+  background-color: #2bb3d2;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.updateBtn:hover {
+  background-color: #1fa4b6;
+}
+.actionBtn {
+  background-color: #0cb47c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+} 
+.actionBtnDelete {
+  background-color: #ef4444; /* red */
+  color: #fff;
+   border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}

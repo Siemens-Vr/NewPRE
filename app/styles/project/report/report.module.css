@@ -116,7 +116,7 @@
 
 .progressContainer {
   width: 100%;
-  background-color: #E8F5E9;  
+  /* background-color: #E8F5E9;   */
   border-radius: 4px;
   overflow: hidden;
   height: 28px;                

@@ -121,7 +121,7 @@ const ViewCohort = () => {
                   'Number of Students': level.students?.length || 0,
                   'Number of Facilitators': level.facilitators?.length || 0
                 }}
-                href={`/pages/student/dashboard/cohorts/${cohortsData.uuid}/levels/${level.uuid}`}
+                href={`/student/dashboard/cohorts/${cohortsData.uuid}/levels/${level.uuid}`}
                 onUpdate={() => handleEditLevel(level)}
                 onDelete={() => handleDeleteLevel(level.uuid)}
                 showDropdown={true}

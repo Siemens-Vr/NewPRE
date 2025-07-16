@@ -32,7 +32,7 @@ export default function CostCategoryDetailPage() {
       key: "total_amount",
       label: "Total Amount",
       sortable: true,
-      render: (row) => `$${row.total_amount?.toLocaleString() || "0"}`,
+      render: (row) => `${row.total_amount?.toLocaleString() || "0"}`,
     },
     { key: "description", label: "Description", sortable: false },
     {
@@ -48,7 +48,7 @@ export default function CostCategoryDetailPage() {
             View
           </button>
           <button
-            className={styles.actionBtn}
+            className={styles.updateBtn}
             onClick={() => {
               setEditItem(row);
               setShowEditModal(true);
@@ -73,7 +73,7 @@ export default function CostCategoryDetailPage() {
               }
             }}
           >
-            Delete
+            Archieve
           </button>
         </div>
       ),
@@ -91,7 +91,7 @@ export default function CostCategoryDetailPage() {
       const res = await api.get(
         `/cost_categories_tables/${category_id}`
       );
-      console.log(res)
+      console.log(res.data);
 
       if (res.status === 200) {
         setCostItems(res.data);

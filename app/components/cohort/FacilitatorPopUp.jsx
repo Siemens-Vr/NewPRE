@@ -1,72 +1,82 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormModal from "@/app/components/Form/FormModal";
-import Select from "react-select";
+import Spinner from "@/app/components/spinner/spinner";
+import api from "@/app/lib/utils/axios";
 
-const FacilitatorFormModal = ({ onClose, onAddFacilitator, facilitators }) => {
+export default function FacilitatorFormModal({ onClose, onAddFacilitator }) {
+  const [options, setOptions] = useState(null);
   const [formValues, setFormValues] = useState({
-    facilitator: null,
-    role: null,
+    facilitator: "",
+    role: "",
   });
 
-  const roleOptions = [
-    { value: 'Theory Instructor', label: 'Theory Instructor' },
-    { value: 'Practical Instructor', label: 'Practical Instructor' },
-  ];
+  // 1) Fetch once on mount
+  useEffect(() => {
+    api
+      .get("/facilitators")
+      .then((res) => {
+        // map API data into { value,label } shape
+        const opts = Array.isArray(res.data)
+          ? res.data.map((f) => ({
+              value: f.uuid,
+              label: `${f.firstName} ${f.lastName}`,
+            }))
+          : [];
+        setOptions(opts);
+      })
+      .catch((_) => setOptions([]));
+  }, []);
 
-  const handleFormChange = (updated) => {
-    setFormValues(updated);
-  };
-
- const handleSubmit = () => {
-  const { facilitator: facilitatorId, role } = formValues;
-
-  // Find the full facilitator object from facilitators list
-  const fullFacilitator = facilitators.find(fac => fac.uuid === facilitatorId);
-
-  if (fullFacilitator && role) {
-    onAddFacilitator({
-      uuid: fullFacilitator.uuid,
-      name: `${fullFacilitator.firstName} ${fullFacilitator.lastName}`, // full name string
-      role: role,  // role is already the string from select
-    });
-    onClose();
-  } else {
-    alert("Please select a valid facilitator and role");
+  // 2) If still loading, show spinner
+  if (options === null) {
+    return (
+      <div style={{ textAlign: "center", padding: 40 }}>
+        <Spinner />
+      </div>
+    );
   }
-};
 
-
-  const fields = [
-    {
-      name: 'facilitator',
-      label: 'Select Facilitator',
-      type: 'select',
-      options: facilitators.map(fac => ({
-        value: fac.uuid,
-        label: `${fac.firstName} ${fac.lastName}`,
-      })),
-    },
-    {
-      name: 'role',
-      label: 'Select Role',
-      type: 'select',
-      options: roleOptions
-    }
+  const roleOptions = [
+    { value: "Theory Instructor", label: "Theory Instructor" },
+    { value: "Practical Instructor", label: "Practical Instructor" },
   ];
+
+  // 3) When user hits “Done” (or clicks Add), validate & bubble up
+  const handleSubmit = () => {
+    const { facilitator, role } = formValues;
+    console.log("Submitting facilitator:", formValues);
+    if (!facilitator || !role) {
+      return alert("Please select both facilitator and role.");
+    }
+    onAddFacilitator({ value: facilitator, role });
+    onClose();
+  };
 
   return (
     <FormModal
       title="Add Facilitator"
-      fields={fields}
+      fields={[
+        {
+          name: "facilitator",
+          label: "Select Facilitator",
+          type: "select",
+          options: options,
+        },
+        {
+          name: "role",
+          label: "Select Role",
+          type: "select",
+          options: roleOptions,
+        },
+      ]}
       initialValues={formValues}
+      onChange={(vals) => setFormValues(vals)}
+      onAdd={handleSubmit}
       onSubmit={handleSubmit}
-      onAdd={() => {}}
-      onChange={handleFormChange}
       onClose={onClose}
+      extraActions={[]}
     />
   );
-};
-
-export default FacilitatorFormModal;
+}

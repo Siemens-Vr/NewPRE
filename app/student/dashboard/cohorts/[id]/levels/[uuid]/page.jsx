@@ -14,6 +14,7 @@ import AddFacilitatorPage from "@/app/student/dashboard/facilitators/add/page";
 import api from '@/app/lib/utils/axios';
 import Table from '@/app/components/table/Table';
 import Loading from '@/app/components/Loading/Loading';
+import FacilitatorSelectPopup from '@/app/components/cohort/FacilitatorsSelect';
 
 import Link from 'next/link';
 
@@ -33,6 +34,7 @@ const LevelDetails = ({ searchParams }) => {
     const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
     const [loading, setLoading] = useState(false);
+  const [showSelectFacPopup, setShowSelectFacPopup] = useState(false);
 
   const params = useParams();
 
@@ -75,6 +77,23 @@ const LevelDetails = ({ searchParams }) => {
       setSortOrder('asc');
     }
   };
+
+ const handleSelectFacilitator = async (facUuid) => {
+    try {
+      await api.post(
+        `/levels/${levelData.uuid}/facilitators`,
+        { facilitatorId: facUuid }
+      );
+      // re-fetch so the table updates with the newly added facilitator
+      await fetchData();
+    } catch (err) {
+      console.error('Error attaching facilitator:', err);
+      alert('Could not add facilitator.');
+    } finally {
+      setShowSelectFacPopup(false);
+    }
+  };
+
  if (loading) {
     return <Loading text="Loading level details..." />;
   }
@@ -229,16 +248,29 @@ const LevelDetails = ({ searchParams }) => {
       <div className={styles.instructorsTable}>
         <div className={styles.tableTop}>
     <h3>Instructors</h3>
-    <button onClick={handleAddNewClick} className={styles.addButton}>
-      Add New Instructor
-    </button>
-    { showAddNewPopup && (
-  <AddFacilitatorPage
-    levelUuid={levelData.uuid}
-    onSave={handleAddFacilitator}
-    onClose={handleClosePopup}
-  />
-)}
+          <button
+           onClick={() => setShowSelectFacPopup(true)}
+           className={styles.addButton}
+           >
+           + Add Existing Instructor
+         </button>
+        {showSelectFacPopup && (
+          <FacilitatorSelectPopup
+            allFacilitators={facilitators}
+            currentLevelFacilitators={levelData.facilitators}
+            onClose={() => setShowSelectFacPopup(false)}
+            onSelect={({ facilitatorId, specification }) => {
+              // call your API to attach with specification
+              api.post(`/levels/${levelData.uuid}/facilitators`, {
+                facilitatorId,
+                specification
+              })
+              .then(fetchData)
+              .catch(() => alert('Failed to add facilitator.'))
+              .finally(() => setShowSelectFacPopup(false));
+            }}
+          />
+        )}
 
   </div>
 

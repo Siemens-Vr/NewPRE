@@ -7,17 +7,16 @@ import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
 import Swal from "sweetalert2";
 import styles from "@/app/styles/archive/archive.module.css";
-import Navbar from  '@/app/components/navbar/navbar'
-
+import Navbar from  '@/app/components/navbar/navbar';
 
 export default function ArchivePage() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, hasRole } = useAuth();
   // console.log("ArchivePage user:", user);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-
+  
   // Fetch archived records for this user
   const fetchArchived = async () => {
     if (!isAuthenticated) return;
@@ -76,10 +75,40 @@ export default function ArchivePage() {
     }
   };
 
+  const handleDeletePermanently = async (recordId) => {
+    const confirm = await Swal.fire({
+      title: "Delete permanently?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete permanently",
+      confirmButtonColor: "#d33",
+      cancelButtonText: "Cancel",
+    });
+    
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await api.delete(`/api/auth/archived/${recordId}`);
+      Swal.fire({
+        icon: "success",
+        title: "Record deleted permanently!",
+        toast: true,
+        position: "top-end",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      fetchArchived();
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Failed to delete record permanently", "error");
+    }
+  };
+
   const columns = [
     {
       key: "no",
-      label: "#",
+      label: "No",
       sortable: false,
       render: (_r, idx) => idx + 1,
     },
@@ -111,15 +140,28 @@ export default function ArchivePage() {
       label: "Actions",
       sortable: false,
       render: (r) => (
-        <button
-          className={styles.restoreBtn}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRestore(r.recordId);
-          }}
-        >
-          Restore
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button
+            className={`${styles.actionButton} ${styles.restoreBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRestore(r.recordId);
+            }}
+          >
+            Restore
+          </button>
+          {hasRole('admin') && (
+            <button
+              className={`${styles.actionButton} ${styles.deleteBtn}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeletePermanently(r.recordId);
+              }}
+            >
+              Delete Permanently
+            </button>
+          )}
+        </div>
       ),
     },
   ];

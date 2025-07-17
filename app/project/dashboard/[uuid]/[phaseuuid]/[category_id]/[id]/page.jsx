@@ -306,7 +306,7 @@ export default function DocumentsPage() {
                   <button
                     onClick={() => handleDownload(file)}
                     title="Download"
-                    className="p-2 rounded hover:bg-gray-200 text-blue-600"
+                    className="p-2 rounded hover:bg-gray-200 text-blue-500"
                   >
                     <FaDownload />
                   </button>
@@ -317,7 +317,7 @@ export default function DocumentsPage() {
                       setShowArchiveModal(true);
                     }}
                     title="Archive"
-                    className="p-2 rounded hover:bg-gray-200 text-red-600"
+                    className="p-2 rounded hover:bg-gray-200 text-red-500"
                   >
                     <FaArchive />
                   </button>

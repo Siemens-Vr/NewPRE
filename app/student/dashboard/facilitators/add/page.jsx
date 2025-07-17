@@ -85,11 +85,11 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
       idNo: values.idNo,
       gender: values.gender,
     };
-
+console.log("Submitting payload:", payload);
     try {
       // use the levelUuid prop here
       const response = await api.post(
-        `/levels/${levelUuid}/facilitators`,
+        `/facilitators`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );

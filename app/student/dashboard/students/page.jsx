@@ -190,21 +190,21 @@ const columns = [
     render: row => (
       <div className={styles.buttons}>
         <button
-          className={`${styles.button} ${styles.view}`}
+          className={`${styles.actionButton} ${styles.view}`}
           onClick={() => window.location.href = `/student/dashboard/students/${row.uuid}/`}
           title="View"
         >
           View
         </button>
         <button
-          className={`${styles.button} ${styles.addlevel}`}
+          className={`${styles.actionButton} ${styles.editBtn}`}
           onClick={() => handleUpdateStudent(row)}
           title="Update"
         >
         Update
         </button>
         <button
-          className={`${styles.button} ${styles.delete}`}
+          className={`${styles.actionButton} ${styles.delete}`}
           onClick={() => handleDeleteStudent(row.uuid, `${row.firstName} ${row.lastName}`, row)}
           title="Delete"
         >

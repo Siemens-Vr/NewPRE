@@ -147,23 +147,7 @@
     transition: 0.3s ease-in-out;
 }
 
-.button.view {
-    background: #1b9392;
-    color: white;
-}
 
-.button.view:hover {
-    background: #c6e7e7;
-}
-
-.button.delete {
-    background: #ef4444;
-    color: white;
-}
-
-.button.delete:hover {
-    background: #991b1b;
-}
 
 .noStudents {
     text-align: center;
@@ -183,4 +167,44 @@
 .button.addlevel:hover{
     background: #c6e7e7;
     color: white;
+}
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.actionButton:hover {
+  background: rgba(0,0,0,0.05);
+}
+.editBtn {
+ color: #28a745;
+  border-color: #28a745;
+}
+
+.editBtn:hover {
+   background: #28a745;
+  color: #fff;
+}
+.view {
+    border-color: #1b9392;
+    color: #1b9392;
+}
+.view:hover {
+  background: #1b9392;
+  color: #fff;
+}
+.delete {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.delete:hover {
+  background: #ef4444;
+  color: #fff;
 }

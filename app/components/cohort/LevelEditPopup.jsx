@@ -5,6 +5,7 @@ import FormModal from '@/app/components/Form/formTable';
 import styles from '@/app/styles/cohorts/viewCohort/viewLevel.module.css';
 
 const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
+  console.log("LevelEditPopup levelData:", levelData);
   const formatDate = (dateString) =>
     dateString ? new Date(dateString).toISOString().split('T')[0] : '';
 

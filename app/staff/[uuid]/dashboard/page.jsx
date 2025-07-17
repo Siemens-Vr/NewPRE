@@ -8,6 +8,7 @@ import { Activity, Users, ClipboardList, FileText, Box } from "lucide-react";
 import StaffComponents from "@/app/components/staff/staffComponents";
 
 import Link from "next/link";
+import { useParams } from "react-router-dom";
 
 const Card = ({ children, className }) => (
   <div className={`${styles.card} ${className}`}>{children}</div>
@@ -15,6 +16,8 @@ const Card = ({ children, className }) => (
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ totalUsers: 0, activeStaff: 0, pendingRequests: 0 });
+  const params = useParams()
+  const {uuid} = params
 
   useEffect(() => {
     setStats({ totalUsers: 150, activeStaff: 75, pendingRequests: 5 });
@@ -29,7 +32,7 @@ const Dashboard = () => {
 
       {/* Quick Links Section */}
       <div className={styles.quickActions}>
-        <Link href="/projects" className={styles.quickLink}>
+        <Link href={`/staffs/${uuid}/dashboard/projects`} className={styles.quickLink}>
           <Activity size={20} />
           <span> Your Projects</span>
         </Link>

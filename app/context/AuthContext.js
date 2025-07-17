@@ -36,7 +36,7 @@ const ROLE_DASHBOARDS = {
 admin: "/admin/dashboard",
 equipment: "/equipment/dashboard",
 employee: "/employee/dashboard",
-staff: "/staff/dashboard",
+staff: "/staffs/dashboard",
 user: "/user/dashboard",
 };
 

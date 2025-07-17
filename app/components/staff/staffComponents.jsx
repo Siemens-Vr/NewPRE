@@ -131,11 +131,11 @@ const StaffCard = () => {
     useEffect(() => {
       const fetchNotification = async () => {
         setLoading(true);
-        console.log("Fetching notifications...");
+        // console.log("Fetching notifications...");
         try {
           const response = await fetch(`${config.baseURL}/notifications`);
           const data = await response.json();
-          console.log("Data Received:", data);
+          // console.log("Data Received:", data);
           setNotifications(data);
         } catch (error) {
           console.error("Error fetching notification:", error);
@@ -171,11 +171,11 @@ const TodoCard = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       setLoading(true);
-      console.log("Fetching leave types...");
+      // console.log("Fetching leave types...");
       try {
         const response = await fetch(`${config.baseURL}/todos`);
         const data = await response.json();
-        console.log("Data Received:", data);
+        // console.log("Data Received:", data);
         setTodos(data);
       } catch (error) {
         console.error("Error fetching to-dos list:", error);
@@ -211,7 +211,7 @@ const ProjectCard = () => {
   useEffect(() => {
     const fetchProject = async () => {
       setLoading(true);
-      console.log("Fetching projects...");
+      // console.log("Fetching projects...");
       // try {
       //   const response = await fetch(`${config.baseURL}/projects`);
       //   const data = await response.json();

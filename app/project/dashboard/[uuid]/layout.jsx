@@ -46,6 +46,7 @@ export default function ProjectLayout({ children }) {
     { key: 'monitoring', label: 'Monitoring', href: `/projects/${uuid}/monitoring` },
     ...(typeTab ? [typeTab] : []),
     { key: 'report', label: 'Report', href: `/projects/${uuid}/report` },
+     { key: 'personnel', label: 'Personnel', href: `/projects/${uuid}/personnel` },
   ];
 
   let activeKey = 'info';

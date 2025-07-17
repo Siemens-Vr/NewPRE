@@ -2,10 +2,12 @@
 import api from '@/app/lib/utils/axios';
 import styles from '@/app/styles/users/users.module.css';
 import Search from '@/app/components/search/search';
+import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react';
+
 
 const UsersPageContent = () => {
     const router = useRouter();
@@ -13,6 +15,21 @@ const UsersPageContent = () => {
     const [loading, setLoading] = useState(false);
     const [q, setQ] = useState('');
     const [users, setUsers] = useState([]);
+
+const { onlineUsers, fetchOnlineUsers, isSocketConnected } = useAuth();
+
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      setLoading(true);
+      await fetchOnlineUsers();
+      setLoading(false);
+    };
+
+    loadUsers();
+  }, []);
+
+  console.log("online users",onlineUsers)
 
     // 2. on mount, read ?q= from the URL
     useEffect(() => {
@@ -41,6 +58,8 @@ const UsersPageContent = () => {
             .finally(() => setLoading(false));
     }, [q, router, searchParams]);
 
+    // console.log(users)
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -63,7 +82,7 @@ const UsersPageContent = () => {
                 <tbody>
                     {users.map((user) => (
                         <tr key={user._id}>
-                            <td>{user.username}</td>
+                            <td>{user.firstName}  {user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                             <td>{user.role.toUpperCase()}</td>

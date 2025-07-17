@@ -110,25 +110,38 @@ export default function MonitoringPage() {
                     label: "Latest Update",
                     render: o => new Date(o.createdAt).toLocaleDateString()
                   },
-                  {
-                    key: "progress",
-                    label: "Progress",
-                    render: o => {
-                      const pct = Math.round(o.value * 100);
-                      const bgColor =
-                        pct === 100 ? "#4caf50" : pct === 0 ? "#f44336" : "#2196f3";
-                      return (
-                        <div className={styles.progressContainer}>
-                          <div
-                            className={styles.progressInner}
-                            style={{ width: `${pct}%`, backgroundColor: bgColor }}
-                          >
-                            {pct}%
-                          </div>
+               {
+                  key: "progress",
+                  label: "Progress",
+                  render: o => {
+                    const isComplete = o.value === 1;
+                    const isApproved = o.is_approved;
+                    
+                    const pct = isComplete ? 100 : 0;
+                    const bgColor = isComplete 
+                      ? (isApproved ? "#4caf50" : "#2196f3") 
+                      : "#f44336";
+                    const text = isComplete 
+                      ? (isApproved ? "100%" : "Pending Approval")
+                      : "0%";
+                    const textColor = isComplete ? "white" : "black";
+                    
+                    return (
+                      <div className={styles.progressContainer}>
+                        <div
+                          className={styles.progressInner}
+                          style={{ 
+                            width: `${pct}%`, 
+                            backgroundColor: bgColor,
+                            color: textColor
+                          }}
+                        >
+                          {text}
                         </div>
-                      );
-                    }
+                      </div>
+                    );
                   }
+                }
                 ]}
                 data={rows}
                 onRowClick={handleRowClick}         

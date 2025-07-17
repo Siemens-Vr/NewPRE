@@ -2,134 +2,124 @@
 
 import React, { useState, useEffect } from "react";
 import FormModal from "@/app/components/Form/formTable";
-import Spinner from "@/app/components/spinner/spinner";
-import FacilitatorPopup from "@/app/components/cohort/FacilitatorPopUp";
 import api from "@/app/lib/utils/axios";
+import FacilitatorPopup from "@/app/components/cohort/FacilitatorPopUp";
 
-const AddLevelForm = ({ onClose, onSave, cohortStartDate = "", cohortEndDate = "" }) => {
- const [formValues, setFormValues] = useState({
-  levelName: '',   
-  startDate: '',
-  endDate: '',
-  exam_dates: '',
-  exam_quotation_number: '',
-  facilitators: [],
-});
+export default function AddLevelForm({
+  onClose,
+  onSave,
+  cohortStartDate,
+  cohortEndDate,
+}) {
+  const [formValues, setFormValues] = useState({
+    levelName: "",
+    startDate: "",
+    endDate: "",
+    exam_dates: "",
+    exam_quotation_number: "",
+    facilitators: [],
+  });
+  const [facList, setFacList] = useState([]);
+  const [showFacPopup, setShowFacPopup] = useState(false);
+  const [dateError, setDateError] = useState("");
   const [facilitatorsList, setFacilitatorsList] = useState([]);
-  const [showFacilitatorPopup, setShowFacilitatorPopup] = useState(false);
-  const [levelDateError, setLevelDateError] = useState('');
 
   const levelOptions = [
     { value: "SMSCP Level 1", label: "SMSCP Level 1" },
     { value: "SMSCP Level 2", label: "SMSCP Level 2" },
     { value: "SMSCP Level 3", label: "SMSCP Level 3" },
   ];
-
-  useEffect(() => {
-    const fetchFacilitators = async () => {
-      try {
-        const res = await api.get(`/facilitators`);
-        setFacilitatorsList(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error("Error fetching facilitators:", err);
-        setFacilitatorsList([]);
-      }
-    };
-    fetchFacilitators();
-  }, []);
+useEffect(() => {
+  api.get("/facilitators")
+     .then(res => setFacilitatorsList(res.data || []))
+     .catch(() => setFacilitatorsList([]));
+}, []);
 
   const validateDates = () => {
-    const start = new Date(formValues.startDate);
-    const end = new Date(formValues.endDate);
-    const cohortStart = new Date(cohortStartDate);
-    const cohortEnd = new Date(cohortEndDate);
+    const s = new Date(formValues.startDate);
+    const e = new Date(formValues.endDate);
+    const cs = new Date(cohortStartDate);
+    const ce = new Date(cohortEndDate);
 
-    if (formValues.startDate && formValues.endDate) {
-      if (start >= end) {
-        setLevelDateError("Level end date must be after start date.");
-        return false;
-      }
-      if (cohortStartDate && cohortEndDate) {
-        if (start < cohortStart || end > cohortEnd) {
-          setLevelDateError("Level dates must be within cohort dates.");
-          return false;
-        }
-      }
+    if (s >= e) {
+      return "End must be after start.";
     }
-    setLevelDateError("");
-    return true;
+    if (cs && ce && (s < cs || e > ce)) {
+      return "Level must sit within cohort dates.";
+    }
+    return "";
   };
 
-const handleFormSubmit = () => {
-  if (!validateDates()) return;
+  const handleSubmit = () => {
+    const err = validateDates();
+    if (err) {
+      setDateError(err);
+      return;
+    }
+    // everything’s valid!
+     const readyLevel = {
+    levelName:             formValues.levelName,
+    startDate:             new Date(formValues.startDate).toISOString(),
+    endDate:               new Date(formValues.endDate).toISOString(),
+    exam_dates:            formValues.exam_dates
+                             ? new Date(formValues.exam_dates).toISOString()
+                             : null,
+    exam_quotation_number: formValues.exam_quotation_number,
+    facilitators:          formValues.facilitators   // already {value,role}
+  };
 
-  if (!formValues?.levelUuid) {
-    alert("Please select a level");
+   onSave(readyLevel);
+   onClose();
+  };
+const openFacilitatorPopup = () => {
+  if (facilitatorsList.length === 0) {
+    alert("No facilitators available yet.");
     return;
   }
-
-  const selectedOption = levelOptions.find(option => option.value === formValues.levelUuid);
-
-  if (!selectedOption) {
-    alert("Selected level is invalid");
-    return;
-  }
-
-  const newLevel = {
-    ...formValues,
-    levelName: selectedOption.label,
-  };
-
-  delete newLevel.levelUuid;
-
-  onSave(newLevel);
-  onClose();
+  setShowFacilitatorPopup(true);
 };
+  // when FormModal calls onChange
+  const handleChange = (vals) => setFormValues(vals);
 
-
-  const handleFormChange = (updatedValues) => {
-    setFormValues(updatedValues);
-  };
-
- const addFacilitator = (facilitator) => {
- console.log("Adding facilitator:", facilitator);
-
-  setFormValues(prev => {
-    if (prev.facilitators.some(f => f.uuid === facilitator.uuid)) return prev;
-    return {
-      ...prev,
-      facilitators: [...prev.facilitators, facilitator]
-    };
-  });
-};
-
-
-
-  const removeFacilitator = (index) => {
-  const updated = [...formValues.facilitators];
-  updated.splice(index, 1);
-  setFormValues(prev => ({
+  const addFacilitator = (fac) => {
+    if (!formValues.facilitators.some((f) => f.uuid === fac.uuid)) {
+     setFormValues(prev => ({
     ...prev,
-   facilitators: updated
+    facilitators: [...prev.facilitators, {
+      value: fac.value,
+      role:  fac.role
+    }]
   }));
-};
+    }
+    setShowFacPopup(false);
+  };
 
+  const removeFac = (i) => {
+    setFormValues((prev) => ({
+      ...prev,
+      facilitators: prev.facilitators.filter((_, idx) => idx !== i),
+    }));
+  };
 
-  // ✅ Use levelName directly in the field
-  const fields = [
+  const levelFields = [
     {
-      name: 'levelUuid',
-      label: 'Level',
-      type: 'select',
+      name: "levelName",
+      label: "Level",
+      type: "select",
       options: levelOptions,
+      required: true,
     },
-    { name: 'startDate', label: 'Start Date', type: 'date' },
-    { name: 'endDate', label: 'End Date', type: 'date' },
-    { name: 'exam_dates', label: 'Exam Date', type: 'date' },
-    { name: 'exam_quotation_number', label: 'Exam Quotation Number', type: 'text' },
+    { name: "startDate", label: "Start Date", type: "date", required: true },
+    { name: "endDate", label: "End Date", type: "date", required: true },
+    { name: "exam_dates", label: "Exam Date", type: "date" },
+    {
+      name: "exam_quotation_number",
+      label: "Quotation #",
+      type: "text",
+    },
   ];
 
-  const facilitatorTable = formValues.facilitators.length > 0 ? (
+  const facTable = formValues.facilitators.length ? (
     <table>
       <thead>
         <tr>
@@ -139,56 +129,54 @@ const handleFormSubmit = () => {
         </tr>
       </thead>
       <tbody>
-        {formValues.facilitators.map((fac, index) => (
-          <tr key={index}>
-            <td>{fac.name || "N/A"}</td>
-             <td>{fac.role || "N/A"}</td>
-
+        {formValues.facilitators.map((f, i) => (
+          <tr key={i}>
+            <td>{f.name}</td>
+            <td>{f.role}</td>
             <td>
-              <button type="button" onClick={() => removeFacilitator(index)}>Remove</button>
+              <button onClick={() => removeFac(i)}>Remove</button>
             </td>
           </tr>
         ))}
       </tbody>
     </table>
-  ) : <p>No facilitators added yet.</p>;
+  ) : (
+    <p>No facilitators</p>
+  );
 
   return (
     <>
       <FormModal
         title="Add Level"
-        fields={fields}
+        fields={levelFields}
         initialValues={formValues}
-        onSubmit={handleFormSubmit}
-        onAdd={() => setShowFacilitatorPopup(true)}
-        onChange={handleFormChange}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        onAdd={() => setShowFacPopup(true)}
         onClose={onClose}
         extraActions={[
           {
-            label: "+ Add Facilitator",
-            onClick: () => setShowFacilitatorPopup(true),
-            className: 'cancel'
-          }
+            label:"+ Add Facilitator",
+            onClick: openFacilitatorPopup
+          },
         ]}
         tableContent={
           <>
-            {levelDateError && (
-              <p className="text-red-600 font-semibold text-center">{levelDateError}</p>
+            {dateError && (
+              <p className="text-red-600 text-center">{dateError}</p>
             )}
-            {facilitatorTable}
+            {facTable}
           </>
         }
       />
 
-      {showFacilitatorPopup && (
+      {showFacPopup && (
         <FacilitatorPopup
-          onClose={() => setShowFacilitatorPopup(false)}
+          onClose={() => setShowFacPopup(false)}
+          facilitators={facList}
           onAddFacilitator={addFacilitator}
-          facilitators={facilitatorsList}
         />
       )}
     </>
   );
-};
-
-export default AddLevelForm;
+}

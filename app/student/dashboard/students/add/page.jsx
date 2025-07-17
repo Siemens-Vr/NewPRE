@@ -1,26 +1,15 @@
 "use client";
-
 import { useState } from "react";
-import styles from '@/app/styles/students/addStudent/addStudent.module.css';
-import { config } from "/config";
-import CohortModal from '@/app/components/cohort/AddCohort';
-import Spinner from '@/app/components/spinner/spinner'
-import { Label } from "recharts";
-import {useRouter} from "next/navigation";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import api from '@/app/lib/utils/axios';
-import FormModal from '@/app/components/Form/FormModal';
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import api from "@/app/lib/utils/axios";
+import FormModal from "@/app/components/Form/formTable";
+import CohortLevelModal from "@/app/components/cohort/CohortLevelModal"; // see below
+import styles from "@/app/styles/students/addStudent/addStudent.module.css";
 
-const AddStudentPage = ({onClose}) => {
-  const router= useRouter();
-  const [showCohortModal, setShowCohortModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [cohortLevelList, setCohortLevelList] = useState([]);
-  
+export default function AddStudentPage({ onClose }) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,143 +19,114 @@ const AddStudentPage = ({onClose}) => {
     kcseNo: "",
     gender: "",
     idNo: "",
-    cohortLevels: [],
   });
+  const [cohortLevelList, setCohortLevelList] = useState([]);
+  const [showCohortModal, setShowCohortModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setErrorMessage("");
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // student fields change
+  const handleStudentChange = (vals) => {
+    setFormData(vals);
   };
 
-  const handleSaveCohorts = (data) => {
-    setCohortLevelList(data);
+  // receive cohort+level list from modal
+  const handleSaveCohortRow = (row) => {
+     console.log("👀 Received new cohort‐level row:", row);
+    setCohortLevelList(prev => [...prev, row]);
+    setShowCohortModal(false);
   };
 
-  const handleDelete = (index) => {
-    const updatedCohortLevelList = cohortLevelList.filter((_, i) => i !== index);
-    setCohortLevelList(updatedCohortLevelList);
+  // remove one entry
+  const handleDelete = (i) => {
+    setCohortLevelList((prev) => prev.filter((_, idx) => idx !== i));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formValues = e.values;
+  const handleSubmit = async () => {
     setLoading(true);
-    setErrorMessage("");
-    toast.success("Student added successfully! ");
-    const dataToSend = {
-      ...formValues,
-      cohortLevels: cohortLevelList.map(item => ({
-        cohortUuid: item.cohortUuid,
-        levelUuid: item.levelUuid,
-        fee : item.fee,
-        examResults : item.examResults
-
-      }))
-    };
-
-
-    console.log("Data to be sent to the backend:", dataToSend);
-
+    // you can validate formData and cohortLevelList here...
+    const payload = {
+      ...formData,
+      cohortLevels: cohortLevelList 
+    }
+    console.log("Data to send:", payload);
     try {
-        const response = await api.post("/students", dataToSend, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-      
-        const data = response.data;
+      const res = await api.post("/students", payload);
+      toast.success("Student added!");
+      // optionally router.push or onClose()
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add student");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        console.log("Backend responded with:", data);
-        
-        if (response.statusText === 201) {
-          toast.success("Student added successfully! 🎉");
-          // ... redirect, reset, etc.
-        } else {
-          // Fallback error toast
-          toast.error("Failed to add Facilitator");
-        }
-      }  catch (error) {
-        console.error("Caught error:", error?.response?.data || error.message || error);
-        toast.error("An unexpected error occurred.");
-      }
-       finally {
-        setLoading(false);
-      }
-    }      
-
-  const fields = [
-    { name: 'firstName', label: 'First Name', type: 'text', placeholder: 'First Name' },
-    { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last Name' },
-    { name: 'email', label: 'Email', type: 'text', placeholder: 'Email' },
-    { name: 'phone', label: 'Phone', type: 'text', placeholder: 'Phone Number' },
-    { name: 'regNo', label: 'Registration No', type: 'text', placeholder: 'Registration Number' },
-    { name: 'kcseNo', label: 'KCSE No', type: 'text', placeholder: 'KCSE Number' },
-    {
-      name: 'gender', label: 'Gender', type: 'select',
+  const studentFields = [
+    { name: "firstName", label: "First Name", type: "text" },
+    { name: "lastName",  label: "Last Name",  type: "text" },
+    { name: "email",     label: "Email",      type: "text" },
+    { name: "phone",     label: "Phone",      type: "text" },
+    { name: "regNo",     label: "Reg No",     type: "text" },
+    { name: "kcseNo",    label: "KCSE No",    type: "text" },
+    { name: "gender",    label: "Gender",     type: "select",
       options: [
-        { value: 'male', label: 'Male' },
-        { value: 'female', label: 'Female' }
+        { value: "male",   label: "Male" },
+        { value: "female", label: "Female" }
       ]
     },
-    { name: 'idNo', label: 'ID Number', type: 'text', placeholder: 'ID Number' },
+    { name: "idNo",      label: "ID No",      type: "text" },
   ];
 
   return (
     <>
       <FormModal
         title="Add Student"
-        fields={fields}
+        fields={studentFields}
         initialValues={formData}
-        onSubmit={(values) => handleSubmit({ preventDefault: () => {}, values })}
+        onChange={handleStudentChange}
+        onAdd={() => setShowCohortModal(true)}    // “Add Cohort+Level”
+        onSubmit={handleSubmit}
         onClose={onClose}
-        extraActions={[
-          { label: 'Add Cohort & Level', onClick: () => setShowCohortModal(true), className: 'cancel' }
-        ]}
-      >
-        {cohortLevelList.length > 0 && (
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Cohort</th>
-                  <th>Level</th>
-                  <th>Fee</th>
-                  <th>Exam Results</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cohortLevelList.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.cohortName}</td>
-                    <td>{item.levelName}</td>
-                    <td>{item.fee}</td>
-                    <td>{item.examResults}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className={styles.deleteButton}
-                        onClick={() => handleDelete(index)}
-                      >
-                        Delete
-                      </button>
-                    </td>
+        tableContent={
+          cohortLevelList.length ? (
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Cohort</th><th>Level</th>
+                    <th>Fee</th><th>Exam Results</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </FormModal>
+                </thead>
+                <tbody>
+                  {cohortLevelList.map((it, i) => (
+                    <tr key={i}>
+                      <td>{it.cohortName}</td>
+                      <td>{it.levelName}</td>
+                      <td>{it.fee}</td>
+                      <td>{it.examResults}</td>
+                      <td>
+                        <button onClick={() => handleDelete(i)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null
+        }
+      />
 
       {showCohortModal && (
-        <CohortModal
-          onSave={handleSaveCohorts}
+        <CohortLevelModal
           onClose={() => setShowCohortModal(false)}
+          onSave={handleSaveCohortRow}
         />
       )}
+
+      <ToastContainer />
+      {/* {loading && <Spinner />} */}
     </>
   );
-};
-
-export default AddStudentPage;
+}

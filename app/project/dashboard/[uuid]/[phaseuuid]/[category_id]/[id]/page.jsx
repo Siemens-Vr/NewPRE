@@ -3,32 +3,27 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useParams } from "next/navigation";
 import Swal from "sweetalert2";
-
 import api from "@/app/lib/utils/axios";
 import styles from "@/app/styles/project/project/project.module.css";
 import UploadDropdown from "@/app/components/uploadDropdown/uploadDropdown";
 import FormModal from "@/app/components/Form/FormModal";
-
 import { MdFolder } from "react-icons/md";
 import { FaRegFileAlt, FaDownload, FaArchive } from "react-icons/fa";
-// import Tippy from '@tippyjs/react'; // for nice tooltips
 
-
-// ─── REDUCER & ACTIONS ─────────────────────────────────────────────────────────
-
+// ─── ACTIONS & REDUCER ────────────────────────────────────────────────────────
 const ACTIONS = {
-  SET_VIEW:      "SET_VIEW",
-  OPEN_FOLDER:  "OPEN_FOLDER",
-  BACK:         "BACK",
-  ADD_FOLDER:   "ADD_FOLDER",
-  ADD_FILE:     "ADD_FILE",
+  SET_VIEW:    "SET_VIEW",
+  OPEN_FOLDER: "OPEN_FOLDER",
+  BACK:        "BACK",
+  ADD_FOLDER:  "ADD_FOLDER",
+  ADD_FILE:    "ADD_FILE",
 };
 
 const initialState = {
   folders:     [],
   files:       [],
-  breadcrumbs: [],       
-  currentId:   null,    
+  breadcrumbs: [],
+  currentId:   null,
 };
 
 function reducer(state, { type, payload }) {
@@ -47,13 +42,10 @@ function reducer(state, { type, payload }) {
     case ACTIONS.OPEN_FOLDER:
       return {
         ...state,
-        breadcrumbs: [
-          ...state.breadcrumbs,
-          { id: payload.id, name: payload.name }
-        ]
+        breadcrumbs: [...state.breadcrumbs, { id: payload.id, name: payload.name }],
       };
 
-   case ACTIONS.BACK: {
+    case ACTIONS.BACK: {
       const bc = [...state.breadcrumbs];
       bc.pop();
       return {
@@ -64,16 +56,10 @@ function reducer(state, { type, payload }) {
     }
 
     case ACTIONS.ADD_FOLDER:
-      return {
-        ...state,
-        folders: [...state.folders, payload],
-      };
+      return { ...state, folders: [...state.folders, payload] };
 
     case ACTIONS.ADD_FILE:
-      return {
-        ...state,
-        files: [...state.files, payload],
-      };
+      return { ...state, files: [...state.files, payload] };
 
     default:
       return state;
@@ -84,8 +70,8 @@ function reducer(state, { type, payload }) {
 export default function DocumentsPage() {
   const { id } = useParams();
   const [state, dispatch] = useReducer(reducer, initialState);
-  // console.log("Initial state:", state);
-  // modal state
+
+  // Modals for create/upload & archive
   const [modal, setModal] = useState({
     createFolder: false,
     uploadFile:   false,
@@ -93,103 +79,105 @@ export default function DocumentsPage() {
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
 
-  //  fetch &  view
- const loadFolder = async (targetId, isRoot = false, name = "Root") => {
-  try {
-    if (isRoot) {
-      // root-level: get folders + files
-      const res = await api.get(`/cost_cat/${targetId}`);
-      const { folders, documents } = res.data.data;
-      dispatch({
-        type: ACTIONS.SET_VIEW,
-        payload: { id: targetId, name, folders, documents, reset: true },
-      });
-    } else {
-      // subfolder: only files
-      const resFiles = await api.get(`/cost_cat/files/${targetId}`);
-      dispatch({
-        type: ACTIONS.SET_VIEW,
-        payload: { 
-          id: targetId, 
-          name, 
-          folders: [],
-          documents: resFiles.data,
-          reset: false 
-        },
-      });
-      dispatch({ type: ACTIONS.OPEN_FOLDER, payload: { id: targetId, name } });
+  // Archive modal
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [archiveTarget, setArchiveTarget]     = useState(null);
+  const [archiveType, setArchiveType]         = useState("file"); // or "folder"
+
+  const archiveFields = [
+    {
+      name: "reason",
+      label: "Reason for archiving",
+      type: "select",
+      options: [
+        { value: "No longer relevant", label: "No longer relevant" },
+        { value: "Duplicate entry",      label: "Duplicate entry" },
+        { value: "Incorrect data",       label: "Incorrect data" },
+        { value: "Other",                label: "Other" },
+      ],
+    },
+  ];
+
+  // ─── LOAD FOLDER ─────────────────────────────────────────────────────────────
+  const loadFolder = async (targetId, isRoot = false, name = "Root") => {
+    try {
+      if (isRoot) {
+        const res = await api.get(`/cost_cat/${targetId}`);
+        const { folders, documents } = res.data.data;
+        dispatch({
+          type: ACTIONS.SET_VIEW,
+          payload: { id: targetId, name, folders, documents, reset: true },
+        });
+      } else {
+        const resFiles = await api.get(`/cost_cat/files/${targetId}`);
+        dispatch({
+          type: ACTIONS.SET_VIEW,
+          payload: {
+            id: targetId,
+            name,
+            folders: [],
+            documents: resFiles.data,
+            reset: false,
+          },
+        });
+        dispatch({
+          type: ACTIONS.OPEN_FOLDER,
+          payload: { id: targetId, name },
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", err.message, "error");
     }
-  } catch (err) {
-    console.error(err);
-    Swal.fire("Error", err.message, "error");
-  }
-};
-
-
+  };
 
   useEffect(() => {
     if (id) loadFolder(id, true, "Root");
   }, [id]);
 
-
-  const handleOpenFolder = (f) => {
+  const handleOpenFolder = (f) =>
     loadFolder(f.uuid, false, f.folderName);
-    dispatch({ type: ACTIONS.OPEN_FOLDER, payload: { id: f.uuid, name: f.folderName } });
-  };
+
   const handleBack = () => dispatch({ type: ACTIONS.BACK });
 
-  //  CREATE FOLDER
-const handleCreateFolder = async (folderName) => {
-  console.log("Creating folder:", folderName);
-  if (!folderName.trim()) return;
+  // ─── CREATE FOLDER ───────────────────────────────────────────────────────────
+  const handleCreateFolder = async (values) => {
+    const folderName = values.folderName?.trim();
+    if (!folderName) return;
+    try {
+      const res = await api.post(`/cost_cat/${state.currentId}`, { folderName });
+      dispatch({ type: ACTIONS.ADD_FOLDER, payload: res.data });
+      setModal(m => ({ ...m, createFolder: false }));
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.error || err.message, "error");
+    }
+  };
 
-  try {
-    const res = await api.post(`/cost_cat/${state.currentId}`, { folderName });
-    // console.log("Folder created:", res.data);
-    dispatch({ type: ACTIONS.ADD_FOLDER, payload: res.data });
-    // close the modal
-    setModal(m => ({ ...m, createFolder: false }));
-  } catch (err) {
-    Swal.fire("Error", err.response?.data?.error || err.message, "error");
-  }
-};
+  // ─── UPLOAD SINGLE FILE ──────────────────────────────────────────────────────
+  const handleFileUpload = async (values) => {
+    const file = values.file;
+    if (!file) return;
+    const fd = new FormData();
+    fd.append("cost_category", file);
+    try {
+      const res = await api.post(
+        `/cost_cat/file/${state.currentId}`, fd,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      dispatch({ type: ACTIONS.ADD_FILE, payload: res.data.newFile });
+      setModal(m => ({ ...m, uploadFile: false }));
+      await loadFolder(
+        state.currentId,
+        state.breadcrumbs.length === 1,
+        state.breadcrumbs[state.breadcrumbs.length - 1].name
+      );
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", err.response?.data?.error || err.message, "error");
+    }
+  };
 
-
-  // UPLOAD SINGLE FILE
- const handleFileUpload = async ({ file }) => {
-  if (!file) return;
-
-  const fd = new FormData();
-  fd.append("cost_category", file);
-
-  try {
-    const res = await api.post(
-      `/cost_cat/file/${state.currentId}`, 
-      fd,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-
-    // Add the returned file to state
-    dispatch({ type: ACTIONS.ADD_FILE, payload: res.data.newFile });
-
-    // Close modal
-    setModal(m => ({ ...m, uploadFile: false }));
-
-    // Reload the current folder’s contents
-    const isRoot = state.breadcrumbs.length === 1;
-    await loadFolder(
-      state.currentId,
-      isRoot,
-      state.breadcrumbs[state.breadcrumbs.length - 1].name
-    );
-  } catch (err) {
-    console.error("Upload error:", err);
-    Swal.fire("Error", err.response?.data?.error || err.message, "error");
-  }
-};
-
-
-  // UPLOAD MULTIPLE FILES
+  // ─── UPLOAD MULTIPLE FILES ───────────────────────────────────────────────────
   const handleFolderUpload = async () => {
     for (const f of selectedFiles) {
       const fd = new FormData();
@@ -198,192 +186,175 @@ const handleCreateFolder = async (folderName) => {
         const res = await api.post(`/cost_cat/${state.currentId}`, fd);
         dispatch({ type: ACTIONS.ADD_FILE, payload: res.data.newFile });
       } catch (err) {
-        console.error("Upload error:", err);
+        console.error(err);
       }
     }
     setModal(m => ({ ...m, uploadFolder: false }));
     setSelectedFiles([]);
   };
 
-  //VIEW FILE
-
+  // ─── VIEW & DOWNLOAD ─────────────────────────────────────────────────────────
   const handleView = (file) => {
-  const filename = file.name;
-  const viewUrl = `${api.defaults.baseURL}/uploads/cost_category/${filename}`;
-  const w = window.open(viewUrl, "_blank", "noopener");
-  // if (!w) {
-  //   alert("Pop-up blocked! Please allow pop-ups.");
-  // }
-};
-
-//const filePath = `/download/${file.documentPath}`;
-  //DOWNLOAD FILE
+    const url = `${api.defaults.baseURL}/uploads/cost_category/${file.name}`;
+    window.open(url, "_blank", "noopener");
+  };
   const handleDownload = (file) => {
-  const filename = file.name;
-  // console.log("Downloading file:", filename);
-  const dlUrl = `${api.defaults.baseURL}/download/uploads/cost_category/${filename}`;
-  const a = document.createElement("a");
-  a.href = dlUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-};
+    const url = `${api.defaults.baseURL}/download/uploads/cost_category/${file.name}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
-const handleArchive = async (file) => {
-  const filename = file.name;
-  const archiveUrl = `${api.defaults.baseURL}/uploads/cost_category/${filename}/archive`;
-  try {
-    const res = await api.post(archiveUrl);
-    Swal.fire("Success", "File archived successfully", "success");
-  } catch (err) {
-    Swal.fire("Error", err.response?.data?.error || err.message, "error");
-  } 
-};
+  // ─── ARCHIVE ─────────────────────────────────────────────────────────────────
+  const handleArchive = async (values) => {
+    setShowArchiveModal(false);
+    const reason = values.reason;
+    if (!archiveTarget) return;
+    try {
+      if (archiveType === "file") {
+        await api.post(
+          `/uploads/cost_category/file/${archiveTarget.uuid}/archive`,
+          { reason }
+        );
+      } else {
+        await api.post(
+          `/cost_cat/${state.currentId}/archive`,
+          { folderId: archiveTarget.uuid, reason }
+        );
+      }
+      Swal.fire("Success", `${archiveType} archived`, "success");
+      // reload
+      const bc   = state.breadcrumbs;
+      const name = bc[bc.length - 1]?.name || "Root";
+      await loadFolder(state.currentId, bc.length === 1, name);
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", err.response?.data?.error || err.message, "error");
+    }
+  };
 
-
-  const currentName =
-    state.breadcrumbs[state.breadcrumbs.length - 1]?.name || "Root";
+  // ─── RENDER ──────────────────────────────────────────────────────────────────
+  const currentName = state.breadcrumbs[state.breadcrumbs.length - 1]?.name || "Root";
 
   return (
     <div className={styles.projectDetails}>
       {/* HEADER */}
       <div className={styles.inputDocumentHeader}>
-
         <button
           onClick={handleBack}
           disabled={state.breadcrumbs.length <= 1}
-        className=" flex  p-4 justify-center align-center text-blue-600 text-weight-bold text-2xl"
+          className="flex p-4 justify-center items-center text-blue-600 font-bold text-2xl"
         >
           ←
         </button>
-        {/* <h2>{currentName}</h2> */}
+        <h2 className="text-xl font-semibold">{currentName}</h2>
         <div className={styles.inputDocumentHeaderRight}>
-                <UploadDropdown setModalStates={setModal} />
-            </div>
+        <UploadDropdown setModalStates={setModal} />
+        </div>
       </div>
 
       {/* FOLDERS */}
       <section>
-  <h2 className="text-xl font-semibold p-2 text-black">Folders</h2>
-  <br />
-  <div className="flex flex-wrap gap-4">
-    {state.folders.map(folder => (
-      <div
-        key={folder.uuid}
-        className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
-        onClick={() => handleOpenFolder(folder)}
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          <MdFolder className="text-yellow-500 rounded p-1 w-8 h-8" />
-          <h3 className="text-gray-700 font-medium truncate">
-            {folder.folderName || "Unnamed Folder"}
-          </h3>
+        <h3 className="text-xl font-semibold p-2">Folders</h3>
+        <div className="flex flex-wrap gap-4">
+          {state.folders.map(folder => (
+            <div
+              key={folder.uuid}
+              className="flex items-center justify-between bg-gray-100 rounded-lg p-3 min-w-0 w-full sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-300"
+              onClick={() => handleOpenFolder(folder)}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <MdFolder className="text-yellow-500 w-8 h-8 p-1" />
+                <h3 className="text-gray-700 font-medium truncate">
+                  {folder.folderName || "Unnamed Folder"}
+                </h3>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-</section>
-
+      </section>
 
       {/* FILES */}
-  <section>
-  <h2 className="text-xl font-semibold p-2">Files</h2>
-  <div className="flex flex-wrap gap-4">
-    {state.files.map(file => {
-  // 1. Strip any leading digits + dash
-  const rawName = (file.name || "Unnamed Document").replace(/^[0-9]+-/, "");
+      <section>
+        <h3 className="text-xl font-semibold p-2">Files</h3>
+        <div className="flex flex-wrap gap-4">
+          {state.files.map(file => {
+            const rawName = (file.name || "Unnamed Document").replace(/^[0-9]+-/, "");
+            const MAX = 30;
+            const displayName =
+              rawName.length > MAX ? rawName.slice(0, MAX).trimEnd() + "..." : rawName;
 
-  // 2. Truncate if longer than, say, 30 characters
-  const MAX = 30;
-  const displayName =
-    rawName.length > MAX
-      ? rawName.slice(0, MAX).trimEnd() + "..."
-      : rawName;
+            return (
+              <div
+                key={file.uuid}
+                className="flex items-center justify-between bg-gray-100 rounded-lg p-3 w-full sm:w-[300px] shadow-sm hover:shadow-md"
+              >
+                <div
+                  onClick={() => handleView(file)}
+                  className="flex items-center gap-3 min-w-0 cursor-pointer"
+                >
+                  <FaRegFileAlt className="text-yellow-500 w-8 h-8 p-1" />
+                  <span className="text-gray-700 text-sm truncate">
+                    {displayName}
+                  </span>
+                </div>
 
-  return (
-    <div
-      key={file.uuid}
-      className="flex items-center justify-between bg-gray-100 rounded-lg p-3 w-full sm:w-[300px] shadow-sm hover:shadow-md"
-    >
-      {/* File icon + name */}
-      <div
-        onClick={() => handleView(file)}
-        className="flex items-center gap-3 min-w-0 cursor-pointer"
-      >
-        <FaRegFileAlt className="text-yellow-500 w-8 h-8 p-1" />
-        <span className="text-gray-700 text-sm truncate">
-          {displayName}
-        </span>
-      </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleDownload(file)}
+                    title="Download"
+                    className="p-2 rounded hover:bg-gray-200 text-blue-500"
+                  >
+                    <FaDownload />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setArchiveType("file");
+                      setArchiveTarget(file);
+                      setShowArchiveModal(true);
+                    }}
+                    title="Archive"
+                    className="p-2 rounded hover:bg-gray-200 text-red-500"
+                  >
+                    <FaArchive />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Download + Archive */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => handleDownload(file)}
-          title="Download"
-          className="p-2 rounded hover:bg-gray-200 text-blue-600"
-        >
-          <FaDownload />
-        </button>
-        <button
-          onClick={() => handleArchive(file)}
-          title="Archive"
-          className="p-2 rounded hover:bg-gray-200 text-red-600"
-        >
-          <FaArchive />
-        </button>
-      </div>
-    </div>
-  );
-})}
-  </div>
-</section>
+      {/* MODALS */}
+      {modal.createFolder && (
+        <FormModal
+          isOpen
+          title="Create Folder"
+          fields={[
+            { name: "folderName", label: "Folder Name", type: "text", placeholder: "Enter folder name" },
+          ]}
+          initialValues={{ folderName: "" }}
+          onSubmit={handleCreateFolder}
+          onClose={() => setModal(m => ({ ...m, createFolder: false }))}
+          submitLabel="Create"
+        />
+      )}
 
+      {modal.uploadFile && (
+        <FormModal
+          isOpen
+          title="Upload File"
+          fields={[{ name: "file", label: "Select File", type: "file" }]}
+          initialValues={{ file: null }}
+          onSubmit={handleFileUpload}
+          onClose={() => setModal(m => ({ ...m, uploadFile: false }))}
+          submitLabel="Upload"
+        />
+      )}
 
-
-{/* CREATE FOLDER MODAL */}
-{modal.createFolder && (
-  <FormModal
-    isOpen
-    title="Create Folder"
-
-    // 1) Tell FormModal to render a single text field called "folderName"
-    fields={[
-      {
-        name: "folderName",
-        label: "Folder Name",
-        type: "text",
-        placeholder: "Enter folder name",
-      },
-    ]}
-
-    // 2) Optionally, start with an empty initial value
-    initialValues={{ folderName: "" }}
-
-    // 3) When the user submits, FormModal hands you the full values object
-    onSubmit={({ folderName }) => handleCreateFolder(folderName)}
-
-    onClose={() => setModal(m => ({ ...m, createFolder: false }))}
-    submitLabel="Create"
-  />
-)}
-{/* UPLOAD FILE MODAL */}
-{modal.uploadFile && (
-  <FormModal
-    isOpen
-    title="Upload File"
-    fields={[{ name: "file", label: "Select File", type: "file" }]}
-    initialValues={{ file: null }}
-    onSubmit={handleFileUpload}
-    onClose={() => setModal(m => ({ ...m, uploadFile: false }))}
-    submitLabel="Upload"
-  />
-)}
-
-
-
-      {/* UPLOAD FOLDER MODAL */}
       {modal.uploadFolder && (
         <FormModal
           isOpen
@@ -395,10 +366,22 @@ const handleArchive = async (file) => {
             multiple: true,
             onChange: e => setSelectedFiles(Array.from(e.target.files)),
           }]}
-          onClose={() => setModal(m => ({ ...m, uploadFolder: false }))}
           onSubmit={handleFolderUpload}
+          onClose={() => setModal(m => ({ ...m, uploadFolder: false }))}
           submitLabel="Upload"
           disableSubmit={!selectedFiles.length}
+        />
+      )}
+
+      {showArchiveModal && (
+        <FormModal
+          isOpen
+          title={`Archive ${archiveType}`}
+          fields={archiveFields}
+          initialValues={{ reason: "" }}
+          onSubmit={handleArchive}
+          onClose={() => setShowArchiveModal(false)}
+          extraActions={[]}
         />
       )}
     </div>

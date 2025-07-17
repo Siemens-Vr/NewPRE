@@ -12,6 +12,7 @@ const CardComponent = ({
   onCardClick = null,
   onUpdate,
   onDelete,
+  onArchive,
 }) => {
   const router = useRouter();
 
@@ -57,6 +58,14 @@ const CardComponent = ({
               className={`${styles.actionButton} ${styles.deleteButton}`}
             >
               Delete
+            </button>
+          )}
+          {onArchive && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onArchive(); }}
+              className={`${styles.actionButton} ${styles.deleteButton}`}
+            >
+              Archive
             </button>
           )}
         </div>

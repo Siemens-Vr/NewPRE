@@ -12,7 +12,7 @@ import Navbar from  '@/app/components/navbar/navbar'
 
 export default function ArchivePage() {
   const { isAuthenticated, user } = useAuth();
-  console.log("ArchivePage user:", user);
+//   console.log("ArchivePage user:", user);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortKey, setSortKey] = useState(null);

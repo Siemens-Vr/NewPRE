@@ -50,27 +50,27 @@ const Sidebar = () => {
   const menuItems = [
     {
       title: "Dashboard",
-      path: `/pages/staff/${activeUuid}/dashboard`,
+      path: `/staff/${activeUuid}/dashboard`,
       icon: <MdDashboard className={styles.whiteIcon} />,
     },
     {
       title: "Profile",
-      path: `/pages/staff/${activeUuid}/dashboard/profile`,
+      path: `/staff/${activeUuid}/dashboard/profile`,
       icon: <MdPeople className={styles.whiteIcon} />,
     },
     {
       title: "Leave",
-      path: `/pages/staff/${activeUuid}/dashboard/leave`,
+      path: `/staff/${activeUuid}/dashboard/leave`,
       icon: <MdAnalytics className={styles.whiteIcon} />,
     },
     {
       title: "Todos",
-      path: `/pages/staff/${activeUuid}/dashboard/todos`,
+      path: `/staff/${activeUuid}/dashboard/todos`,
       icon: <MdAnalytics className={styles.whiteIcon} />,
     },
     {
       title: "Notifications",
-      path: `/pages/staff/${activeUuid}/dashboard/notifications`,
+      path: `/staff/${activeUuid}/dashboard/notifications`,
       icon: <MdAnalytics className={styles.whiteIcon} />,
     },
   ];

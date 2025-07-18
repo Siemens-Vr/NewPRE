@@ -14,34 +14,33 @@ import { useAuth } from "@/app/context/AuthContext";
 
 export default function OutputDetails() {
   const { phaseuuid } = useParams();
+  const { user, hasRole, isAuthenticated, sendSocketMessage } = useAuth();
 
-    const { user, hasRole, isAuthenticated } = useAuth();
-
-
-  // all outputs and split lists
+  // State
   const [allOutputs, setAllOutputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
   const [archivedOutputs, setArchivedOutputs] = useState([]);
   const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // sorting
+  // Sorting
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
 
-  // add / edit
+  // Modals
   const [adding, setAdding] = useState(false);
   const [editingData, setEditingData] = useState(null);
-
-  // archive modal controls
   const [showArchiveModal, setShowArchiveModal] = useState(false);
   const [archiveTarget, setArchiveTarget] = useState(null);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState(null);
+  const [rejectInitialValues, setRejectInitialValues] = useState({ reason: "" });
 
-  // feedback
+  // Feedback
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch outputs and split by is_archived
+  // Fetch outputs
   const fetchOutputs = async () => {
     if (!phaseuuid) return;
     setLoading(true);
@@ -59,47 +58,88 @@ export default function OutputDetails() {
     }
   };
 
-  useEffect(() => {
-    fetchOutputs();
-  }, [phaseuuid]);
+  useEffect(() => { fetchOutputs(); }, [phaseuuid]);
 
-  console.log(outputs)
-
-  // Archive function
+  // Archive
   const archiveOutput = async (uuid, reason) => {
-    // console.log("Archiving Output:", uuid, reason)
-    setMessage(null);
-    setError(null);
+    setMessage(null); setError(null);
     try {
       await api.post(`/outputs/${uuid}/archive`, { reason });
-      const updatedAll = allOutputs.map(o =>
+      const updated = allOutputs.map(o =>
         o.uuid === uuid ? { ...o, is_archived: true } : o
       );
-      setAllOutputs(updatedAll);
-      setOutputs(updatedAll.filter(o => !o.is_archived));
-      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
+      setAllOutputs(updated);
+      setOutputs(updated.filter(o => !o.is_archived));
+      setArchivedOutputs(updated.filter(o => o.is_archived));
       const name = allOutputs.find(o => o.uuid === uuid)?.name;
       setMessage(`“${name}” archived.`);
     } catch (err) {
-    if (err.response) {
-      console.error("Archive API error payload:", err.response.data);
-      setError(err.response.data.error || err.response.data.message || "Archive failed");
-    } else {
-      console.error("Network or CORS error:", err);
-      setError("Unable to reach server");
+      console.error(err);
+      setError(err.response?.data?.message || "Archive failed");
     }
+  };
+
+  // Reject
+ const rejectOutput = async (uuid, reason) => {
+  setMessage(null);
+  setError(null);
+
+  try {
+    // 1) Mark the output as rejected
+    await api.post(`/outputs/reject/${uuid}`, { reason });
+
+    // 2) Update UI state
+    const updated = allOutputs.map(o =>
+      o.uuid === uuid ? { ...o, is_rejected: true } : o
+    );
+    setAllOutputs(updated);
+    setOutputs(updated.filter(o => !o.is_archived));
+    setArchivedOutputs(updated.filter(o => o.is_archived));
+    const name = allOutputs.find(o => o.uuid === uuid)?.name;
+    setMessage(`“${name}” was rejected.`);
+
+    // 3) Send a notification via HTTP
+    const createdBy = allOutputs.find(o => o.uuid === uuid)?.createdBy;
+    await api.post('/notifications', {
+      userId: createdBy,                // the user who should receive this
+      type: "output_rejected",
+      outputId: uuid,
+      message: `Your output “${name}” was rejected. Reason: ${reason}`
+    });
+
+  } catch (err) {
+    console.error("Reject failed:", err);
+    setError(
+      err.response?.data?.message ||
+      "Reject failed; could not send notification."
+    );
   }
-}
- 
+};
+
+  // Approve (unchanged)
+  const handleApprove = async output => {
+    setMessage(null); setError(null);
+    try {
+      await api.post(`/outputs/approve/${output.uuid}`);
+      const updated = allOutputs.map(o =>
+        o.uuid === output.uuid ? { ...o, is_approved: true } : o
+      );
+      setAllOutputs(updated);
+      setOutputs(updated.filter(o => !o.is_archived));
+      setArchivedOutputs(updated.filter(o => o.is_archived));
+      setMessage(`"${output.name}" approved successfully.`);
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Approval failed");
+    }
+  };
 
   // Sorting helper
   const handleSort = (key, data, setter) => {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc";
-    setSortKey(key);
-    setSortOrder(order);
+    setSortKey(key); setSortOrder(order);
     const sorted = [...data].sort((a, b) => {
-      const aVal = a[key] ?? "";
-      const bVal = b[key] ?? "";
+      const aVal = a[key] ?? "", bVal = b[key] ?? "";
       if (typeof aVal === "string") {
         return order === "asc"
           ? aVal.localeCompare(bVal)
@@ -109,37 +149,9 @@ export default function OutputDetails() {
     });
     setter(sorted);
   };
-  // Add this function to your component
-  const handleApprove = async (output) => {
-
-    console.log(output)
-    try {
-      setMessage(null);
-      setError(null);
-      
-      await api.post(`/outputs/approve/${output.uuid}`);
-      
-      // Update the local state to reflect the approval
-      const updatedAll = allOutputs.map(o =>
-        o.uuid === output.uuid ? { ...o, is_approved: true } : o
-      );
-      setAllOutputs(updatedAll);
-      setOutputs(updatedAll.filter(o => !o.is_archived));
-      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
-      
-      setMessage(`"${output.name}" approved successfully.`);
-    } catch (err) {
-      console.error('Error approving output:', err);
-      if (err.response) {
-        setError(err.response.data.error || err.response.data.message || "Approval failed");
-      } else {
-        setError("Unable to reach server");
-      }
-    }
-  };
 
   // Table columns
-  const tableColumns = (isArchiveView = false) => [
+  const tableColumns = isArchiveView => [
     { key: "no", label: "No.", sortable: true },
     { key: "name", label: "Name", sortable: true },
     { key: "description", label: "Description" },
@@ -147,102 +159,90 @@ export default function OutputDetails() {
     {
       key: "document_name",
       label: "Document",
-        render: (r) => {
-      // 1) Strip leading numbers + dash
-      const raw = (r.document_name || "").replace(/^[0-9]+-/, "");
-      // 2) Truncate to 50 chars
-      const MAX = 50;
-      const display =
-        raw.length > MAX ? raw.slice(0, MAX).trimEnd() + "…" : raw;
-      return (
-        <a href={r.document_path} target="_blank" rel="noreferrer" title={raw}>
-          {display}
-        </a>
-      );
-    }
+      render: r => {
+        const raw = (r.document_name||"").replace(/^[0-9]+-/, "");
+        const display = raw.length>50 ? raw.slice(0,50)+"…" : raw;
+        return <a href={r.document_path} target="_blank" rel="noreferrer">{display}</a>;
+      }
     },
     {
       key: "actions",
       label: "Actions",
-      render: r =>
-        isArchiveView ? null : (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <button
-              className={` ${styles.actionButton} ${styles.actionBtn}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                const w = window.open("_blank", "noopener");
-                if (!w) return alert("Allow pop-ups");
-                w.location.href = `${api.defaults.baseURL}/uploads/outputs/${r.document_name}`;
-              }}
-            >
-              View
-            </button>
+      render: r => !isArchiveView && (
+        <div style={{ display:"flex", gap:"0.5rem" }}>
+          <button
+            className={`${styles.actionButton} ${styles.actionBtn}`}
+            onClick={e => {
+              e.stopPropagation();
+              window.open(`${api.defaults.baseURL}/uploads/outputs/${r.document_name}`, "_blank");
+            }}
+          >View</button>
+
+          <button
+            className={`${styles.actionButton} ${styles.editBtn}`}
+            onClick={e => { e.stopPropagation(); setEditingData(r); }}
+          >Edit</button>
+
+          <button
+            className={`${styles.actionButton} ${styles.actionBtnDelete}`}
+            onClick={e => { e.stopPropagation(); setArchiveTarget(r); setShowArchiveModal(true); }}
+          >Archive</button>
+
+          {hasRole("admin") && !r.is_approved && (
             <button
               className={`${styles.actionButton} ${styles.editBtn}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditingData(r);
-              }}
-            >
-              Edit
-            </button>
+              onClick={e => { e.stopPropagation(); handleApprove(r); }}
+            >Approve</button>
+          )}
+
+          {hasRole("admin") && !r.is_rejected && !r.is_approved && (
             <button
               className={`${styles.actionButton} ${styles.actionBtnDelete}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setArchiveTarget(r);
-                setShowArchiveModal(true);
-              }}
-            >
-              Archive
-            </button>
-           {hasRole('admin') && !r.is_approved && (
-            <button
-              className={`${styles.actionButton} ${styles.editBtn}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleApprove(r);
-              }}
-            >
-              Approve
-            </button>
+              onClick={e => {
+              e.stopPropagation();
+               setRejectTarget(r);
+           setRejectInitialValues({ reason: "" });
+           setShowRejectModal(true);
+            }}
+            >Reject</button>
           )}
-          </div>
-        )
+        </div>
+      )
     }
   ];
 
-  // The single "reason" field passed into FormModal
-  const archiveFields = [
+  // Modal fields
+  const archiveFields = [{
+    name:"reason", label:"Reason for archiving", type:"select",
+    options:[
+      {value:"No longer relevant", label:"No longer relevant"},
+      {value:"Duplicate entry", label:"Duplicate entry"},
+      {value:"Incorrect data", label:"Incorrect data"},
+      {value:"Other", label:"Other"}
+    ]
+  }];
+
+  const rejectFields = [
     {
       name: "reason",
-      label: "Reason for archiving",
-      type: "select",
-      options: [
-        { value: "No longer relevant", label: "No longer relevant" },
-        { value: "Duplicate entry", label: "Duplicate entry" },
-        { value: "Incorrect data", label: "Incorrect data" },
-        { value: "Other", label: "Other" }
-      ]
+      label: "Reason for rejection",
+      type: "text",      // <-- was "select" before
     }
   ];
 
-    useEffect(() => {
-    if (!message) return;
-    const id = setTimeout(() => setMessage(null), 6000);
-    return () => clearTimeout(id);
+  // Auto-clear messages
+  useEffect(() => {
+    if (message) {
+      const id = setTimeout(() => setMessage(null), 6000);
+      return () => clearTimeout(id);
+    }
   }, [message]);
 
-   const handleRowClick = (output) => {
-    const url = `${api.defaults.baseURL}/uploads/outputs/${output.document_name}`;
-    window.open(url, "_blank");
-  };
-  // auto-dismiss error after 6s
   useEffect(() => {
-    if (!error) return;
-    const id = setTimeout(() => setError(null), 6000);
-    return () => clearTimeout(id);
+    if (error) {
+      const id = setTimeout(() => setError(null), 6000);
+      return () => clearTimeout(id);
+    }
   }, [error]);
 
   if (loading) return <div className={styles.loading}>Loading…</div>;
@@ -250,16 +250,13 @@ export default function OutputDetails() {
   return (
     <>
       {message && <div className={styles.successMsg}>{message}</div>}
-      {error && <div className={styles.errorMsg}>{error}</div>}
+      {error   && <div className={styles.errorMsg}>{error}</div>}
 
       {adding && (
         <AddOutputModal
           open
-          onClose={() => setAdding(false)}
-          onAdded={() => {
-            fetchOutputs();
-            setAdding(false);
-          }}
+          onClose={()=>setAdding(false)}
+          onAdded={()=>{fetchOutputs(); setAdding(false)}}
           phaseuuid={phaseuuid}
         />
       )}
@@ -267,11 +264,8 @@ export default function OutputDetails() {
       {editingData && (
         <EditOutputModal
           open
-          onClose={() => setEditingData(null)}
-          onEdited={() => {
-            fetchOutputs();
-            setEditingData(null);
-          }}
+          onClose={()=>setEditingData(null)}
+          onEdited={()=>{fetchOutputs(); setEditingData(null)}}
           phaseuuid={phaseuuid}
           editData={editingData}
         />
@@ -279,58 +273,57 @@ export default function OutputDetails() {
 
       {showArchiveModal && (
         <FormModal
-          title={`Archive "${archiveTarget.name}"`}
+          title={`Archive “${archiveTarget.name}”`}
           fields={archiveFields}
           initialValues={{ reason: "" }}
-          onChange={vals => {
-            /* FormModal will call this with { reason: '...' } */
-            /* we don't need to store locally here */
-          }}
-          onSubmit={vals => {
-            archiveOutput(archiveTarget.uuid, vals.reason);
-            setShowArchiveModal(false);
-          }}
-          onClose={() => setShowArchiveModal(false)}
+          onSubmit={vals=>{archiveOutput(archiveTarget.uuid, vals.reason); setShowArchiveModal(false)}}
+          onClose={()=>setShowArchiveModal(false)}
           extraActions={[]}
         />
       )}
 
+      {showRejectModal && (
+        <FormModal
+          title={`Reject “${rejectTarget.name}”`}
+          fields={rejectFields}
+           initialValues={rejectInitialValues}
+          onSubmit={vals => {
+            rejectOutput(rejectTarget.uuid, vals.reason);
+            setShowRejectModal(false);
+          }}
+          onClose={() => setShowRejectModal(false)}
+          extraActions={[]}
+        />
+      )}
+
+
       <div className={styles.milestonesSection}>
         <h2>Outputs</h2>
-
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+        <div style={{display:"flex", gap:"0.5rem", marginBottom:"1rem"}}>
           <Toolbar
-            placeholder={`Search outputs...`}
+            placeholder="Search outputs..."
             buttons={[
-              {
-                label: "Filter",
-
-                variant: "secondary",
-                icon: MdFilterList
-              },
-              !showArchived && {
-                label: "Add New",
-                onClick: () => setAdding(true),
-                variant: "primary",
-                icon: MdAdd
-              }
+              { label:"Filter", variant:"secondary", icon:MdFilterList },
+              !showArchived && { label:"Add New", onClick:()=>setAdding(true), variant:"primary", icon:MdAdd }
             ].filter(Boolean)}
           />
         </div>
-
         <Table
           columns={tableColumns(showArchived)}
           data={showArchived ? archivedOutputs : outputs}
           sortKey={sortKey}
           sortOrder={sortOrder}
-          onSort={key =>
-            handleSort(
-              key,
-              showArchived ? archivedOutputs : outputs,
-              showArchived ? setArchivedOutputs : setOutputs
+          onSort={key => handleSort(
+            key,
+            showArchived ? archivedOutputs : outputs,
+            showArchived ? setArchivedOutputs : setOutputs
+          )}
+          onRowClick={r =>
+            window.open(
+              `${api.defaults.baseURL}/uploads/outputs/${r.document_name}`,
+              "_blank"
             )
           }
-             onRowClick={handleRowClick}  
         />
       </div>
     </>

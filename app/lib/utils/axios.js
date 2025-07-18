@@ -13,8 +13,8 @@ export const setAccessToken = (token) => {
 };
 
 const api = axios.create({
-  // baseURL: process.env.BASE_URL || "https://vml-erp-api.dkut.ac.ke",
-  baseURL: process.env.BASE_URL || "http://localhost:10600",
+  baseURL: process.env.BASE_URL || "https://vml-erp-api.dkut.ac.ke",
+  // baseURL: process.env.BASE_URL || "http://localhost:10600",
   withCredentials: true, 
   
 });

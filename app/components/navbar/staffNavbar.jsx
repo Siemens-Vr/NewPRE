@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter  } from "next/navigation";
 import styles from "@/app/styles/navbar/navbar.module.css";
 import { MdNotifications } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { config} from "@/config";
 
 const Navbar = () => {
   const pathname = usePathname();
+    const router = useRouter();
   const searchParams = useSearchParams();
   const uuid = searchParams.get("uuid"); 
   const [staff, setStaff] = useState(null);
@@ -49,7 +50,18 @@ const Navbar = () => {
 
     
       <div className={styles.menu1}>
-        <MdNotifications size={22} className={styles.notificationIcon} />
+        <div
+            className={styles.notificationWrapper}
+            onClick={() => {
+              // setUnreadCount(0);
+              router.push(`/notifications`);
+            }}
+          >
+            <MdNotifications size={20} />
+            {/* {unreadCount > 0 && (
+              <span className={styles.notificationBadge}>{unreadCount}</span>
+            )} */}
+          </div>
 
        
         <div className={styles.userMenu}>

@@ -96,7 +96,7 @@ console.log("Submitting payload:", payload);
 
       const newFacilitator = response.data;
       toast.success("Facilitator added successfully!");
-      onSave(newFacilitator);
+      await onSave(newFacilitator, levelUuid);
       onClose();
     } catch (error) {
       console.error("Error adding facilitator:", error.response?.data || error);

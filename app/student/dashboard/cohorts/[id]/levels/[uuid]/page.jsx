@@ -48,6 +48,7 @@ const LevelDetails = ({ searchParams }) => {
       const response = await api.get(`/levels/${params.id}/levels/${params.uuid}`);
       const data = response.data;
       setLevelData(data);
+      console.log("Fetched level data:", data);
     } catch (error) {
       console.error("Error fetching level data:", error);
   

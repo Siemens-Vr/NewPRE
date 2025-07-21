@@ -1,18 +1,20 @@
 "use client";
-import React, { useState, useEffect, useRef, useContext } from 'react';  // ← add useContext
+
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import styles from '@/app/styles/navbar/navbar.module.css';
 import Image from "next/image";
 import { MdNotifications, MdOutlineChat } from "react-icons/md";
-import { AuthContext } from "@/app/context/AuthContext";             // ← import your context
+import { AuthContext } from "@/app/context/AuthContext";
+import styles from "@/app/styles/navbar/navbar.module.css";
 
 const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useContext(AuthContext);                         // ← now works
+  const { user, isAuthenticated, socket } = useContext(AuthContext);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
 
   // Close dropdown on outside click
@@ -25,6 +27,21 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Increment unreadCount on incoming NOTIFICATION messages
+  useEffect(() => {
+    if (!isAuthenticated || !socket) return;
+    const handler = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "NOTIFICATION") {
+          setUnreadCount((c) => c + 1);
+        }
+      } catch {}
+    };
+    socket.addEventListener("message", handler);
+    return () => socket.removeEventListener("message", handler);
+  }, [isAuthenticated, socket]);
 
   // Convert pathname (e.g., "/staff") to "Staff"
   const pageTitle = pathname?.split("/").filter(Boolean).pop() || "Dashboard";
@@ -44,63 +61,66 @@ const Navbar = () => {
   // Current page title = last breadcrumb label
   const currentTitle = breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard";
 
-  return (
+ return (
     <div className={styles.container}>
-    <div className={styles.container1}>
-      <div className={styles.left}>
-        <span className={styles.username}>
-                {user?.username?.toUpperCase() || ""}
-              </span>
-              <span className={styles.userTitle}>
-                {user?.role?.toUpperCase() || ""}
-             </span>
-      </div>
+      <div className={styles.container1}>
+        <div className={styles.left}>
+          <span className={styles.username}>{user?.username?.toUpperCase() || ""}</span>
+          <span className={styles.userTitle}>{user?.role?.toUpperCase() || ""}</span>
+        </div>
 
-      <div className={styles.right}>
-        <MdOutlineChat size={20} />
-        <MdNotifications size={20} />
-        <div className={styles.userMenu} ref={dropdownRef}>
-          <div className={styles.user} onClick={() => setDropdownOpen(!dropdownOpen)}>
-            <Image
-              className={styles.userImage}
-              src="/noavatar.png"
-              alt=""
-              width="40"
-              height="40"
-            />
-            <div className={styles.userDetail}>
-               <span className={styles.username}>
-                {user?.username?.toUpperCase() || ""}
-              </span>
-              <span className={styles.userTitle}>
-                {user?.role?.toUpperCase() || ""}
-              </span>
-            </div>
+        <div className={styles.right}>
+          <MdOutlineChat size={20} />
+
+          <div
+            className={styles.notificationWrapper}
+            onClick={() => {
+              setUnreadCount(0);
+              router.push(`staff/${uuid}/dashboard/notifications`);
+            }}
+          >
+            <MdNotifications size={20} />
+            {unreadCount > 0 && (
+              <span className={styles.notificationBadge}>{unreadCount}</span>
+            )}
           </div>
-          {dropdownOpen && (
-            <div className={styles.dropdownMenu}>
-              <ul>
-                <li>My Profile</li>
-                <li>Settings</li>
-                <li>Logout</li>
-                  <li
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      router.push("/archive");
-                    }}
-                  >
-                    Archive
-           </li>
-              </ul>
+
+          <div className={styles.userMenu} ref={dropdownRef}>
+            <div className={styles.user} onClick={() => setDropdownOpen((o) => !o)}>
+              <Image
+                className={styles.userImage}
+                src="/noavatar.png"
+                alt="avatar"
+                width={40}
+                height={40}
+              />
+              <div className={styles.userDetail}>
+                <span className={styles.username}>
+                  {user?.username?.toUpperCase() || ""}
+                </span>
+                <span className={styles.userTitle}>
+                  {user?.role?.toUpperCase() || ""}
+                </span>
+              </div>
             </div>
-          )}
+            {dropdownOpen && (
+              <div className={styles.dropdownMenu}>
+                <ul>
+                  <li>
+                    <Link href="/profile">My Profile</Link>
+                  </li>
+                  <li>
+                    <Link href="/settings">Settings</Link>
+                  </li>
+                  <li onClick={() => router.push("/archive")}>Archive</li>
+                  <li onClick={() => router.push("/logout")}>Logout</li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
 
-
-          {/* Breadcrumbs */}
       <nav className={styles.breadcrumbs}>
         {breadcrumbs.map((bc, idx) => (
           <React.Fragment key={bc.href}>
@@ -113,11 +133,6 @@ const Navbar = () => {
           </React.Fragment>
         ))}
       </nav>
-
-      {/* Page Title */}
-      {/* <div className={styles.titleContainer}>
-        <h1 className={styles.pageTitle}>{currentTitle}</h1>
-      </div> */}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import FormModal from "@/app/components/Form/formTable";
+import FormModal from "@/app/components/Form/FormModal";
 import Spinner from "@/app/components/spinner/spinner";
 
 const levelOptions = [

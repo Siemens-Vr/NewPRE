@@ -7,9 +7,8 @@ require('dotenv').config();
 let accessToken = null;
 
 export const setAccessToken = (token) => {
-    // console.log("✅ Access token set:", token); 
-
   accessToken = token;
+ 
 };
 
 const api = axios.create({

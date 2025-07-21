@@ -40,26 +40,66 @@ staff: "/staffs/dashboard",
 user: "/user/dashboard",
 };
 
-// --- TOKEN MANAGEMENT ---
+
+let _accessToken = null;
+
+const getCookie = (name) => {
+  if (typeof window === 'undefined') return null;
+  const match = document.cookie.match(
+    new RegExp('(^|; )' + name + '=([^;]*)')
+  );
+  return match ? decodeURIComponent(match[2]) : null;
+};
+
 const getStoredToken = () => {
-if (typeof window === "undefined") return null;
-return localStorage.getItem("token");
+  return getCookie('token');
+};
+
+
+const getStoredRefreshToken = () => {
+  return getCookie('refreshToken');
 };
 
 const setStoredTokens = (accessToken, refreshToken) => {
-if (typeof window === "undefined") return;
-localStorage.setItem("token", accessToken);
-localStorage.setItem("refreshtoken", refreshToken);
-document.cookie = `token=${accessToken}; path=/; secure; samesite=strict; max-age=3600`;
-setAccessToken(accessToken);
+  if (typeof window === 'undefined') return;
+
+  // 1 hour for accessToken
+  document.cookie = [
+    `token=${encodeURIComponent(accessToken)}`,
+    `path=/`,
+    `secure`,
+    `samesite=strict`,
+    `max-age=${60 * 60}`
+  ].join('; ');
+
+  document.cookie = [
+    `refreshToken=${encodeURIComponent(refreshToken)}`,
+    `path=/`,
+    `secure`,
+    `samesite=strict`,
+    `max-age=${7 * 24 * 60 * 60}`
+  ].join('; ');
+
+  _accessToken = accessToken;
 };
 
+/** Clear both cookies and the in-memory access token */
 const clearStoredTokens = () => {
-if (typeof window === "undefined") return;
-localStorage.removeItem("token");
-localStorage.removeItem("refreshtoken");
-document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-setAccessToken(null);
+  if (typeof window === 'undefined') return;
+
+  document.cookie = [
+    `token=`,
+    `path=/`,
+    `expires=Thu, 01 Jan 1970 00:00:00 GMT`
+  ].join('; ');
+
+  document.cookie = [
+    `refreshToken=`,
+    `path=/`,
+    `expires=Thu, 01 Jan 1970 00:00:00 GMT`
+  ].join('; ');
+
+  _accessToken = null;
 };
 
 // --- DATA FETCHING ---

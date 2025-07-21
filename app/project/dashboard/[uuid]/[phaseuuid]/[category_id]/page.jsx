@@ -47,8 +47,9 @@ export default function CostCategoryDetailPage() {
     setLoading(true);
     try {
       const res = await api.get(`/cost_categories_tables/${category_id}`);
+   
       if (res.status === 200) {
-        setCostItems(res.data);
+        setCostItems(res.data.cost_categories_entries);
       } else {
         setError("Failed to fetch cost items");
       }

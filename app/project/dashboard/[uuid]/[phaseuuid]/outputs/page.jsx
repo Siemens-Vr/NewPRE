@@ -21,7 +21,7 @@ export default function OutputDetails() {
   // all outputs and split lists
   const [allOutputs, setAllOutputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
-  const [archivedOutputs, setArchivedOutputs] = useState([]);
+ 
   const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -48,9 +48,9 @@ export default function OutputDetails() {
     try {
       const res = await api.get(`/outputs/${phaseuuid}`);
       const all = res.data || [];
-      setAllOutputs(all);
-      setOutputs(all.filter(o => !o.is_archived));
-      setArchivedOutputs(all.filter(o => o.is_archived));
+      console.log(all.outputs)
+      setAllOutputs(all.outputs);
+    
     } catch (err) {
       console.error(err);
       setError("Failed to load outputs");
@@ -63,11 +63,10 @@ export default function OutputDetails() {
     fetchOutputs();
   }, [phaseuuid]);
 
-  console.log(outputs)
+
 
   // Archive function
   const archiveOutput = async (uuid, reason) => {
-    // console.log("Archiving Output:", uuid, reason)
     setMessage(null);
     setError(null);
     try {
@@ -76,8 +75,6 @@ export default function OutputDetails() {
         o.uuid === uuid ? { ...o, is_archived: true } : o
       );
       setAllOutputs(updatedAll);
-      setOutputs(updatedAll.filter(o => !o.is_archived));
-      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
       const name = allOutputs.find(o => o.uuid === uuid)?.name;
       setMessage(`“${name}” archived.`);
     } catch (err) {
@@ -124,9 +121,6 @@ export default function OutputDetails() {
         o.uuid === output.uuid ? { ...o, is_approved: true } : o
       );
       setAllOutputs(updatedAll);
-      setOutputs(updatedAll.filter(o => !o.is_archived));
-      setArchivedOutputs(updatedAll.filter(o => o.is_archived));
-      
       setMessage(`"${output.name}" approved successfully.`);
     } catch (err) {
       console.error('Error approving output:', err);
@@ -320,7 +314,7 @@ export default function OutputDetails() {
 
         <Table
           columns={tableColumns(showArchived)}
-          data={showArchived ? archivedOutputs : outputs}
+          data={allOutputs}
           sortKey={sortKey}
           sortOrder={sortOrder}
           onSort={key =>

@@ -5,6 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import styles from "@/app/styles/components/singleComponent/singlecomponent.module.css";
 import api from "@/app/lib/utils/axios";
 import Table from "@/app/components/table/Table";
+import AddPersonnel from "@/app/components/project/personnel/AddPersonnel";
+import EmptyState from '@/app/components/EmptyState/EmptyState';
+
 
 export default function Personnel() {
   const { uuid } = useParams(); 
@@ -15,11 +18,16 @@ export default function Personnel() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(true);
+  const [showAdd, setShowAdd] = useState(false)
+   const [adding, setAdding] = useState(false);
   const [error, setError] = useState(null);
 
   // Navigation handlers
   const handleAddPersonnel = () => {
-    router.push(`/projects/${uuid}/personnel/add`);
+      console.log('Add Personnel button clicked!'); // Debug log
+
+    setShowAdd(true)
+
   };
 
   const handleEditPersonnel = (personnelUuid) => {
@@ -44,22 +52,6 @@ export default function Personnel() {
     }
   };
 
-  const handleDeletePersonnel = async (personnelUuid) => {
-    if (!confirm("Are you sure you want to delete this personnel assignment?")) {
-      return;
-    }
-
-    try {
-      const response = await api.delete(`personnel/${personnelUuid}`);
-      if (response.status === 200) {
-        // Refresh personnel list
-        fetchPersonnelData();
-      }
-    } catch (error) {
-      console.error("Error deleting personnel:", error);
-      setError("Failed to delete personnel");
-    }
-  };
 
   // Table column configuration
   const personnelColumns = [
@@ -147,7 +139,7 @@ export default function Personnel() {
           >
             Edit
           </button>
-          {row.isActive && (
+          {/* {row.isActive && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -158,17 +150,8 @@ export default function Personnel() {
             >
               Deactivate
             </button>
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeletePersonnel(row.uuid);
-            }}
-            className={styles.deleteBtn}
-            style={{ fontSize: "12px", padding: "4px 8px" }}
-          >
-            Delete
-          </button>
+          )} */}
+      
         </div>
       ),
     },
@@ -281,12 +264,13 @@ export default function Personnel() {
         </div>
 
         {personnel.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
-            <p>No personnel assigned to this project yet.</p>
-            <button onClick={handleAddPersonnel} className={styles.editBtn}>
-              Add First Personnel
-            </button>
-          </div>
+              <EmptyState
+                   illustration="/undraw_no-data_ig65.svg"
+                   message="No personnel records found"
+                   details="You haven’t added any personnels in this project"
+                   actionLabel="Add first Personnel"
+                   onAction={() => setShowAdd(true)}
+                 />
         ) : (
           <>
             <Table
@@ -314,6 +298,10 @@ export default function Personnel() {
           </>
         )}
       </div>
+        {showAdd && <AddPersonnel onClose={() => setShowAdd(false)} />}
+      
+      
+    
     </div>
   );
 }

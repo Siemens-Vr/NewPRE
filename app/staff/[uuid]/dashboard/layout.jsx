@@ -1,5 +1,4 @@
 import Sidebar from '@/app/components/sidebar/staffSidebar'
-import Footer  from '@/app/components/footer/footer'
 import Navbar from  '@/app/components/navbar/staffNavbar'
 import styles from   '@/app/styles/dashboards/dashboard.module.css'
 

@@ -20,7 +20,7 @@ export default function PhaseDetailPage({ projectType }) {
   const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [editCard, setEditCard] = useState(null);
   const [showEditCardModal, setShowEditCardModal] = useState(false);
-    const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   // Fetch cards for this phase
   const fetchCards = async () => {
@@ -28,7 +28,7 @@ export default function PhaseDetailPage({ projectType }) {
     try {
       const res = await api.get(`/cost_categories/${phaseuuid}`);
       if (res.status === 200) {
-        setCards(res.data);
+        setCards(res.data.cost_categories);
         setError(null);
       } else {
         setError("Failed to fetch cards");

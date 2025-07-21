@@ -74,7 +74,7 @@ const Sidebar = () => {
       icon: <MdAnalytics className={styles.whiteIcon} />,
     },
   ];
-console.log(activeUuid)
+// console.log(activeUuid)
   return (
     <div className={styles.container}>
       {/* User Info */}

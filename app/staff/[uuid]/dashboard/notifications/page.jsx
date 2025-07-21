@@ -182,6 +182,7 @@ export default function NotificationsPage() {
                     }
                     onChange={toggleSelectAll}
                   />
+                 
                   <span className={styles.colMessage}>Message</span>
                   <span className={styles.colTime}>Time</span>
                 </li>
@@ -196,6 +197,13 @@ export default function NotificationsPage() {
                       checked={selected.includes(n.id)}
                       onChange={() => toggleSelectOne(n.id)}
                     />
+                     {/* <a
+                         href={`${api.defaults.baseURL}/outputs/${n.output.uuid}`} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                        > 
+                          {n.output.name} 
+                       </a> */}
                     <div className={styles.colMessage}>{n.message}</div>
                     <time className={styles.colTime}>
                       {new Date(n.createdAt).toLocaleString()}

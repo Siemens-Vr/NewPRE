@@ -64,6 +64,8 @@ console.log("Submitting cohort data:", levels, payload);
     }
     // then always close the form or navigate away:
     onClose();
+    await fetchCohorts(); // refresh the cohort list
+    toast.success("Cohort created successfully!");
 }  catch (err) {
   console.error("Full Axios error:", err);
   console.error("Error code:", err.code);

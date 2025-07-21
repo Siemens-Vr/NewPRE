@@ -80,40 +80,33 @@ export default function OutputDetails() {
   };
 
   // Reject
- const rejectOutput = async (uuid, reason) => {
+const rejectOutput = async (uuid, reason) => {
   setMessage(null);
   setError(null);
 
   try {
-    // 1) Mark the output as rejected
-    await api.post(`/outputs/reject/${uuid}`, { reason });
+    const createdBy = allOutputs.find(o => o.uuid === uuid)?.createdBy;
 
-    // 2) Update UI state
+    // Send both reason and createdBy to the backend; backend will handle notifications
+    await api.put(`/outputs/reject/${uuid}`, { reason, createdBy });
+
+    // Update UI state
     const updated = allOutputs.map(o =>
       o.uuid === uuid ? { ...o, is_rejected: true } : o
     );
     setAllOutputs(updated);
-   
+
     const name = allOutputs.find(o => o.uuid === uuid)?.name;
     setMessage(`“${name}” was rejected.`);
-
-    // 3) Send a notification via HTTP
-    const createdBy = allOutputs.find(o => o.uuid === uuid)?.createdBy;
-    await api.post('/notifications', {
-      userId: createdBy,                // the user who should receive this
-      type: "output_rejected",
-      outputId: uuid,
-      message: `Your output “${name}” was rejected. Reason: ${reason}`
-    });
-
   } catch (err) {
     console.error("Reject failed:", err);
     setError(
       err.response?.data?.message ||
-      "Reject failed; could not send notification."
+      "Reject failed; please try again."
     );
   }
 };
+
 
   // Approve (unchanged)
   const handleApprove = async output => {

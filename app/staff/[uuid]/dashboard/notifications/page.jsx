@@ -27,7 +27,7 @@ export default function NotificationsPage() {
       try {
         // fetch only this user's notifications
         const res = await api.get(
-          `${config.baseURL}/notifications?userId=${user.id}`
+          `/outputs/users/notifications`
         );
         if (res.status === 200) {
           setNotifications(res.data.rows || []);

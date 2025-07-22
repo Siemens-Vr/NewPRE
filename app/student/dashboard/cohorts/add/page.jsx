@@ -60,13 +60,11 @@ console.log("Submitting cohort data:", levels, payload);
    try {
  const res = await api.post("/cohorts", payload);
     // only call onSave if it exists:
-    if (typeof onSave === "function") {
-      onSave(res.data);
-    }
-    // then always close the form or navigate away:
-    onClose();
-    await fetchCohorts(); // refresh the cohort list
-    toast.success("Cohort created successfully!");
+   await fetchCohorts();
+      toast.success("Cohort created successfully!");
+     // 3) notify parent / close modal
+      if (typeof onSave === "function") onSave(res.data);
+      onClose();
 }  catch (err) {
   console.error("Full Axios error:", err);
   console.error("Error code:", err.code);

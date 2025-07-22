@@ -64,29 +64,39 @@
 }
 
 .button {
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
+display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.button:hover {
+  background: rgba(0,0,0,0.05);
 }
 
 .button.view {
-    background: #1b9392;
-    color: white;
+    border-color: #2bb3d2;
+  color: #2bb3d2;
 }
 
 .button.view:hover {
-    background: #c6e7e7;
+   background: #2bb3d2;
+  color: #fff;
 }
 
 .button.delete {
-    background: #ef4444;
-    color: white;
+     color: #dc3545;
+  border-color: #dc3545;
 }
 
 .button.delete:hover {
-    background: #991b1b;
+     background: #dc3545;
+  color: #fff;
 }
 
 .noStudents {
@@ -95,16 +105,4 @@
     font-weight: 600;
     color: #c6e7e7;
     margin-top: 20px;
-}
-
-.search{
-    margin-top: -10px;
-}
-.button.addlevel {
-    background: #1b9392;
-    color: white;
-}
-.button.addlevel:hover{
-    background: #c6e7e7;
-    color: white;
 }

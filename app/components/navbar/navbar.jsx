@@ -78,7 +78,8 @@ const Navbar = () => {
             className={styles.notificationWrapper}
             onClick={() => {
               setUnreadCount(0);
-              router.push(`staff/${uuid}/dashboard/notifications`);
+               window.location.href = `/staff/${user.uuid}/dashboard/notifications`;
+              
             }}
           >
             <MdNotifications size={20} />

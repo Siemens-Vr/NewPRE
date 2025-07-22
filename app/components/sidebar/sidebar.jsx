@@ -50,9 +50,8 @@ const Sidebar = () => {
             title: "Student",
             icon: <MdSchool className={styles.whiteIcon} />,
             subpages: [
-              { title: "Dashboard", path: "/students", icon: <MdDashboard className={styles.whiteIcon} /> },
-              { title: "Students", path: "/students/students", icon: <MdPeople className={styles.whiteIcon} /> },
               { title: "Cohorts", path: "/students/cohorts", icon: <MdGroup className={styles.whiteIcon} /> },
+              { title: "Students", path: "/students/students", icon: <MdPeople className={styles.whiteIcon} /> },
               { title: "Instructors", path: "/students/facilitators", icon: <MdPerson className={styles.whiteIcon} /> },
             ],
           },
@@ -60,7 +59,6 @@ const Sidebar = () => {
             title: "Equipment",
             icon: <MdInventory className={styles.whiteIcon} />,
             subpages: [
-              { title: "Dashboard", path: "/equipments", icon: <MdDashboard className={styles.whiteIcon} /> },
               { title: "Products", path: "/equipments/components", icon: <MdInventory className={styles.whiteIcon} /> },
               { title: "Borrow", path: "/equipments/borrow", icon: <MdAssignment className={styles.whiteIcon} /> },
               { title: "Notifications", path: "/equipments/notifications", icon: <MdNotifications className={styles.whiteIcon} /> },

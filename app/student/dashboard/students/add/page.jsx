@@ -9,7 +9,7 @@ import FormModal from "@/app/components/Form/formTable";
 import CohortLevelModal from "@/app/components/cohort/CohortLevelModal";
 import styles from "@/app/styles/students/addStudent/addStudent.module.css";
 
-export default function AddStudentPage({ onClose }) {
+export default function AddStudentPage({ onClose, onSave }) {
   const [studentValues, setStudentValues] = useState({
     firstName: "",
     lastName: "",

@@ -23,6 +23,7 @@ export default function AddLevelForm({
   const [showFacPopup, setShowFacPopup] = useState(false);
   const [dateError, setDateError] = useState("");
   const [facilitatorsList, setFacilitatorsList] = useState([]);
+  const [showFacilitatorPopup, setShowFacilitatorPopup] = useState(false);
 
   const levelOptions = [
     { value: "SMSCP Level 1", label: "SMSCP Level 1" },

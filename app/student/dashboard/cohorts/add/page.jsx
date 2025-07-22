@@ -6,8 +6,9 @@ import styles from "@/app/styles/cohorts/addCohort/addCohort.module.css";
 import api from "@/app/lib/utils/axios";
 import Spinner from "@/app/components/spinner/spinner";
 import AddLevelForm from "@/app/components/cohort/AddLevel";
+import { toast } from "react-toastify";
 
-export default function AddCohortPage({ onClose}) {
+export default function AddCohortPage({ onClose, onSave, fetchCohorts }) {
   const [cohortFormValues, setCohortFormValues] = useState({
     cohortName: "",
     startDate: "",

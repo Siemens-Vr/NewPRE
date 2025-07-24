@@ -10,6 +10,8 @@ import UpdatePopUp from "@/app/components/update/update";
 export default function ComponentDetail() {
   const { id } = useParams();
 
+  console.log("This component is mounting", id)
+
   const [component, setComponent] = useState(null);
   const [borrowHistory, setBorrowHistory] = useState([]);
   const [productHistory, setProductHistory] = useState([]);
@@ -103,23 +105,48 @@ export default function ComponentDetail() {
   };
 
   // ——— Data fetch ———
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const [compRes, borrowRes, prodRes] = await Promise.all([
-          api.get(`${config.baseURL}/components/${id}`),
-          api.get(`${config.baseURL}/borrow?componentUUID=${id}`),
-          api.get(`${config.baseURL}/components/${id}/history`),
-        ]);
-        if (compRes.statusText === "OK")   setComponent(compRes.data);
-        if (borrowRes.statusText === "OK") setBorrowHistory(borrowRes.data);
-        if (prodRes.statusText === "OK")   setProductHistory(prodRes.data);
-      } catch (error) {
-        console.error("Error fetching data", error);
+useEffect(() => {
+  const fetchAll = async () => {
+    try {
+      const [compRes, borrowRes, prodRes] = await Promise.all([
+        api.get(`/components/${id}`),
+        // api.get(`/borrow/${id}/history`),
+        api.get(`/components/${id}/history`),
+      ]);
+
+      // Log out the full Axios response objects
+      console.log("Component response:", compRes);
+      console.log("Borrow response:   ", borrowRes);
+      console.log("History response:  ", prodRes);
+
+      // Better check with status code
+      if (compRes.status === 200) {
+        setComponent(compRes.data);
+      } else {
+        console.warn("Unexpected component status:", compRes.status);
       }
-    };
-    fetchAll();
-  }, [id]);
+
+      if (borrowRes.status === 200) {
+        setBorrowHistory(borrowRes.data);
+      } else {
+        console.warn("Unexpected borrow status:", borrowRes.status);
+      }
+
+      if (prodRes.status === 200) {
+        setProductHistory(prodRes.data);
+      } else {
+        console.warn("Unexpected history status:", prodRes.status);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchAll();
+}, [id]);
+
+
+ 
 
   return (
     <div className={styles.container}>

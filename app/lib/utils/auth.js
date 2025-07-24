@@ -1,6 +1,8 @@
+require('dotenv').config()
+
 export async function refreshAccessToken() {
   try {
-    const res = await fetch("http://localhost:10600/api/auth/refresh-token", {
+    const res = await fetch(`${process.env.BASE_URL}/auth/refresh-token`, {
       method: "POST",
       credentials: "include",    
       headers: {

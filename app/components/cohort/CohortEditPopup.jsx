@@ -13,31 +13,9 @@ const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
     endDate: formatDate(cohortData.endDate),
   });
 
-  const fields = [
-    {
-      name: 'cohortName',
-      label: 'Cohort Name',
-      type: 'text',
-      placeholder: 'Enter cohort name',
-    },
-    {
-      name: 'startDate',
-      label: 'Start Date',
-      type: 'date',
-    },
-    {
-      name: 'endDate',
-      label: 'End Date',
-      type: 'date',
-    },
-  ];
-
-  // ✅ Update handler that works with reusable FormModal
-  const handleFieldChange = (name, value) => {
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  // This onChange matches FormModal: it receives a partial object { fieldName: value }
+  const handleChange = (updates) => {
+    setFormValues((prev) => ({ ...prev, ...updates }));
   };
 
   const handleSubmit = (values) => {
@@ -50,6 +28,29 @@ const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
     onClose();
   };
 
+  // Include `value` in each field so FormModal can control the input
+  const fields = [
+    {
+      name: 'cohortName',
+      label: 'Cohort Name',
+      type: 'text',
+      placeholder: 'Enter cohort name',
+      value: formValues.cohortName,
+    },
+    {
+      name: 'startDate',
+      label: 'Start Date',
+      type: 'date',
+      value: formValues.startDate,
+    },
+    {
+      name: 'endDate',
+      label: 'End Date',
+      type: 'date',
+      value: formValues.endDate,
+    },
+  ];
+
   return (
     <FormModal
       title="Edit Cohort Details"
@@ -57,7 +58,7 @@ const CohortEditPopup = ({ cohortData, onClose, onUpdate }) => {
       initialValues={formValues}
       onSubmit={handleSubmit}
       onClose={onClose}
-      onChange={handleFieldChange} // ✅ important fix
+      onChange={handleChange}
     />
   );
 };

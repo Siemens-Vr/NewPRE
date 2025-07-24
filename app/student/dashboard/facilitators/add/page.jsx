@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '@/app/lib/utils/axios';
 import FormModal from "@/app/components/Form/FormModal";
 
-export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
+export default function AddFacilitatorPage({ levelUuid, onClose , fetchFacilitators }) {
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -85,7 +85,7 @@ export default function AddFacilitatorPage({ levelUuid, onSave, onClose }) {
       idNo: values.idNo,
       gender: values.gender,
     };
-console.log("Submitting payload:", payload);
+// console.log("Submitting payload:", payload);
     try {
       // use the levelUuid prop here
       const response = await api.post(
@@ -94,9 +94,13 @@ console.log("Submitting payload:", payload);
         { headers: { "Content-Type": "application/json" } }
       );
 
-      const newFacilitator = response.data;
+      if (typeof fetchFacilitators === "function") {
+        await fetchFacilitators(levelUuid);
+      }
+
+     // 2) Success toast
       toast.success("Facilitator added successfully!");
-      await onSave(newFacilitator, levelUuid);
+
       onClose();
     } catch (error) {
       console.error("Error adding facilitator:", error.response?.data || error);

@@ -24,8 +24,40 @@ const EditLevelForm = ({
   onSave,
   onClose,
 }) => {
-    
-  // wait for initialValues before rendering form
+  // 1) Hooks at the top level
+  const [formValues, setFormValues] = useState({
+    uuid: "",
+    levelName: "",
+    startDate: "",
+    endDate: "",
+    exam_dates: "",
+    exam_quotation_number: "",
+  });
+  const [levelDateError, setLevelDateError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // 2) When initialValues loads, populate formValues
+  useEffect(() => {
+    if (!initialValues) return;
+
+    setFormValues({
+      uuid: initialValues.uuid || "",
+      levelName: initialValues.levelName || "",
+      startDate: formatDate(initialValues.startDate),
+      endDate: formatDate(initialValues.endDate),
+      exam_dates:
+        formatDate(initialValues.exam_dates) ||
+        formatDate(initialValues.examDates),
+      exam_quotation_number:
+        initialValues.exam_quotation_number ||
+        initialValues.examQuotationNumber ||
+        "",
+    });
+    // clear any prior errors when loading new data
+    setLevelDateError("");
+  }, [initialValues]);
+
+  // 3) Show loader until initialValues exist
   if (!initialValues) {
     return (
       <div
@@ -43,23 +75,7 @@ const EditLevelForm = ({
     );
   }
 
-  // initialize formValues once, from initialValues
-  const [formValues, setFormValues] = useState(() => ({
-    uuid: initialValues.uuid || "",
-    levelName: initialValues.levelName || "",
-    startDate: formatDate(initialValues.startDate),
-    endDate: formatDate(initialValues.endDate),
-    exam_dates:
-      formatDate(initialValues.exam_dates) ||
-      formatDate(initialValues.examDates),
-    exam_quotation_number:
-      initialValues.exam_quotation_number ||
-      initialValues.examQuotationNumber ||
-      "",
-  }));
-  const [levelDateError, setLevelDateError] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  // 4) Validation & handlers
   const validateDates = () => {
     const s = new Date(formValues.startDate);
     const e = new Date(formValues.endDate);
@@ -82,7 +98,6 @@ const EditLevelForm = ({
 
   const handleSubmit = async () => {
     if (!validateDates()) return;
-
     if (!formValues.levelName) {
       alert("Please select a level");
       return;
@@ -104,7 +119,7 @@ const EditLevelForm = ({
     setFormValues((prev) => ({ ...prev, ...updates }));
   };
 
-  // define your FormModal fields, binding to formValues
+  // 5) Define your FormModal fields
   const fields = [
     {
       name: "levelName",

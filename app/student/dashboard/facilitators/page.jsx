@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '@/app/components/pagination/pagination';
 import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
@@ -10,30 +11,32 @@ import api from '@/app/lib/utils/axios';
 import Swal from 'sweetalert2';
 import styles from '@/app/styles/students/addStudent/facilitators.module.css';
 import Loading from '@/app/components/Loading/Loading';
+import EmptyState from '@/app/components/EmptyState/EmptyState';
 import Link from "next/link";
-import { useSearchParams } from 'next/navigation';
 
 const ROWS_PER_PAGE = 10;
 
-const FacilitatorsPage = () => {
+export default function FacilitatorsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q') || '';
+
   const [facilitators, setFacilitators] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(0);
   const [adding, setAdding] = useState(false);
-  const searchParams = useSearchParams();
-  const q = searchParams.get('q') || '';
 
   useEffect(() => {
     const fetchFacilitators = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const response = await api.get(`/facilitators${q ? `?q=${q}` : ''}`);
         setFacilitators(Array.isArray(response.data) ? response.data : []);
-
       } catch (error) {
         console.error('Error fetching facilitators:', error);
+        Swal.fire('Error', 'Failed to load facilitators', 'error');
       } finally {
         setLoading(false);
       }
@@ -41,7 +44,8 @@ const FacilitatorsPage = () => {
     fetchFacilitators();
   }, [q]);
 
-  const handleDeleteFacilitator = async (uuid, fullName) => {
+  const handleDeleteFacilitator = async (uuid, fullName, e) => {
+    e.stopPropagation();
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `You are about to delete ${fullName}`,
@@ -74,23 +78,22 @@ const FacilitatorsPage = () => {
     }
   };
 
- const sortedFacilitators = useMemo(() => {
-  const data = Array.isArray(facilitators) ? facilitators : [];
-  if (!sortKey) return data;
-  return [...data].sort((a, b) => {
-    const aVal = (a[sortKey] ?? '').toString().toLowerCase();
-    const bVal = (b[sortKey] ?? '').toString().toLowerCase();
-    if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-    if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
-    return 0;
-  });
-}, [facilitators, sortKey, sortOrder]);
+  const sorted = useMemo(() => {
+    const data = [...facilitators];
+    if (!sortKey) return data;
+    return data.sort((a, b) => {
+      const aVal = (a[sortKey] ?? '').toString().toLowerCase();
+      const bVal = (b[sortKey] ?? '').toString().toLowerCase();
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [facilitators, sortKey, sortOrder]);
 
-
-  const paginatedFacilitators = useMemo(() => {
+  const pageData = useMemo(() => {
     const start = page * ROWS_PER_PAGE;
-    return sortedFacilitators.slice(start, start + ROWS_PER_PAGE);
-  }, [sortedFacilitators, page]);
+    return sorted.slice(start, start + ROWS_PER_PAGE);
+  }, [sorted, page]);
 
   const columns = [
     {
@@ -106,12 +109,18 @@ const FacilitatorsPage = () => {
       label: 'Actions',
       render: row => (
         <div className={styles.buttons}>
-          <Link href={`/pages/student/dashboard/facilitators/${row.uuid}`}>
-            <button className={`${styles.button} ${styles.view}`}>View</button>
-          </Link>
+          <button
+            className={`${styles.button} ${styles.view}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/student/dashboard/facilitators/${row.uuid}`);
+            }}
+          >
+            View
+          </button>
           <button
             className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDeleteFacilitator(row.uuid, `${row.firstName} ${row.lastName}`)}
+            onClick={(e) => handleDeleteFacilitator(row.uuid, `${row.firstName} ${row.lastName}`, e)}
           >
             Delete
           </button>
@@ -141,28 +150,36 @@ const FacilitatorsPage = () => {
       />
 
       {loading ? (
-        <Loading />
-      ) : paginatedFacilitators.length > 0 ? (
-        <Table
-          columns={columns}
-          data={paginatedFacilitators}
-          onSort={handleSort}
-          sortKey={sortKey}
-          sortOrder={sortOrder}
-        />
+        <Loading text="Loading facilitators..." />
+      ) : sorted.length > 0 ? (
+        <>
+          <Table
+            columns={columns}
+            data={pageData}
+            onSort={handleSort}
+            sortKey={sortKey}
+            sortOrder={sortOrder}
+            onRowClick={(row) =>
+              router.push(`/student/dashboard/facilitators/${row.uuid}`)
+            }
+          />
+          <Pagination
+            count={sorted.length}
+            itemsPerPage={ROWS_PER_PAGE}
+            onPageChange={setPage}
+          />
+        </>
       ) : (
-        <p className={styles.noData}>No facilitators found.</p>
+        <EmptyState
+          illustration="/undraw_no-data_ig65.svg"
+          message="No facilitators found"
+          details="You haven’t added any facilitators yet. Start by adding one now."
+          actionLabel="Add Facilitator"
+          onAction={() => setAdding(true)}
+        />
       )}
-
-      <Pagination
-        count={sortedFacilitators.length}
-        itemsPerPage={ROWS_PER_PAGE}
-        onPageChange={(p) => setPage(p)}
-      />
 
       {adding && <AddFacilitatorPage onClose={() => setAdding(false)} />}
     </div>
   );
-};
-
-export default FacilitatorsPage;
+}

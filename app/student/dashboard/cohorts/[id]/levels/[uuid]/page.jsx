@@ -1,22 +1,20 @@
 "use client";
 
 import styles from '@/app/styles/cohorts/viewCohort/viewLevel.module.css'
-import Search from '@/app/components/cohort/search'
 import Pagination from '@/app/components/pagination/pagination'
 import LevelEditPopup from '@/app/components/cohort/LevelEditPopup'
-import { AddUpdateHoursPopup, ViewHoursPopup } from '@/app/components/facilitators/WorkHoursPopups'
-import { config } from '/config';
+import { AddUpdateHoursPopup } from '@/app/components/facilitators/WorkHoursPopups';
+import { ViewHoursPopup }  from '@/app/components/facilitators/viewWorkHours';
 import { pdf } from '@react-pdf/renderer';
 import LevelDetailsPDF from '@/app/components/cohort/LevelDetailsPDF'
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import AddFacilitatorPage from "@/app/student/dashboard/facilitators/add/page";
 import api from '@/app/lib/utils/axios';
 import Table from '@/app/components/table/Table';
 import Loading from '@/app/components/Loading/Loading';
 import FacilitatorSelectPopup from '@/app/components/cohort/FacilitatorsSelect';
+import { toast } from 'react-toastify';
 
-import Link from 'next/link';
 
 
 const ROWS_PER_PAGE = 10;
@@ -131,7 +129,8 @@ const LevelDetails = ({ searchParams }) => {
       const response = await api.patch(`/levels/${levelData.uuid}`, updatedData);
       const updatedLevel = response.data;
       setLevelData({ ...levelData, ...updatedLevel });
-      alert("Level Information updated")
+      toast.success("Level Information updated");
+      await fetchData(); // re-fetch to get the latest data
       setShowPopup(false);
     } catch (error) {
       console.error('Error updating level:', error);

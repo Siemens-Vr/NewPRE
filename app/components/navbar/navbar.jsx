@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { MdNotifications, MdOutlineChat } from "react-icons/md";
@@ -12,7 +12,7 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, socket } = useContext(AuthContext);
-
+  const { uuid } = useParams(); 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
@@ -37,7 +37,9 @@ const Navbar = () => {
         if (data.type === "NOTIFICATION") {
           setUnreadCount((c) => c + 1);
         }
-      } catch {}
+      } catch (err) {
+        console.error("Failed to parse socket message:", err);
+      }
     };
     socket.addEventListener("message", handler);
     return () => socket.removeEventListener("message", handler);

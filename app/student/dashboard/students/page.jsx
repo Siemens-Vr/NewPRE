@@ -2,7 +2,7 @@
 "use client";
 
 import api from '@/app/lib/utils/axios';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter,useParams  } from 'next/navigation';
 import UpdateStudent from "@/app/components/student/UpdateStudent";
 import Pagination from '@/app/components/pagination/pagination';
 import styles from '@/app/styles/students/Student.module.css';
@@ -14,18 +14,17 @@ import Toolbar from '@/app/components/ToolBar/ToolBar';
 import Table from '@/app/components/table/Table';
 import { MdAdd, MdFilterList, MdDownload  } from 'react-icons/md';
 import Loading from '@/app/components/Loading/Loading';
-import { useParams } from 'next/navigation';
 import EmptyState from '@/app/components/EmptyState/EmptyState';
 
 
 
 const ROWS_PER_PAGE = 10;
 const StudentsPage = () => {
+  const router = useRouter();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
-  // const [popupStudentId, setPopupStudentId] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(0);
@@ -35,7 +34,6 @@ const StudentsPage = () => {
   
 
   const searchParams = useSearchParams();
-  const { replace } = useRouter();
   const q = searchParams.get('q') || '';
     const params = useParams();
     const { uuid, id } = params;
@@ -49,7 +47,7 @@ const StudentsPage = () => {
         const res = await api.get(url);
        setStudents(res.data.content);
 setFilteredStudents(res.data.content);
-        // console.log("data:",res.data);
+        console.log("data:",res.data);
       } catch (err) {
         console.error(err);
         Swal.fire('Error', 'Failed to load students list', 'error');
@@ -191,7 +189,9 @@ const columns = [
       <div className={styles.buttons}>
         <button
           className={`${styles.actionButton} ${styles.view}`}
-          onClick={() => window.location.href = `/student/dashboard/students/${row.uuid}/`}
+          onClick={() =>
+            router.push(`/student/dashboard/students/${row.uuid}`)
+          }
           title="View"
         >
           View
@@ -252,6 +252,9 @@ const columns = [
            onSort={handleSort}
           sortKey={sortKey}
            sortOrder={sortOrder}
+           onRowClick={(row) =>
+              router.push(`/student/dashboard/students/${row.uuid}`)
+            }
          />
        ) : (
          <EmptyState

@@ -9,7 +9,7 @@ import FormModal from "@/app/components/Form/formTable";
 import CohortLevelModal from "@/app/components/cohort/CohortLevelModal";
 import styles from "@/app/styles/students/addStudent/addStudent.module.css";
 
-export default function AddStudentPage({ onClose }) {
+export default function AddStudentPage({ onClose, onSave }) {
   const [studentValues, setStudentValues] = useState({
     firstName: "",
     lastName: "",
@@ -19,36 +19,25 @@ export default function AddStudentPage({ onClose }) {
     kcseNo: "",
     gender: "",
     idNo: "",
-    examResults: "",
-    feePayment: "",
   });
   const [cohortLevels, setCohortLevels] = useState([]);
   const [showCohortModal, setShowCohortModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const studentFields = [
-    { name: "firstName", label: "First Name", type: "text" },
-    { name: "lastName",  label: "Last Name",  type: "text" },
-    { name: "email",     label: "Email",      type: "text" },
-    { name: "phone",     label: "Phone",      type: "text" },
-    { name: "regNo",     label: "Reg No",     type: "text" },
-    { name: "kcseNo",    label: "KCSE No",    type: "text" },
+    { name: "firstName", label: "First Name", type: "text" ,placeholder: "Enter first name"},
+    { name: "lastName",  label: "Last Name",  type: "text" ,placeholder: "Enter last name"},
+    { name: "email",     label: "Email",      type: "text" ,placeholder: "Enter email"},
+    { name: "phone",     label: "Phone",      type: "text" ,placeholder: "Enter phone number"},
+    { name: "regNo",     label: "Reg No",     type: "text" ,placeholder: "Enter registration number"},
+    { name: "kcseNo",    label: "KCSE No",    type: "text" ,placeholder: "Enter KCSE number"},
     { name: "gender",    label: "Gender",     type: "select",
       options: [
         { value: "male",   label: "Male" },
         { value: "female", label: "Female" }
       ]
     },
-    { name: "idNo",      label: "ID No",      type: "text" },
-    {
-          name: "examResults", label: "Exam Status", type: "select",
-          options: [
-            { value: "pass",    label: "Pass" },
-            { value: "fail",    label: "Fail" },
-            { value: "no-show", label: "No Show" }
-          ]
-        },
-    { name: "feePayment",  label: "Fee Payment",  type: "number" }
+    { name: "idNo",      label: "ID No",      type: "text" ,placeholder: "Enter ID number"},
   ];
 
   // update student form fields
@@ -69,44 +58,58 @@ export default function AddStudentPage({ onClose }) {
 console.log("Cohort Levels:", cohortLevels);
 console.log("Student Values:", studentValues);
   // final submit
-  const handleSubmit = async () => {
-    if (cohortLevels.length === 0) {
-      toast.error("Please add at least one Cohort & Level.");
-      return;
-    }
+ const handleSubmit = async () => {
+  if (!cohortLevels.length) {
+    toast.error("Please add at least one Cohort & Level.");
+    return;
+  }
 
-    setLoading(true);
-    const payload = {
+  setLoading(true);
+  try {
+    // 1) Create the student
+    const studentPayload = {
       firstName: studentValues.firstName,
-      lastName: studentValues.lastName,
-      email: studentValues.email,
-      phone: studentValues.phone,
-      regNo: studentValues.regNo,
-      kcseNo: studentValues.kcseNo,
-      gender: studentValues.gender,
-      idNo: studentValues.idNo,
-      examResults: studentValues.examResults,
-      feePayment: studentValues.feePayment,
-      cohortLevels
+      lastName:  studentValues.lastName,
+      email:     studentValues.email,
+      phone:     studentValues.phone,
+      regNo:     studentValues.regNo,
+      kcseNo:    studentValues.kcseNo,
+      gender:    studentValues.gender,
+      idNo:      studentValues.idNo,
     };
-console.log("Submitting student data:", cohortLevels, payload);
-    try {
-      await api.post("/students", payload);
-      // only call onSave if it exists:
-      if (typeof onSave === "function") {
-        onSave(payload);
-      }
-      // then always close the form or navigate away:
-      setLoading(false);
-      toast.success("Student added!");
-      onClose();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add student");
-    } finally {
-      setLoading(false);
-    }
-  };
+
+    const createRes = await api.post("/students", studentPayload);
+    const newStudentUuid = createRes.data.uuid; 
+    // (or whatever field your API returns)
+
+    // 2) Attach each cohort-level row
+    await Promise.all(cohortLevels.map(row =>
+      api.post(
+        `/students/${newStudentUuid}/cohort-levels`,
+        {
+          cohortUuid: row.cohortUuid,
+          levelUuid:  row.levelUuid,
+          fee:        row.fee,
+          examResults: row.examResults
+        }
+      )
+    ));
+
+    toast.success("Student added!");
+    onSave && onSave();
+    onClose();
+  } catch (err) {
+    console.error("Create student error:", err);
+    const msg =
+      err.response?.data?.message ||
+      err.response?.data?.error   ||
+      "Failed to add student";
+    toast.error(msg);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // table to show inside the modal
   const cohortTable = cohortLevels.length > 0

@@ -1,11 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import FormModal from '@/app/components/Form/formTable';
 import styles from '@/app/styles/cohorts/viewCohort/viewLevel.module.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
-  console.log("LevelEditPopup levelData:", levelData);
+const LevelEditPopup = ({
+  levelData,
+  onClose,
+  onUpdate,
+  fetchData,
+}) => {
   const formatDate = (dateString) =>
     dateString ? new Date(dateString).toISOString().split('T')[0] : '';
 
@@ -15,22 +21,39 @@ const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
     endDate: formatDate(levelData.endDate),
     exam_dates: formatDate(levelData.examDates),
     exam_quotation_number: levelData.examQuotationNumber,
-    facilitatorRole: '', // assuming static/default value
+    facilitatorRole: '',
   });
 
-  const handleChange = (updatedValues) => {
-    setFormValues(updatedValues);
+  const handleChange = (updated) => {
+    setFormValues((prev) => ({ ...prev, ...updated }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const payload = {
       ...formValues,
       startDate: formatDate(formValues.startDate),
       endDate: formatDate(formValues.endDate),
       exam_dates: formatDate(formValues.exam_dates),
     };
-    onUpdate(payload);
-    onClose();
+
+    try {
+      // 1) send update
+      await onUpdate(payload);
+
+      // 2) re-fetch the latest for this level
+      if (typeof fetchData === 'function') {
+        await fetchData(levelData.uuid);
+      }
+
+      // 3) show success toast
+      toast.success('Level updated successfully!');
+
+      // 4) close the modal
+      onClose();
+    } catch (err) {
+      console.error('Error updating level:', err);
+      toast.error('Failed to update level.');
+    }
   };
 
   const fields = [
@@ -52,15 +75,25 @@ const LevelEditPopup = ({ levelData, onClose, onUpdate }) => {
   ];
 
   return (
-    <FormModal
-      title="Edit Level Details"
-      fields={fields}
-      initialValues={formValues}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-      onClose={onClose}
-      extraActions={[]}
-    />
+    <>
+      <FormModal
+        title="Edit Level Details"
+        fields={fields}
+        initialValues={formValues}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        onClose={onClose}
+        extraActions={[]}
+      />
+      <ToastContainer
+        position="top-center"
+        autoClose={2500}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
+    </>
   );
 };
 

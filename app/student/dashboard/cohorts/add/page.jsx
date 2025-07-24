@@ -6,8 +6,9 @@ import styles from "@/app/styles/cohorts/addCohort/addCohort.module.css";
 import api from "@/app/lib/utils/axios";
 import Spinner from "@/app/components/spinner/spinner";
 import AddLevelForm from "@/app/components/cohort/AddLevel";
+import { toast } from "react-toastify";
 
-export default function AddCohortPage({ onClose}) {
+export default function AddCohortPage({ onClose, onSave, fetchCohorts }) {
   const [cohortFormValues, setCohortFormValues] = useState({
     cohortName: "",
     startDate: "",
@@ -59,13 +60,11 @@ console.log("Submitting cohort data:", levels, payload);
    try {
  const res = await api.post("/cohorts", payload);
     // only call onSave if it exists:
-    if (typeof onSave === "function") {
-      onSave(res.data);
-    }
-    // then always close the form or navigate away:
-    onClose();
-    await fetchCohorts(); // refresh the cohort list
-    toast.success("Cohort created successfully!");
+   await fetchCohorts();
+      toast.success("Cohort created successfully!");
+     // 3) notify parent / close modal
+      if (typeof onSave === "function") onSave(res.data);
+      onClose();
 }  catch (err) {
   console.error("Full Axios error:", err);
   console.error("Error code:", err.code);

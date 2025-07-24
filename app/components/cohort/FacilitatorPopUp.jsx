@@ -26,7 +26,7 @@ export default function FacilitatorFormModal({ onClose, onAddFacilitator }) {
           : [];
         setOptions(opts);
       })
-      .catch((_) => setOptions([]));
+      .catch(() => setOptions([]));
   }, []);
 
   // 2) If still loading, show spinner

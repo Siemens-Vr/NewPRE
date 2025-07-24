@@ -4,6 +4,7 @@ import { refreshAccessToken } from "./auth";
 import { isTokenExpired } from "./token"; 
 require('dotenv').config();
 
+
 let accessToken = null;
 
 export const setAccessToken = (token) => {
@@ -12,7 +13,7 @@ export const setAccessToken = (token) => {
 };
 
 const api = axios.create({
-  baseURL: process.env.BASE_URL || "http://localhost:10600",
+  baseURL:process.env.NEXT_PUBLIC_BASE_URL,
   withCredentials: true, 
 });
 
